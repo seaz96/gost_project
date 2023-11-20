@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/Gost_Project.props" />
+</Project>
