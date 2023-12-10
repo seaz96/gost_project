@@ -1,5 +1,9 @@
-using Gost_Project.Data.Context;
-using Gost_Project.Data.Repositories;
+using Gost_Project.Data;
+using Gost_Project.Data.Repositories.Companies;
+using Gost_Project.Data.Repositories.Fields;
+using Gost_Project.Data.Repositories.Gosts;
+using Gost_Project.Data.Repositories.References;
+using Gost_Project.Data.Repositories.Users;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

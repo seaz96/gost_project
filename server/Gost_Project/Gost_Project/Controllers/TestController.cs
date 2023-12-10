@@ -1,6 +1,7 @@
-using Gost_Project.Data.Context;
+using Gost_Project.Data;
 using Gost_Project.Data.Entities;
-using Gost_Project.Data.Repositories;
+using Gost_Project.Data.Repositories.Fields;
+using Gost_Project.Data.Repositories.Gosts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Controllers;

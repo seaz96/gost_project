@@ -6,6 +6,5 @@ namespace Gost_Project.Data.Entities;
 
 public class BaseEntity
 {
-    [Required]
-    public long Id { get; set; }
+    public required long Id { get; set; }
 }

@@ -4,11 +4,9 @@ namespace Gost_Project.Data.Entities;
 
 public class UserEntity : BaseEntity
 {
-    [Required]
-    public string Login { get; set; }
+    public required string Login { get; set; }
     
-    [Required]
-    public string Password { get; set; }
+    public required string Password { get; set; }
     
     public Role Role { get; set; }
 
