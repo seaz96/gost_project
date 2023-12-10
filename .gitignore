@@ -16,7 +16,7 @@
 /dataSources.local.xml
 
 bin/
-debug/
+obj/
 
 .vs/
 .idea/
