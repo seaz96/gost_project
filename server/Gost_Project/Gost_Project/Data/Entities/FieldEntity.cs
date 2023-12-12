@@ -8,7 +8,7 @@ public class FieldEntity : BaseEntity
 
     public string? CodeOKS { get; set; }
 
-    public string? CodeOKPD { get; set; }
+    public string? ActivityField { get; set; }
 
     public DateTime AcceptanceDate { get; set; }
 
@@ -23,6 +23,8 @@ public class FieldEntity : BaseEntity
     public string? KeyWords { get; set; }
 
     public string? KeyPhrases { get; set; }
+    
+    public string? ApplicationArea { get; set; }
 
     public AdoptionLevel AdoptionLevel { get; set; }
 
@@ -34,6 +36,8 @@ public class FieldEntity : BaseEntity
 
     public Status Status { get; set; }
     
+    public HarmonizationLevel Harmonization { get; set; }
+    
     public bool IsPrimary { get; set; }
 }
 
@@ -41,6 +45,7 @@ public enum AdoptionLevel
 {
     International,
     Foreign,
+    Regional,
     Organizational,
     National,
     Interstate
@@ -51,4 +56,11 @@ public enum Status
     Valid,
     Canceled,
     Replaced
+}
+
+public enum HarmonizationLevel
+{
+    Unharmonized,
+    Modified,
+    Harmonized
 }

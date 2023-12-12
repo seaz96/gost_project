@@ -25,11 +25,10 @@ public class TestController : ControllerBase
     [HttpPost("test")]
     public async Task<IActionResult> Test(FieldEntity field)
     {
-        var newField = new FieldEntity();
         _gostsRepository.Add(new GostEntity() { Id = 3, ActualFieldId = 5, PrimaryFieldId = 6 });
         var gost = _gostsRepository.GetById(1);
-        _fieldsRepository.Add(new FieldEntity { Id = 5 });
-        _fieldsRepository.Add(new FieldEntity { Id = 6 });
+        _fieldsRepository.Add(new FieldEntity { Id = 5, AcceptanceDate = DateTime.UtcNow, CommissionDate = DateTime.UtcNow});
+        _fieldsRepository.Add(new FieldEntity { Id = 6, AcceptanceDate = DateTime.UtcNow, CommissionDate = DateTime.UtcNow});
         var actualField = _fieldsRepository.GetById(gost.ActualFieldId);
         var primaryField = _fieldsRepository.GetById(gost.PrimaryFieldId);
 

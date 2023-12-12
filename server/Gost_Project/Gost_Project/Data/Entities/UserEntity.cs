@@ -11,8 +11,6 @@ public class UserEntity : BaseEntity
     public Role Role { get; set; }
 
     public string? Name { get; set; }
-    
-    public long CompanyId { get; set; }
 }
 
 public enum Role

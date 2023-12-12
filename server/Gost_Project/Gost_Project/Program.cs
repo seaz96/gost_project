@@ -1,5 +1,4 @@
 using Gost_Project.Data;
-using Gost_Project.Data.Repositories.Companies;
 using Gost_Project.Data.Repositories.Fields;
 using Gost_Project.Data.Repositories.Gosts;
 using Gost_Project.Data.Repositories.References;
@@ -15,7 +14,6 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"));
 });
 
-builder.Services.AddScoped<ICompaniesRepository, CompaniesRepository>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IFieldsRepository, FieldsRepository>();
 builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();

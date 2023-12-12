@@ -8,7 +8,5 @@ public interface IGostsRepository
 
     public GostEntity GetById(long id);
 
-    public List<GostEntity> GetByCompany(long companyId);
-
     public long Add(GostEntity field);
 }

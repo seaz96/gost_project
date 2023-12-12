@@ -16,11 +16,6 @@ public class UsersRepository : IUsersRepository
         return _context.Users.ToList();
     }
 
-    public List<UserEntity> GetByCompany(long id)
-    {
-        return _context.Users.Where(user => user.CompanyId == id).ToList();
-    }
-
     public void Add(UserEntity user)
     {
         _context.Users.Add(user);

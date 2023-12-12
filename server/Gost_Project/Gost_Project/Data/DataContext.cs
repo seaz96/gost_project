@@ -6,7 +6,6 @@ namespace Gost_Project.Data;
 
 public class DataContext : DbContext
 {
-    public DbSet<CompanyEntity> Companies { get; set; } = null!;
     public DbSet<UserEntity> Users { get; set; } = null!;
     public DbSet<GostEntity> Gosts { get; set; } = null!;
     public DbSet<FieldEntity> Fields { get; set; } = null!;
