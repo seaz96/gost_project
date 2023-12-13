@@ -24,10 +24,8 @@ public class FieldsRepository : IFieldsRepository
 
     public long Add(FieldEntity field)
     {
-        long id = _context.Fields.ToList().Count + 1;
-        field.Id = id;
         _context.Fields.Add(field);
         _context.SaveChanges();
-        return id;
+        return field.Id;
     }
 }

@@ -6,5 +6,7 @@ namespace Gost_Project.Data.Entities;
 
 public class BaseEntity
 {
-    public required long Id { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public long Id { get; set; }
 }

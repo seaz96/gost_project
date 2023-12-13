@@ -1,6 +1,8 @@
-namespace Gost_Project.Data.Entities;   
+using Gost_Project.Data.Entities;
 
-public class FieldEntity : BaseEntity
+namespace Gost_Project.Data.Models;
+
+public class AddNewGostDto
 {
     public string? Designation { get; set; }
 
@@ -10,9 +12,9 @@ public class FieldEntity : BaseEntity
 
     public string? ActivityField { get; set; }
 
-    public DateTime? AcceptanceDate { get; set; }
+    public DateTime AcceptanceDate { get; set; }
 
-    public DateTime? CommissionDate { get; set; }
+    public DateTime CommissionDate { get; set; }
 
     public string? Author { get; set; }
 
@@ -39,28 +41,4 @@ public class FieldEntity : BaseEntity
     public HarmonizationLevel Harmonization { get; set; }
     
     public bool IsPrimary { get; set; }
-}
-
-public enum AdoptionLevel
-{
-    International,
-    Foreign,
-    Regional,
-    Organizational,
-    National,
-    Interstate
-}
-
-public enum Status
-{
-    Valid,
-    Canceled,
-    Replaced
-}
-
-public enum HarmonizationLevel
-{
-    Unharmonized,
-    Modified,
-    Harmonized
 }
