@@ -23,12 +23,12 @@ public class ReferencesRepository : IReferencesRepository
 
     public NormativeReferenceEntity GetByParentId(long id)
     {
-        return _context.NormativeReferences.FirstOrDefault(reference => reference.ParentalGostId == id);
+        return _context.NormativeReferences.FirstOrDefault(reference => reference.ParentalDocId == id);
     }
 
     public NormativeReferenceEntity GetByChildId(long id)
     {
-        return _context.NormativeReferences.FirstOrDefault(reference => reference.ChildGostId == id);
+        return _context.NormativeReferences.FirstOrDefault(reference => reference.ChildDocId == id);
     }
 
     public void Add(NormativeReferenceEntity reference)

@@ -7,20 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace Gost_Project.Controllers;
 
 [ApiController]
-[Route("api/gosts")]
-public class GostsController : ControllerBase
+[Route("api/docs")]
+public class DocsController : ControllerBase
 {
     private readonly IMapper _mapper;
-    private readonly IGostsService _gostsService;
+    private readonly IDocsService _docsService;
     
-    public GostsController(IGostsService gostsService, IMapper mapper)
+    public DocsController(IDocsService docsService, IMapper mapper)
     {
         _mapper = mapper;
-        _gostsService = gostsService;
+        _docsService = docsService;
     }
     
     [HttpPost("add")]
-    public async Task<IActionResult> AddNewGost(AddNewGostDto dto)
+    public async Task<IActionResult> AddNewDoc(AddNewDocDto dto)
     {
         if (!ModelState.IsValid)
         {
@@ -29,7 +29,7 @@ public class GostsController : ControllerBase
 
         var newField = _mapper.Map<FieldEntity>(dto);
 
-        var id = _gostsService.AddNewGost(newField);
+        var id = _docsService.AddNewDoc(newField);
         
         return Ok(id);
     }

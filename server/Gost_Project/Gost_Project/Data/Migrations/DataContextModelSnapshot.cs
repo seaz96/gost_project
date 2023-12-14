@@ -22,6 +22,25 @@ namespace Gost_Project.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Gost_Project.Data.Entities.DocEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ActualFieldId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PrimaryFieldId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Docs");
+                });
+
             modelBuilder.Entity("Gost_Project.Data.Entities.FieldEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -92,25 +111,6 @@ namespace Gost_Project.Data.Migrations
                     b.ToTable("Fields");
                 });
 
-            modelBuilder.Entity("Gost_Project.Data.Entities.GostEntity", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("ActualFieldId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PrimaryFieldId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Gosts");
-                });
-
             modelBuilder.Entity("Gost_Project.Data.Entities.NormativeReferenceEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -119,10 +119,10 @@ namespace Gost_Project.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ChildGostId")
+                    b.Property<long>("ChildDocId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("ParentalGostId")
+                    b.Property<long>("ParentalDocId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");

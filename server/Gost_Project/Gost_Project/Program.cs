@@ -1,7 +1,7 @@
 using AutoMapper;
 using Gost_Project.Data;
 using Gost_Project.Data.Repositories.Fields;
-using Gost_Project.Data.Repositories.Gosts;
+using Gost_Project.Data.Repositories.Docs;
 using Gost_Project.Data.Repositories.References;
 using Gost_Project.Data.Repositories.Users;
 using Gost_Project.Helpers;
@@ -23,9 +23,9 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IFieldsRepository, FieldsRepository>();
 builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
-builder.Services.AddScoped<IGostsRepository, GostsRepository>();
+builder.Services.AddScoped<IDocsRepository, DocsRepository>();
 
-builder.Services.AddScoped<IGostsService, GostsService>();
+builder.Services.AddScoped<IDocsService, DocsService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

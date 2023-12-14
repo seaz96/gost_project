@@ -2,7 +2,7 @@ using Gost_Project.Data.Entities;
 
 namespace Gost_Project.Data.Models;
 
-public class AddNewGostDto
+public class AddNewDocDto
 {
     public string? Designation { get; set; }
 
