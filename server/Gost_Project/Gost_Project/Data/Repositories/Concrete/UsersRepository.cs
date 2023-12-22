@@ -1,6 +1,7 @@
 using Gost_Project.Data.Entities;
+using Gost_Project.Data.Repositories.Abstract;
 
-namespace Gost_Project.Data.Repositories.Users;
+namespace Gost_Project.Data.Repositories.Concrete;
 
 public class UsersRepository : IUsersRepository
 {
@@ -13,7 +14,7 @@ public class UsersRepository : IUsersRepository
 
     public List<UserEntity> GetAll()
     {
-        return _context.Users.ToList();
+        return [.. _context.Users];
     }
 
     public void Add(UserEntity user)

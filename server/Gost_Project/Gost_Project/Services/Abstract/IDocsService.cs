@@ -1,6 +1,6 @@
 using Gost_Project.Data.Entities;
 
-namespace Gost_Project.Helpers;
+namespace Gost_Project.Services.Abstract;
 
 public interface IDocsService
 {

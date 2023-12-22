@@ -1,6 +1,6 @@
 using Gost_Project.Data.Entities;
 
-namespace Gost_Project.Data.Repositories.Docs;
+namespace Gost_Project.Data.Repositories.Abstract;
 
 public interface IDocsRepository
 {

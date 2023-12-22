@@ -20,3 +20,5 @@ obj/
 
 .vs/
 .idea/
+
+*.sln

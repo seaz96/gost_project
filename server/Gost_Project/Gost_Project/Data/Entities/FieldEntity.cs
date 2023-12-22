@@ -1,4 +1,4 @@
-namespace Gost_Project.Data.Entities;   
+namespace Gost_Project.Data.Entities;
 
 public class FieldEntity : BaseEntity
 {
@@ -23,7 +23,7 @@ public class FieldEntity : BaseEntity
     public string? KeyWords { get; set; }
 
     public string? KeyPhrases { get; set; }
-    
+
     public string? ApplicationArea { get; set; }
 
     public AdoptionLevel AdoptionLevel { get; set; }
@@ -35,9 +35,9 @@ public class FieldEntity : BaseEntity
     public string? Amendments { get; set; }
 
     public Status Status { get; set; }
-    
+
     public HarmonizationLevel Harmonization { get; set; }
-    
+
     public bool IsPrimary { get; set; }
 }
 

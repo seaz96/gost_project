@@ -2,7 +2,7 @@ using Gost_Project.Data.Entities;
 
 namespace Gost_Project.Data.Models;
 
-public class AddNewDocDto
+public class AddNewDocDtoModel
 {
     public string? Designation { get; set; }
 
@@ -25,7 +25,7 @@ public class AddNewDocDto
     public string? KeyWords { get; set; }
 
     public string? KeyPhrases { get; set; }
-    
+
     public string? ApplicationArea { get; set; }
 
     public AdoptionLevel AdoptionLevel { get; set; }
@@ -37,8 +37,8 @@ public class AddNewDocDto
     public string? Amendments { get; set; }
 
     public Status Status { get; set; }
-    
+
     public HarmonizationLevel Harmonization { get; set; }
-    
+
     public bool IsPrimary { get; set; }
 }

@@ -1,7 +1,7 @@
 using Gost_Project.Data.Entities;
-using Microsoft.EntityFrameworkCore;
+using Gost_Project.Data.Repositories.Concrete;
 
-namespace Gost_Project.Data.Repositories.Fields;
+namespace Gost_Project.Data.Repositories.Abstract;
 
 public class FieldsRepository : IFieldsRepository
 {

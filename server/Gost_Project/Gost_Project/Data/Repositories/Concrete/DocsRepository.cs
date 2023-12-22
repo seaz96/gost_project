@@ -1,7 +1,7 @@
-using System.Diagnostics.CodeAnalysis;
 using Gost_Project.Data.Entities;
+using Gost_Project.Data.Repositories.Abstract;
 
-namespace Gost_Project.Data.Repositories.Docs;
+namespace Gost_Project.Data.Repositories.Concrete;
 
 public class DocsRepository : IDocsRepository
 {
@@ -21,7 +21,7 @@ public class DocsRepository : IDocsRepository
     {
         return _context.Docs.Where(gost => gost.Id == id).FirstOrDefault();
     }
-    
+
     public long Add(DocEntity field)
     {
         long id = _context.Docs.ToList().Count + 1;

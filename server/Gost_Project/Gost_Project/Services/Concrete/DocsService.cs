@@ -1,9 +1,9 @@
 using Gost_Project.Data.Entities;
-using Gost_Project.Data.Models;
-using Gost_Project.Data.Repositories.Fields;
-using Gost_Project.Data.Repositories.Docs;
+using Gost_Project.Data.Repositories.Abstract;
+using Gost_Project.Data.Repositories.Concrete;
+using Gost_Project.Services.Abstract;
 
-namespace Gost_Project.Helpers;
+namespace Gost_Project.Services.Concrete;
 
 public class DocsService : IDocsService
 {
