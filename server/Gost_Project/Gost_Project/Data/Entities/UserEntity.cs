@@ -1,3 +1,5 @@
+using Gost_Project.Data.Entities.Navigations;
+
 namespace Gost_Project.Data.Entities;
 
 public class UserEntity : BaseEntity
@@ -6,13 +8,7 @@ public class UserEntity : BaseEntity
 
     public string? Password { get; set; }
 
-    public Role Role { get; set; }
-
     public string? Name { get; set; }
-}
 
-public enum Role
-{
-    User,
-    Admin
+    public UserRoles Role { get; set; }
 }

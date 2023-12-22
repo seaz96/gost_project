@@ -1,4 +1,5 @@
 using Gost_Project.Data.Entities;
+using Gost_Project.Data.Entities.Navigations;
 
 namespace Gost_Project.Data.Models;
 
@@ -12,9 +13,9 @@ public class AddNewDocDtoModel
 
     public string? ActivityField { get; set; }
 
-    public DateTime AcceptanceDate { get; set; }
+    public DateTime? AcceptanceDate { get; set; }
 
-    public DateTime CommissionDate { get; set; }
+    public DateTime? CommissionDate { get; set; }
 
     public string? Author { get; set; }
 
@@ -28,7 +29,7 @@ public class AddNewDocDtoModel
 
     public string? ApplicationArea { get; set; }
 
-    public AdoptionLevel AdoptionLevel { get; set; }
+    public DocAdoptionLevels AdoptionLevel { get; set; }
 
     public string? DocumentText { get; set; }
 
@@ -36,9 +37,9 @@ public class AddNewDocDtoModel
 
     public string? Amendments { get; set; }
 
-    public Status Status { get; set; }
+    public DocStatuses Status { get; set; }
 
-    public HarmonizationLevel Harmonization { get; set; }
+    public HarmonizationLevels Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
 }

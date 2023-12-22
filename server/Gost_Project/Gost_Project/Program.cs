@@ -1,11 +1,15 @@
+using Anomaly.Middlewares.Extensions;
 using AutoMapper;
+using CorsairMessengerServer;
 using Gost_Project.Data;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Profiles;
 using Gost_Project.Services.Abstract;
 using Gost_Project.Services.Concrete;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 class Porgram
 {
@@ -13,15 +17,40 @@ class Porgram
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var securityKey = builder.Configuration.GetSection("Security")["SecurityKey"];
+
+        ArgumentNullException.ThrowIfNull(securityKey);
+        AuthOptions.Initialize(securityKey);
+
         builder.Services.AddControllers();
+        builder.Services.AddAuthentication();
 
         builder.Services.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        var mapperConfig = new MapperConfiguration(config => config.AddProfile(new MapperProfile()));
-        var mapper = mapperConfig.CreateMapper();
+        builder.Services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = AuthOptions.AUTH_TOKEN_ISSUER,
+                    ValidAudience = AuthOptions.AUTH_TOKEN_AUDIENCE,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = AuthOptions.SymmetricSecurityKey,
+                };
+            });
+
+        var mapper = new MapperConfiguration(config =>
+        {
+            config.AddProfile(new MapperProfile());
+        })
+        .CreateMapper();
 
         builder.Services.AddSingleton(mapper);
 
@@ -43,7 +72,10 @@ class Porgram
         }
 
         app.UseHttpsRedirection();
+        app.UseRequestHeadersComplementaryMiddleware();
+        app.UseAuthentication();
         app.UseAuthorization();
+        app.UseSecurityHeadersComplementaryMiddleware();
         app.MapControllers();
 
         app.Run();
