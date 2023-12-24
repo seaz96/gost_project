@@ -1,9 +1,7 @@
 using AutoMapper;
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Models;
-using Gost_Project.Helpers;
 using Gost_Project.Services.Abstract;
-using Gost_Project.Services.Concrete;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Controllers;
@@ -41,8 +39,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
             return BadRequest("Model is not valid");
         }
         
-        var result = await docsService.DeleteDocAsync(docId);
-        await referencesService.DeleteReferencesByIdAsync(docId);
+        var result = await _docsService.DeleteDocAsync(docId);
+        await _referencesService.DeleteReferencesByIdAsync(docId);
 
         return result;
     }
