@@ -32,14 +32,21 @@ public class DocsService : IDocsService
         return docId;
     }
 
-    public void DeleteDoc(long id)
+    public IActionResult DeleteDoc(long id)
     {
         var doc = _docsRepository.GetById(id);
 
+        if (doc is null)
+        {
+            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+        }
+        
         _fieldsRepository.Delete(doc.PrimaryFieldId);
         _fieldsRepository.Delete(doc.ActualFieldId);
         
         _docsRepository.Delete(id);
+
+        return new OkObjectResult("Document deleted successfully.");
     }
 
     public IActionResult ChangeStatus(long id, DocStatuses status)
@@ -65,6 +72,6 @@ public class DocsService : IDocsService
             _fieldsRepository.Update(actualField);
         }
 
-        return new OkObjectResult("Status changed successfully!");
+        return new OkObjectResult("Status changed successfully.");
     }
 }

@@ -23,7 +23,7 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Model is not valid");
         }
 
         var newField = _mapper.Map<FieldEntity>(dto);
@@ -38,13 +38,13 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Model is not valid");
         }
         
-        docsService.DeleteDoc(docId);
+        var result = docsService.DeleteDoc(docId);
         referencesService.DeleteReferencesById(docId);
-        
-        return Ok();
+
+        return result;
     }
     
     [HttpPut("update/{docId}")]
@@ -52,14 +52,14 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Model is not valid");
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
-        _fieldsService.Update(updatedField, docId);
+        var result = _fieldsService.Update(updatedField, docId);
         _referencesService.UpdateReferences(dto.ReferencesId, docId);
 
-        return Ok();
+        return result;
     }
     
     [HttpPut("actualize/{docId}")]
@@ -67,19 +67,24 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest();
+            return BadRequest("Model is not valid");
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
-        _fieldsService.Update(updatedField, docId);
+        var result = _fieldsService.Actualize(updatedField, docId);
         _referencesService.UpdateReferences(dto.ReferencesId, docId);
 
-        return Ok();
+        return result;
     }
 
     [HttpPut("change-status")]
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequestModel model)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Model is not valid");
+        }
+        
         return _docsService.ChangeStatus(model.Id, model.Status);
     }
 }
