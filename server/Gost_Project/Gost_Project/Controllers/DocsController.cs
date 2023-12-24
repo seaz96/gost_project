@@ -61,4 +61,19 @@ public class DocsController(IDocsService docsService, IMapper mapper,
 
         return Ok();
     }
+    
+    [HttpPut("actualize/{docId}")]
+    public async Task<IActionResult> Actualize([FromBody] UpdateFieldDtoModel dto, long docId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest();
+        }
+
+        var updatedField = _mapper.Map<FieldEntity>(dto);
+        _fieldsService.Update(updatedField, docId);
+        _referencesService.UpdateReferences(dto.ReferencesId, docId);
+
+        return Ok();
+    }
 }

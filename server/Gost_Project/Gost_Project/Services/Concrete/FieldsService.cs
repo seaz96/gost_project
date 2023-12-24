@@ -11,10 +11,18 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IDocsRepository _docsRepository = docsRepository;
 
-    public void Update(FieldEntity updatedEntity, long docId)
+    public void Update(FieldEntity updatedField, long docId)
     {
         var doc = _docsRepository.GetById(docId);
-        updatedEntity.Id = doc.PrimaryFieldId;
-        _fieldsRepository.Update(updatedEntity);
+        updatedField.Id = doc.PrimaryFieldId;
+        _fieldsRepository.Update(updatedField);
+    }
+
+    public void Actualize(FieldEntity actualizedField, long docId)
+    {
+        var doc = _docsRepository.GetById(docId);
+        actualizedField.Id = doc.ActualFieldId.Value;
+        
+        _fieldsRepository.Update(actualizedField);
     }
 }

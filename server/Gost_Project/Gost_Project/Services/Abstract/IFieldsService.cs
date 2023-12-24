@@ -4,5 +4,5 @@ namespace Gost_Project.Services.Abstract;
 
 public interface IFieldsService
 {
-    public void Update(FieldEntity updatedEntity, long docId);
+    public void Update(FieldEntity updatedField, long docId);
 }
