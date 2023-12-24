@@ -6,7 +6,7 @@ public interface IDocsRepository
 {
     public List<DocEntity> GetAll();
 
-    public DocEntity GetById(long id);
+    public DocEntity? GetById(long id);
 
     public long Add(DocEntity field);
 

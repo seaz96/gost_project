@@ -76,4 +76,10 @@ public class DocsController(IDocsService docsService, IMapper mapper,
 
         return Ok();
     }
+
+    [HttpPut("change-status")]
+    public async Task<IActionResult> ChangeStatus(ChangeStatusRequestModel model)
+    {
+        return _docsService.ChangeStatus(model.Id, model.Status);
+    }
 }

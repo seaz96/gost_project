@@ -6,7 +6,7 @@ public interface IFieldsRepository
 {
     public List<FieldEntity> GetAll();
 
-    public FieldEntity GetById(long id);
+    public FieldEntity? GetById(long? id);
 
     // public List<FieldEntity> GetByGostId(long gostId);
 

@@ -4,21 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gost_Project.Data.Repositories.Concrete;
 
-public class DocsRepository : IDocsRepository
+public class DocsRepository(DataContext context) : IDocsRepository
 {
-    private readonly DataContext _context;
-
-    public DocsRepository(DataContext context)
-    {
-        _context = context;
-    }
+    private readonly DataContext _context = context;
 
     public List<DocEntity> GetAll()
     {
         return _context.Docs.ToList();
     }
 
-    public DocEntity GetById(long id)
+    public DocEntity? GetById(long id)
     {
         return _context.Docs.Where(gost => gost.Id == id).FirstOrDefault();
     }

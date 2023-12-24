@@ -4,23 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gost_Project.Data.Repositories.Abstract;
 
-public class FieldsRepository : IFieldsRepository
+public class FieldsRepository(DataContext context) : IFieldsRepository
 {
-    private readonly DataContext _context;
-
-    public FieldsRepository(DataContext context)
-    {
-        _context = context;
-    }
+    private readonly DataContext _context = context;
 
     public List<FieldEntity> GetAll()
     {
         return _context.Fields.ToList();
     }
 
-    public FieldEntity GetById(long id)
+    public FieldEntity? GetById(long? id)
     {
-        return GetAll().Where(field => field.Id == id).FirstOrDefault();
+        return GetAll().FirstOrDefault(field => field.Id == id);
     }
 
     public long Add(FieldEntity field)

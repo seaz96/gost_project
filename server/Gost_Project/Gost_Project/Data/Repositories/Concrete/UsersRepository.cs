@@ -3,14 +3,9 @@ using Gost_Project.Data.Repositories.Abstract;
 
 namespace Gost_Project.Data.Repositories.Concrete;
 
-public class UsersRepository : IUsersRepository
+public class UsersRepository(DataContext context) : IUsersRepository
 {
-    private readonly DataContext _context;
-
-    public UsersRepository(DataContext context)
-    {
-        _context = context;
-    }
+    private readonly DataContext _context = context;
 
     public List<UserEntity> GetAll()
     {

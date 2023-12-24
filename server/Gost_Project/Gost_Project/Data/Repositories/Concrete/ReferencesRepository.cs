@@ -18,12 +18,12 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
         return _context.DocsReferences.Where(reference => reference.Id == id).FirstOrDefault();
     }
 
-    public DocReferenceEntity GetByParentId(long id)
+    public DocReferenceEntity? GetByParentId(long id)
     {
         return _context.DocsReferences.FirstOrDefault(reference => reference.ParentalDocId == id);
     }
 
-    public DocReferenceEntity GetByChildId(long id)
+    public DocReferenceEntity? GetByChildId(long id)
     {
         return _context.DocsReferences.FirstOrDefault(reference => reference.ChildDocId == id);
     }
