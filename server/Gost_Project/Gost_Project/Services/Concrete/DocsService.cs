@@ -28,4 +28,14 @@ public class DocsService : IDocsService
 
         return docId;
     }
+
+    public void DeleteDoc(long id)
+    {
+        var doc = _docsRepository.GetById(id);
+
+        _fieldsRepository.Delete(doc.PrimaryFieldId);
+        _fieldsRepository.Delete(doc.ActualFieldId);
+        
+        _docsRepository.Delete(id);
+    }
 }

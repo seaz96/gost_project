@@ -1,5 +1,6 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gost_Project.Data.Repositories.Concrete;
 
@@ -37,5 +38,41 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
     {
         _context.DocsReferences.AddRange(references);
         _context.SaveChanges();
+    }
+
+    public void DeleteAllByParentId(long parentId)
+    {
+        _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId).ExecuteDelete();
+        _context.SaveChanges();
+    }
+    
+    public void DeleteAllByChildId(long parentId)
+    {
+        _context.DocsReferences.Where(reference => reference.ChildDocId == parentId).ExecuteDelete();
+        _context.SaveChanges();
+    }
+
+    public void UpdateByParentId(List<long> referenceIds, long parentId)
+    {
+        var references = _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId);
+        var toDelete = new List<long>();
+        
+        foreach (var reference in references)
+        {
+            if (referenceIds.Contains(reference.ChildDocId))
+            {
+                referenceIds.Remove(reference.ChildDocId);
+            }
+            else
+            {
+                referenceIds.Remove(reference.ChildDocId);
+                toDelete.Add(reference.ChildDocId);
+            }
+        }
+
+        _context.DocsReferences.Where(reference =>
+            reference.ParentalDocId == parentId && toDelete.Contains(reference.ChildDocId)).ExecuteDelete();
+        
+        AddRange(referenceIds.Select(id => new DocReferenceEntity {ChildDocId = id, ParentalDocId = parentId}).ToList());
     }
 }

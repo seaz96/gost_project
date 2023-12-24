@@ -60,6 +60,7 @@ class Program
         builder.Services.AddScoped<IDocsRepository, DocsRepository>();
         builder.Services.AddScoped<IDocsService, DocsService>();
         builder.Services.AddScoped<IReferencesService, ReferencesService>();
+        builder.Services.AddScoped<IFieldsService, FieldsService>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

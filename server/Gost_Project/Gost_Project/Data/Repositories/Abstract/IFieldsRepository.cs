@@ -11,4 +11,8 @@ public interface IFieldsRepository
     // public List<FieldEntity> GetByGostId(long gostId);
 
     public long Add(FieldEntity field);
+
+    public void Delete(long? id);
+
+    public void Update(FieldEntity newField);
 }

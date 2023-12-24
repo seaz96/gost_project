@@ -13,12 +13,23 @@ public class ReferencesService : IReferencesService
         _referencesRepository = referencesRepository;
     }
 
-    public void AddReferences(List<long> referencesIds, long parentId)
+    public void AddReferences(List<long> referenceIds, long parentId)
     {
-        var references = referencesIds
+        var references = referenceIds
             .Select(childId => new DocReferenceEntity { ParentalDocId = parentId, ChildDocId = childId })
             .ToList();
 
         _referencesRepository.AddRange(references);
+    }
+
+    public void DeleteReferencesById(long id)
+    {
+        _referencesRepository.DeleteAllByParentId(id);
+        _referencesRepository.DeleteAllByChildId(id);
+    }
+
+    public void UpdateReferences(List<long> referenceIds, long parentId)
+    {
+        _referencesRepository.UpdateByParentId(referenceIds, parentId);
     }
 }

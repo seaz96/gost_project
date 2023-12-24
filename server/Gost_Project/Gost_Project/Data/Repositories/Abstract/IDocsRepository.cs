@@ -9,4 +9,6 @@ public interface IDocsRepository
     public DocEntity GetById(long id);
 
     public long Add(DocEntity field);
+
+    public void Delete(long id);
 }

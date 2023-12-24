@@ -15,4 +15,10 @@ public interface IReferencesRepository
     public void Add(DocReferenceEntity reference);
 
     public void AddRange(List<DocReferenceEntity> references);
+
+    public void DeleteAllByParentId(long parentId);
+
+    public void DeleteAllByChildId(long parentId);
+
+    public void UpdateByParentId(List<long> referenceIds, long parentId);
 }

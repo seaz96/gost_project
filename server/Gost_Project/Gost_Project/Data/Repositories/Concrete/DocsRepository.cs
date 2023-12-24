@@ -1,5 +1,6 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Repositories.Abstract;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gost_Project.Data.Repositories.Concrete;
 
@@ -29,5 +30,10 @@ public class DocsRepository : IDocsRepository
         _context.Docs.Add(field);
         _context.SaveChanges();
         return id;
+    }
+
+    public void Delete(long id)
+    {
+        _context.Docs.Where(doc => doc.Id == id).ExecuteDelete();
     }
 }
