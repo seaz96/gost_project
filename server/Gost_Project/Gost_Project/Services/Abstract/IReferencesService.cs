@@ -2,9 +2,9 @@ namespace Gost_Project.Services.Abstract;
 
 public interface IReferencesService
 {
-    public void AddReferences(List<long> referenceIds, long parentId);
+    public Task AddReferencesAsync(List<long> referenceIds, long parentId);
 
-    public void DeleteReferencesById(long id);
+    public Task DeleteReferencesByIdAsync(long id);
 
-    public void UpdateReferences(List<long> referenceIds, long parentId);
+    public Task UpdateReferencesAsync(List<long> referenceIds, long parentId);
 }

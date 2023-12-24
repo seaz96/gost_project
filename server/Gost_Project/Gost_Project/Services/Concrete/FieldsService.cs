@@ -6,15 +6,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Services.Concrete;
 
-public class FieldsService(IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository, IDocsRepository docsRepository) : IFieldsService
+public class FieldsService(IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository,
+    IDocsRepository docsRepository) : IFieldsService
 {
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IDocsRepository _docsRepository = docsRepository;
 
-    public IActionResult Update(FieldEntity updatedField, long docId)
+    public async Task<IActionResult> UpdateAsync(FieldEntity updatedField, long docId)
     {
-        var doc = _docsRepository.GetById(docId);
+        var doc = await _docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {
@@ -22,14 +23,14 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
         }
         
         updatedField.Id = doc.PrimaryFieldId;
-        _fieldsRepository.Update(updatedField);
+        await _fieldsRepository.UpdateAsync(updatedField);
 
         return new OkObjectResult("Document updated successfully.");
     }
 
-    public IActionResult Actualize(FieldEntity actualizedField, long docId)
+    public async Task<IActionResult> ActualizeAsync(FieldEntity actualizedField, long docId)
     {
-        var doc = _docsRepository.GetById(docId);
+        var doc = await _docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {
@@ -38,7 +39,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
         
         actualizedField.Id = doc.ActualFieldId.Value;
         
-        _fieldsRepository.Update(actualizedField);
+        await _fieldsRepository.UpdateAsync(actualizedField);
 
         return new OkObjectResult("Document actualized successfully");
     }

@@ -8,27 +8,25 @@ public class DocsRepository(DataContext context) : IDocsRepository
 {
     private readonly DataContext _context = context;
 
-    public List<DocEntity> GetAll()
+    public async Task<List<DocEntity>> GetAllAsync()
     {
-        return _context.Docs.ToList();
+        return await _context.Docs.ToListAsync();
     }
 
-    public DocEntity? GetById(long id)
+    public async Task<DocEntity?> GetByIdAsync(long id)
     {
-        return _context.Docs.Where(gost => gost.Id == id).FirstOrDefault();
+        return await _context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
     }
 
-    public long Add(DocEntity field)
+    public async Task<long> AddAsync(DocEntity document)
     {
-        long id = _context.Docs.ToList().Count + 1;
-        field.Id = id;
-        _context.Docs.Add(field);
-        _context.SaveChanges();
-        return id;
+        _context.Docs.Add(document);
+        await _context.SaveChangesAsync();
+        return document.Id;
     }
 
-    public void Delete(long id)
+    public async Task DeleteAsync(long id)
     {
-        _context.Docs.Where(doc => doc.Id == id).ExecuteDelete();
+        await _context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
     }
 }

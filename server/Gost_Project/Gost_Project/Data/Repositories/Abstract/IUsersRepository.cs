@@ -4,11 +4,11 @@ namespace Gost_Project.Data.Repositories.Abstract;
 
 public interface IUsersRepository
 {
-    public List<UserEntity> GetAll();
+    public Task<List<UserEntity>> GetAll();
 
-    public void Add(UserEntity user);
+    public Task AddAsync(UserEntity user);
 
-    public void Delete(long id);
+    public Task DeleteAsync(long id);
 
-    public void UpdateName(long id, string? name);
+    public Task UpdateNameAsync(long id, string? name);
 }

@@ -4,21 +4,21 @@ namespace Gost_Project.Data.Repositories.Abstract;
 
 public interface IReferencesRepository
 {
-    public List<DocReferenceEntity> GetAll();
+    public Task<List<DocReferenceEntity>> GetAllAsync();
 
-    public DocReferenceEntity? GetById(long id);
+    public Task<DocReferenceEntity?> GetByIdAsync(long id);
 
-    public DocReferenceEntity? GetByParentId(long id);
+    public Task<DocReferenceEntity?> GetByParentIdAsync(long id);
 
-    public DocReferenceEntity? GetByChildId(long id);
+    public Task<DocReferenceEntity?> GetByChildIdAsync(long id);
 
-    public void Add(DocReferenceEntity reference);
+    public Task AddAsync(DocReferenceEntity reference);
 
-    public void AddRange(List<DocReferenceEntity> references);
+    public Task AddRangeAsync(List<DocReferenceEntity> references);
 
-    public void DeleteAllByParentId(long parentId);
+    public Task DeleteAllByParentIdAsync(long parentId);
 
-    public void DeleteAllByChildId(long parentId);
+    public Task DeleteAllByChildIdAsync(long parentId);
 
-    public void UpdateByParentId(List<long> referenceIds, long parentId);
+    public Task UpdateByParentIdAsync(List<long> referenceIds, long parentId);
 }

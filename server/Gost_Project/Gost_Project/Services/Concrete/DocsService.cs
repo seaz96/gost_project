@@ -8,68 +8,62 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Services.Concrete;
 
-public class DocsService : IDocsService
+public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository) : IDocsService
 {
-    private readonly IDocsRepository _docsRepository;
-    private readonly IFieldsRepository _fieldsRepository;
+    private readonly IDocsRepository _docsRepository = docsRepository;
+    private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
 
-    public DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository)
-    {
-        _fieldsRepository = fieldsRepository;
-        _docsRepository = docsRepository;
-    }
-
-    public long AddNewDoc(FieldEntity primaryField)
+    public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
         var actualField = new FieldEntity();
 
-        var primaryId = _fieldsRepository.Add(primaryField);
-        var actualId = _fieldsRepository.Add(actualField);
+        var primaryId = await _fieldsRepository.AddAsync(primaryField);
+        var actualId = await _fieldsRepository.AddAsync(actualField);
 
         var doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
-        var docId = _docsRepository.Add(doc);
+        var docId = await _docsRepository.AddAsync(doc);
 
         return docId;
     }
 
-    public IActionResult DeleteDoc(long id)
+    public async Task<IActionResult> DeleteDocAsync(long id)
     {
-        var doc = _docsRepository.GetById(id);
+        var doc = await _docsRepository.GetByIdAsync(id);
 
         if (doc is null)
         {
             return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
         }
         
-        _fieldsRepository.Delete(doc.PrimaryFieldId);
-        _fieldsRepository.Delete(doc.ActualFieldId);
+        await _fieldsRepository.DeleteAsync(doc.PrimaryFieldId);
+        await _fieldsRepository.DeleteAsync(doc.ActualFieldId);
         
-        _docsRepository.Delete(id);
+        await _docsRepository.DeleteAsync(id);
 
         return new OkObjectResult("Document deleted successfully.");
     }
 
-    public IActionResult ChangeStatus(long id, DocStatuses status)
+    public async Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status)
     {
-        var doc = _docsRepository.GetById(id);
+        var doc = await _docsRepository.GetByIdAsync(id);
 
         if (doc is null)
         {
             return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
         }
         
-        var primaryField = _fieldsRepository.GetById(doc.PrimaryFieldId);
-        var actualField = _fieldsRepository.GetById(doc.ActualFieldId);
+        var primaryField = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
+        var actualField = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId);
         
         if (primaryField is not null)
         {
             primaryField.Status = status;
-            _fieldsRepository.Update(primaryField);
+            await _fieldsRepository.UpdateAsync(primaryField);
         }
         if (actualField is not null)
         {
             actualField.Status = status;
-            _fieldsRepository.Update(actualField);
+            await _fieldsRepository.UpdateAsync(actualField);
         }
 
         return new OkObjectResult("Status changed successfully.");

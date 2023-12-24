@@ -27,8 +27,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         }
 
         var newField = _mapper.Map<FieldEntity>(dto);
-        var docId = _docsService.AddNewDoc(newField);
-        _referencesService.AddReferences(dto.ReferencesId, docId);
+        var docId = await _docsService.AddNewDocAsync(newField);
+        await _referencesService.AddReferencesAsync(dto.ReferencesId, docId);
         
         return Ok(docId);
     }
@@ -41,8 +41,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
             return BadRequest("Model is not valid");
         }
         
-        var result = docsService.DeleteDoc(docId);
-        referencesService.DeleteReferencesById(docId);
+        var result = await docsService.DeleteDocAsync(docId);
+        await referencesService.DeleteReferencesByIdAsync(docId);
 
         return result;
     }
@@ -56,8 +56,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
-        var result = _fieldsService.Update(updatedField, docId);
-        _referencesService.UpdateReferences(dto.ReferencesId, docId);
+        var result = await _fieldsService.UpdateAsync(updatedField, docId);
+        await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
 
         return result;
     }
@@ -71,8 +71,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
-        var result = _fieldsService.Actualize(updatedField, docId);
-        _referencesService.UpdateReferences(dto.ReferencesId, docId);
+        var result = await _fieldsService.ActualizeAsync(updatedField, docId);
+        await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
 
         return result;
     }
@@ -85,6 +85,6 @@ public class DocsController(IDocsService docsService, IMapper mapper,
             return BadRequest("Model is not valid");
         }
         
-        return _docsService.ChangeStatus(model.Id, model.Status);
+        return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 }

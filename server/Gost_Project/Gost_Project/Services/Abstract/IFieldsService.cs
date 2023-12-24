@@ -5,7 +5,7 @@ namespace Gost_Project.Services.Abstract;
 
 public interface IFieldsService
 {
-    public IActionResult Update(FieldEntity updatedField, long docId);
+    public Task<IActionResult> UpdateAsync(FieldEntity updatedField, long docId);
 
-    public IActionResult Actualize(FieldEntity actualizedField, long docId);
+    public Task<IActionResult> ActualizeAsync(FieldEntity actualizedField, long docId);
 }

@@ -4,15 +4,13 @@ namespace Gost_Project.Data.Repositories.Concrete;
 
 public interface IFieldsRepository
 {
-    public List<FieldEntity> GetAll();
+    public Task<List<FieldEntity>> GetAllAsync();
 
-    public FieldEntity? GetById(long? id);
+    public Task<FieldEntity?> GetByIdAsync(long? id);
 
-    // public List<FieldEntity> GetByGostId(long gostId);
+    public Task<long> AddAsync(FieldEntity field);
 
-    public long Add(FieldEntity field);
+    public Task DeleteAsync(long? id);
 
-    public void Delete(long? id);
-
-    public void Update(FieldEntity newField);
+    public Task UpdateAsync(FieldEntity newField);
 }

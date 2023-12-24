@@ -4,11 +4,11 @@ namespace Gost_Project.Data.Repositories.Abstract;
 
 public interface IDocsRepository
 {
-    public List<DocEntity> GetAll();
+    public Task<List<DocEntity>> GetAllAsync();
 
-    public DocEntity? GetById(long id);
+    public Task<DocEntity?> GetByIdAsync(long id);
 
-    public long Add(DocEntity field);
+    public Task<long> AddAsync(DocEntity document);
 
-    public void Delete(long id);
+    public Task DeleteAsync(long id);
 }

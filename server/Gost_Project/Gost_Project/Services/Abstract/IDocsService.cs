@@ -6,9 +6,9 @@ namespace Gost_Project.Services.Abstract;
 
 public interface IDocsService
 {
-    public long AddNewDoc(FieldEntity primaryField);
+    public Task<long> AddNewDocAsync(FieldEntity primaryField);
 
-    public IActionResult DeleteDoc(long id);
+    public Task<IActionResult> DeleteDocAsync(long id);
 
-    public IActionResult ChangeStatus(long id, DocStatuses status);
+    public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
 }

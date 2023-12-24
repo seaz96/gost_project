@@ -4,32 +4,28 @@ using Gost_Project.Services.Abstract;
 
 namespace Gost_Project.Services.Concrete;
 
-public class ReferencesService : IReferencesService
+public class ReferencesService(IReferencesRepository referencesRepository) : IReferencesService
 {
-    private readonly IReferencesRepository _referencesRepository;
+    private readonly IReferencesRepository _referencesRepository = referencesRepository;
 
-    public ReferencesService(IReferencesRepository referencesRepository)
-    {
-        _referencesRepository = referencesRepository;
-    }
 
-    public void AddReferences(List<long> referenceIds, long parentId)
+    public async Task AddReferencesAsync(List<long> referenceIds, long parentId)
     {
         var references = referenceIds
             .Select(childId => new DocReferenceEntity { ParentalDocId = parentId, ChildDocId = childId })
             .ToList();
 
-        _referencesRepository.AddRange(references);
+        await _referencesRepository.AddRangeAsync(references);
     }
 
-    public void DeleteReferencesById(long id)
+    public async Task DeleteReferencesByIdAsync(long id)
     {
-        _referencesRepository.DeleteAllByParentId(id);
-        _referencesRepository.DeleteAllByChildId(id);
+        await _referencesRepository.DeleteAllByParentIdAsync(id);
+        await _referencesRepository.DeleteAllByChildIdAsync(id);
     }
 
-    public void UpdateReferences(List<long> referenceIds, long parentId)
+    public async Task UpdateReferencesAsync(List<long> referenceIds, long parentId)
     {
-        _referencesRepository.UpdateByParentId(referenceIds, parentId);
+        await _referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
     }
 }

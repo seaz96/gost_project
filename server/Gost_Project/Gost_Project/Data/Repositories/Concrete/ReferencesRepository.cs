@@ -8,51 +8,51 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
 {
     private readonly DataContext _context = context;
 
-    public List<DocReferenceEntity> GetAll()
+    public async Task<List<DocReferenceEntity>> GetAllAsync()
     {
-        return _context.DocsReferences.ToList();
+        return await _context.DocsReferences.ToListAsync();
     }
 
-    public DocReferenceEntity GetById(long id)
+    public async Task<DocReferenceEntity?> GetByIdAsync(long id)
     {
-        return _context.DocsReferences.Where(reference => reference.Id == id).FirstOrDefault();
+        return await _context.DocsReferences.Where(reference => reference.Id == id).FirstOrDefaultAsync();
     }
 
-    public DocReferenceEntity? GetByParentId(long id)
+    public async Task<DocReferenceEntity?> GetByParentIdAsync(long id)
     {
-        return _context.DocsReferences.FirstOrDefault(reference => reference.ParentalDocId == id);
+        return await _context.DocsReferences.FirstOrDefaultAsync(reference => reference.ParentalDocId == id);
     }
 
-    public DocReferenceEntity? GetByChildId(long id)
+    public async Task<DocReferenceEntity?> GetByChildIdAsync(long id)
     {
-        return _context.DocsReferences.FirstOrDefault(reference => reference.ChildDocId == id);
+        return await _context.DocsReferences.FirstOrDefaultAsync(reference => reference.ChildDocId == id);
     }
 
-    public void Add(DocReferenceEntity reference)
+    public async Task AddAsync(DocReferenceEntity reference)
     {
-        _context.DocsReferences.Add(reference);
-        _context.SaveChanges();
+        await _context.DocsReferences.AddAsync(reference);
+        await _context.SaveChangesAsync();
     }
 
-    public void AddRange(List<DocReferenceEntity> references)
+    public async Task AddRangeAsync(List<DocReferenceEntity> references)
     {
-        _context.DocsReferences.AddRange(references);
-        _context.SaveChanges();
+        await _context.DocsReferences.AddRangeAsync(references);
+        await _context.SaveChangesAsync();
     }
 
-    public void DeleteAllByParentId(long parentId)
+    public async Task DeleteAllByParentIdAsync(long parentId)
     {
-        _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId).ExecuteDelete();
-        _context.SaveChanges();
+        await _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId).ExecuteDeleteAsync();
+        await _context.SaveChangesAsync();
     }
     
-    public void DeleteAllByChildId(long parentId)
+    public async Task DeleteAllByChildIdAsync(long parentId)
     {
-        _context.DocsReferences.Where(reference => reference.ChildDocId == parentId).ExecuteDelete();
-        _context.SaveChanges();
+        await _context.DocsReferences.Where(reference => reference.ChildDocId == parentId).ExecuteDeleteAsync();
+        await _context.SaveChangesAsync();
     }
 
-    public void UpdateByParentId(List<long> referenceIds, long parentId)
+    public async Task UpdateByParentIdAsync(List<long> referenceIds, long parentId)
     {
         var references = _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId);
         var toDelete = new List<long>();
@@ -70,9 +70,11 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
             }
         }
 
-        _context.DocsReferences.Where(reference =>
-            reference.ParentalDocId == parentId && toDelete.Contains(reference.ChildDocId)).ExecuteDelete();
+        await _context.DocsReferences.Where(reference =>
+            reference.ParentalDocId == parentId && toDelete.Contains(reference.ChildDocId)).ExecuteDeleteAsync();
         
-        AddRange(referenceIds.Select(id => new DocReferenceEntity {ChildDocId = id, ParentalDocId = parentId}).ToList());
+        await AddRangeAsync(referenceIds.Select(id => new DocReferenceEntity {ChildDocId = id, ParentalDocId = parentId}).ToList());
+        
+        await _context.SaveChangesAsync();
     }
 }

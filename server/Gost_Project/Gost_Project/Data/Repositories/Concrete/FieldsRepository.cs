@@ -8,32 +8,32 @@ public class FieldsRepository(DataContext context) : IFieldsRepository
 {
     private readonly DataContext _context = context;
 
-    public List<FieldEntity> GetAll()
+    public async Task<List<FieldEntity>> GetAllAsync()
     {
-        return _context.Fields.ToList();
+        return await _context.Fields.ToListAsync();
     }
 
-    public FieldEntity? GetById(long? id)
+    public async Task<FieldEntity?> GetByIdAsync(long? id)
     {
-        return GetAll().FirstOrDefault(field => field.Id == id);
+        return await _context.Fields.FirstOrDefaultAsync(field => field.Id == id);
     }
 
-    public long Add(FieldEntity field)
+    public async Task<long> AddAsync(FieldEntity field)
     {
-        _context.Fields.Add(field);
-        _context.SaveChanges();
+        await _context.Fields.AddAsync(field);
+        await _context.SaveChangesAsync();
         return field.Id;
     }
 
-    public void Delete(long? id)
+    public async Task DeleteAsync(long? id)
     {
-        _context.Fields.Where(field => field.Id == id).ExecuteDelete();
+       await _context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
     }
 
-    public void Update(FieldEntity newField)
+    public async Task UpdateAsync(FieldEntity newField)
     {
         _context.Fields.Update(newField);
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }
