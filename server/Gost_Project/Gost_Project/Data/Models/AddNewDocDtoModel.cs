@@ -42,4 +42,6 @@ public class AddNewDocDtoModel
     public HarmonizationLevels Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
+    
+    public List<long> ReferencesId { get; set; }
 }

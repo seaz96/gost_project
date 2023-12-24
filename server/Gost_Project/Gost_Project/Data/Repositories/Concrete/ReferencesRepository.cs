@@ -30,5 +30,12 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
     public void Add(DocReferenceEntity reference)
     {
         _context.DocsReferences.Add(reference);
+        _context.SaveChanges();
+    }
+
+    public void AddRange(List<DocReferenceEntity> references)
+    {
+        _context.DocsReferences.AddRange(references);
+        _context.SaveChanges();
     }
 }

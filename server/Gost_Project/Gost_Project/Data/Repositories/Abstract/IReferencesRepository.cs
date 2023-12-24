@@ -13,4 +13,6 @@ public interface IReferencesRepository
     public DocReferenceEntity GetByChildId(long id);
 
     public void Add(DocReferenceEntity reference);
+
+    public void AddRange(List<DocReferenceEntity> references);
 }

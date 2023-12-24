@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-class Porgram
+class Program
 {
     public static void Main(string[] args)
     {
@@ -59,6 +59,7 @@ class Porgram
         builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
         builder.Services.AddScoped<IDocsRepository, DocsRepository>();
         builder.Services.AddScoped<IDocsService, DocsService>();
+        builder.Services.AddScoped<IReferencesService, ReferencesService>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
