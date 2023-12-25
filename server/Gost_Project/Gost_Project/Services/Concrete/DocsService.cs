@@ -1,5 +1,6 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
+using Gost_Project.Data.Models;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Services.Abstract;
@@ -67,5 +68,23 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         }
 
         return new OkObjectResult("Status changed successfully.");
+    }
+
+    public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id)
+    {
+        var doc = await _docsRepository.GetByIdAsync(id);
+        
+        if (doc is null)
+        {
+            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+        }
+        
+        var result = new GetDocumentResponseModel
+        {
+            Primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
+            Actual = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId.Value)
+        };
+
+        return new OkObjectResult(result);
     }
 }

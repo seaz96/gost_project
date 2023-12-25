@@ -85,4 +85,10 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         
         return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id)
+    {
+        return await _docsService.GetDocument(id);
+    }
 }
