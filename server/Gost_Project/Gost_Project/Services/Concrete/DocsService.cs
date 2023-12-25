@@ -82,9 +82,22 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         var result = new GetDocumentResponseModel
         {
             Primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
-            Actual = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId.Value)
+            Actual = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId.Value),
+            DocId = doc.Id
         };
 
         return new OkObjectResult(result);
+    }
+
+    public async Task<ActionResult<GetDocumentResponseModel>> GetAllDocuments()
+    {
+        var docs = await _docsRepository.GetAllAsync();
+        var fields = await _fieldsRepository.GetAllAsync();
+
+        return new OkObjectResult(docs.Select(doc => new GetDocumentResponseModel
+            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
+                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
+                DocId = doc.Id })
+            .ToList());
     }
 }

@@ -4,6 +4,8 @@ namespace Gost_Project.Data.Models;
 
 public class GetDocumentResponseModel
 {
+    public long DocId { get; set; }
+    
     public FieldEntity Primary { get; set; }
     
     public FieldEntity Actual { get; set; }

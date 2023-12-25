@@ -14,4 +14,6 @@ public interface IDocsService
     public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
 
     public Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id);
+
+    public Task<ActionResult<GetDocumentResponseModel>> GetAllDocuments();
 }

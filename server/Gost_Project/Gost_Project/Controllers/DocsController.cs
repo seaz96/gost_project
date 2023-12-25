@@ -91,4 +91,10 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         return await _docsService.GetDocument(id);
     }
+    
+    [HttpGet("all")]
+    public async Task<ActionResult<GetDocumentResponseModel>> GetAllDocuments()
+    {
+        return await _docsService.GetAllDocuments();
+    }
 }
