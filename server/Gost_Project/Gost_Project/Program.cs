@@ -2,6 +2,7 @@ using Anomaly.Middlewares.Extensions;
 using AutoMapper;
 using CorsairMessengerServer;
 using Gost_Project.Data;
+using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Profiles;
@@ -61,6 +62,8 @@ class Program
         builder.Services.AddScoped<IDocsService, DocsService>();
         builder.Services.AddScoped<IReferencesService, ReferencesService>();
         builder.Services.AddScoped<IFieldsService, FieldsService>();
+        
+        builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

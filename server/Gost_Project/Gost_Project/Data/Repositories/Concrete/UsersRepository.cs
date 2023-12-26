@@ -8,23 +8,38 @@ public class UsersRepository(DataContext context) : IUsersRepository
 {
     private readonly DataContext _context = context;
 
-    public async Task<List<UserEntity>> GetAll()
+    public async Task<List<UserEntity>> GetAllAsync()
     {
-        return [.. _context.Users];
+        return await _context.Users.ToListAsync();
+    }
+
+    public async Task<UserEntity?> GetUserAsync(string login)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
     }
 
     public async Task AddAsync(UserEntity user)
     {
-        _context.Users.Add(user);
+        await _context.Users.AddAsync(user);
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> IsLoginExistAsync(string login)
+    {
+        return await _context.Users.AnyAsync(u => u.Login == login);
     }
 
     public async Task DeleteAsync(long id)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+
         if (user is not null)
         {
             _context.Users.Remove(user);
         }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateNameAsync(long id, string? name)
