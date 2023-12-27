@@ -47,7 +47,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                 var primaryField = doc.Primary;
                 var statistic = statistics.FirstOrDefault(stat => stat.DocId == doc.DocId);
 
-                return IsDocPassedFilter(actualField, primaryField, model, statistic);
+                return IsGetViewsDocPassedFilter(actualField, primaryField, model, statistic);
             })
             .Select<GetDocumentResponseModel, DocWithViewsModel>(doc =>
             {
@@ -66,7 +66,23 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
             .ToList());
     }
 
-    private bool IsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
+    public async Task<IActionResult> GetCount(GetCountOfDocsModel model)
+    {
+        var docs = await _docsService.GetAllDocuments();
+        var statistics = await _docStatisticsRepository.GetAllAsync();
+
+        return new OkObjectResult(docs
+            .Where(doc =>
+            {
+                var primaryField = doc.Primary;
+                var statistic = statistics.FirstOrDefault(stat => stat.DocId == doc.DocId);
+
+                return IsGetCountDocPassedFilter(primaryField, model, statistic);
+            })
+            .Count());
+    }
+    
+    private bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
         GetViewsModel model, DocStatisticEntity statistic)
     {
         return (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) &&
@@ -74,6 +90,14 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) &&
                (actualField.FullName ?? primaryField.FullName).Contains(model.FullName) &&
                ((model.StartDate <= statistic.Created && statistic.Created <= model.EndDate) ||
+                (model.StartDate <= statistic.Changed && statistic.Changed <= model.EndDate));
+    }
+    
+    private bool IsGetCountDocPassedFilter(FieldEntity primaryField,
+        GetCountOfDocsModel model, DocStatisticEntity statistic)
+    {
+        return primaryField.Status == model.Status &&
+               ((model.StartDate <= statistic.Created && statistic.Created <= model.EndDate) || 
                 (model.StartDate <= statistic.Changed && statistic.Changed <= model.EndDate));
     }
 }

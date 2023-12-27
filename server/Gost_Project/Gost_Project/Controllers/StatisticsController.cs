@@ -15,4 +15,10 @@ public class StatisticsController(IDocStatisticsService docStatisticsService) : 
     {
         return await _docStatisticsService.GetViews(model);
     }
+
+    [HttpGet("get-count")]
+    public async Task<IActionResult> GetCountOfDocsAsync([FromQuery] GetCountOfDocsModel model)
+    {
+        return await _docStatisticsService.GetCount(model);
+    }
 }
