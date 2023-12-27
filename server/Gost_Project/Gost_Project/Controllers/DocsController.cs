@@ -108,8 +108,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     }
     
     [HttpGet("all")]
-    public async Task<ActionResult<GetDocumentResponseModel>> GetAllDocuments()
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments()
     {
-        return await _docsService.GetAllDocuments();
+        return Ok(await _docsService.GetAllDocuments());
     }
 }

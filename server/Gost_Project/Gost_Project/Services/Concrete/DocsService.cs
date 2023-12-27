@@ -89,15 +89,15 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult(result);
     }
 
-    public async Task<ActionResult<GetDocumentResponseModel>> GetAllDocuments()
+    public async Task<List<GetDocumentResponseModel>> GetAllDocuments()
     {
         var docs = await _docsRepository.GetAllAsync();
         var fields = await _fieldsRepository.GetAllAsync();
 
-        return new OkObjectResult(docs.Select(doc => new GetDocumentResponseModel
+        return docs.Select(doc => new GetDocumentResponseModel
             { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
                 Actual = fields.Find(field => field.Id == doc.ActualFieldId),
                 DocId = doc.Id })
-            .ToList());
+            .ToList();
     }
 }
