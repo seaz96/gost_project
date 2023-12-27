@@ -59,9 +59,12 @@ class Program
         builder.Services.AddScoped<IFieldsRepository, FieldsRepository>();
         builder.Services.AddScoped<IReferencesRepository, ReferencesRepository>();
         builder.Services.AddScoped<IDocsRepository, DocsRepository>();
+        builder.Services.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
+        
         builder.Services.AddScoped<IDocsService, DocsService>();
         builder.Services.AddScoped<IReferencesService, ReferencesService>();
         builder.Services.AddScoped<IFieldsService, FieldsService>();
+        builder.Services.AddScoped<IDocStatisticsService, DocStatisticsService>();
         
         builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
 

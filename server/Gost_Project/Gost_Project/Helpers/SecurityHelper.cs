@@ -11,10 +11,12 @@ namespace Gost_Project.Helpers
         public static string GetAuthToken(UserEntity user)
         {
             var userId = user.Id.ToString();
+            var role = user.Role.ToString();
 
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, userId),
+                new(ClaimTypes.Role, role)
             };
 
             var jwt = new JwtSecurityToken(

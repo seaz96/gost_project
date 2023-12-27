@@ -20,7 +20,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
 
     public async Task<long> AddAsync(DocEntity document)
     {
-        _context.Docs.Add(document);
+        await _context.Docs.AddAsync(document);
         await _context.SaveChangesAsync();
         return document.Id;
     }
