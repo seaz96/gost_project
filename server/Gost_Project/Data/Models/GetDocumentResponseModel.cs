@@ -9,4 +9,6 @@ public class GetDocumentResponseModel
     public FieldEntity Primary { get; set; }
     
     public FieldEntity Actual { get; set; }
+
+    public List<DocWithStatusModel> References { get; set; }
 }

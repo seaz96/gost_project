@@ -112,4 +112,16 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     {
         return Ok(await _docsService.GetAllDocuments());
     }
+    
+    [HttpGet("all-valid")]
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments()
+    {
+        return Ok(await _docsService.GetValidDocuments());
+    }
+    
+    [HttpGet("all-canceled")]
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments()
+    {
+        return Ok(await _docsService.GetArchivedDocuments());
+    }
 }

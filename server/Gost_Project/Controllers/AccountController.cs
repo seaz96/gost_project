@@ -17,7 +17,6 @@ namespace Gost_Project.Controllers
     public class AccountController(IPasswordHasher passwordHasher, IUsersRepository usersRepository) : ControllerBase
     {
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
-
         private readonly IUsersRepository _usersRepository = usersRepository;
 
         [HttpPost("login")]
