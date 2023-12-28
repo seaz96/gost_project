@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Services.Concrete;
 
-public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository) : IDocsService
+public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
-
+    private readonly IReferencesRepository _referencesRepository = referencesRepository;
+    
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
         var actualField = new FieldEntity();
@@ -79,11 +80,32 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
         }
         
+        var docs = await _docsRepository.GetAllAsync();
+        var fields = await _fieldsRepository.GetAllAsync();
+        
+        var references = (await _referencesRepository.GetAllAsync())
+            .Where(reference => reference.ParentalDocId == id)
+            .Select(reference =>
+            {
+                var docRef = docs.FirstOrDefault(x => x.Id == reference.ChildDocId);
+                var primary = fields.Find(field => field.Id == docRef.PrimaryFieldId);
+                var actual = fields.Find(field => field.Id == docRef.ActualFieldId);
+
+                return new DocWithStatusModel
+                {
+                    DocId = docRef.Id,
+                    Designation = actual.Designation ?? primary.Designation,
+                    Status = primary.Status
+                };
+            })
+            .ToList();
+        
         var result = new GetDocumentResponseModel
         {
             Primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
             Actual = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId.Value),
-            DocId = doc.Id
+            DocId = doc.Id,
+            References = references
         };
 
         return new OkObjectResult(result);
@@ -98,6 +120,32 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
                 Actual = fields.Find(field => field.Id == doc.ActualFieldId),
                 DocId = doc.Id })
+            .ToList();
+    }
+    
+    public async Task<List<GetDocumentResponseModel>> GetValidDocuments()
+    {
+        var docs = await _docsRepository.GetAllAsync();
+        var fields = await _fieldsRepository.GetAllAsync();
+
+        return docs.Select(doc => new GetDocumentResponseModel
+            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
+                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
+                DocId = doc.Id })
+            .Where(doc => doc.Primary.Status == DocStatuses.Valid)
+            .ToList();
+    }
+    
+    public async Task<List<GetDocumentResponseModel>> GetArchivedDocuments()
+    {
+        var docs = await _docsRepository.GetAllAsync();
+        var fields = await _fieldsRepository.GetAllAsync();
+
+        return docs.Select(doc => new GetDocumentResponseModel
+            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
+                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
+                DocId = doc.Id })
+            .Where(doc => doc.Primary.Status != DocStatuses.Valid)
             .ToList();
     }
 }

@@ -16,4 +16,8 @@ public interface IDocsService
     public Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id);
 
     public Task<List<GetDocumentResponseModel>> GetAllDocuments();
+    
+    public Task<List<GetDocumentResponseModel>> GetValidDocuments();
+    
+    public Task<List<GetDocumentResponseModel>> GetArchivedDocuments();
 }
