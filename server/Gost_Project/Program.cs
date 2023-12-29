@@ -87,9 +87,10 @@ class Program
 
         app.UseSwagger();
         app.UseSwaggerUI();
-
+        
         app.UseHttpsRedirection();
         app.UseRequestHeadersComplementaryMiddleware();
+        app.UseCors("AllowAll");
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
