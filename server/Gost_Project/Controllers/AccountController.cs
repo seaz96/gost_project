@@ -10,6 +10,7 @@ using Gost_Project.Helpers;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Gost_Project.Controllers
 {
@@ -116,18 +117,44 @@ namespace Gost_Project.Controllers
             return Ok(users);
         }
 
-        [HttpPost("edit")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Edit([FromBody] UserEditModel userEditModel)
+        [HttpPost("self-edit")]
+        public async Task<ActionResult> SelfEdit([FromBody] UserSelfEditModel userSelfEditModel)
         {
-            var user = await _usersRepository.GetUserAsync(userEditModel.Login);
+            var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (idClaim is null || !int.TryParse(idClaim, out var id))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _usersRepository.GetUserAsync(id);
 
             if (user is null)
             {
-                return BadRequest(new { Field = nameof(userEditModel.Login) });
+                return BadRequest();
             }
 
-            
+            user.OrgName = userSelfEditModel.OrgName ?? user.OrgName;
+            user.OrgBranch = userSelfEditModel.OrgBranch ?? user.OrgBranch;
+            user.OrgActivity = userSelfEditModel.OrgActivity ?? user.OrgActivity;
+
+            return Ok();
+        }
+
+        [HttpPost("admin-edit")]
+        public async Task<ActionResult> AdminEdit([FromBody] UserAdminEditModel userAdminEditModel)
+        {
+            var user = await _usersRepository.GetUserAsync(userAdminEditModel.Login);
+
+            if (user is null)
+            {
+                return BadRequest(new { Field = nameof(userAdminEditModel.Login) });
+            }
+
+            user.OrgName = userAdminEditModel.OrgName ?? user.OrgName;
+            user.OrgBranch = userAdminEditModel.OrgBranch ?? user.OrgBranch;
+            user.OrgActivity = userAdminEditModel.OrgActivity ?? user.OrgActivity;
+            user.Role = userAdminEditModel.IsAdmin ? UserRoles.Admin : UserRoles.User;
 
             return Ok();
         }

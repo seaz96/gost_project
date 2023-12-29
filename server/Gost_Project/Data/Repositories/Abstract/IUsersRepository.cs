@@ -16,4 +16,6 @@ public interface IUsersRepository
     public Task<bool> IsLoginExistAsync(string login);
 
     public Task<UserEntity?> GetUserAsync(string login);
+
+    public Task<UserEntity?> GetUserAsync(long id);
 }

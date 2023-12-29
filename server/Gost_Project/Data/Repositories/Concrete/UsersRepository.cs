@@ -18,6 +18,11 @@ public class UsersRepository(DataContext context) : IUsersRepository
         return await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
     }
 
+    public async Task<UserEntity?> GetUserAsync(long id)
+    {
+        return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+    }
+
     public async Task AddAsync(UserEntity user)
     {
         await _context.Users.AddAsync(user);
