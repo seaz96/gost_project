@@ -8,6 +8,7 @@ using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Extensions;
 using Gost_Project.Helpers;
 using Gost_Project.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Controllers
@@ -62,6 +63,22 @@ namespace Gost_Project.Controllers
             AddAuthorizationCookie(token);
 
             task.Wait();
+
+            return Ok();
+        }
+
+        [HttpPost("restore")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Restore([FromBody] PasswordRestoreModel passwordRestoreModel)
+        {
+            var user = await _usersRepository.GetUserAsync(passwordRestoreModel.Login);
+
+            if (user is null)
+            {
+                return BadRequest(new { Field = nameof(passwordRestoreModel.Login) });
+            }
+
+            user.Password = _passwordHasher.Hash(passwordRestoreModel.NewPassword);
 
             return Ok();
         }
