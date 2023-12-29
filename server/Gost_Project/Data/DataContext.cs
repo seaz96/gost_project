@@ -1,6 +1,5 @@
 using Gost_Project.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using DbContext = Microsoft.EntityFrameworkCore.DbContext;
 
 namespace Gost_Project.Data;
 
@@ -15,6 +14,6 @@ public class DataContext : DbContext
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
+        Database.Migrate();
     }
 }

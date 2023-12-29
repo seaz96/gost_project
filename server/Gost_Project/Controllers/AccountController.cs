@@ -18,9 +18,11 @@ namespace Gost_Project.Controllers
     public class AccountController(IPasswordHasher passwordHasher, IUsersRepository usersRepository) : ControllerBase
     {
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
+
         private readonly IUsersRepository _usersRepository = usersRepository;
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
         {
             var user = await _usersRepository.GetUserAsync(loginModel.Login);
@@ -45,6 +47,7 @@ namespace Gost_Project.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult> Register([FromBody] RegisterModel registerModel)
         {
             var isLoginExist = await _usersRepository.IsLoginExistAsync(registerModel.Login);
@@ -67,9 +70,9 @@ namespace Gost_Project.Controllers
             return Ok();
         }
 
-        [HttpPost("restore")]
+        [HttpPost("restore-password")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Restore([FromBody] PasswordRestoreModel passwordRestoreModel)
+        public async Task<ActionResult> RestorePassword([FromBody] PasswordRestoreModel passwordRestoreModel)
         {
             var user = await _usersRepository.GetUserAsync(passwordRestoreModel.Login);
 
@@ -79,6 +82,52 @@ namespace Gost_Project.Controllers
             }
 
             user.Password = _passwordHasher.Hash(passwordRestoreModel.NewPassword);
+
+            return Ok();
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<ActionResult> ChangePassword([FromBody] PasswordChangeModel passwordChangeModel)
+        {
+            var user = await _usersRepository.GetUserAsync(passwordChangeModel.Login);
+
+            if (user is null)
+            {
+                return BadRequest(new { Field = nameof(passwordChangeModel.Login) });
+            }
+
+            user.Password = _passwordHasher.Hash(passwordChangeModel.NewPassword);
+
+            return Ok();
+        }
+
+        [HttpGet("list")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> UsersList()
+        {
+            var users = (await _usersRepository.GetAllAsync()).Select(user => new 
+            {
+                user.Name,
+                user.Login,
+                Role = user.Role.ToString(),
+            });
+
+            return Ok(users);
+        }
+
+        [HttpPost("edit")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Edit([FromBody] UserEditModel userEditModel)
+        {
+            var user = await _usersRepository.GetUserAsync(userEditModel.Login);
+
+            if (user is null)
+            {
+                return BadRequest(new { Field = nameof(userEditModel.Login) });
+            }
+
+            
 
             return Ok();
         }
