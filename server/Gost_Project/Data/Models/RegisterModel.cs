@@ -19,5 +19,11 @@ namespace Gost_Project.Data.Models
 
         [UserRoleValidation]
         public required string Role { get; set; }
+        
+        public string? OrgName { get; set; }
+
+        public string? OrgBranch { get; set; }
+        
+        public string? OrgActivity { get; set; }
     }
 }

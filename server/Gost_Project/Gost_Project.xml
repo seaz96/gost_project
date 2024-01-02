@@ -8,12 +8,13 @@
             <summary>
             Log in to account, cookie auth
             </summary>
+            <returns>User info</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.Register(Gost_Project.Data.Models.RegisterModel)">
             <summary>
             Create a new account and log in
             </summary>
-            <returns>Add auth token to cookies</returns>
+            <returns>Add auth token to cookies and return user info</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.RestorePassword(Gost_Project.Data.Models.PasswordRestoreModel)">
             <summary>

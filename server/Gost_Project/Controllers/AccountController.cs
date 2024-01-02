@@ -25,6 +25,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     /// <summary>
     /// Log in to account, cookie auth
     /// </summary>
+    /// <returns>User info</returns>
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromBody] LoginModel loginModel)
@@ -47,12 +48,18 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         AddAuthorizationCookie(token);
 
-        return Ok();
+        return Ok(new
+        {
+            user.Id,
+            user.Login,
+            user.Name,
+            role = user.Role.ToString()
+        });
     }
     /// <summary>
     /// Create a new account and log in
     /// </summary>
-    /// <returns>Add auth token to cookies</returns>
+    /// <returns>Add auth token to cookies and return user info</returns>
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<ActionResult> Register([FromBody] RegisterModel registerModel)
@@ -74,7 +81,13 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         task.Wait();
 
-        return Ok();
+        return Ok(new
+        {
+            user.Id,
+            user.Login,
+            user.Name,
+            role = user.Role.ToString()
+        });
     }
 
     /// <summary>
@@ -190,7 +203,10 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             Login = registerModel.Login,
             Name = registerModel.Name,
             Role = Enum.Parse<UserRoles>(registerModel.Role.FirstCharToUpperNextToLower()),
-            Password = hashedPassword 
+            Password = hashedPassword,
+            OrgBranch = registerModel.OrgBranch,
+            OrgActivity = registerModel.OrgActivity,
+            OrgName = registerModel.OrgName
         };
     }
 
