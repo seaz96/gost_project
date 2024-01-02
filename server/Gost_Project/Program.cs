@@ -11,6 +11,7 @@ using Gost_Project.Services.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 class Program
 {
@@ -69,7 +70,19 @@ class Program
         builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1",
+                new OpenApiInfo
+                {
+                    Title = "Gost_project - V1",
+                    Version = "v1"
+                }
+            );
+
+            var filePath = Path.Combine(System.AppContext.BaseDirectory, "Gost_Project.xml");
+            c.IncludeXmlComments(filePath);
+        });
 
         builder.Services.AddCors(options =>
         {

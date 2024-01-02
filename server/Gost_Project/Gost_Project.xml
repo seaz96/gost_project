@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gost_Project</name>
+    </assembly>
+    <members>
+        <member name="M:Gost_Project.Controllers.AccountController.Login(Gost_Project.Data.Models.LoginModel)">
+            <summary>
+            Log in into account
+            </summary>
+            <returns>Adds auth token into cookies</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.Register(Gost_Project.Data.Models.RegisterModel)">
+            <summary>
+            Register a new account
+            </summary>
+            <returns>Adds auth token into cookies and creates new account</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.RestorePassword(Gost_Project.Data.Models.PasswordRestoreModel)">
+            <summary>
+            Restore password by admin
+            </summary>
+            <returns>Changing user password</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.ChangePassword(Gost_Project.Data.Models.PasswordChangeModel)">
+            <summary>
+            Changes user password by old password
+            </summary>
+            <returns>Changes new password</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.UsersList">
+            <summary>
+            Get all users
+            </summary>
+            <returns>List of users</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.Edit(Gost_Project.Data.Models.UserEditModel)">
+            <summary>
+            Edit user info
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.CreateUser(Gost_Project.Data.Models.RegisterModel,Gost_Project.Services.Abstract.IPasswordHasher)">
+            <summary>
+            Creating new user
+            </summary>
+            <returns>New user entitty</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.AddNewDoc(Gost_Project.Data.Models.AddNewDocDtoModel)">
+            <summary>
+            Add new doc
+            </summary>
+            <returns>Id of new doc</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.DeleteDoc(System.Int64)">
+            <summary>
+            Delete doc by id
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.Update(Gost_Project.Data.Models.UpdateFieldDtoModel,System.Int64)">
+            <summary>
+            Update primary info of doc
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.Actualize(Gost_Project.Data.Models.UpdateFieldDtoModel,System.Int64)">
+            <summary>
+            Update actual field in document
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.ChangeStatus(Gost_Project.Data.Models.ChangeStatusRequestModel)">
+            <summary>
+            Change status of doc
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetDocument(System.Int64)">
+            <summary>
+            Get doc by id with its references
+            </summary>
+            <returns>Doc with actual and primary fileds and references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetAllDocuments">
+            <summary>
+            Get all documents without references
+            </summary>
+            <returns>List of any status document without references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetValidDocuments">
+            <summary>
+            Get only valid documents
+            </summary>
+            <returns>List of valid documents without references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetCanceledDocuments">
+            <summary>
+            Get only not valid documents
+            </summary>
+            <returns>List of replaced or canceled documents without references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.StatisticsController.GetViewsAsync(Gost_Project.Data.Models.GetViewsModel)">
+            <summary>
+            Get views of every document bu filters
+            </summary>
+            <returns>List of document views with ids</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.StatisticsController.GetCountOfDocsAsync(Gost_Project.Data.Models.GetCountOfDocsModel)">
+            <summary>
+            Get count of all documents by filters
+            </summary>
+            <returns>Count of docs</returns>
+        </member>
+        <member name="T:Gost_Project.Data.Entities.Navigations.DocAdoptionLevels">
+            <summary>
+            International - 0
+            Foreign - 1
+            Regional - 2
+            Organizational - 3
+            National - 4
+            Interstate - 5
+            </summary>
+        </member>
+        <member name="T:Gost_Project.Data.Entities.Navigations.DocStatuses">
+            <summary>
+            Valid - 0
+            Canceled - 1
+            Replaced - 2
+            </summary>
+        </member>
+        <member name="T:Gost_Project.Data.Entities.Navigations.HarmonizationLevels">
+            <summary>
+            Unharmonized - 0
+            Modified - 1
+            Harmonized - 2
+            </summary>
+        </member>
+        <member name="T:Gost_Project.Data.Entities.Navigations.UserRoles">
+            <summary>
+            User - 0
+            Admin - 1
+            </summary>
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.RemoveRequired">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.RenameGostToDoc">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.FieldsRenames">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.SwitchFieldsToNullable">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.AddStats">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddStats.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddStats.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddStats.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.AddFieldsToUser">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Helpers.RegexHelper.EmailRegex">
+            <remarks>
+            Pattern:<br/>
+            <code>^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,5}$</code><br/>
+            Explanation:<br/>
+            <code>
+            ○ Match if at the beginning of the string.<br/>
+            ○ Match a character in the set [-.\w] atomically at least once.<br/>
+            ○ Match '@'.<br/>
+            ○ Loop greedily at least once.<br/>
+                ○ 1st capture group.<br/>
+                    ○ Match a character in the set [-\w] atomically at least once.<br/>
+                    ○ Match '.'.<br/>
+            ○ Match a character in the set [-\w] atomically at least 2 and at most 5 times.<br/>
+            ○ Match if at the end of the string or if before an ending newline.<br/>
+            </code>
+            </remarks>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0">
+            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the EmailRegex method.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.EmailRegex_0.Instance">
+            <summary>Cached, thread-safe singleton instance.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.#ctor">
+            <summary>Initializes the instance.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory">
+            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.CreateInstance">
+            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner">
+            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
+            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if a possible match was found; false if no more matches are possible.</returns>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.EmailRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
+            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
+            <param name="inputSpan">The text being scanned by the regular expression.</param>
+            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
+        </member>
+        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
+            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
+            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
+            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.StackPush(System.Int32[]@,System.Int32@,System.Int32,System.Int32)">
+            <summary>Pushes 2 values onto the backtracking stack.</summary>
+        </member>
+    </members>
+</doc>

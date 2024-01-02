@@ -10,12 +10,20 @@ public class StatisticsController(IDocStatisticsService docStatisticsService) : 
 {
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
     
+    /// <summary>
+    /// Get views of every document bu filters
+    /// </summary>
+    /// <returns>List of document views with ids</returns>
     [HttpGet("get-views")]
     public async Task<ActionResult<List<DocWithViewsModel>>> GetViewsAsync([FromQuery] GetViewsModel model)
     {
         return await _docStatisticsService.GetViews(model);
     }
 
+    /// <summary>
+    /// Get count of all documents by filters
+    /// </summary>
+    /// <returns>Count of docs</returns>
     [HttpGet("get-count")]
     public async Task<IActionResult> GetCountOfDocsAsync([FromQuery] GetCountOfDocsModel model)
     {
