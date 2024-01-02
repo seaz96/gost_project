@@ -6,44 +6,40 @@
     <members>
         <member name="M:Gost_Project.Controllers.AccountController.Login(Gost_Project.Data.Models.LoginModel)">
             <summary>
-            Log in into account
+            Log in to account, cookie auth
             </summary>
-            <returns>Adds auth token into cookies</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.Register(Gost_Project.Data.Models.RegisterModel)">
             <summary>
-            Register a new account
+            Create a new account and log in
             </summary>
-            <returns>Adds auth token into cookies and creates new account</returns>
+            <returns>Add auth token to cookies</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.RestorePassword(Gost_Project.Data.Models.PasswordRestoreModel)">
             <summary>
-            Restore password by admin
+            Change user password by admin
             </summary>
-            <returns>Changing user password</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.ChangePassword(Gost_Project.Data.Models.PasswordChangeModel)">
             <summary>
-            Changes user password by old password
+            Change password by old password
             </summary>
-            <returns>Changes new password</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.UsersList">
             <summary>
-            Get all users
+            Get list of all users for admin
             </summary>
             <returns>List of users</returns>
         </member>
-        <member name="M:Gost_Project.Controllers.AccountController.Edit(Gost_Project.Data.Models.UserEditModel)">
+        <member name="M:Gost_Project.Controllers.AccountController.SelfEdit(Gost_Project.Data.Models.UserSelfEditModel)">
             <summary>
-            Edit user info
+            Edit own user info 
             </summary>
         </member>
-        <member name="M:Gost_Project.Controllers.AccountController.CreateUser(Gost_Project.Data.Models.RegisterModel,Gost_Project.Services.Abstract.IPasswordHasher)">
+        <member name="M:Gost_Project.Controllers.AccountController.AdminEdit(Gost_Project.Data.Models.UserAdminEditModel)">
             <summary>
-            Creating new user
+            Edit user info by admin
             </summary>
-            <returns>New user entitty</returns>
         </member>
         <member name="M:Gost_Project.Controllers.DocsController.AddNewDoc(Gost_Project.Data.Models.AddNewDocDtoModel)">
             <summary>
