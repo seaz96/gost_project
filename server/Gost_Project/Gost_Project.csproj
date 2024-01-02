@@ -4,9 +4,10 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DocumentationFile>Gost_Project.xml</DocumentationFile>
     </PropertyGroup>
 
