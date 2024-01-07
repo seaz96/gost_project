@@ -9,5 +9,8 @@ namespace Gost_Project.Data.Models
 
         [JsonPropertyName("new_password")]
         public required string NewPassword { get; set; }
+        
+        [JsonPropertyName("old_password")]
+        public required string OldPassword { get; set; }
     }
 }
