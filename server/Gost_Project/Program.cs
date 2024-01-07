@@ -91,7 +91,7 @@ class Program
                 {
                     builder
                         .AllowAnyOrigin()
-                        .AllowAnyMethod()
+                        .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader();
                 });
         });
@@ -102,8 +102,8 @@ class Program
         app.UseSwaggerUI();
         
         app.UseHttpsRedirection();
-        app.UseRequestHeadersComplementaryMiddleware();
         app.UseCors("AllowAll");
+        app.UseRequestHeadersComplementaryMiddleware();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
