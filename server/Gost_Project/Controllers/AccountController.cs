@@ -123,7 +123,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             return BadRequest(new { Field = nameof(passwordChangeModel.Login) });
         }
 
-        if (user.Password != _passwordHasher.Hash(passwordChangeModel.OldPassword))
+        if (!_passwordHasher.Verify(passwordChangeModel.OldPassword, user.Password!))
         {
             return BadRequest("Old password is wrong");
         }
