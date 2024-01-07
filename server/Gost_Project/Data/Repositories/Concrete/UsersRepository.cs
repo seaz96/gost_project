@@ -58,4 +58,22 @@ public class UsersRepository(DataContext context) : IUsersRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task UpdatePasswordAsync(long id, string password)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (user is not null)
+        {
+            user.Password = password;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
+    }
+
+    public async Task UpdateAsync(UserEntity user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
 }

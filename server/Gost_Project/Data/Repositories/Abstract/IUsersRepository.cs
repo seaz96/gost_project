@@ -17,5 +17,9 @@ public interface IUsersRepository
 
     public Task<UserEntity?> GetUserAsync(string login);
 
+    public Task UpdatePasswordAsync(long id, string password);
+
+    public Task UpdateAsync(UserEntity user);
+
     public Task<UserEntity?> GetUserAsync(long id);
 }

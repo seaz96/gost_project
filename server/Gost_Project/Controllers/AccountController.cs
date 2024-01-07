@@ -104,7 +104,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             return BadRequest(new { Field = nameof(passwordRestoreModel.Login) });
         }
 
-        user.Password = _passwordHasher.Hash(passwordRestoreModel.NewPassword);
+        await _usersRepository.UpdatePasswordAsync(user.Id, _passwordHasher.Hash(passwordRestoreModel.NewPassword));
 
         return Ok();
     }
@@ -117,7 +117,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     public async Task<ActionResult> ChangePassword([FromBody] PasswordChangeModel passwordChangeModel)
     {
         var user = await _usersRepository.GetUserAsync(passwordChangeModel.Login);
-
+        
         if (user is null)
         {
             return BadRequest(new { Field = nameof(passwordChangeModel.Login) });
@@ -128,7 +128,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             return BadRequest("Old password is wrong");
         }
         
-        user.Password = _passwordHasher.Hash(passwordChangeModel.NewPassword);
+        await _usersRepository.UpdatePasswordAsync(user.Id, _passwordHasher.Hash(passwordChangeModel.NewPassword));
 
         return Ok();
     }
@@ -175,6 +175,8 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         user.OrgBranch = userSelfEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userSelfEditModel.OrgActivity ?? user.OrgActivity;
 
+        await _usersRepository.UpdateAsync(user);
+
         return Ok();
     }
 
@@ -195,8 +197,28 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         user.OrgBranch = userAdminEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userAdminEditModel.OrgActivity ?? user.OrgActivity;
         user.Role = userAdminEditModel.IsAdmin ? UserRoles.Admin : UserRoles.User;
+        
+        await _usersRepository.UpdateAsync(user);
 
         return Ok();
+    }
+    
+    [Authorize]
+    [HttpGet("self-info")]
+    public async Task<ActionResult> GetSelfInfo()
+    {
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        return Ok(new
+        {
+            user.Login,
+            user.Name,
+            user.OrgName,
+            user.OrgBranch,
+            user.OrgActivity
+        });
     }
 
     private static UserEntity CreateUser(RegisterModel registerModel, IPasswordHasher hasher)
