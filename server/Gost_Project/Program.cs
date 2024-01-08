@@ -92,7 +92,8 @@ class Program
                     builder
                         .WithOrigins("http://localhost:3000")
                         .WithMethods("POST", "GET", "DELETE", "PUT")
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                 });
         });
         
