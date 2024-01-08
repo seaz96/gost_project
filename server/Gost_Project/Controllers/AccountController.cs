@@ -23,7 +23,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     private readonly IUsersRepository _usersRepository = usersRepository;
 
     /// <summary>
-    /// Log in to account, cookie auth
+    /// Log in to account
     /// </summary>
     /// <returns>User info</returns>
     [HttpPost("login")]
@@ -46,20 +46,19 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         var token = SecurityHelper.GetAuthToken(user);
 
-        AddAuthorizationCookie(token);
-
         return Ok(new
         {
             user.Id,
             user.Login,
             user.Name,
-            role = user.Role.ToString()
+            role = user.Role.ToString(),
+            token
         });
     }
     /// <summary>
     /// Create a new account and log in
     /// </summary>
-    /// <returns>Add auth token to cookies and return user info</returns>
+    /// <returns>Return user info with auth token</returns>
     [HttpPost("register")]
     [AllowAnonymous]
     public async Task<ActionResult> Register([FromBody] RegisterModel registerModel)
@@ -77,8 +76,6 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         var token = SecurityHelper.GetAuthToken(user);
 
-        AddAuthorizationCookie(token);
-
         task.Wait();
 
         return Ok(new
@@ -86,7 +83,8 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             user.Id,
             user.Login,
             user.Name,
-            role = user.Role.ToString()
+            role = user.Role.ToString(),
+            token
         });
     }
 
@@ -203,6 +201,9 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         return Ok();
     }
     
+    /// <summary>
+    /// Get self user info (authorized only)
+    /// </summary>
     [Authorize]
     [HttpGet("self-info")]
     public async Task<ActionResult> GetSelfInfo()
@@ -235,16 +236,5 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             OrgActivity = registerModel.OrgActivity,
             OrgName = registerModel.OrgName
         };
-    }
-
-    private void AddAuthorizationCookie(string token)
-    {
-        HttpContext.Response.Cookies.Append(RequestHeadersComplementaryMiddleware.AuthorizationTokenCookieName, token, new CookieOptions
-        {
-            MaxAge = AuthOptions.AuthTokenLifetime,
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-        });
     }
 }

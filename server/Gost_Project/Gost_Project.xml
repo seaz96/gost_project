@@ -6,7 +6,7 @@
     <members>
         <member name="M:Gost_Project.Controllers.AccountController.Login(Gost_Project.Data.Models.LoginModel)">
             <summary>
-            Log in to account, cookie auth
+            Log in to account
             </summary>
             <returns>User info</returns>
         </member>
@@ -14,7 +14,7 @@
             <summary>
             Create a new account and log in
             </summary>
-            <returns>Add auth token to cookies and return user info</returns>
+            <returns>Return user info with auth token</returns>
         </member>
         <member name="M:Gost_Project.Controllers.AccountController.RestorePassword(Gost_Project.Data.Models.PasswordRestoreModel)">
             <summary>
@@ -40,6 +40,11 @@
         <member name="M:Gost_Project.Controllers.AccountController.AdminEdit(Gost_Project.Data.Models.UserAdminEditModel)">
             <summary>
             Edit user info by admin
+            </summary>
+        </member>
+        <member name="M:Gost_Project.Controllers.AccountController.GetSelfInfo">
+            <summary>
+            Get self user info (authorized only)
             </summary>
         </member>
         <member name="M:Gost_Project.Controllers.DocsController.AddNewDoc(Gost_Project.Data.Models.AddNewDocDtoModel)">
