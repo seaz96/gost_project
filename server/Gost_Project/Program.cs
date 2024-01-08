@@ -90,7 +90,7 @@ class Program
                 builder =>
                 {
                     builder
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:3000")
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader();
                 });
