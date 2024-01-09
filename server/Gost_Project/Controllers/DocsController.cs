@@ -1,4 +1,5 @@
 using AutoMapper;
+using CorsairMessengerServer.Attributes;
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Models;
 using Gost_Project.Services.Abstract;
@@ -131,6 +132,7 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// Get all documents without references
     /// </summary>
     /// <returns>List of any status document without references</returns>
+    [NoCache]
     [HttpGet("all")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments([FromQuery] SearchParametersModel parameters)
     {
@@ -141,6 +143,7 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// Get only valid documents
     /// </summary>
     /// <returns>List of valid documents without references</returns>
+    [NoCache]
     [HttpGet("all-valid")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments([FromQuery] SearchParametersModel parameters)
     {
@@ -151,6 +154,7 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// Get only not valid documents
     /// </summary>
     /// <returns>List of replaced or canceled documents without references</returns>
+    [NoCache]
     [HttpGet("all-canceled")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments([FromQuery] SearchParametersModel parameters)
     {
