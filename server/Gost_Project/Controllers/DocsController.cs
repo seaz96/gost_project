@@ -132,9 +132,9 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// </summary>
     /// <returns>List of any status document without references</returns>
     [HttpGet("all")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments()
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments([FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetAllDocuments());
+        return Ok(await _docsService.GetAllDocuments(parameters));
     }
     
     /// <summary>
@@ -142,9 +142,9 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// </summary>
     /// <returns>List of valid documents without references</returns>
     [HttpGet("all-valid")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments()
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments([FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetValidDocuments());
+        return Ok(await _docsService.GetAllDocuments(parameters, true));
     }
     
     /// <summary>
@@ -152,8 +152,8 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     /// </summary>
     /// <returns>List of replaced or canceled documents without references</returns>
     [HttpGet("all-canceled")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments()
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments([FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetArchivedDocuments());
+        return Ok(await _docsService.GetAllDocuments(parameters, false));
     }
 }

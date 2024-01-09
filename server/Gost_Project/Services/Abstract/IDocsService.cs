@@ -17,7 +17,7 @@ public interface IDocsService
 
     public Task<List<GetDocumentResponseModel>> GetAllDocuments();
     
-    public Task<List<GetDocumentResponseModel>> GetValidDocuments();
+    public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters);
     
-    public Task<List<GetDocumentResponseModel>> GetArchivedDocuments();
+    public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters, bool isValid);
 }

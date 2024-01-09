@@ -1,8 +1,9 @@
+using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 
-namespace Gost_Project.Data.Entities;
+namespace Gost_Project.Data.Models;
 
-public class FieldEntity : BaseEntity
+public class SearchParametersModel
 {
     public string? Designation { get; set; }
 
@@ -36,10 +37,5 @@ public class FieldEntity : BaseEntity
 
     public string? Amendments { get; set; }
 
-    public DocStatuses Status { get; set; }
-
     public HarmonizationLevels? Harmonization { get; set; }
-
-    public bool IsPrimary { get; set; }
 }
-
