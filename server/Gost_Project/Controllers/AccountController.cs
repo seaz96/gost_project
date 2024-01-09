@@ -51,6 +51,9 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             user.Id,
             user.Login,
             user.Name,
+            user.OrgName,
+            user.OrgBranch,
+            user.OrgActivity,
             role = user.Role.ToString(),
             token
         });
@@ -83,6 +86,9 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             user.Id,
             user.Login,
             user.Name,
+            user.OrgName,
+            user.OrgBranch,
+            user.OrgActivity,
             role = user.Role.ToString(),
             token
         });
