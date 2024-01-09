@@ -101,3 +101,5 @@ jobs:
           url: ${{ secrets.BACKEND_UPDATE_WEBHOOK }}
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json"}'
+          ignoreStatusCodes: "204"
+          timeout: 20000
