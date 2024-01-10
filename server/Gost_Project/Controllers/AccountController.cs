@@ -246,11 +246,13 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         return Ok(new
         {
+            user.Id,
             user.Login,
             user.Name,
             user.OrgName,
             user.OrgBranch,
-            user.OrgActivity
+            user.OrgActivity,
+            user.Role
         });
     }
 
