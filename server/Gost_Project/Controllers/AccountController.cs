@@ -147,6 +147,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     {
         var users = (await _usersRepository.GetAllAsync()).Select(user => new 
         {
+            user.Id
             user.Name,
             user.Login,
             Role = user.Role.ToString(),
