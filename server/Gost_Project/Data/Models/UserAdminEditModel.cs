@@ -15,8 +15,5 @@ namespace Gost_Project.Data.Models
 
         [JsonPropertyName("org_activity")]
         public string? OrgActivity { get; set; }
-
-        [JsonPropertyName("is_admin")]
-        public bool IsAdmin { get; set; }
     }
 }

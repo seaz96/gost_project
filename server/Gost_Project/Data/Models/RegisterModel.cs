@@ -16,9 +16,6 @@ namespace Gost_Project.Data.Models
         [MinLength(LoginModelConstraints.PASSWORD_MIN_LENGTH)]
         [MaxLength(LoginModelConstraints.PASSWORD_MAX_LENGTH)]
         public required string Password { get; set; }
-
-        [UserRoleValidation]
-        public required string Role { get; set; }
         
         public string? OrgName { get; set; }
 

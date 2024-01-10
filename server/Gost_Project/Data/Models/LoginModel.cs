@@ -6,7 +6,6 @@ namespace Gost_Project.Data.Models
 {
     public class LoginModel
     {
-        [RegularExpression(RegexHelper.EmailValidationRegex)]
         public required string Login {  get; set; }
 
         [MinLength(LoginModelConstraints.PASSWORD_MIN_LENGTH)]

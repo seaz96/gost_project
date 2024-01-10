@@ -42,6 +42,11 @@
             Edit user info by admin
             </summary>
         </member>
+        <member name="M:Gost_Project.Controllers.AccountController.MakeAdmin(Gost_Project.Data.Models.ChangeUserRoleModel)">
+            <summary>
+            Make user admin
+            </summary>
+        </member>
         <member name="M:Gost_Project.Controllers.AccountController.GetSelfInfo">
             <summary>
             Get self user info (authorized only)
@@ -97,6 +102,11 @@
             </summary>
             <returns>List of replaced or canceled documents without references</returns>
         </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetDesignationWithIdDocs">
+            <summary>
+            Get all docs in format doc id + designation
+            </summary>
+        </member>
         <member name="M:Gost_Project.Controllers.StatisticsController.GetViewsAsync(Gost_Project.Data.Models.GetViewsModel)">
             <summary>
             Get views of every document bu filters
@@ -137,6 +147,7 @@
             <summary>
             User - 0
             Admin - 1
+            Heisenberg - 2
             </summary>
         </member>
         <member name="T:Gost_Project.Data.Migrations.Initial">

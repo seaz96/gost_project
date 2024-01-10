@@ -98,7 +98,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     /// Change user password by admin
     /// </summary>
     [HttpPost("restore-password")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<ActionResult> RestorePassword([FromBody] PasswordRestoreModel passwordRestoreModel)
     {
         var user = await _usersRepository.GetUserAsync(passwordRestoreModel.Login);
@@ -142,7 +142,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     /// </summary>
     /// <returns>List of users</returns>
     [HttpGet("list")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<ActionResult> UsersList()
     {
         var users = (await _usersRepository.GetAllAsync()).Select(user => new 
@@ -188,6 +188,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     /// Edit user info by admin
     /// </summary>
     [HttpPost("admin-edit")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<ActionResult> AdminEdit([FromBody] UserAdminEditModel userAdminEditModel)
     {
         var user = await _usersRepository.GetUserAsync(userAdminEditModel.Login);
@@ -196,11 +197,36 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         {
             return BadRequest(new { Field = nameof(userAdminEditModel.Login) });
         }
-
+        
+        if (user.Role != UserRoles.User && User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value != "Heisenberg")
+        {
+            return new BadRequestObjectResult("You don't have permission");
+        }
+        
         user.OrgName = userAdminEditModel.OrgName ?? user.OrgName;
         user.OrgBranch = userAdminEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userAdminEditModel.OrgActivity ?? user.OrgActivity;
-        user.Role = userAdminEditModel.IsAdmin ? UserRoles.Admin : UserRoles.User;
+        
+        await _usersRepository.UpdateAsync(user);
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Make user admin
+    /// </summary>
+    [HttpPost("make-admin")]
+    [Authorize(Roles = "Heisenberg")]
+    public async Task<ActionResult> MakeAdmin(ChangeUserRoleModel requestModel)
+    {
+        var user = await _usersRepository.GetUserAsync(requestModel.UserId);
+        
+        if (user is null)
+        {
+            return BadRequest($"User with id {requestModel.UserId} not found");
+        }
+
+        user.Role = requestModel.IsAdmin ? UserRoles.Admin : UserRoles.User;
         
         await _usersRepository.UpdateAsync(user);
 
@@ -236,7 +262,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         {
             Login = registerModel.Login,
             Name = registerModel.Name,
-            Role = Enum.Parse<UserRoles>(registerModel.Role.FirstCharToUpperNextToLower()),
+            Role = UserRoles.User,
             Password = hashedPassword,
             OrgBranch = registerModel.OrgBranch,
             OrgActivity = registerModel.OrgActivity,

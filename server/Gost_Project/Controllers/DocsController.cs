@@ -27,7 +27,7 @@ public class DocsController(
     /// Add new doc
     /// </summary>
     /// <returns>Id of new doc</returns>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("add")]
     public async Task<IActionResult> AddNewDoc([FromBody] AddNewDocDtoModel dto)
     {
@@ -47,7 +47,7 @@ public class DocsController(
     /// <summary>
     /// Delete doc by id
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpDelete("delete/{docId}")]
     public async Task<IActionResult> DeleteDoc(long docId)
     {
@@ -66,7 +66,7 @@ public class DocsController(
     /// <summary>
     /// Update primary info of doc
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPut("update/{docId}")]
     public async Task<IActionResult> Update([FromBody] UpdateFieldDtoModel dto, long docId)
     {
@@ -86,7 +86,7 @@ public class DocsController(
     /// <summary>
     /// Update actual field in document
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPut("actualize/{docId}")]
     public async Task<IActionResult> Actualize([FromBody] UpdateFieldDtoModel dto, long docId)
     {
@@ -106,7 +106,7 @@ public class DocsController(
     /// <summary>
     /// Change status of doc
     /// </summary>
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPut("change-status")]
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequestModel model)
     {
