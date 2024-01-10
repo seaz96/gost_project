@@ -10,15 +10,19 @@ namespace Gost_Project.Controllers;
 
 [ApiController]
 [Route("api/docs")]
-public class DocsController(IDocsService docsService, IMapper mapper,
-    IReferencesService referencesService, IFieldsService fieldsService, IDocStatisticsService docStatisticsService) : ControllerBase
+public class DocsController(
+    IDocsService docsService,
+    IMapper mapper,
+    IReferencesService referencesService,
+    IFieldsService fieldsService,
+    IDocStatisticsService docStatisticsService) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly IDocsService _docsService = docsService;
     private readonly IReferencesService _referencesService = referencesService;
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
-    
+
     /// <summary>
     /// Add new doc
     /// </summary>
@@ -36,10 +40,10 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         var docId = await _docsService.AddNewDocAsync(newField);
         await _referencesService.AddReferencesAsync(dto.ReferencesId, docId);
         await _docStatisticsService.AddNewDocStatsAsync(docId);
-        
+
         return Ok(docId);
     }
-    
+
     /// <summary>
     /// Delete doc by id
     /// </summary>
@@ -51,14 +55,14 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         {
             return BadRequest("Model is not valid");
         }
-        
+
         var result = await _docsService.DeleteDocAsync(docId);
         await _referencesService.DeleteReferencesByIdAsync(docId);
         await _docStatisticsService.DeleteAsync(docId);
-        
+
         return result;
     }
-    
+
     /// <summary>
     /// Update primary info of doc
     /// </summary>
@@ -75,10 +79,10 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         var result = await _fieldsService.UpdateAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
         await _docStatisticsService.UpdateChangedAsync(docId);
-        
+
         return result;
     }
-    
+
     /// <summary>
     /// Update actual field in document
     /// </summary>
@@ -110,9 +114,9 @@ public class DocsController(IDocsService docsService, IMapper mapper,
         {
             return BadRequest("Model is not valid");
         }
-        
+
         await _docStatisticsService.UpdateChangedAsync(model.Id);
-        
+
         return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
@@ -124,40 +128,54 @@ public class DocsController(IDocsService docsService, IMapper mapper,
     public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long docId)
     {
         await _docStatisticsService.UpdateViewsAsync(docId);
-        
+
         return await _docsService.GetDocument(docId);
     }
-    
+
     /// <summary>
     /// Get all documents without references
     /// </summary>
     /// <returns>List of any status document without references</returns>
     [NoCache]
     [HttpGet("all")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments([FromQuery] SearchParametersModel parameters)
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments(
+        [FromQuery] SearchParametersModel parameters)
     {
         return Ok(await _docsService.GetAllDocuments(parameters));
     }
-    
+
     /// <summary>
     /// Get only valid documents
     /// </summary>
     /// <returns>List of valid documents without references</returns>
     [NoCache]
     [HttpGet("all-valid")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments([FromQuery] SearchParametersModel parameters)
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments(
+        [FromQuery] SearchParametersModel parameters)
     {
         return Ok(await _docsService.GetAllDocuments(parameters, true));
     }
-    
+
     /// <summary>
     /// Get only not valid documents
     /// </summary>
     /// <returns>List of replaced or canceled documents without references</returns>
     [NoCache]
     [HttpGet("all-canceled")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments([FromQuery] SearchParametersModel parameters)
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments(
+        [FromQuery] SearchParametersModel parameters)
     {
         return Ok(await _docsService.GetAllDocuments(parameters, false));
     }
+
+    /// <summary>
+    /// Get all docs in format doc id + designation
+    /// </summary>
+    [NoCache]
+    [HttpGet("all-designation-id")]
+    public async Task<ActionResult> GetDesignationWithIdDocs()
+    {
+        return Ok(await _docsService.GetDesignationIdDocs());
+    }
+
 }

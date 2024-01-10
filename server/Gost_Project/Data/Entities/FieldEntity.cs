@@ -14,7 +14,7 @@ public class FieldEntity : BaseEntity
 
     public DateTime? AcceptanceDate { get; set; }
 
-    public DateTime? CommissionDate { get; set; }
+    public DateTime? CommissionDate { get; set; }   
 
     public string? Author { get; set; }
 

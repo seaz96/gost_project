@@ -20,4 +20,6 @@ public interface IDocsService
     public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters);
     
     public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters, bool isValid);
+
+    public Task<List<DesigntaionIdDocModel>> GetDesignationIdDocs();
 }
