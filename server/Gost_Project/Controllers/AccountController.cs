@@ -155,6 +155,32 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
 
         return Ok(users);
     }
+    
+    /// <summary>
+    /// Get full user info
+    /// </summary>
+    [HttpGet("get-user-info")]
+    [Authorize(Roles = "Admin,Heisenberg")]
+    public async Task<ActionResult> GetUserInfo([FromQuery] long id)
+    {
+        var user = await _usersRepository.GetUserAsync(id);
+        
+        if (user is null)
+        {
+            return BadRequest($"No user with such id {id}");
+        }
+
+        return Ok(new
+        {
+            user.Id,
+            user.Login,
+            user.Name,
+            user.OrgBranch,
+            user.OrgActivity,
+            user.OrgName,
+            Role = user.Role.ToString()
+        });
+    }
 
     /// <summary>
     /// Edit own user info 
