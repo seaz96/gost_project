@@ -279,7 +279,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             user.OrgName,
             user.OrgBranch,
             user.OrgActivity,
-            user.Role.ToString()
+            Role = user.Role.ToString()
         });
     }
 
