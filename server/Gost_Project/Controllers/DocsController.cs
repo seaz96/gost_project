@@ -136,9 +136,6 @@ public class DocsController(
     [HttpGet("{docId}")]
     public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long docId)
     {
-        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
-        
         return await _docsService.GetDocument(docId);
     }
 

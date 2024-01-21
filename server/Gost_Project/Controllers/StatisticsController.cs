@@ -1,5 +1,9 @@
+using System.Security.Claims;
+using Gost_Project.Data.Entities;
+using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Controllers;
@@ -28,5 +32,18 @@ public class StatisticsController(IDocStatisticsService docStatisticsService) : 
     public async Task<IActionResult> GetCountOfDocsAsync([FromQuery] GetCountOfDocsModel model)
     {
         return await _docStatisticsService.GetCount(model);
+    }
+    
+    /// <summary>
+    /// Updating document views
+    /// </summary>
+    [Authorize]
+    [HttpPost("update-views/{docId}")]
+    public async Task<IActionResult> UpdateViews(long docId)
+    {
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+
+        return Ok("Views updated succesfully!");
     }
 }
