@@ -7,18 +7,17 @@ namespace Gost_Project.Helpers;
 
 public class SearchHelper
 {
-    private static readonly string[] parametersPriority = ["CodeOKS", "ActivityField", "AdoptionLevel", "Designation", "FullName", "AcceptanceDate", "CommissionDate", 
+    private static readonly string[] ParametersPriority = ["CodeOKS", "ActivityField", "AdoptionLevel", "Designation", "FullName", "AcceptanceDate", "CommissionDate", 
                                                     "Author", "AcceptedFirstTimeOrReplaced", "KeyWords", "KeyPhrases", "ApplicationArea",
                                                     "DocumentText", "Changes", "Amendments", "Harmonization", "Content"];
     
-    public static void GetMatchingDocs(List<GetDocumentResponseModel> docs, SearchParametersModel parameters)
+    public static List<GetDocumentResponseModel> GetMatchingDocs(List<GetDocumentResponseModel> docs, SearchParametersModel parameters)
     {
-        foreach (var parameter in parametersPriority)
+        foreach (var parameter in ParametersPriority)
         {
             var temp = new List<GetDocumentResponseModel>();
             
-            var searchParameter = new object();
-            searchParameter = parameters.GetType().GetProperty(parameter).GetValue(parameters, null);
+            var searchParameter = parameters.GetType().GetProperty(parameter)?.GetValue(parameters, null);
             if (searchParameter is null) continue;
             
             foreach (var doc in docs)
@@ -26,11 +25,8 @@ public class SearchHelper
                 var primary = doc.Primary;
                 var actual = doc.Actual;
                 
-                var primaryParameter = new object();
-                var actualParameter = new object();
-                
-                primaryParameter = primary.GetType().GetProperty(parameter).GetValue(primary, null);
-                actualParameter = actual.GetType().GetProperty(parameter).GetValue(actual, null);
+                var primaryParameter = primary.GetType().GetProperty(parameter)?.GetValue(primary, null);
+                var actualParameter = actual.GetType().GetProperty(parameter)?.GetValue(actual, null);
                 
 
                 if (primaryParameter is string)
@@ -52,7 +48,7 @@ public class SearchHelper
                 else
                 {
                     var docParameter = actualParameter ?? primaryParameter;
-                    if (docParameter.ToString() != searchParameter.ToString())
+                    if (docParameter?.ToString() != searchParameter.ToString())
                     {
                         continue;
                     }
@@ -63,5 +59,7 @@ public class SearchHelper
 
             docs = temp;
         }
+
+        return docs;
     }
 }

@@ -145,9 +145,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
                 DocId = doc.Id })
             .ToList();
         
-        SearchHelper.GetMatchingDocs(docsWithFields, parameters);
-
-        return docsWithFields;
+        return SearchHelper.GetMatchingDocs(docsWithFields, parameters);
     }
     
     public async Task<List<GetDocumentResponseModel>> GetAllDocuments()

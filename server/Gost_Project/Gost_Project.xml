@@ -32,6 +32,11 @@
             </summary>
             <returns>List of users</returns>
         </member>
+        <member name="M:Gost_Project.Controllers.AccountController.GetUserInfo(System.Int64)">
+            <summary>
+            Get full user info
+            </summary>
+        </member>
         <member name="M:Gost_Project.Controllers.AccountController.SelfEdit(Gost_Project.Data.Models.UserSelfEditModel)">
             <summary>
             Edit own user info 
