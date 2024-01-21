@@ -32,7 +32,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         return new OkObjectResult(statistics.Where(stat =>      
             {
                 var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                return IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
+                return doc is not null && IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
             })
             .GroupBy(stat => stat.DocId)
             .Select(group => new
@@ -40,7 +40,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                 DocId = group.Key,
                 Views = group.Count()
             })
-            .OrderBy(stat => stat.Views)
+            .OrderByDescending(stat => stat.Views)
             .Select(stat =>
             {
                 var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);

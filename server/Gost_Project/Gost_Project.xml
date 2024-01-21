@@ -107,9 +107,9 @@
             </summary>
             <returns>List of replaced or canceled documents without references</returns>
         </member>
-        <member name="M:Gost_Project.Controllers.DocsController.GetDesignationWithIdDocs">
+        <member name="M:Gost_Project.Controllers.DocsController.GetDocsWithGeneralInfo">
             <summary>
-            Get all docs in format doc id + designation
+            Get all docs with general info only
             </summary>
         </member>
         <member name="M:Gost_Project.Controllers.StatisticsController.GetViewsAsync(Gost_Project.Data.Models.GetViewsModel)">
@@ -123,6 +123,11 @@
             Get count of all documents by filters
             </summary>
             <returns>Count of docs</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.StatisticsController.UpdateViews(System.Int64)">
+            <summary>
+            Updating document views
+            </summary>
         </member>
         <member name="T:Gost_Project.Data.Entities.Navigations.ActionType">
             <summary>
