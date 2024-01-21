@@ -56,11 +56,13 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
         return new OkObjectResult(statistics
-            .Where(stat => model.StartDate <= stat.Date && stat.Date <= model.EndDate && stat.Action != ActionType.View)
+            .Where(stat => (model.StartDate is not null ? model.StartDate <= stat.Date : true) &&
+                           (model.EndDate is not null ? stat.Date <= model.EndDate : true) 
+                           && stat.Action != ActionType.View)
             .Where(stat =>
             {
                 var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                return doc != null && doc.Primary.Status == model.Status;
+                return doc != null && (model.Status is not null ? doc.Primary.Status == model.Status : true);
             })
             .GroupBy(stat => stat.DocId)
             .Count());
