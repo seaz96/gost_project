@@ -185,6 +185,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
     /// <summary>
     /// Edit own user info 
     /// </summary>
+    [Authorize]
     [HttpPost("self-edit")]
     public async Task<ActionResult> SelfEdit([FromBody] UserSelfEditModel userSelfEditModel)
     {
@@ -201,7 +202,8 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
         {
             return BadRequest();
         }
-
+        
+        user.Name = userSelfEditModel.Name ?? user.Name;
         user.OrgName = userSelfEditModel.OrgName ?? user.OrgName;
         user.OrgBranch = userSelfEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userSelfEditModel.OrgActivity ?? user.OrgActivity;
@@ -230,6 +232,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             return new BadRequestObjectResult("You don't have permission");
         }
         
+        user.Name = userAdminEditModel.Name ?? user.Name;
         user.OrgName = userAdminEditModel.OrgName ?? user.OrgName;
         user.OrgBranch = userAdminEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userAdminEditModel.OrgActivity ?? user.OrgActivity;
