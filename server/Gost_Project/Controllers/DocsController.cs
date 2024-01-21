@@ -1,6 +1,8 @@
+using System.Security.Claims;
 using AutoMapper;
 using CorsairMessengerServer.Attributes;
 using Gost_Project.Data.Entities;
+using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
@@ -39,7 +41,9 @@ public class DocsController(
         var newField = _mapper.Map<FieldEntity>(dto);
         var docId = await _docsService.AddNewDocAsync(newField);
         await _referencesService.AddReferencesAsync(dto.ReferencesId, docId);
-        await _docStatisticsService.AddNewDocStatsAsync(docId);
+
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok(docId);
     }
@@ -78,7 +82,9 @@ public class DocsController(
         var updatedField = _mapper.Map<FieldEntity>(dto);
         var result = await _fieldsService.UpdateAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
-        await _docStatisticsService.UpdateChangedAsync(docId);
+        
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -98,7 +104,9 @@ public class DocsController(
         var updatedField = _mapper.Map<FieldEntity>(dto);
         var result = await _fieldsService.ActualizeAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
-        await _docStatisticsService.UpdateChangedAsync(docId);
+        
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -115,8 +123,9 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        await _docStatisticsService.UpdateChangedAsync(model.Id);
-
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
+        
         return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
@@ -127,8 +136,9 @@ public class DocsController(
     [HttpGet("{docId}")]
     public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long docId)
     {
-        await _docStatisticsService.UpdateViewsAsync(docId);
-
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        
         return await _docsService.GetDocument(docId);
     }
 

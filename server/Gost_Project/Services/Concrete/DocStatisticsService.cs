@@ -1,4 +1,6 @@
+using System.Diagnostics.Metrics;
 using Gost_Project.Data.Entities;
+using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
@@ -14,20 +16,9 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
     private readonly IDocStatisticsRepository _docStatisticsRepository = docStatisticsRepository;
     private readonly IDocsService _docsService = docsService;
     
-    public async Task AddNewDocStatsAsync(long docId)
+    public async Task AddAsync(DocStatisticEntity statistic)
     {
-        var statistic = new DocStatisticEntity { DocId = docId, Created = DateTime.UtcNow, Changed = DateTime.UtcNow };
         await _docStatisticsRepository.AddAsync(statistic);
-    }
-
-    public async Task UpdateViewsAsync(long docId)
-    {
-        await _docStatisticsRepository.UpdateViewsAsync(docId);
-    }
-
-    public async Task UpdateChangedAsync(long docId)
-    {
-        await _docStatisticsRepository.UpdateDateTimeAsync(docId);
     }
 
     public async Task DeleteAsync(long docId)
@@ -35,34 +26,23 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         await _docStatisticsRepository.DeleteAsync(docId);
     }
 
-    public async Task<ActionResult<List<DocWithViewsModel>>> GetViews(GetViewsModel model)
+    public async Task<IActionResult> GetViews(GetViewsModel model)
     {
         var docs = await _docsService.GetAllDocuments();
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
-        return new OkObjectResult(docs
-            .Where(doc =>
+        return new OkObjectResult(statistics.Where(stat =>
             {
-                var actualField = doc.Actual;
-                var primaryField = doc.Primary;
-                var statistic = statistics.FirstOrDefault(stat => stat.DocId == doc.DocId);
-
-                return IsGetViewsDocPassedFilter(actualField, primaryField, model, statistic);
+                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+                return IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
             })
-            .Select<GetDocumentResponseModel, DocWithViewsModel>(doc =>
+            .GroupBy(stat => stat.DocId)
+            .Select(group => new
             {
-                var actualField = doc.Actual;
-                var primaryField = doc.Primary;
-                var statistic = statistics.FirstOrDefault(stat => stat.DocId == doc.DocId);
-
-                return new DocWithViewsModel
-                {
-                    Designation = actualField.Designation ?? primaryField.Designation,
-                    DocId = doc.DocId,
-                    FullName = actualField.FullName ?? primaryField.FullName,
-                    Views = statistic.Views
-                };
+                DocId = group.Key,
+                Views = group.Count()
             })
+            .OrderBy(stat => stat.Views)
             .ToList());
     }
 
@@ -71,33 +51,26 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var docs = await _docsService.GetAllDocuments();
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
-        return new OkObjectResult(docs
-            .Where(doc =>
+        return new OkObjectResult(statistics
+            .Where(stat => model.StartDate <= stat.Date && stat.Date <= model.EndDate && stat.Action != ActionType.View)
+            .Where(stat =>
             {
-                var primaryField = doc.Primary;
-                var statistic = statistics.FirstOrDefault(stat => stat.DocId == doc.DocId);
-
-                return IsGetCountDocPassedFilter(primaryField, model, statistic);
+                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+                return doc != null && doc.Primary.Status == model.Status;
             })
+            .GroupBy(stat => stat.DocId)
             .Count());
     }
     
     private bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
         GetViewsModel model, DocStatisticEntity statistic)
     {
-        return (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) &&
-               (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) &&
-               (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) &&
-               (actualField.FullName ?? primaryField.FullName).Contains(model.FullName) &&
-               ((model.StartDate <= statistic.Created && statistic.Created <= model.EndDate) ||
-                (model.StartDate <= statistic.Changed && statistic.Changed <= model.EndDate));
-    }
-    
-    private bool IsGetCountDocPassedFilter(FieldEntity primaryField,
-        GetCountOfDocsModel model, DocStatisticEntity statistic)
-    {
-        return primaryField.Status == model.Status &&
-               ((model.StartDate <= statistic.Created && statistic.Created <= model.EndDate) || 
-                (model.StartDate <= statistic.Changed && statistic.Changed <= model.EndDate));
+        return (model.Designation is not null ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) : true) &&
+               (model.ActivityField is not null ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) : true) && 
+               (model.CodeOKS is not null ? (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) : true) &&
+               (model.FullName is not null ? (actualField.FullName ?? primaryField.FullName).Contains(model.FullName) : true) &&
+               (model.StartDate is not null ? model.StartDate <= statistic.Date : true) &&
+               (model.EndDate is not null ? statistic.Date <= model.EndDate : true) && 
+               statistic.Action == ActionType.View;
     }
 }

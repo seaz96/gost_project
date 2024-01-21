@@ -124,6 +124,13 @@
             </summary>
             <returns>Count of docs</returns>
         </member>
+        <member name="T:Gost_Project.Data.Entities.Navigations.ActionType">
+            <summary>
+            Create - 0
+            Update - 1
+            View - 2
+            </summary>
+        </member>
         <member name="T:Gost_Project.Data.Entities.Navigations.DocAdoptionLevels">
             <summary>
             International - 0
@@ -249,6 +256,18 @@
             <inheritdoc />
         </member>
         <member name="M:Gost_Project.Data.Migrations.AddNullableEnums.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Gost_Project.Data.Migrations.ChangeStatistics">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="M:Gost_Project.Helpers.RegexHelper.EmailRegex">

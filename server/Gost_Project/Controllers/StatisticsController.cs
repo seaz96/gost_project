@@ -15,7 +15,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService) : 
     /// </summary>
     /// <returns>List of document views with ids</returns>
     [HttpGet("get-views")]
-    public async Task<ActionResult<List<DocWithViewsModel>>> GetViewsAsync([FromQuery] GetViewsModel model)
+    public async Task<IActionResult> GetViewsAsync([FromQuery] GetViewsModel model)
     {
         return await _docStatisticsService.GetViews(model);
     }

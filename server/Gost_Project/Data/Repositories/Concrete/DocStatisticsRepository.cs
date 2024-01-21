@@ -31,22 +31,4 @@ public class DocStatisticsRepository(DataContext context) : IDocStatisticsReposi
 
         await _context.SaveChangesAsync();
     }
-
-    public async Task UpdateViewsAsync(long docId)
-    {
-        var statistic = await _context.DocStatistics.FirstOrDefaultAsync(stat => stat.DocId == docId);
-        
-        statistic.Views++;
-
-        await _context.SaveChangesAsync();
-    }
-    
-    public async Task UpdateDateTimeAsync(long docId)
-    {
-        var statistic = await _context.DocStatistics.FirstOrDefaultAsync(stat => stat.DocId == docId);
-        
-        statistic.Changed = DateTime.UtcNow;
-
-        await _context.SaveChangesAsync();
-    }
 }
