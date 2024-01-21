@@ -1,9 +1,7 @@
-using System.Diagnostics.Metrics;
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Data.Repositories.Abstract;
-using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +29,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var docs = await _docsService.GetAllDocuments();
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
-        return new OkObjectResult(statistics.Where(stat =>
+        return new OkObjectResult(statistics.Where(stat =>      
             {
                 var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
                 return IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);

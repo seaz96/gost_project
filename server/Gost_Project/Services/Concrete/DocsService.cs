@@ -160,20 +160,22 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             .ToList();
     }
 
-    public async Task<List<DesigntaionIdDocModel>> GetDesignationIdDocs()
+    public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfo()
     {
         var docs = await _docsRepository.GetAllAsync();
         var fields = await _fieldsRepository.GetAllAsync();
 
-        return docs.Select(doc => new DesigntaionIdDocModel
-            { Id = doc.Id, Designation = new Func<string>(() =>
+        return docs.Select(doc =>
+            {
+                var primary = fields.Find(field => field.Id == doc.PrimaryFieldId);
+                var actual = fields.Find(field => field.Id == doc.ActualFieldId);
+                
+                return new DocWithGeneralInfoModel
                 {
-                    var primary = fields.Find(field => field.Id == doc.PrimaryFieldId);
-                    var actual = fields.Find(field => field.Id == doc.ActualFieldId);
-
-                    return (actual.Designation ?? primary.Designation);
-                }
-                )()})
+                    Id = doc.Id, Designation = actual.Designation ?? primary?.Designation, FullName = actual.FullName ?? primary?.FullName,
+                    ApplicationArea = actual.ApplicationArea ?? primary?.ApplicationArea, CodeOKS = actual.CodeOKS ?? primary?.CodeOKS
+                };
+            })
             .ToList();
     }
 }

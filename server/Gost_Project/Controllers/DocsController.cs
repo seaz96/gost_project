@@ -176,13 +176,12 @@ public class DocsController(
     }
 
     /// <summary>
-    /// Get all docs in format doc id + designation
+    /// Get all docs with general info only
     /// </summary>
     [NoCache]
-    [HttpGet("all-designation-id")]
-    public async Task<ActionResult> GetDesignationWithIdDocs()
+    [HttpGet("all-general-info")]
+    public async Task<ActionResult> GetDocsWithGeneralInfo()
     {
-        return Ok(await _docsService.GetDesignationIdDocs());
+        return Ok(await _docsService.GetDocsWithGeneralInfo());
     }
-
 }
