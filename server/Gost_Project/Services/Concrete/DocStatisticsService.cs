@@ -43,6 +43,12 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                 Views = group.Count()
             })
             .OrderBy(stat => stat.Views)
+            .Select(stat =>
+            {
+                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+                return new DocWithViewsModel {DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                    Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName};
+            })
             .ToList());
     }
 
