@@ -55,7 +55,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var docs = await _docsService.GetAllDocuments();
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
-        return new OkObjectResult(statistics
+        var filteredStats = statistics
             .Where(stat => (model.StartDate is not null ? model.StartDate <= stat.Date : true) &&
                            (model.EndDate is not null ? stat.Date <= model.EndDate : true) 
                            && stat.Action != ActionType.View)
@@ -63,9 +63,24 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
             {
                 var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
                 return doc != null && (model.Status is not null ? doc.Primary.Status == model.Status : true);
-            })
-            .GroupBy(stat => stat.DocId)
-            .Count());
+            });
+
+        var count = filteredStats.GroupBy(stat => stat.DocId).Count();
+        
+        return new OkObjectResult(new { Count = count,
+            Stats = filteredStats.Select(x =>
+            {
+                var doc = docs.FirstOrDefault(doc => doc.DocId == x.DocId);
+                return new
+                {
+                    DocId = x.DocId,
+                    Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                    FullName = doc.Actual.FullName ?? doc.Primary.FullName,
+                    Action = x.Action.ToString(),
+                    Date = x.Date
+                };
+            })});
+        
     }
     
     private bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
