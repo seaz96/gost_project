@@ -113,6 +113,7 @@ class Program
                         .WithOrigins("http://localhost:3000", "https://*.kexogg.ru")
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader()
+                        .SetIsOriginAllowedToAllowWildcardSubdomains()
                         .AllowCredentials();
                 });
         });
@@ -124,6 +125,11 @@ class Program
         
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
+        app.Use(async (context, next) =>
+        {
+            context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+            await next.Invoke();
+        });
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
