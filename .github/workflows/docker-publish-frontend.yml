@@ -103,4 +103,4 @@ jobs:
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json"}'
           ignoreStatusCodes: "204"
-          timeout: 20000
+          timeout: 60000
