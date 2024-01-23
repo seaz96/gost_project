@@ -152,8 +152,8 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         </tr>
                         <tr>
                             <td>Уровень принятия</td>
-                            <td>{gost.primary.adoptionLevel}</td>
-                            <td>{gost.actual.adoptionLevel}</td>
+                            <td>{gostModel.AdoptionLevel[gost.primary.adoptionLevel]}</td>
+                            <td>{gostModel.AdoptionLevel[gost.actual.adoptionLevel]}</td>
                         </tr>
                         <tr>
                             <td>Текст стандарта</td>
@@ -261,7 +261,7 @@ const CancelCard:React.FC<CancelCardProps> = props => {
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Если вы Отменить ГОСТ, он перенесется в архив, а его статус поменятся на 'Отмененный'
+                    Если вы отмените ГОСТ, он перенесется в архив, а его статус поменятся на 'Отменен'
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

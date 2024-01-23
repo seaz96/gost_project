@@ -259,8 +259,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <RadioGroup 
                   buttons={[
                     {id:'unharmonized', value:'0', label:'Негармонизированный'},
-                    {id:'harmonized', value:'1', label:'Гармонизорованный'},
-                    {id:'modified', value:'2', label:'Модифицированный'},
+                    {id:'harmonized', value:'2', label:'Гармонизорованный'},
+                    {id:'modified', value:'1', label:'Модифицированный'},
                   ]} 
                   name='harmonization'
                   direction='vertical'

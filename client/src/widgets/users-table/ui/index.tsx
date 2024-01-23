@@ -24,7 +24,7 @@ const UsersReview: React.FC<UsersTableProps> = props => {
   return (
     <table className={styles.table}>
       <thead>
-        <th>№</th>
+        <th>ID</th>
         <th>Роль</th>
         <th>Логин</th>
         <th>Фио</th>

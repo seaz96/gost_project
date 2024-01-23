@@ -151,7 +151,7 @@ public class AccountController(IPasswordHasher passwordHasher, IUsersRepository 
             user.Name,
             user.Login,
             Role = user.Role.ToString(),
-        });
+        }).OrderBy(x => x.Id);
 
         return Ok(users);
     }

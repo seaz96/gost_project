@@ -35,6 +35,7 @@ const GostEditPage = () => {
                 ...response.primary,
                 acceptanceDate: response.primary.acceptanceDate.split('T')[0],
                 commissionDate: response.primary.commissionDate.split('T')[0],
+                referencesId: response.references.map(reference => reference.docId)
               }
             }
           />

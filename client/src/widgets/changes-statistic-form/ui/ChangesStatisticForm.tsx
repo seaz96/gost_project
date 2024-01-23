@@ -49,9 +49,9 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
         <p className={styles.status}>Статус</p>
         <RadioGroup 
           buttons={[
-            {id:'Cancelled', value:'0', label:'Отменем'},
-            {id:'Replaced', value:'1', label:'Замененный'},
-            {id:'Current', value:'2', label:'Действующий'},
+            {id:'Cancelled', value:'1', label:'Отменен'},
+            {id:'Replaced', value:'2', label:'Заменен'},
+            {id:'Current', value:'0', label:'Действующий'},
           ]} 
           name='status'
           value={changesData.status.toString()}

@@ -18,7 +18,7 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
   } = props
 
   const [reviewsData, setReviewsData] = useState({
-    gostName: '',
+    designation: '',
     codeOKS: '',
     activityField: '',
     startDate: '',  
@@ -28,14 +28,27 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
 
   const validateData = (event: React.FormEvent) => {
     event.preventDefault()
+
+      if (reviewsData.startDate && new Date(reviewsData.startDate).toString() !== 'Invalid Date') {
+          reviewsData.startDate = new Date(reviewsData.startDate).toISOString();
+      } else {
+          reviewsData.startDate = new Date('1970-01-01').toISOString();
+      }
+
+      if (reviewsData.endDate && new Date(reviewsData.endDate).toString() !== 'Invalid Date') {
+          reviewsData.endDate = new Date(reviewsData.endDate).toISOString();
+      } else {
+          reviewsData.endDate = new Date().toISOString();
+      }
+
     axios.get('https://backend-seaz96.kexogg.ru/api/stats/get-views', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
       },
       params: {
         ...reviewsData,
-        StartDate: new Date(reviewsData.startDate).toISOString(),
-        EndDate: new Date(reviewsData.endDate).toISOString()
+        StartDate: reviewsData.startDate,
+        EndDate: reviewsData.endDate
       }
     }).then(response => {
       handleSubmit(response.data)
@@ -49,8 +62,8 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
         <Input 
           label='Название ГОСТа' 
           type='text' 
-          value={reviewsData.gostName}
-          onChange={(value: string) => setReviewsData({...reviewsData, gostName: value})}
+          value={reviewsData.designation}
+          onChange={(value: string) => setReviewsData({...reviewsData, designation: value})}
         />
         <Input 
           label='Код ОКС' 

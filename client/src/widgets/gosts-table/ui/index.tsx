@@ -30,22 +30,23 @@ const GostsTable: React.FC<GostsTableProps> = props => {
         </thead>
         {filterValue 
           ? 
-          gosts.map(gost => 
-            (gost.primary.designation.includes(filterValue) || gost.primary.fullName.includes(filterValue)) && 
-            <GostRow gost={gost} />
+          gosts.map((gost, index) =>
+            (gost.primary.designation.includes(filterValue) || gost.primary.fullName.includes(filterValue)) &&
+              <GostRow gost={gost} number={index + 1} />
           ) 
-          : 
-          gosts.map(gost => <GostRow gost={gost} />)
+          :
+            gosts.map((gost, index) => <GostRow gost={gost} number={index + 1} />)
         }   
     </table>
   )
 }
 
 interface GostRowProps {
-  gost: gostModel.Gost
+  gost: gostModel.Gost,
+  number: number
 }
 
-const GostRow:React.FC<GostRowProps> = ({gost}) => {
+const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   console.log(!!gost.actual)
 
@@ -68,17 +69,19 @@ const GostRow:React.FC<GostRowProps> = ({gost}) => {
         </div>
       </Popover>
       <tr>
-        <td>{gost.docId}</td>
+        <td>{number}</td>
         <td>{gost.primary.codeOKS}</td>
         <td>{gost.primary.designation}</td>
         <td className={styles.gostDescription}>{gost.primary.fullName}</td>
         <td>
           <div className={styles.buttons}>
-            <Link to={`/gost-review/${gost.docId}`} className={classNames(styles.tableButton, 'baseButton', 'coloredText')}>
+            <Link to={`/gost-review/${gost.docId}`}
+                  className={classNames(styles.tableButton, 'baseButton', 'coloredText')}>
               <img src={eye} alt='eye' className={styles.buttonIcon}/>
               Просмотр
             </Link>
-            <Link to={`/gost-edit/${gost.docId}`} className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>
+            <Link to={`/gost-edit/${gost.docId}`}
+                  className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>
               <img src={pen} alt='pen' className={styles.buttonIcon}/>
               Редактирование
             </Link>

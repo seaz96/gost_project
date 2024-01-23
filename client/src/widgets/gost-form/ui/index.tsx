@@ -49,6 +49,7 @@ const GostForm: React.FC<GostFormProps> = props => {
     let result: number[] = []
     let linksArr = value.split(',')
     response?.forEach(gostInfo => {
+        console.log(response)
       linksArr.forEach(link => {
         if(link === gostInfo.designation) {
           linksArr = linksArr.filter(filterLink => filterLink !== link)
@@ -62,16 +63,15 @@ const GostForm: React.FC<GostFormProps> = props => {
       ? null : linksArr)
   }
 
-  function getLinksById(value: number[]) {
-    let result = ''
+  function getLinksById(value?: number[]) {
+    let result: string[] = []
     response?.forEach(gostInfo => {
-      value.forEach(id => {
+      value?.forEach(id => {
         if(id === gostInfo.id)
-        result += ', ' + gostInfo.designation
+        result.push(gostInfo.designation)
       })
     });
-    console.log(result)
-    return result
+    return result.join(', ')
   }
 
   return (
@@ -80,7 +80,7 @@ const GostForm: React.FC<GostFormProps> = props => {
       handleSubmit({
         ...newGost,
         acceptanceDate: new Date(newGost.acceptanceDate).toISOString(),
-        commissionDate: new Date(newGost.commissionDate).toISOString(),    
+        commissionDate: new Date(newGost.commissionDate).toISOString(),
       })
     }
     }>
@@ -89,8 +89,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Наименование стандарта</td>
               <td>
-                <Input type='text' 
-                  value={newGost.designation} 
+                <Input type='text'
+                  value={newGost.designation}
                   onChange={(value: string) => setNewGost({...newGost, designation:value})}
                 />
               </td>
@@ -98,8 +98,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Заглавие стандарта</td>
               <td>
-                <Input type='text' 
-                  value={newGost.fullName} 
+                <Input type='text'
+                  value={newGost.fullName}
                   onChange={(value: string) => setNewGost({...newGost, fullName:value})}
                 />
               </td>
@@ -107,8 +107,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Код ОКС</td>
               <td>
-              <Input type='text' 
-                  value={newGost.codeOKS} 
+              <Input type='text'
+                  value={newGost.codeOKS}
                   onChange={(value: string) => setNewGost({...newGost, codeOKS:value})}
                 />
               </td>
@@ -116,8 +116,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Сфера деятельности</td>
               <td>
-                <TextArea  
-                  value={newGost.activityField} 
+                <TextArea
+                  value={newGost.activityField}
                   onChange={(value: string) => setNewGost({...newGost, activityField:value})}
                 />
               </td>
@@ -125,8 +125,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Год принятия</td>
               <td>
-                <Input type='date' 
-                  value={newGost.acceptanceDate} 
+                <Input type='date'
+                  value={newGost.acceptanceDate}
                   onChange={(value: string) => setNewGost({...newGost, acceptanceDate:value})}
                 />
               </td>
@@ -135,7 +135,7 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Год введения</td>
               <td>
                 <Input type='date'
-                  value={newGost.commissionDate} 
+                  value={newGost.commissionDate}
                   onChange={(value: string) => setNewGost({...newGost, commissionDate:value})}
                 />
               </td>
@@ -143,8 +143,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Разработчик</td>
               <td>
-                <Input type='text' 
-                  value={newGost.author} 
+                <Input type='text'
+                  value={newGost.author}
                   onChange={(value: string) => setNewGost({...newGost, author:value})}
                 />
               </td>
@@ -152,8 +152,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Принят впервые/взамен</td>
               <td>
-                <Input type='text' 
-                  value={newGost.acceptedFirstTimeOrReplaced} 
+                <Input type='text'
+                  value={newGost.acceptedFirstTimeOrReplaced}
                   onChange={(value: string) => setNewGost({...newGost, acceptedFirstTimeOrReplaced:value})}
                 />
               </td>
@@ -162,7 +162,7 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Содержание</td>
               <td>
                 <TextArea
-                  value={newGost.content} 
+                  value={newGost.content}
                   onChange={(value: string) => setNewGost({...newGost, content:value})}
                 />
               </td>
@@ -170,8 +170,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Область применения</td>
               <td>
-                <TextArea 
-                  value={newGost.applicationArea} 
+                <TextArea
+                  value={newGost.applicationArea}
                   onChange={(value: string) => setNewGost({...newGost, applicationArea:value})}
                 />
               </td>
@@ -180,7 +180,7 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Ключевые слова</td>
               <td>
                 <TextArea
-                  value={newGost.keyWords} 
+                  value={newGost.keyWords}
                   onChange={(value: string) => setNewGost({...newGost, keyWords:value})}
                 />
               </td>
@@ -188,8 +188,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Ключевые фразы</td>
               <td>
-                <TextArea 
-                  value={newGost.keyPhrases} 
+                <TextArea
+                  value={newGost.keyPhrases}
                   onChange={(value: string) => setNewGost({...newGost, keyPhrases:value})}
                 />
               </td>
@@ -197,7 +197,7 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Уровень принятия</td>
               <td>
-                <RadioGroup 
+                <RadioGroup
                   buttons={[
                     {id:'International', value:'0', label:'Международный'},
                     {id:'Foreign', value:'1', label:'Иностранный'},
@@ -205,7 +205,7 @@ const GostForm: React.FC<GostFormProps> = props => {
                     {id:'Organizational', value:'3', label:'Организационный'},
                     {id:'National', value:'4', label:'Национальный'},
                     {id:'Interstate', value:'5', label:'Межгосударственный'},
-                  ]} 
+                  ]}
                   name='adoptionLevel'
                   value={newGost.adoptionLevel.toString()}
                   onChange={(value: string) => {setNewGost({...newGost, adoptionLevel: parseInt(value)})}}
@@ -216,7 +216,7 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Текст стандарта</td>
               <td>
                 <TextArea
-                  value={newGost.documentText} 
+                  value={newGost.documentText}
                   onChange={(value: string) => setNewGost({...newGost, documentText:value})}
                 />
               </td>
@@ -224,12 +224,12 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Нормативные ссылки</td>
               <td>
-              <Input type='text' 
-                  value={referencesId} 
+              <Input type='text'
+                  value={getLinksById(newGost.referencesId)}
                   onChange={(value: string) => setReferencesId(value)}
                   onBlur={(value: string) => handleLinks(value)}
                 />
-                {referencesError && 
+                {referencesError &&
                   `${referencesError.join(', ')} не существует в базе!`
                 }
               </td>
@@ -237,8 +237,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Изменения</td>
               <td>
-              <Input type='text' 
-                  value={newGost.changes} 
+              <Input type='text'
+                  value={newGost.changes}
                   onChange={(value: string) => setNewGost({...newGost, changes:value})}
                 />
               </td>
@@ -246,8 +246,8 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Поправки</td>
               <td>
-              <Input type='text' 
-                  value={newGost.amendments} 
+              <Input type='text'
+                  value={newGost.amendments}
                   onChange={(value: string) => setNewGost({...newGost, amendments:value})}
                 />
               </td>
@@ -255,12 +255,12 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Отменен/Заменен/Действующий</td>
               <td>
-                <RadioGroup 
+                <RadioGroup
                   buttons={[
-                    {id:'Cancelled', value:'0', label:'Отменем'},
-                    {id:'Replaced', value:'1', label:'Замененный'},
-                    {id:'Current', value:'2', label:'Действующий'},
-                  ]} 
+                    {id:'Cancelled', value:'1', label:'Отменен'},
+                    {id:'Replaced', value:'2', label:'Заменен'},
+                    {id:'Current', value:'0', label:'Действующий'},
+                  ]}
                   name='status'
                   value={newGost.status.toString()}
                   onChange={(value: string) => {setNewGost({...newGost, status: parseInt(value)})}}
@@ -270,12 +270,12 @@ const GostForm: React.FC<GostFormProps> = props => {
           <tr>
               <td>Уровень гармонизации</td>
               <td className={styles.radioButtons}>
-                <RadioGroup 
+                <RadioGroup
                   buttons={[
                     {id:'unharmonized', value:'0', label:'Негармонизированный'},
-                    {id:'harmonized', value:'1', label:'Гармонизорованный'},
-                    {id:'modified', value:'2', label:'Модифицированный'},
-                  ]} 
+                    {id:'harmonized', value:'2', label:'Гармонизированный'},
+                    {id:'modified', value:'1', label:'Модифицированный'},
+                  ]}
                   name='harmonization'
                   value={newGost.harmonization.toString()}
                   onChange={(value: string) => {setNewGost({...newGost, harmonization: parseInt(value)})}}
