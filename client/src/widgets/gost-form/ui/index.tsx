@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 import styles from './GostForm.module.scss'
 import { Button, Input, RadioGroup } from 'shared/components'
@@ -13,37 +13,42 @@ interface GostFormProps {
   gost?: GostToSave
 }
 
-const GostForm: React.FC<GostFormProps> = props => {
-  const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
-  const {
-    handleSubmit,
-    gost = {
-      "designation": '',
-      "fullName": '',
-      "codeOKS": '',
-      "activityField": '',
-      "acceptanceDate": '',
-      "commissionDate":  '',
-      "author": '',
-      "acceptedFirstTimeOrReplaced": '',
-      "content": '',
-      "keyWords": '',
-      "keyPhrases": '',
-      "applicationArea": '',
-      "adoptionLevel": 0,
-      "documentText": '',
-      "changes": '',
-      "amendments": '',
-      "status": 0,
-      "harmonization": 1,
-      "isPrimary": true,
-      "referencesId": []
-    }
-  } = props
+function getGostStub() {
+    return {
+        "designation": '',
+        "fullName": '',
+        "codeOKS": '',
+        "activityField": '',
+        "acceptanceDate": '',
+        "commissionDate":  '',
+        "author": '',
+        "acceptedFirstTimeOrReplaced": '',
+        "content": '',
+        "keyWords": '',
+        "keyPhrases": '',
+        "applicationArea": '',
+        "adoptionLevel": 0,
+        "documentText": '',
+        "changes": '',
+        "amendments": '',
+        "status": 0,
+        "harmonization": 1,
+        "isPrimary": true,
+        "referencesId": []
+    } as GostToSave
+}
 
-  const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost)
-  const [referencesId, setReferencesId] = useState(getLinksById(newGost.referencesId))
-  const [referencesError, setReferencesError] = useState<string[] | null>(null)
+const GostForm = ({handleSubmit, gost}: GostFormProps) => {
+    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
+    const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
+    const [references, setReferences] = useState('')
+    const [referencesError, setReferencesError] = useState<string[] | null>(null)
+
+    useEffect(() => {
+        if (gost)
+            setReferences(getLinksById(gost.referencesId))
+    }, [gost, response])
+
 
   function handleLinks(value: string) {
     let result: number[] = []
@@ -225,8 +230,8 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Нормативные ссылки</td>
               <td>
               <Input type='text'
-                  value={getLinksById(newGost.referencesId)}
-                  onChange={(value: string) => setReferencesId(value)}
+                  value={references}
+                  onChange={(value: string) => setReferences(value)}
                   onBlur={(value: string) => handleLinks(value)}
                 />
                 {referencesError &&

@@ -23,7 +23,7 @@ const RadioGroup: React.FC<RadioGroupProps> = props => {
   return (
     <div className={classNames(styles.buttonsGroup, direction === 'vertical' ? styles.vertical : '' )}>
       {buttons.map(button => 
-        <div className={styles.radioButton}>
+        <div key={button.id} className={styles.radioButton}>
           <input 
             type="radio" 
             id={button.id} 
