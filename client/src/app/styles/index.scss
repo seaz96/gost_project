@@ -9,6 +9,11 @@
     padding-right: 85px;
 }
 
+.contentContainer {
+    padding-bottom: 55px;
+    padding-top: 55px;
+}
+
 .baseButton {
     display: flex;
     align-items: center;
@@ -35,4 +40,11 @@
 
 .coloredText {
     color: #D12965;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
 }

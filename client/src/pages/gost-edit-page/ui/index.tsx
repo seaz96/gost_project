@@ -7,6 +7,7 @@ import { GostForm, newGostModel } from 'widgets/gost-form'
 import styles from './GostEditPage.module.scss'
 import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
+import classNames from 'classnames'
 
 const GostEditPage = () => {
   const id = useParams().id
@@ -26,10 +27,7 @@ const GostEditPage = () => {
   if(response) 
     return (
       <div className='container'>
-        <section className={styles.filterSection}>
-          <Filter />
-        </section>
-        <section className={styles.reviewSection}>
+        <section className={classNames('contentContainer', styles.reviewSection)}>
           <GostForm 
             handleSubmit={editOldDocument} 
             gost={

@@ -5,6 +5,7 @@ import styles from './UsersPage.module.scss'
 import { Filter } from 'widgets/filter';
 import { useAxios } from 'shared/hooks';
 import { userModel } from 'entities/user';
+import classNames from 'classnames';
 
 const UsersPage = () => {
   const {response, loading, error} = useAxios<userModel.User[]>('https://backend-seaz96.kexogg.ru/api/accounts/list')
@@ -14,10 +15,8 @@ const UsersPage = () => {
   if(response)
     return (
       <div className='container'>
-          <section className={styles.filterSection}>
-              <Filter />
-          </section>
-          <section className={styles.gostSection}>
+          <section className={classNames('contentContainer', styles.gostSection)}>
+            <h2 className={styles.title}>Список пользователей</h2>
             <UsersTable users={response}/>
           </section>
       </div>

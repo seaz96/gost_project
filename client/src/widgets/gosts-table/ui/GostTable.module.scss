@@ -1,25 +1,20 @@
 .table {
-    display: grid;
-    grid-template-columns: minmax(50px, 1fr) minmax(100px, 4fr) minmax(100px, 3fr) minmax(150px, 8fr) minmax(150px, 6fr);
+    position: relative;
+    display: table;
     border-collapse: collapse;
+    width: 100%;
 
-    thead,
-    tbody,
-    tr {
-        display: contents;
-    }
-
-    .table,
-    tr,
     th,
     td {
-        border: 1px solid #D2D2D2
+        border: 1px solid #D2D2D2;
+    }
+
+    td {
+        border-top: none;
     }
 
     td,
     th {
-        display: flex;
-        align-items: center;
         padding: 9px;
 
         font-family: var(--main-font);
@@ -37,7 +32,11 @@
 
     td:first-child,
     th:first-child {
-        justify-content: center;
+        text-align: center;
+    }
+
+    tbody {
+        position: relative;
     }
 }
 
@@ -46,8 +45,6 @@
 .tableButton {
     height: 38px;
 }
-
-
 
 .buttons {
     display: flex;
@@ -60,6 +57,7 @@
 }
 
 .tableButton {
+    padding: 4px;
     flex-grow: 1;
 }
 
@@ -68,4 +66,27 @@
 .buttonIcon {
     display: inline-block;
     margin-right: 7px;
+}
+
+.loop {
+    position: absolute;
+    right: calc(100% + 8px);
+    top: 50%;
+    transform: translateY(-50%);
+    
+    cursor: pointer;
+}
+
+.collapse {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.applicationAreaContainer {
+    padding: 10px;
+    max-width: 175px;
+
+    border-radius: 7px;
 }

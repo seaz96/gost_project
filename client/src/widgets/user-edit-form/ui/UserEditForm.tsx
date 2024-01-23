@@ -27,7 +27,7 @@ const UserEditForm: React.FC<UserEditFormProps> = props => {
     return (
         <form className={styles.form} onSubmit={(event) => {
             event.preventDefault();
-            handleSubmit()
+            handleSubmit(userEditData)
         }}>
             <Input
                 label='ФИО пользователя'
@@ -53,10 +53,12 @@ const UserEditForm: React.FC<UserEditFormProps> = props => {
                 value={userEditData.orgBranch}
                 onChange={(value: string) => setUserEditData({...userEditData, orgBranch: value})}
             />
-            <div className={styles.checkboxContainer}>
-                <input type='checkbox' id='switchAdmin' checked={userEditData.is_admin ? true : false}/>
-                <label htmlFor='switchAdmin'>Пользователь  является администратором</label>
-            </div>
+            {userData.id !== 0 && userData.role === 'Heisenberg' &&
+                <div className={styles.checkboxContainer}>
+                    <input type='checkbox' id='switchAdmin' checked={userEditData.is_admin ? true : false}/>
+                    <label htmlFor='switchAdmin'>Пользователь  является администратором</label>
+                </div>
+            }
             <Button type='submit' onClick={() => {}} className={styles.formButton} isFilled>Сохранить</Button>
         </form>
     )

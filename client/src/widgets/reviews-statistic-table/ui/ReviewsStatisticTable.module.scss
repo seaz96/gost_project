@@ -1,0 +1,33 @@
+.table {
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+
+    tr,
+    th,
+    td {
+        border: 1px solid #D2D2D2
+    }
+
+    td,
+    th {
+        padding: 9px;
+
+        font-family: var(--main-font);
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0em;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    th {
+        font-weight: 600;
+    }
+
+    td:first-child,
+    th:first-child {
+        text-align: center;
+    }
+}

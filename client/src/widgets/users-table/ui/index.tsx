@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import styles from './UsersReview.module.scss'
-import { userModel } from 'entities/user';
+import { UserContext, userModel } from 'entities/user';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
@@ -16,10 +16,11 @@ enum roles {
 }
 
 const UsersReview: React.FC<UsersTableProps> = props => {
+  const {user} = useContext(UserContext)
   const {
     users
   } = props
-  console.log(users)
+
   return (
     <table className={styles.table}>
       <thead>
@@ -30,14 +31,18 @@ const UsersReview: React.FC<UsersTableProps> = props => {
         <th>Действия</th>
       </thead>
       <tbody>
-        {users.map(user => 
+        {users.map(userData => 
           <tr>
-            <td>{user.id}</td>
-            <td>{roles[user.role]}</td>
-            <td>{user.login}</td>
-            <td>{user.name}</td>
+            <td>{userData.id}</td>
+            <td>{roles[userData.role]}</td>
+            <td>{userData.login}</td>
+            <td>{userData.name}</td>
             <td>
-              <Link to={`/users-edit-page/${user.id}`} className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>Редактирование</Link>
+              {
+                userData.id !== 0 && (user?.role === 'Admin' || user?.role === 'Heisenberg') && 
+                <Link to={`/user-edit-page/${userData.id}`} className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>Редактирование</Link>
+              }
+              
             </td>
           </tr>
         )}

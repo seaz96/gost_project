@@ -1,12 +1,14 @@
 import React from 'react'
 
 import styles from './RadioGroup.module.scss'
+import classNames from 'classnames'
 
 interface RadioGroupProps {
   buttons: {id: string, value: string, label: string}[]
   name: string
   value: string
-  onChange: Function
+  onChange: Function,
+  direction?: 'vertical' | 'horizontal'
 }
 
 const RadioGroup: React.FC<RadioGroupProps> = props => {
@@ -14,11 +16,12 @@ const RadioGroup: React.FC<RadioGroupProps> = props => {
     buttons,
     name,
     value,
-    onChange
+    onChange,
+    direction='horizontal'
   } = props
 
   return (
-    <div className={styles.buttonsGroup}>
+    <div className={classNames(styles.buttonsGroup, direction === 'vertical' ? styles.vertical : '' )}>
       {buttons.map(button => 
         <div className={styles.radioButton}>
           <input 

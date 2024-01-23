@@ -9,14 +9,7 @@
 
 .gostTable {
     border-collapse: collapse;
-    display: grid;
-    grid-template-columns: 1fr 2fr 2fr;
 
-    thead,
-    tbody,
-    tr {
-        display: contents;
-    }
     
     td {
         padding: 9px 25px;
@@ -27,7 +20,7 @@
         line-height: 20px;
         letter-spacing: 0em;
         text-align: left;
-        border: 0.5px solid #D2D2D2;
+        border: 1px solid #D2D2D2;
     }
 }
 
@@ -40,3 +33,25 @@
     margin-bottom: 26px;
 }
 
+.link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+
+    font-family: var(--main-fonr), Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+
+    border: 1px solid;
+    border-color: #D12965;
+    border-radius: 5px;
+}
+
+
+.DeleteCardButton {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

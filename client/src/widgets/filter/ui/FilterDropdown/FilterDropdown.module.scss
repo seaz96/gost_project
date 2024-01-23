@@ -1,0 +1,36 @@
+.dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 55px;
+
+    padding: 15px;
+    border-radius: 7px;
+    border: 1px solid #B2B1B1;
+}
+
+.dropdownItem {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.arrowDown {
+    transition: transform 0.3s;
+}
+
+.dropdownItemInfo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    cursor: pointer;
+}
+
+.arrowUp {
+    transform: rotate(180deg);
+}
+
+.submitButton {
+    height: 40px;
+}

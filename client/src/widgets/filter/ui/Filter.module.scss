@@ -7,6 +7,7 @@
     padding: 15px 20px;
 
     border: 1px solid #D2D2D2;
+    border-right: none;
     border-radius: 1px;
 
     font-family: var(--main-font);
@@ -18,11 +19,39 @@
 }
 
 .filterButton {
+    padding: 8px;
     border-radius: 0 !important;
     border: none !important
 }
 
 .searchButton {
+    padding: 8px;
     border-radius: 0 5px 5px 0 !important;
     border: none !important
+}
+
+.buttonsContainer {
+    position: relative;
+
+    display: flex;
+}
+
+////////////////////////////
+
+.filterDropdown {
+    position: absolute;
+    z-index: 5;
+
+    top: 100%;
+    right: 0;
+
+    background-color: #fff;
+}
+
+.filterDropdownDisabled {
+    display: none;
+}
+
+.filterDropdownEnabled {
+    display: flex;
 }

@@ -1,0 +1,16 @@
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.loaderIcon svg {
+    color:  #CB0E70;
+}
+
+.loaderIcon {
+    width: 70px !important;
+    height: 70px !important;
+}

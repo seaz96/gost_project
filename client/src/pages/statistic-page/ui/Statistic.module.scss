@@ -1,0 +1,16 @@
+.statistic {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+}
+
+.statisticButton {
+    padding: 44px 74px;
+
+    font-family: var(--main-font);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: center;
+}

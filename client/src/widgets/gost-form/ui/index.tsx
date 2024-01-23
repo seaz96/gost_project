@@ -5,13 +5,16 @@ import { Button, Input, RadioGroup } from 'shared/components'
 import { newGostModel } from '..'
 import TextArea from 'shared/components/TextArea'
 import { GostToSave } from '../model/newGostModel'
+import { useAxios } from 'shared/hooks'
+import { gostModel } from 'entities/gost'
 
 interface GostFormProps {
-  handleSubmit: Function
+  handleSubmit: Function,
   gost?: GostToSave
 }
 
 const GostForm: React.FC<GostFormProps> = props => {
+  const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
   const {
     handleSubmit,
     gost = {
@@ -34,36 +37,54 @@ const GostForm: React.FC<GostFormProps> = props => {
       "status": 0,
       "harmonization": 1,
       "isPrimary": true,
-      "referencesId": 1
+      "referencesId": []
     }
   } = props
 
   const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost)
-  console.log(newGost)
+  const [referencesId, setReferencesId] = useState(getLinksById(newGost.referencesId))
+  const [referencesError, setReferencesError] = useState<string[] | null>(null)
+
+  function handleLinks(value: string) {
+    let result: number[] = []
+    let linksArr = value.split(',')
+    response?.forEach(gostInfo => {
+      linksArr.forEach(link => {
+        if(link === gostInfo.designation) {
+          linksArr = linksArr.filter(filterLink => filterLink !== link)
+          result.push(gostInfo.id)
+        }
+      })
+    });
+    setNewGost({...newGost, referencesId: result})
+    setReferencesError(
+      (linksArr.length === 1  && linksArr[0].length === 0) || linksArr.length === 0
+      ? null : linksArr)
+  }
+
+  function getLinksById(value: number[]) {
+    let result = ''
+    response?.forEach(gostInfo => {
+      value.forEach(id => {
+        if(id === gostInfo.id)
+        result += ', ' + gostInfo.designation
+      })
+    });
+    console.log(result)
+    return result
+  }
+
   return (
     <form onSubmit={(event) => {
       event.preventDefault()
-      console.log({
-        ...newGost,
-        acceptanceDate: new Date(newGost.acceptanceDate).toISOString(),
-        commissionDate: new Date(newGost.commissionDate).toISOString(),
-        referencesId: [0]
-      })
       handleSubmit({
         ...newGost,
         acceptanceDate: new Date(newGost.acceptanceDate).toISOString(),
-        commissionDate: new Date(newGost.commissionDate).toISOString(),
-        referencesId: [1]
+        commissionDate: new Date(newGost.commissionDate).toISOString(),    
       })
     }
     }>
       <table className={styles.gostTable}>
-        <thead>
-          <tr>
-            <td>Поле</td>
-            <td>Значение</td>
-          </tr>
-        </thead>
         <tbody>
           <tr>
               <td>Наименование стандарта</td>
@@ -204,9 +225,13 @@ const GostForm: React.FC<GostFormProps> = props => {
               <td>Нормативные ссылки</td>
               <td>
               <Input type='text' 
-                  value={newGost.referencesId} 
-                  onChange={(value: string) => setNewGost({...newGost, referencesId:parseInt(value)})}
+                  value={referencesId} 
+                  onChange={(value: string) => setReferencesId(value)}
+                  onBlur={(value: string) => handleLinks(value)}
                 />
+                {referencesError && 
+                  `${referencesError.join(', ')} не существует в базе!`
+                }
               </td>
           </tr>
           <tr>

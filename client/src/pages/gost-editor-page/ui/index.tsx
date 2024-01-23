@@ -5,6 +5,7 @@ import GostForm from 'widgets/gost-form/ui';
 import styles from './GostEditorPage.module.scss'
 import axios from 'axios';
 import { newGostModel } from 'widgets/gost-form';
+import classNames from 'classnames';
 
 const GostEditorPage = () => {
 
@@ -19,10 +20,7 @@ const GostEditorPage = () => {
 
   return (
     <div className='container'>
-      <section className={styles.filterSection}>
-        <Filter />
-      </section>
-      <section className={styles.reviewSection}>
+      <section className={classNames('contentContainer', styles.reviewSection)}>
         <GostForm handleSubmit={addNewDocument}/>
       </section>
     </div>

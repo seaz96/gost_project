@@ -2,50 +2,51 @@
     display: grid;
     grid-template-columns: minmax(50px, 1fr) minmax(100px, 3fr) minmax(150px, 4fr) minmax(100px, 3fr) minmax(150px, 3fr);
     border-collapse: collapse;
+
+    thead,
+    tbody,
+    tr {
+        display: contents;
+    }
+
+    .table,
+    tr,
+    th,
+    td {
+        border: 1px solid #D2D2D2
+    }
+
+    .tableButton {
+        height: 38px;
+    }
+
+    td,
+    th {
+        display: flex;
+        align-items: center;
+        padding: 9px;
+
+        font-family: var(--main-font);
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0em;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+
+    th {
+        font-weight: 600;
+    }
+
+    .tableButton {
+        flex-grow: 1;
+    }
+
+    td:first-child,
+    th:first-child {
+        justify-content: center;
+    }
 }
 
-thead,
-tbody,
-tr {
-    display: contents;
-}
-
-.table,
-tr,
-th,
-td {
-    border: 1px solid #D2D2D2
-}
-
-.tableButton {
-    height: 38px;
-}
-
-td,
-th {
-    display: flex;
-    align-items: center;
-    padding: 9px;
-
-    font-family: var(--main-font);
-    font-size: 15px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0em;
-    text-align: left;
-    vertical-align: middle;
-}
-
-
-th {
-    font-weight: 600;
-}
-
-.tableButton {
-    flex-grow: 1;
-}
-
-td:first-child,
-th:first-child {
-    justify-content: center;
-}

@@ -19,6 +19,7 @@ interface InputProps {
  type: CustomInputType
  className?: string
  onChange?: Function
+ onBlur?: Function
  value?: string | number | undefined
 }
  
@@ -30,6 +31,7 @@ const Input: React.FC<InputProps> = props => {
     type,
     className,
     onChange = () => {},
+    onBlur = () => {},
     value
   } = props
 
@@ -54,6 +56,7 @@ const Input: React.FC<InputProps> = props => {
         name={inputID}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
+        onBlur={(event) => onBlur(event.target.value)}
         required={required ?? false}
         value={value}
         className={styles.baseInput}
