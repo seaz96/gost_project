@@ -1,0 +1,42 @@
+.title {
+    font-family: var(--main-font);
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.gostTable {
+    border-collapse: collapse;
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr;
+
+    thead,
+    tbody,
+    tr {
+        display: contents;
+    }
+    
+    td {
+        padding: 9px 25px;
+    
+        font-family: var(--main-font);
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        letter-spacing: 0em;
+        text-align: left;
+        border: 0.5px solid #D2D2D2;
+    }
+}
+
+
+.buttonsContainer {
+    display: flex;
+    gap: 10px;
+    height: 38px;
+    margin-top: 27px;
+    margin-bottom: 26px;
+}
+

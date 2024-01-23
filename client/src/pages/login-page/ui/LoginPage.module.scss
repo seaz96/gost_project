@@ -1,0 +1,22 @@
+.loginPageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+
+    margin: auto;
+    padding: 20px;
+}
+
+.logo {
+    margin-top: 33px;
+    margin-bottom: 40px;
+}
+
+.authorizationForm,
+.registrationForm {
+    width: 100%;
+    max-width: 570px;
+    margin-bottom: 31px;
+}

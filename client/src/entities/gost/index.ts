@@ -1,0 +1,1 @@
+export * as gostModel from './model/gostModel';

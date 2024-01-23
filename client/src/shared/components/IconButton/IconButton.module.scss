@@ -1,0 +1,16 @@
+.baseButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #fff;
+    border: 1px solid;
+    border-color: #D12965;
+    border-radius: 5px;
+}
+
+.filledButton {
+    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
+
+    color: #fff;
+}

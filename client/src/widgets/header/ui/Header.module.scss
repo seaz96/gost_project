@@ -1,0 +1,85 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    height: 83px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
+
+}
+
+.buttonsContainer {
+    display: flex;
+    width: clamp(350px, 420px, 443px);
+    gap: 10px;
+    height: 100%;
+}
+
+.headerButton {
+    flex-grow: 1;
+
+    font-size: 14px !important;
+}
+
+.headerNavList {
+    display: flex;
+    gap: 57px;
+}
+
+.navItem {
+    font-family: var(--main-font);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #fff;
+}
+
+.profileContainer {
+    position: relative;
+
+    height: 100%;
+    width: 139px;
+}
+
+.profileButton {
+    height: 100%;
+    width: 100%;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 280px;
+
+    padding: 15px;
+
+    background-color: #fff;
+    border: 1px solid #B2B1B1;
+    border-radius: 5px;
+
+    font-family: var(--main-font);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.dropdownImage {
+    margin-right: 5px;
+}
+
+.exitButton {
+    font: inherit;
+    text-align: left;
+}

@@ -1,0 +1,28 @@
+.filterContainer {
+    display: flex;
+}
+
+.input {
+    width: 100%;
+    padding: 15px 20px;
+
+    border: 1px solid #D2D2D2;
+    border-radius: 1px;
+
+    font-family: var(--main-font);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+}
+
+.filterButton {
+    border-radius: 0 !important;
+    border: none !important
+}
+
+.searchButton {
+    border-radius: 0 5px 5px 0 !important;
+    border: none !important
+}

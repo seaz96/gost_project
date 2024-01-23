@@ -1,0 +1,32 @@
+import React from 'react'
+import { Filter } from 'widgets/filter';
+import GostForm from 'widgets/gost-form/ui';
+
+import styles from './GostEditorPage.module.scss'
+import axios from 'axios';
+import { newGostModel } from 'widgets/gost-form';
+
+const GostEditorPage = () => {
+
+  const addNewDocument = (gost: newGostModel.GostToSave) => {
+    axios.post('https://backend-seaz96.kexogg.ru/api/docs/add', gost, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
+      }
+    })
+    .then(responce => console.log(responce))
+  }
+
+  return (
+    <div className='container'>
+      <section className={styles.filterSection}>
+        <Filter />
+      </section>
+      <section className={styles.reviewSection}>
+        <GostForm handleSubmit={addNewDocument}/>
+      </section>
+    </div>
+  )
+}
+
+export default GostEditorPage;
