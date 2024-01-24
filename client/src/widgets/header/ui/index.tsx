@@ -38,6 +38,7 @@ const ProfileDropdown = () => {
 }
 
 const Header = () => {
+    const {user, setUser} = useContext(UserContext);
     const [isDropdownVisible,setDropdownVisible] = useState(false)
 
     const dropdownCloseHandler = () => {
@@ -51,22 +52,28 @@ const Header = () => {
                 <Button onClick={() => {}} className={styles.headerButton}>
                     <Link to='/' style={{color: 'inherit'}}>ВСЕ ДОКУМЕНТЫ</Link>
                 </Button>
-                <Button 
-                    onClick={() => {}} 
-                    isColoredText 
-                    className={styles.headerButton} 
-                    prefix={<img src={addIcon} alt='add'/>} 
-                >
-                    <Link to='/gost-editor' style={{color: 'inherit'}}>СОЗДАТЬ ДОКУМЕНТ</Link>
-                </Button>
+                {(user?.role === 'Admin' || user?.role === 'Heisenberg') 
+                && 
+                    <Button 
+                        onClick={() => {}} 
+                        isColoredText 
+                        className={styles.headerButton} 
+                        prefix={<img src={addIcon} alt='add'/>} 
+                    >
+                        <Link to='/gost-editor' style={{color: 'inherit'}}>СОЗДАТЬ ДОКУМЕНТ</Link>
+                    </Button>
+                }
             </div>
             <nav className={styles.headerNav}>
                 <ul className={styles.headerNavList}>
-                    <li className={styles.navItem}>
-                        <Link to='/users-page' style={{color: 'inherit'}}>
-                            Пользователи
-                        </Link>
-                    </li>
+                    {(user?.role === 'Admin' || user?.role === 'Heisenberg') 
+                    && 
+                        <li className={styles.navItem}>
+                            <Link to='/users-page' style={{color: 'inherit'}}>
+                                Пользователи
+                            </Link>
+                        </li>
+                    }
                     <li className={styles.navItem}>
                         <Link to='/archive' style={{color: 'inherit'}}>
                             Архив
