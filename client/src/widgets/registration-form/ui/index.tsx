@@ -49,7 +49,7 @@ const RegistrationForm:React.FC<RegistrationFormProps> = props => {
         <Input type='text' label='Деятельность организации' value={formData.orgActivity} onChange={(value: string) => setFormData({...formData, orgActivity: value})}/>
         <div className={styles.buttonsContainer}>
             <Button onClick={() => {}} isFilled className={styles.formButton} type='submit'>Зарегистрироваться</Button>
-            <Button className={styles.formButton} onClick={() => changeForm()} isColoredText>Авторизоваться№</Button>
+            <Button className={styles.formButton} onClick={() => changeForm()} isColoredText>Авторизоваться</Button>
         </div>
     </form>
   )

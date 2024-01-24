@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Filter } from 'widgets/filter'
 import { GostForm, newGostModel } from 'widgets/gost-form'
 
@@ -10,6 +10,7 @@ import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
 
 const GostEditPage = () => {
+  const navigate = useNavigate()
   const id = useParams().id
   const {response, loading, error} = useAxios<gostModel.Gost>(`https://backend-seaz96.kexogg.ru/api/docs/${id}`)
 
@@ -19,7 +20,7 @@ const GostEditPage = () => {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       }
     })
-    .then(response => console.log(response))
+    .then(response => navigate('/'))
   }
 
   if(loading) return <></>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import styles from './GostReview.module.scss';
 import { Button } from 'shared/components';
@@ -9,6 +9,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import axios from 'axios';
 import { useNavigate } from "react-router-dom"
 import { useAxios } from 'shared/hooks';
+import { UserContext } from 'entities/user';
 
 interface GostReviewProps {
     gost: gostModel.Gost,
@@ -22,14 +23,26 @@ const GostReview:React.FC<GostReviewProps> = props => {
     } = props
     const navigate = useNavigate()
     const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
-
+    const {user} = useContext(UserContext)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
+    const [recoverModalOpen, setRecoverModalOpen] = useState(false)
 
     const primaryAcceptanceDate = new Date(gost.primary.acceptanceDate)
     const primaryCommissionDate = new Date(gost.primary.commissionDate)
     const actualAcceptanceDate = gost.actual.acceptanceDate ? new Date(gost.actual.acceptanceDate) : null
     const actualCommissionDate = gost.actual.acceptanceDate ? new Date(gost.actual.commissionDate) : null
+
+    useEffect(() => {
+        axios.post(`https://backend-seaz96.kexogg.ru/api/stats/update-views/${gostId}`, {}, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            },
+            params: {
+                docId: gostId
+            }
+        })
+    }, [])
 
     const onDeleteSubmit = () => {
         axios.delete(`https://backend-seaz96.kexogg.ru/api/docs/delete/${gostId}`, {
@@ -38,6 +51,18 @@ const GostReview:React.FC<GostReviewProps> = props => {
             }
         })
         .then(response => navigate('/'))
+    }
+
+    const recoverDoc = () => {
+        axios.put(`https://backend-seaz96.kexogg.ru/api/docs/change-status`, {
+            id: gostId,
+            status: 0
+        }, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+            }
+        })
+        .then(response => {navigate('/')})
     }
 
     const cancelDoc = () => {
@@ -52,24 +77,26 @@ const GostReview:React.FC<GostReviewProps> = props => {
         .then(response => {navigate('/')})
     }
 
-    function getLinksById(value: {docId: number, designation: string, status: number}[]) {
-        let result:string[] = []
-        value?.forEach(ref => {
-            result.push(ref.designation)
-        })
-        return result.join(', ')
-    }
-
     return (
         <>
             <div className={styles.reviewContainer}>
                 <h2 className={styles.title}>Просмотр документа</h2>
+                {(user?.role === 'Admin' || user?.role === 'Heisenberg') 
+                &&
                 <div className={styles.buttonsContainer}>
                     <Link onClick={() => {}} to={`/gost-edit/${gostId}`} className={classNames(styles.link, 'coloredText')}>Редактировать</Link>
                     <Button onClick={() => setDeleteModalOpen(true)} isColoredText>Удалить</Button>
-                    <Button onClick={() => setCancelModalOpen(true)} isColoredText>Отменить</Button>
+                    {
+                        gost.primary.status === 1 
+                        ?
+                        <Button onClick={() => setRecoverModalOpen(true)} isColoredText>Восстановить</Button>
+                        :
+                        <Button onClick={() => setCancelModalOpen(true)} isColoredText>Отменить</Button>
+                    }
+                    <Link to={`/gost-replace-page/${gostId}`} className={classNames(styles.link, 'coloredText')}>Заменить</Link>
                     <Link to={`/gost-actualize-page/${gostId}`} className={classNames(styles.link, 'coloredText')}>Актуализировать данные</Link>
                 </div>
+                }
                 <table className={styles.gostTable}>
                     <thead>
                         <tr>
@@ -157,13 +184,21 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         </tr>
                         <tr>
                             <td>Текст стандарта</td>
-                            <td>{gost.primary.documentText}</td>
-                            <td>{gost.actual.documentText}</td>
+                            <td><a href={gost.primary.documentText}>{gost.primary.documentText}</a></td>
+                            <td><a href={gost.actual.documentText}>{gost.actual.documentText}</a></td>
                         </tr>
                         <tr>
                             <td>Нормативные ссылки</td>
-                            <td>{getLinksById(gost.references)}</td>
-                            <td>{getLinksById(gost.references)}</td>
+                            <td>
+                                {gost.references.map(refId => 
+                                    <Link to={`/gost-review/${refId.docId}`}>{refId.designation}</Link>
+                                )}
+                            </td>
+                            <td>
+                                {gost.references.map(refId => 
+                                    <Link to={`/gost-review/${refId.docId}`}>{refId.designation}</Link>
+                                )}
+                            </td>
                         </tr>
                         <tr>
                             <td>Изменения</td>
@@ -197,6 +232,11 @@ const GostReview:React.FC<GostReviewProps> = props => {
                 isOpen={cancelModalOpen}
                 setIsOpen={setCancelModalOpen}
                 onSubmitFunction={cancelDoc}
+            />
+            <RecoverCard
+                isOpen={recoverModalOpen}
+                setIsOpen={setRecoverModalOpen}
+                onSubmitFunction={recoverDoc}
             />
         </>
     )
@@ -232,6 +272,42 @@ const DeleteCard:React.FC<DeleteCardProps> = props => {
                 <Button isColoredText onClick={() => setIsOpen(false)} className={styles.DeleteCardButton}>Отменить</Button>
                 <Button isFilled onClick={() => onSubmitFunction()}  className={styles.DeleteCardButton}>
                     Удалить
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+
+interface RecoverCardProps {
+    isOpen: boolean,
+    setIsOpen: Function,
+    onSubmitFunction: Function
+}
+
+const RecoverCard:React.FC<RecoverCardProps> = props => {
+    const {
+        isOpen,
+        setIsOpen,
+        onSubmitFunction
+    } = props
+
+    return (
+        <Dialog
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+        >
+            <DialogTitle id="alert-dialog-title">
+                Восстановить ГОСТ?
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Если вы восстановите ГОСТ, он удалится из архива, а его статус будет изменён на 'Действующий'
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button isColoredText onClick={() => setIsOpen(false)} className={styles.DeleteCardButton}>Назад</Button>
+                <Button isFilled onClick={() => onSubmitFunction()}  className={styles.DeleteCardButton}>
+                    Восстановить
                 </Button>
             </DialogActions>
         </Dialog>

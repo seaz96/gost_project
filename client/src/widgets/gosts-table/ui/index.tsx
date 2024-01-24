@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import styles from './GostTable.module.scss'
 import loop  from '../assets/loop.png';
@@ -8,6 +8,7 @@ import pen from 'shared/assets/pen.svg';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import { Collapse, Popover } from '@mui/material';
+import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
   gosts: gostModel.Gost[],
@@ -48,7 +49,7 @@ interface GostRowProps {
 
 const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  console.log(!!gost.actual)
+  const {user} = useContext(UserContext)
 
   return (
     <tbody>
@@ -80,11 +81,14 @@ const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
               <img src={eye} alt='eye' className={styles.buttonIcon}/>
               Просмотр
             </Link>
-            <Link to={`/gost-edit/${gost.docId}`}
-                  className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>
-              <img src={pen} alt='pen' className={styles.buttonIcon}/>
-              Редактирование
-            </Link>
+            {
+              (user?.role === 'Admin' || user?.role === 'Heisenberg') &&
+              <Link to={`/gost-edit/${gost.docId}`}
+                    className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>
+                <img src={pen} alt='pen' className={styles.buttonIcon}/>
+                Редактирование
+              </Link>
+            }
           </div>
         </td>
       </tr>

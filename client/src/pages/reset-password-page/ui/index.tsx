@@ -4,20 +4,23 @@ import { ResetPasswordForm } from 'widgets/reset-password-form'
 import styles from './ResetPasswordPage.module.scss'
 import axios from 'axios'
 import { UserContext } from 'entities/user'
+import { useNavigate } from 'react-router-dom'
 
 const ResetPasswordPage = () => {
+  const navigate = useNavigate()
   const {user} = useContext(UserContext)
   const handleSubmit = (oldPassword: string, newPassword: string) => {
-    console.log({
-      'login': user?.login,
-      'new_password': newPassword,
-      'oldPassword': oldPassword
-    })
     axios.post('https://backend-seaz96.kexogg.ru/api/accounts/change-password', {
       'login': user?.login,
       'new_password': newPassword,
       'old_password': oldPassword
-    }, {headers: {'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`}}).then(responce => console.log(responce))
+    }, 
+    {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
+      }
+    })
+    .then(() => navigate('/'))
   }
 
   return (

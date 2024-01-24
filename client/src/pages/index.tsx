@@ -16,6 +16,7 @@ const StatisticPage = lazy(() => import('./statistic-page').then((module) => ({ 
 const ReviewsStatisticPage = lazy(() => import('./reviews-statistic-page').then((module) => ({ default: module.ReviewsStatisticPage })))
 const ChangesStatisticPage = lazy(() => import('./changes-statistic-page').then((module) => ({ default: module.ChangesStatisticPage })))
 const GostActualizePage = lazy(() => import('./gost-actualize-page').then((module) => ({ default: module.GostActualizePage })))
+const GostReplacePage = lazy(() => import('./gost-replace-page').then((module) => ({ default: module.GostReplacePage })))
 
 const AppRouter = () => {
     const {user} = useContext(UserContext)
@@ -39,6 +40,7 @@ const AppRouter = () => {
                 <Route path='/reviews-statistic-page' element={<ReviewsStatisticPage />} />
                 <Route path='/changes-statistic-page' element={<ChangesStatisticPage />} />
                 <Route path='/gost-actualize-page/:id' element={<GostActualizePage />} />
+                <Route path='/gost-replace-page/:id' element={<GostReplacePage />} />
             </Routes>
             :
             <Routes>

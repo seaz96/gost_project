@@ -6,8 +6,10 @@ import styles from './GostEditorPage.module.scss'
 import axios from 'axios';
 import { newGostModel } from 'widgets/gost-form';
 import classNames from 'classnames';
+import { useNavigate } from 'react-router-dom';
 
 const GostEditorPage = () => {
+  const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave) => {
     axios.post('https://backend-seaz96.kexogg.ru/api/docs/add', gost, {
@@ -15,7 +17,7 @@ const GostEditorPage = () => {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       }
     })
-    .then(responce => console.log(responce))
+    .then(responce => navigate('/'))
   }
 
   return (
