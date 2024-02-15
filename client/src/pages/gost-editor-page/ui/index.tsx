@@ -12,12 +12,13 @@ const GostEditorPage = () => {
   const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave) => {
+    console.log(gost)
     axios.post('https://backend-seaz96.kexogg.ru/api/docs/add', gost, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       }
     })
-    .then(responce => navigate('/'))
+    .then(responce => navigate('/gost-review/'+responce.data))
   }
 
   return (

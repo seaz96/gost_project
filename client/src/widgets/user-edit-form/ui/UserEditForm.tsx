@@ -1,27 +1,31 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import styles from './UserEditForm.module.scss'
 import { Button, Input } from 'shared/components';
 import { UserEditType } from '../model/userEditModel';
-import { userModel } from 'entities/user';
+import { UserContext, userModel } from 'entities/user';
 
 interface UserEditFormProps {
     handleSubmit: Function,
-    userData: userModel.User
+    userData: userModel.User,
+    id: number
 }
 
 const UserEditForm: React.FC<UserEditFormProps> = props => {
     const {
         handleSubmit,
-        userData
+        userData,
+        id
     } = props
+    const {user} = useContext(UserContext)
 
     const [userEditData, setUserEditData] = useState<UserEditType>({
         name: userData.name,
-        orgName: userData.orgName,
-        orgActivity: userData.orgActivity,
-        orgBranch: userData.orgBranch,
-        is_admin: userData.role === 'Admin' ? true : false
+        login: userData.login,
+        org_name: userData.orgName,
+        org_activity: userData.orgActivity,
+        org_branch: userData.orgBranch,
+        is_admin: userData.role === 'Admin' || userData.role === 'Heisenberg' ? true : false
     })
 
     return (
@@ -35,27 +39,33 @@ const UserEditForm: React.FC<UserEditFormProps> = props => {
                 value={userEditData.name}
                 onChange={(value: string) => setUserEditData({...userEditData, name: value})}
             />
+            <Input
+                label='Логин'
+                type='text'
+                value={userEditData.login}
+                onChange={(value: string) => setUserEditData({...userEditData, login: value})}
+            />
             <Input 
                 label='Название организации' 
                 type='text'
-                value={userEditData.orgName}
-                onChange={(value: string) => setUserEditData({...userEditData, orgName: value})}
+                value={userEditData.org_name}
+                onChange={(value: string) => setUserEditData({...userEditData, org_name: value})}
             />
             <Input 
                 label='Отделение организации' 
                 type='text'
-                value={userEditData.orgActivity}
-                onChange={(value: string) => setUserEditData({...userEditData, orgActivity: value})}
+                value={userEditData.org_branch}
+                onChange={(value: string) => setUserEditData({...userEditData, org_branch: value})}
             />
             <Input 
                 label='Деятельность организации' 
                 type='text'
-                value={userEditData.orgBranch}
-                onChange={(value: string) => setUserEditData({...userEditData, orgBranch: value})}
+                value={userEditData.org_activity}
+                onChange={(value: string) => setUserEditData({...userEditData, org_activity: value})}
             />
-            {userData.id !== 0 && userData.role === 'Heisenberg' &&
+            {id !== user?.id && user?.role === 'Heisenberg' &&
                 <div className={styles.checkboxContainer}>
-                    <input type='checkbox' id='switchAdmin' checked={userEditData.is_admin ? true : false}/>
+                    <input type='checkbox' id='switchAdmin' onChange={() => setUserEditData({...userEditData, is_admin: !userEditData.is_admin})} checked={userEditData.is_admin ? true : false}/>
                     <label htmlFor='switchAdmin'>Пользователь  является администратором</label>
                 </div>
             }

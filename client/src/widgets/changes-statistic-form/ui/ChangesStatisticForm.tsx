@@ -20,7 +20,8 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
   const [changesData, setChangesData] = useState({
     status: 0 | 1 | 2,
     dateFrom: '',  
-    dateTo: ''
+    dateTo: '',
+    count: 0
   })
 
   const validateData = (event: React.FormEvent) => {
@@ -30,12 +31,12 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
         'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
       },
       params: {
-        ...changesData,
+        status: changesData.status,
+        count: changesData.count,
         StartDate: new Date(changesData.dateFrom).toISOString(),
-        EndDate: new Date(changesData.dateTo).toISOString()
+        EndDate: new Date(changesData.dateTo).toISOString(),
       }
     }).then(response => {
-      console.log(response.data)
       handleSubmit(response.data)
       startDateSubmit(changesData.dateFrom)
       endDateSubmit(changesData.dateTo)
@@ -69,6 +70,13 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
           type='date' 
           value={changesData.dateTo}
           onChange={(value: string) => setChangesData({...changesData, dateTo: value})}
+        />
+        <p className={styles.countTitle}>Количетсво выводимых изменений</p>
+        <Input 
+          placeholder='Количество...' 
+          type='text' 
+          value={changesData.count}
+          onChange={(value: string) => setChangesData({...changesData, count: +value})}
         />
         <Button onClick={() => {}} className={styles.formButton} isFilled type='submit'>Сформировать отчёт</Button>
     </form>

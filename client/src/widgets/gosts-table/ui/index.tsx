@@ -7,7 +7,7 @@ import eye from 'shared/assets/eye.svg';
 import pen from 'shared/assets/pen.svg';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
-import { Collapse, Popover } from '@mui/material';
+import { Collapse, IconButton, Popover } from '@mui/material';
 import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
@@ -48,24 +48,37 @@ interface GostRowProps {
 }
 
 const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const open = Boolean(anchorEl);
   const {user} = useContext(UserContext)
 
   return (
     <tbody>
-      <img 
+      <IconButton  
         id={gost.docId.toString()}
-        src={loop} 
         className={styles.loop}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        alt='открыть сводку по сфере применения'
-      />
+        onClick={(event) => {
+          setAnchorEl(event.currentTarget);
+        }}
+      >
+        <img src={loop} alt='открыть сводку по сфере применения'/>
+      </IconButton>
       <Popover
         id={gost.docId.toString()}
-        open={dropdownOpen}
-        onClose={() => setDropdownOpen(false)}
+        open={open}
+        onClose={() => setAnchorEl(null)}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        sx={{
+          '.css-3bmhjh-MuiPaper-root-MuiPopover-paper': {
+
+          }
+        }}
       >
-        <div className={styles.applicationAreaContainer}>
+        <div className={styles.applicationAreaContainer} style={{whiteSpace: "pre-line"}}>
           {gost.primary.applicationArea}
         </div>
       </Popover>

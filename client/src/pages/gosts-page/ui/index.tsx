@@ -9,7 +9,7 @@ import { useState } from 'react';
 const GostsPage = () => {
   const [inputValue, setInputValue] = useState('')
   const {response, error, loading, setParams} = useAxios<gostModel.Gost[]>(
-    'https://backend-seaz96.kexogg.ru/api/docs/all?',
+    'https://backend-seaz96.kexogg.ru/api/docs/all-valid',
   )
 
 

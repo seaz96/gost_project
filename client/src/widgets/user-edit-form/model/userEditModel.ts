@@ -1,7 +1,8 @@
 export type UserEditType = {
     name: string,
-    orgName: string,
-    orgBranch: string,
-    orgActivity: string,
+    login: string,
+    org_name: string,
+    org_branch: string,
+    org_activity: string,
     is_admin: boolean
 }

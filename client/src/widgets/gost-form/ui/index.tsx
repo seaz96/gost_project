@@ -54,7 +54,6 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
     let result: number[] = []
     let linksArr = value.split(',')
     response?.forEach(gostInfo => {
-        console.log(response)
       linksArr.forEach(link => {
         if(link === gostInfo.designation) {
           linksArr = linksArr.filter(filterLink => filterLink !== link)
@@ -128,7 +127,7 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Год принятия</td>
+              <td>Дата принятия</td>
               <td>
                 <Input type='date'
                   value={newGost.acceptanceDate}
@@ -137,7 +136,7 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Год введения</td>
+              <td>Дата введения</td>
               <td>
                 <Input type='date'
                   value={newGost.commissionDate}

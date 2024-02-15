@@ -122,7 +122,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
                             <td>{gost.actual.activityField}</td>
                         </tr>
                         <tr>
-                            <td>Год принятия</td>
+                            <td>Дата принятия</td>
                             <td>
                             {
                             `${primaryAcceptanceDate.getUTCDate()}.${primaryAcceptanceDate.getUTCMonth()}.${primaryAcceptanceDate.getUTCFullYear()}`
@@ -135,7 +135,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
                             </td>
                         </tr>
                         <tr>
-                            <td>Год введения</td>
+                            <td>Дата введения</td>
                             <td> 
                             {
                             `${primaryCommissionDate.getUTCDate()}.${primaryCommissionDate.getUTCMonth()}.${primaryCommissionDate.getUTCFullYear()}`
@@ -164,8 +164,8 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         </tr>
                         <tr>
                             <td>Область применения</td>
-                            <td>{gost.primary.applicationArea}</td>
-                            <td>{gost.actual.applicationArea}</td>
+                            <td style={{whiteSpace: "pre-line"}}>{gost.primary.applicationArea}</td>
+                            <td style={{whiteSpace: "pre-line"}}>{gost.actual.applicationArea}</td>
                         </tr>
                         <tr>
                             <td>Ключевые слова</td>

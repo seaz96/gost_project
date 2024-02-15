@@ -14,7 +14,7 @@ import classNames from 'classnames';
 import { UserContext } from 'entities/user';
 
 const ProfileDropdown = () => {
-    const {user, setUser} = useContext(UserContext);
+    const {setUser} = useContext(UserContext);
 
     return (
         <div className={styles.dropdown}>
@@ -22,7 +22,7 @@ const ProfileDropdown = () => {
                 <img src={lock} className={styles.dropdownImage} alt='reset password' />
                 Сменить пароль
             </Link>
-            <Link to={`/user-edit-page/${user?.id}`} style={{color: 'inherit'}}>
+            <Link to={`/self-edit-page`} style={{color: 'inherit'}}>
                 <img src={account} className={styles.dropdownImage} alt='edit profile' />
                 Редактировать профиль
             </Link>
@@ -38,7 +38,7 @@ const ProfileDropdown = () => {
 }
 
 const Header = () => {
-    const {user, setUser} = useContext(UserContext);
+    const {user} = useContext(UserContext);
     const [isDropdownVisible,setDropdownVisible] = useState(false)
 
     const dropdownCloseHandler = () => {
@@ -49,9 +49,7 @@ const Header = () => {
     return (
         <header className={classNames(styles.header, 'container')}>
             <div className={styles.buttonsContainer}>
-                <Button onClick={() => {}} className={styles.headerButton}>
-                    <Link to='/' style={{color: 'inherit'}}>ВСЕ ДОКУМЕНТЫ</Link>
-                </Button>
+                <Link to='/' className={classNames('baseButton', styles.headerButton)}>ВСЕ ДОКУМЕНТЫ</Link>
                 {(user?.role === 'Admin' || user?.role === 'Heisenberg') 
                 && 
                     <Button 

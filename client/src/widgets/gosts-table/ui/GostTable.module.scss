@@ -69,6 +69,8 @@
 }
 
 .loop {
+    width: 48px;
+    height: 48px;
     position: absolute;
     right: calc(100% + 8px);
     top: 50%;
@@ -86,7 +88,7 @@
 
 .applicationAreaContainer {
     padding: 10px;
-    max-width: 175px;
+    max-width: 900px;
 
     border-radius: 7px;
 }

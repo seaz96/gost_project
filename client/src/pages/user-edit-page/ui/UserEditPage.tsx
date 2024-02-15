@@ -10,15 +10,12 @@ import axios from 'axios';
 
 const UserEditPage = () => {
     const navigate = useNavigate()
-    const {user} = useContext(UserContext)
     const id = parseInt(useParams().id || '')
     const {response, loading, error} = useAxios<userModel.User>(`https://backend-seaz96.kexogg.ru/api/accounts/get-user-info`, {'id': id})
-
     if(loading) return <></>
 
     const handleUserEdit = (userData: UserEditType) => {
-        const editedUser = {'name': userData.name, 'org_name': userData.orgName, 'org_branch': userData.orgBranch, 'org_activity': userData.orgActivity}
-        axios.post('https://backend-seaz96.kexogg.ru/api/accounts/admin-edit', editedUser, {
+        axios.post('https://backend-seaz96.kexogg.ru/api/accounts/admin-edit', userData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
             }
@@ -26,7 +23,7 @@ const UserEditPage = () => {
         .then(() => {
             const isAdmin = response?.role === 'Admin' || response?.role === 'Heisenberg'
             if(userData.is_admin !== isAdmin) {
-                axios.post('https://backend-seaz96.kexogg.ru/api/accounts/admin-edit', 
+                axios.post('https://backend-seaz96.kexogg.ru/api/accounts/make-admin', 
                 {
                     'userId': response?.id,
                     'isAdmin': userData.is_admin && !isAdmin ? true : false
@@ -38,24 +35,16 @@ const UserEditPage = () => {
                 })
             }
         })
-        .then(() => navigate('/'))
+        .then(() => navigate('/users-page'))
     }
  
-    const handleSelfEdit = (userData: UserEditType) => {
-        console.log(userData)
-        const editedUser = {'name': userData.name, 'org_name': userData.orgName, 'org_branch': userData.orgBranch, 'org_activity': userData.orgActivity}
-        axios.post('https://backend-seaz96.kexogg.ru/api/accounts/self-edit', editedUser, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-            }
-        }).then(repsonse => navigate('/'))
-    }
+
     
     if(response) 
     return (
         <div>
             <section className={styles.userEditSection}>
-                <UserEditForm handleSubmit={id && id === user?.id ? handleSelfEdit : handleUserEdit } userData={response}/>
+                <UserEditForm handleSubmit={handleUserEdit } userData={response} id={response.id}/>
             </section>
         </div>
     )

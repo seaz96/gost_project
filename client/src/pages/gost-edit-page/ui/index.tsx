@@ -20,7 +20,7 @@ const GostEditPage = () => {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       }
     })
-    .then(response => navigate('/'))
+    .then(response => navigate('/gost-review/' + id))
   }
 
   if(loading) return <></>
