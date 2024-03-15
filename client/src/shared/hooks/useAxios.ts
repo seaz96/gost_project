@@ -26,7 +26,7 @@ const useAxios = <T>(url: string, defaultParams?:any) => {
 
     useEffect(() => {
         fetchData();
-    }, [params]);
+    }, [params, url]);
 
 
     return { response, error, loading, setParams };
