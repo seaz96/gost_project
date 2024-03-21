@@ -9,10 +9,10 @@ import styles from './SelfEditPage.module.scss'
 
 const SelfEditPage = () => {
     const navigate = useNavigate()
-    const {response, loading, error} = useAxios<userModel.User>(`https://backend-seaz96.kexogg.ru/api/accounts/self-info`)
+    const {response, loading, error} = useAxios<userModel.User>(`localhost:8080/api/accounts/self-info`)
 
     const handleSelfEdit = (userData: UserEditType) => {
-        axios.post('https://backend-seaz96.kexogg.ru/api/accounts/self-edit', userData, {
+        axios.post('localhost:8080/api/accounts/self-edit', userData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
             }

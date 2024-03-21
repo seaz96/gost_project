@@ -39,7 +39,7 @@ function getGostStub() {
 }
 
 const GostForm = ({handleSubmit, gost}: GostFormProps) => {
-    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
+    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('localhost:8080/api/docs/all-general-info')
     const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
     const [references, setReferences] = useState('')
     const [referencesError, setReferencesError] = useState<string[] | null>(null)

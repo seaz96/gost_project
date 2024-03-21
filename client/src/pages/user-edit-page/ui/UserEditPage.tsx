@@ -11,11 +11,11 @@ import axios from 'axios';
 const UserEditPage = () => {
     const navigate = useNavigate()
     const id = parseInt(useParams().id || '')
-    const {response, loading, error} = useAxios<userModel.User>(`https://backend-seaz96.kexogg.ru/api/accounts/get-user-info`, {'id': id})
+    const {response, loading, error} = useAxios<userModel.User>(`localhost:8080/api/accounts/get-user-info`, {'id': id})
     if(loading) return <></>
 
     const handleUserEdit = (userData: UserEditType) => {
-        axios.post('https://backend-seaz96.kexogg.ru/api/accounts/admin-edit', userData, {
+        axios.post('localhost:8080/api/accounts/admin-edit', userData, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
             }
@@ -23,7 +23,7 @@ const UserEditPage = () => {
         .then(() => {
             const isAdmin = response?.role === 'Admin' || response?.role === 'Heisenberg'
             if(userData.is_admin !== isAdmin) {
-                axios.post('https://backend-seaz96.kexogg.ru/api/accounts/make-admin', 
+                axios.post('localhost:8080/api/accounts/make-admin', 
                 {
                     'userId': response?.id,
                     'isAdmin': userData.is_admin && !isAdmin ? true : false

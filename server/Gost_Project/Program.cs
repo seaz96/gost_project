@@ -110,7 +110,7 @@ class Program
                 builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:3000", "https://*.kexogg.ru")
+                        .WithOrigins("http://localhost:3000", "https://gost-storage.ru")
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader()
                         .SetIsOriginAllowedToAllowWildcardSubdomains()

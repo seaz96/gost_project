@@ -36,17 +36,17 @@ function getGostStub() {
 const GostReplacePage = () => {
     const navigate = useNavigate()
     const gostToReplaceId = useParams().id
-    const {response, loading} = useAxios<gostModel.Gost>('https://backend-seaz96.kexogg.ru/api/docs/' + gostToReplaceId)
+    const {response, loading} = useAxios<gostModel.Gost>('localhost:8080/api/docs/' + gostToReplaceId)
 
 
     const addNewDocument = (gost: newGostModel.GostToSave) => {
-      axios.post('https://backend-seaz96.kexogg.ru/api/docs/add', gost, {
+      axios.post('localhost:8080/api/docs/add', gost, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
         }
       })
       .then(() => {
-          axios.put(`https://backend-seaz96.kexogg.ru/api/docs/change-status`, {
+          axios.put(`localhost:8080/api/docs/change-status`, {
               id: gostToReplaceId,
               status: 2
           }, {

@@ -10,12 +10,12 @@ import { gostModel } from 'entities/gost'
 
 const GostActualizePage = () => {
   const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`https://backend-seaz96.kexogg.ru/api/docs/${id}`)
+  const {response, loading, error} = useAxios<gostModel.Gost>(`localhost:8080/api/docs/${id}`)
   const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave) => {
     console.log(gost)
-    axios.put('https://backend-seaz96.kexogg.ru/api/docs/actualize/' + id, gost, {
+    axios.put('localhost:8080/api/docs/actualize/' + id, gost, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       },

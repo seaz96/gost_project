@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Gost_Project.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231222173519_FieldsRenames")]
-    partial class FieldsRenames
+    [Migration("20240320175336_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,7 @@ namespace Gost_Project.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ActualFieldId")
+                    b.Property<long?>("ActualFieldId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("PrimaryFieldId")
@@ -63,6 +63,31 @@ namespace Gost_Project.Data.Migrations
                     b.ToTable("DocsReferences");
                 });
 
+            modelBuilder.Entity("Gost_Project.Data.Entities.DocStatisticEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Action")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("DocId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DocStatistics");
+                });
+
             modelBuilder.Entity("Gost_Project.Data.Entities.FieldEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -80,7 +105,7 @@ namespace Gost_Project.Data.Migrations
                     b.Property<string>("ActivityField")
                         .HasColumnType("text");
 
-                    b.Property<int>("AdoptionLevel")
+                    b.Property<int?>("AdoptionLevel")
                         .HasColumnType("integer");
 
                     b.Property<string>("Amendments")
@@ -113,7 +138,7 @@ namespace Gost_Project.Data.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<int>("Harmonization")
+                    b.Property<int?>("Harmonization")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsPrimary")
@@ -145,6 +170,15 @@ namespace Gost_Project.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrgActivity")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrgBranch")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OrgName")
                         .HasColumnType("text");
 
                     b.Property<string>("Password")

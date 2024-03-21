@@ -10,7 +10,7 @@ const ResetPasswordPage = () => {
   const navigate = useNavigate()
   const {user} = useContext(UserContext)
   const handleSubmit = (oldPassword: string, newPassword: string) => {
-    axios.post('https://backend-seaz96.kexogg.ru/api/accounts/change-password', {
+    axios.post('localhost:8080/api/accounts/change-password', {
       'login': user?.login,
       'new_password': newPassword,
       'old_password': oldPassword
