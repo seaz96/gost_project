@@ -8,7 +8,7 @@ import { gostModel } from 'entities/gost';
 
 const ArchivePage = () => {
     const [filterParams, setFilterParams] = useState<gostModel.GostFields | null>(null)
-    const {response, loading, error} = useAxios<gostModel.Gost[]>('localhost:8080/api/docs/all-canceled')
+    const {response, loading, error} = useAxios<gostModel.Gost[]>('https://gost-storage.ru/api/docs/all-canceled')
 
     if(loading) return <></>
 

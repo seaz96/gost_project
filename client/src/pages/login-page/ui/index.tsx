@@ -17,7 +17,7 @@ const LoginPage = () => {
     const {setUser} = useContext(UserContext)
 
     const handleRegistration = (user: registrationModel.UserRegistration) => {
-        axios.post<userModel.User>('localhost:8080/api/accounts/register', user)
+        axios.post<userModel.User>('https://gost-storage.ru/api/accounts/register', user)
         .then(response => {
             setUser(response.data);
             localStorage.setItem('jwt_token', response.data.token)
@@ -26,7 +26,7 @@ const LoginPage = () => {
     }
 
     const handleAuthorization = (user: authorizationModel.UserAuthorization) => {
-        axios.post<userModel.User>('localhost:8080/api/accounts/login', user)
+        axios.post<userModel.User>('https://gost-storage.ru/api/accounts/login', user)
         .then((response) => {
             setUser(response.data);
             localStorage.setItem('jwt_token', response.data.token)

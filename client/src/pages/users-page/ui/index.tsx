@@ -8,7 +8,7 @@ import { userModel } from 'entities/user';
 import classNames from 'classnames';
 
 const UsersPage = () => {
-  const {response, loading, error} = useAxios<userModel.User[]>('localhost:8080/api/accounts/list')
+  const {response, loading, error} = useAxios<userModel.User[]>('https://gost-storage.ru/api/accounts/list')
 
   if(loading) return <></>
 

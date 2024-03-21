@@ -26,7 +26,7 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
 
   const validateData = (event: React.FormEvent) => {
     event.preventDefault()
-    axios.get('localhost:8080/api/stats/get-count', {
+    axios.get('https://gost-storage.ru/api/stats/get-count', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
       },

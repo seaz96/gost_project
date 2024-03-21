@@ -9,7 +9,7 @@ import { useState } from 'react';
 const GostsPage = () => {
   const [inputValue, setInputValue] = useState('')
   const {response, error, loading, setParams} = useAxios<gostModel.Gost[]>(
-    'localhost:8080/api/docs/all-valid',
+    'https://gost-storage.ru/api/docs/all-valid',
   )
 
 

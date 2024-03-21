@@ -36,17 +36,17 @@ function getGostStub() {
 const GostReplacePage = () => {
     const navigate = useNavigate()
     const gostToReplaceId = useParams().id
-    const {response, loading} = useAxios<gostModel.Gost>('localhost:8080/api/docs/' + gostToReplaceId)
+    const {response, loading} = useAxios<gostModel.Gost>('https://gost-storage.ru/api/docs/' + gostToReplaceId)
 
 
     const addNewDocument = (gost: newGostModel.GostToSave) => {
-      axios.post('localhost:8080/api/docs/add', gost, {
+      axios.post('https://gost-storage.ru/api/docs/add', gost, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
         }
       })
       .then(() => {
-          axios.put(`localhost:8080/api/docs/change-status`, {
+          axios.put(`https://gost-storage.ru/api/docs/change-status`, {
               id: gostToReplaceId,
               status: 2
           }, {

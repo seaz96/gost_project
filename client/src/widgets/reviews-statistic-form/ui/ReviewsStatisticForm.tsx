@@ -41,7 +41,7 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
           reviewsData.endDate = new Date().toISOString();
       }
 
-    axios.get('localhost:8080/api/stats/get-views', {
+    axios.get('https://gost-storage.ru/api/stats/get-views', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
       },

@@ -12,10 +12,10 @@ import classNames from 'classnames'
 const GostEditPage = () => {
   const navigate = useNavigate()
   const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`localhost:8080/api/docs/${id}`)
+  const {response, loading, error} = useAxios<gostModel.Gost>(`https://gost-storage.ru/api/docs/${id}`)
 
   const editOldDocument = (gost: newGostModel.GostToSave) => {
-    axios.put(`localhost:8080/api/docs/update/${id}`, gost, {
+    axios.put(`https://gost-storage.ru/api/docs/update/${id}`, gost, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
       }

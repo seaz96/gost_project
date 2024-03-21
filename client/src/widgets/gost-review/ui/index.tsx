@@ -22,7 +22,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
         gostId
     } = props
     const navigate = useNavigate()
-    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('localhost:8080/api/docs/all-general-info')
+    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://gost-storage.ru/api/docs/all-general-info')
     const {user} = useContext(UserContext)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
@@ -34,7 +34,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     const actualCommissionDate = gost.actual.acceptanceDate ? new Date(gost.actual.commissionDate) : null
 
     useEffect(() => {
-        axios.post(`localhost:8080/api/stats/update-views/${gostId}`, {}, {
+        axios.post(`https://gost-storage.ru/api/stats/update-views/${gostId}`, {}, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
             },
@@ -45,7 +45,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     }, [])
 
     const onDeleteSubmit = () => {
-        axios.delete(`localhost:8080/api/docs/delete/${gostId}`, {
+        axios.delete(`https://gost-storage.ru/api/docs/delete/${gostId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
             }
@@ -54,7 +54,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     }
 
     const recoverDoc = () => {
-        axios.put(`localhost:8080/api/docs/change-status`, {
+        axios.put(`https://gost-storage.ru/api/docs/change-status`, {
             id: gostId,
             status: 0
         }, {
@@ -66,7 +66,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     }
 
     const cancelDoc = () => {
-        axios.put(`localhost:8080/api/docs/change-status`, {
+        axios.put(`https://gost-storage.ru/api/docs/change-status`, {
             id: gostId,
             status: 1
         }, {
