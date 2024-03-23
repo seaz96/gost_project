@@ -7,7 +7,7 @@ public interface IDocsRepository
 {
     public Task<List<DocEntity>> GetAllAsync();
 
-    public Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset);
+    public Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
 
     public Task<DocEntity?> GetByIdAsync(long id);
 

@@ -15,7 +15,7 @@ public interface IDocsService
 
     public Task<ActionResult<GetDocumentResponseModel>> GetDocumentAsync(long id);
     
-    public Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset);
+    public Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
 
     public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
 }

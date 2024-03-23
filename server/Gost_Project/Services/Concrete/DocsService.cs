@@ -113,9 +113,9 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult(result);
     }
 
-    public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset)
+    public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
-        var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, offset);
+        var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, lastId);
 
         var docsWithFields = docs.Select(doc => new GetDocumentResponseModel
         {

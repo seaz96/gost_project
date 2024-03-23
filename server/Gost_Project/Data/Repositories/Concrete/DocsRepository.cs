@@ -15,7 +15,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
         return await _context.Docs.ToListAsync();
     }
 
-    public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset)
+    public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
         var fieldIds = await _context.Fields
             .Where(f => parameters.CodeOKS == null || (f.CodeOKS ?? "").ToLower()
@@ -76,7 +76,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
             .Distinct()
             .OrderBy(x => x.Id)
-            .Skip(offset)
+            .Where(x => x.Id > lastId)
             .Take(limit)
             .ToList();
 

@@ -146,9 +146,9 @@ public class DocsController(
     [NoCache]
     [HttpGet("all")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetDocuments(
-        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, null, limit, offset));
+        return Ok(await _docsService.GetDocumentsAsync(parameters, null, limit, lastId));
     }
 
     /// <summary>
@@ -158,9 +158,9 @@ public class DocsController(
     [NoCache]
     [HttpGet("all-valid")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments(
-        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, offset));    
+        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
     }
 
     /// <summary>
@@ -170,9 +170,9 @@ public class DocsController(
     [NoCache]
     [HttpGet("all-canceled")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments(
-        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, offset));
+        return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, lastId));
     }
 
     /// <summary>
