@@ -13,13 +13,9 @@ public interface IDocsService
 
     public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
 
-    public Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id);
-
-    public Task<List<GetDocumentResponseModel>> GetAllDocuments();
+    public Task<ActionResult<GetDocumentResponseModel>> GetDocumentAsync(long id);
     
-    public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters);
-    
-    public Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters, bool isValid);
+    public Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset);
 
-    public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfo();
+    public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
 }

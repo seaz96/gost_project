@@ -26,7 +26,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetViews(GetViewsModel model)
     {
-        var docs = await _docsService.GetAllDocuments();
+        var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 10000);
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
         return new OkObjectResult(statistics.Where(stat =>      
@@ -52,7 +52,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetCount(GetCountOfDocsModel model)
     {
-        var docs = await _docsService.GetAllDocuments();
+        var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 10000);
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
         var filteredStats = statistics

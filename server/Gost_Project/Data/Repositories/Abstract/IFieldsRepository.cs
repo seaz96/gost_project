@@ -6,6 +6,8 @@ public interface IFieldsRepository
 {
     public Task<List<FieldEntity>> GetAllAsync();
 
+    public FieldEntity? GetById(long? id);
+    
     public Task<FieldEntity?> GetByIdAsync(long? id);
 
     public Task<long> AddAsync(FieldEntity field);

@@ -132,11 +132,11 @@ public class DocsController(
     /// <summary>
     /// Get doc by id with its references
     /// </summary>
-    /// <returns>Doc with actual and primary fileds and references</returns>
+    /// <returns>Doc with actual and primary fields and references</returns>
     [HttpGet("{docId}")]
     public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long docId)
     {
-        return await _docsService.GetDocument(docId);
+        return await _docsService.GetDocumentAsync(docId);
     }
 
     /// <summary>
@@ -145,10 +145,10 @@ public class DocsController(
     /// <returns>List of any status document without references</returns>
     [NoCache]
     [HttpGet("all")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetAllDocuments(
-        [FromQuery] SearchParametersModel parameters)
+    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetDocuments(
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
-        return Ok(await _docsService.GetAllDocuments(parameters));
+        return Ok(await _docsService.GetDocumentsAsync(parameters, null, limit, offset));
     }
 
     /// <summary>
@@ -158,9 +158,9 @@ public class DocsController(
     [NoCache]
     [HttpGet("all-valid")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments(
-        [FromQuery] SearchParametersModel parameters)
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
-        return Ok(await _docsService.GetAllDocuments(parameters, true));
+        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, offset));    
     }
 
     /// <summary>
@@ -170,9 +170,9 @@ public class DocsController(
     [NoCache]
     [HttpGet("all-canceled")]
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments(
-        [FromQuery] SearchParametersModel parameters)
+        [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
-        return Ok(await _docsService.GetAllDocuments(parameters, false));
+        return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, offset));
     }
 
     /// <summary>
@@ -182,6 +182,6 @@ public class DocsController(
     [HttpGet("all-general-info")]
     public async Task<ActionResult> GetDocsWithGeneralInfo()
     {
-        return Ok(await _docsService.GetDocsWithGeneralInfo());
+        return Ok(await _docsService.GetDocsWithGeneralInfoAsync());
     }
 }

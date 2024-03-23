@@ -30,7 +30,7 @@ class Program
         builder.Services.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
+        }, ServiceLifetime.Transient);
 
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

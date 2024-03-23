@@ -15,6 +15,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
+    private readonly object _locker = new object();
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
@@ -72,7 +73,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult("Status changed successfully.");
     }
 
-    public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long id)
+    public async Task<ActionResult<GetDocumentResponseModel>> GetDocumentAsync(long id)
     {
         var doc = await _docsRepository.GetByIdAsync(id);
         
@@ -112,53 +113,21 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult(result);
     }
 
-    public async Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters, bool isValid)
+    public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int offset)
     {
-        var docs = await _docsRepository.GetAllAsync();
-        var fields = await _fieldsRepository.GetAllAsync();
+        var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, offset);
 
         var docsWithFields = docs.Select(doc => new GetDocumentResponseModel
-            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
-                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
-                DocId = doc.Id })
-            .Where(doc =>
-            {
-                if (isValid)
-                    return doc.Primary.Status == DocStatuses.Valid;
-                return doc.Primary.Status != DocStatuses.Valid;
-            })
-            .ToList();
-        
-        return SearchHelper.GetMatchingDocs(docsWithFields, parameters);
-    }
-    
-    public async Task<List<GetDocumentResponseModel>> GetAllDocuments(SearchParametersModel parameters)
-    {
-        var docs = await _docsRepository.GetAllAsync();
-        var fields = await _fieldsRepository.GetAllAsync();
+        {
+            Primary = _fieldsRepository.GetById(doc.PrimaryFieldId),
+            Actual = _fieldsRepository.GetById(doc.ActualFieldId),
+            DocId = doc.Id
+        });
 
-        var docsWithFields = docs.Select(doc => new GetDocumentResponseModel
-            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
-                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
-                DocId = doc.Id })
-            .ToList();
-        
-        return SearchHelper.GetMatchingDocs(docsWithFields, parameters);
-    }
-    
-    public async Task<List<GetDocumentResponseModel>> GetAllDocuments()
-    {
-        var docs = await _docsRepository.GetAllAsync();
-        var fields = await _fieldsRepository.GetAllAsync();
-
-        return docs.Select(doc => new GetDocumentResponseModel
-            { Primary = fields.Find(field => field.Id == doc.PrimaryFieldId),
-                Actual = fields.Find(field => field.Id == doc.ActualFieldId),
-                DocId = doc.Id })
-            .ToList();
+        return docsWithFields.ToList();
     }
 
-    public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfo()
+    public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync()
     {
         var docs = await _docsRepository.GetAllAsync();
         var fields = await _fieldsRepository.GetAllAsync();

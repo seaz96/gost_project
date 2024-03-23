@@ -87,21 +87,21 @@
             <summary>
             Get doc by id with its references
             </summary>
-            <returns>Doc with actual and primary fileds and references</returns>
+            <returns>Doc with actual and primary fields and references</returns>
         </member>
-        <member name="M:Gost_Project.Controllers.DocsController.GetAllDocuments(Gost_Project.Data.Models.SearchParametersModel)">
+        <member name="M:Gost_Project.Controllers.DocsController.GetDocuments(Gost_Project.Data.Models.SearchParametersModel,System.Int32,System.Int32)">
             <summary>
             Get all documents without references
             </summary>
             <returns>List of any status document without references</returns>
         </member>
-        <member name="M:Gost_Project.Controllers.DocsController.GetValidDocuments(Gost_Project.Data.Models.SearchParametersModel)">
+        <member name="M:Gost_Project.Controllers.DocsController.GetValidDocuments(Gost_Project.Data.Models.SearchParametersModel,System.Int32,System.Int32)">
             <summary>
             Get only valid documents
             </summary>
             <returns>List of valid documents without references</returns>
         </member>
-        <member name="M:Gost_Project.Controllers.DocsController.GetCanceledDocuments(Gost_Project.Data.Models.SearchParametersModel)">
+        <member name="M:Gost_Project.Controllers.DocsController.GetCanceledDocuments(Gost_Project.Data.Models.SearchParametersModel,System.Int32,System.Int32)">
             <summary>
             Get only not valid documents
             </summary>
@@ -177,102 +177,6 @@
             <inheritdoc />
         </member>
         <member name="M:Gost_Project.Data.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.RemoveRequired">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RemoveRequired.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.RenameGostToDoc">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.RenameGostToDoc.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.FieldsRenames">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.FieldsRenames.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.SwitchFieldsToNullable">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.SwitchFieldsToNullable.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.AddStats">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddStats.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddStats.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddStats.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.AddFieldsToUser">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddFieldsToUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.AddNullableEnums">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddNullableEnums.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddNullableEnums.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.AddNullableEnums.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="T:Gost_Project.Data.Migrations.ChangeStatistics">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
-            <inheritdoc />
-        </member>
-        <member name="M:Gost_Project.Data.Migrations.ChangeStatistics.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
         <member name="M:Gost_Project.Helpers.RegexHelper.EmailRegex">
