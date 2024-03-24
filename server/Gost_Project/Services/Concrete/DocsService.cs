@@ -126,6 +126,11 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         return docsWithFields.ToList();
     }
+    
+    public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
+    {
+        return await _docsRepository.GetCountOfDocumentsAsync(parameters, isValid);
+    }
 
     public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync()
     {

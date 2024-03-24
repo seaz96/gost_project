@@ -174,6 +174,42 @@ public class DocsController(
     {
         return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, lastId));
     }
+    
+    /// <summary>
+    /// Get count of all documents without references
+    /// </summary>
+    /// <returns>List of any status document without references</returns>
+    [NoCache]
+    [HttpGet("all-count")]
+    public async Task<ActionResult<int>> GetDocumentsCount(
+        [FromQuery] SearchParametersModel parameters)
+    {
+        return Ok(await _docsService.GetDocumentsCountAsync(parameters, null));
+    }
+
+    /// <summary>
+    /// Count count of only valid documents
+    /// </summary>
+    /// <returns>List of valid documents without references</returns>
+    [NoCache]
+    [HttpGet("all-valid-count")]
+    public async Task<ActionResult<int>> GetValidDocumentsCount(
+        [FromQuery] SearchParametersModel parameters)
+    {
+        return Ok(await _docsService.GetDocumentsCountAsync(parameters, true));    
+    }
+
+    /// <summary>
+    /// Get count of only not valid documents
+    /// </summary>
+    /// <returns>List of replaced or canceled documents without references</returns>
+    [NoCache]
+    [HttpGet("all-canceled-count")]
+    public async Task<ActionResult<int>> GetCanceledDocumentsCount(
+        [FromQuery] SearchParametersModel parameters)
+    {
+        return Ok(await _docsService.GetDocumentsCountAsync(parameters, false));
+    }
 
     /// <summary>
     /// Get all docs with general info only

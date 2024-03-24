@@ -107,6 +107,24 @@
             </summary>
             <returns>List of replaced or canceled documents without references</returns>
         </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetDocumentsCount(Gost_Project.Data.Models.SearchParametersModel)">
+            <summary>
+            Get count of all documents without references
+            </summary>
+            <returns>List of any status document without references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetValidDocumentsCount(Gost_Project.Data.Models.SearchParametersModel)">
+            <summary>
+            Count count of only valid documents
+            </summary>
+            <returns>List of valid documents without references</returns>
+        </member>
+        <member name="M:Gost_Project.Controllers.DocsController.GetCanceledDocumentsCount(Gost_Project.Data.Models.SearchParametersModel)">
+            <summary>
+            Get count of only not valid documents
+            </summary>
+            <returns>List of replaced or canceled documents without references</returns>
+        </member>
         <member name="M:Gost_Project.Controllers.DocsController.GetDocsWithGeneralInfo">
             <summary>
             Get all docs with general info only
