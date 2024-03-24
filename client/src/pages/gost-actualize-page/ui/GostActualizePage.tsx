@@ -7,18 +7,16 @@ import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 const GostActualizePage = () => {
   const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`https://gost-storage.ru/api/docs/${id}`)
+  const {response, loading, error} = useAxios<gostModel.Gost>(`/docs/${id}`)
   const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave) => {
     console.log(gost)
-    axios.put('https://gost-storage.ru/api/docs/actualize/' + id, gost, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-      },
+    axiosInstance.put('/docs/actualize/' + id, gost, {
       params: {
         docId: id
       }

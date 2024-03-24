@@ -5,20 +5,16 @@ import styles from './ResetPasswordPage.module.scss'
 import axios from 'axios'
 import { UserContext } from 'entities/user'
 import { useNavigate } from 'react-router-dom'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 const ResetPasswordPage = () => {
   const navigate = useNavigate()
   const {user} = useContext(UserContext)
   const handleSubmit = (oldPassword: string, newPassword: string) => {
-    axios.post('https://gost-storage.ru/api/accounts/change-password', {
+    axiosInstance.post('/accounts/change-password', {
       'login': user?.login,
       'new_password': newPassword,
       'old_password': oldPassword
-    }, 
-    {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-      }
     })
     .then(() => navigate('/'))
   }

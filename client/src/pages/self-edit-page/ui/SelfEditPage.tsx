@@ -6,17 +6,15 @@ import { useAxios } from 'shared/hooks'
 import { UserEditForm, UserEditType } from 'widgets/user-edit-form'
 
 import styles from './SelfEditPage.module.scss'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 const SelfEditPage = () => {
     const navigate = useNavigate()
-    const {response, loading, error} = useAxios<userModel.User>(`https://gost-storage.ru/api/accounts/self-info`)
+    const {response, loading, error} = useAxios<userModel.User>(`/accounts/self-info`)
 
     const handleSelfEdit = (userData: UserEditType) => {
-        axios.post('https://gost-storage.ru/api/accounts/self-edit', userData, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-            }
-        }).then(() => navigate('/users-page'))
+        axiosInstance.post('/accounts/self-edit', userData)
+        .then(() => navigate('/users-page'))
     }
     
     if(response) 

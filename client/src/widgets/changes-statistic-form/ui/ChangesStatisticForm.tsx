@@ -3,6 +3,7 @@ import { Button, Input, RadioGroup } from 'shared/components'
 
 import styles from './ChangesStatisticForm.module.scss'
 import axios from 'axios'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 interface ChangesStatisticFormProps {
   handleSubmit: Function,
@@ -26,10 +27,7 @@ const ChangesStatisticForm:React.FC<ChangesStatisticFormProps> = props => {
 
   const validateData = (event: React.FormEvent) => {
     event.preventDefault()
-    axios.get('https://gost-storage.ru/api/stats/get-count', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-      },
+    axiosInstance.get('/stats/get-count', {
       params: {
         status: changesData.status,
         count: changesData.count,

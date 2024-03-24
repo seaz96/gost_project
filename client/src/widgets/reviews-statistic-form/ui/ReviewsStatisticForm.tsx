@@ -3,6 +3,7 @@ import { Button, Input } from 'shared/components'
 
 import styles from './ReviewsStatisticForm.module.scss'
 import axios from 'axios'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 interface ReviewsStatisticFormProps {
   handleSubmit: Function,
@@ -41,10 +42,7 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
           reviewsData.endDate = new Date().toISOString();
       }
 
-    axios.get('https://gost-storage.ru/api/stats/get-views', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-      },
+    axiosInstance.get('/stats/get-views', {
       params: {
         ...reviewsData,
         StartDate: reviewsData.startDate,

@@ -6,6 +6,7 @@ import { RegistrationForm, registrationModel } from 'widgets/registration-form';
 import urfuLogo from 'shared/assets/urfu.png';
 import styles from './LoginPage.module.scss';
 import { UserContext, userModel } from 'entities/user';
+import { axiosInstance } from 'shared/configs/axiosConfig';
 
 enum states {
     authorization,
@@ -17,7 +18,7 @@ const LoginPage = () => {
     const {setUser} = useContext(UserContext)
 
     const handleRegistration = (user: registrationModel.UserRegistration) => {
-        axios.post<userModel.User>('https://gost-storage.ru/api/accounts/register', user)
+        axiosInstance.post<userModel.User>('/accounts/register', user)
         .then(response => {
             setUser(response.data);
             localStorage.setItem('jwt_token', response.data.token)
@@ -26,7 +27,7 @@ const LoginPage = () => {
     }
 
     const handleAuthorization = (user: authorizationModel.UserAuthorization) => {
-        axios.post<userModel.User>('https://gost-storage.ru/api/accounts/login', user)
+        axiosInstance.post<userModel.User>('/accounts/login', user)
         .then((response) => {
             setUser(response.data);
             localStorage.setItem('jwt_token', response.data.token)

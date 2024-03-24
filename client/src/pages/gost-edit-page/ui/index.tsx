@@ -8,19 +8,16 @@ import styles from './GostEditPage.module.scss'
 import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 const GostEditPage = () => {
   const navigate = useNavigate()
   const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`https://gost-storage.ru/api/docs/${id}`)
+  const {response, loading, error} = useAxios<gostModel.Gost>(`/docs/${id}`)
 
   const editOldDocument = (gost: newGostModel.GostToSave) => {
-    axios.put(`https://gost-storage.ru/api/docs/update/${id}`, gost, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-      }
-    })
-    .then(response => navigate('/gost-review/' + id))
+    axiosInstance.put(`/docs/update/${id}`, gost)
+    .then(() => navigate('/gost-review/' + id))
   }
 
   if(loading) return <></>
