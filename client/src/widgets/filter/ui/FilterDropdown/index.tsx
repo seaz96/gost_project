@@ -3,36 +3,20 @@ import React, { useState } from 'react'
 
 import styles from './FilterDropdown.module.scss';
 import arrowDown from '../../assets/arrowDown.png';
-import { Button, Input, RadioGroup } from 'shared/components';
+import { Input, RadioGroup } from 'shared/components';
 import { Collapse } from '@mui/material';
 import classNames from 'classnames';
-import { useAxios } from 'shared/hooks';
 
 interface FilterDropdownProps {
-    filterSubmit: Function
+    filterData: Partial<gostModel.GostFields>
+    filterSubmit: (filterData: Partial<gostModel.GostFields>) => void
 }
 
 const FilterDropdown: React.FC<FilterDropdownProps> = props => {
     const {
-        filterSubmit
+        filterSubmit,
+        filterData
     } = props
-    const [filterData, setFilterData] = useState<Partial<gostModel.GostFields>>({
-        "designation": '',
-        "fullName": '',
-        "codeOKS": '',
-        "activityField": '',
-        "acceptanceDate": '',
-        "commissionDate":  '',
-        "author": '',
-        "acceptedFirstTimeOrReplaced": '',
-        "content": '',
-        "keyWords": '',
-        "keyPhrases": '',
-        "applicationArea": '',
-        "documentText": '',
-        "changes": '',
-        "amendments": '',
-    })
 
     const [filterStatus, setFilterStatus] = useState({
         "designation": '',
@@ -68,7 +52,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.codeOKS} 
-                    onChange={(value: string) => setFilterData({...filterData, codeOKS: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, codeOKS: value})} 
                 />
             </Collapse>
         </div>
@@ -81,7 +65,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.activityField} 
-                    onChange={(value: string) => setFilterData({...filterData, activityField: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, activityField: value})} 
                 />
             </Collapse>
         </div>
@@ -94,7 +78,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='date' 
                     value={filterData.acceptanceDate} 
-                    onChange={(value: string) => setFilterData({...filterData, acceptanceDate: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, acceptanceDate: value})} 
                 />
             </Collapse>
         </div>
@@ -107,7 +91,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='date' 
                     value={filterData.commissionDate} 
-                    onChange={(value: string) => setFilterData({...filterData, commissionDate: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, commissionDate: value})} 
                 />
             </Collapse>
         </div>
@@ -120,7 +104,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.author} 
-                    onChange={(value: string) => setFilterData({...filterData, author: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, author: value})} 
                 />
             </Collapse>
         </div>
@@ -133,7 +117,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.acceptedFirstTimeOrReplaced} 
-                    onChange={(value: string) => setFilterData({...filterData, acceptedFirstTimeOrReplaced: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, acceptedFirstTimeOrReplaced: value})} 
                 />
             </Collapse>
         </div>
@@ -146,7 +130,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.content} 
-                    onChange={(value: string) => setFilterData({...filterData, content: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, content: value})} 
                 />
             </Collapse>
         </div>
@@ -159,7 +143,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.applicationArea} 
-                    onChange={(value: string) => setFilterData({...filterData, applicationArea: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, applicationArea: value})} 
                 />
             </Collapse>
         </div>
@@ -172,7 +156,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.keyWords} 
-                    onChange={(value: string) => setFilterData({...filterData, keyWords: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, keyWords: value})} 
                 />
             </Collapse>
         </div>
@@ -185,7 +169,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.keyPhrases} 
-                    onChange={(value: string) => setFilterData({...filterData, keyPhrases: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, keyPhrases: value})} 
                 />
             </Collapse>
         </div>
@@ -207,7 +191,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                   direction='vertical'
                   name='adoptionLevel'
                   value={filterData.adoptionLevel?.toString() || '0'}
-                  onChange={(value: string) => {setFilterData({...filterData, adoptionLevel: parseInt(value)})}}
+                  onChange={(value: string) => {filterSubmit({...filterData, adoptionLevel: parseInt(value)})}}
                 />
             </Collapse>
         </div>
@@ -220,7 +204,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.documentText} 
-                    onChange={(value: string) => setFilterData({...filterData, documentText: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, documentText: value})} 
                 />
             </Collapse>
         </div>
@@ -233,7 +217,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.changes} 
-                    onChange={(value: string) => setFilterData({...filterData, changes: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, changes: value})} 
                 />
             </Collapse>
         </div>
@@ -246,7 +230,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                 <Input 
                     type='text' 
                     value={filterData.amendments} 
-                    onChange={(value: string) => setFilterData({...filterData, amendments: value})} 
+                    onChange={(value: string) => filterSubmit({...filterData, amendments: value})} 
                 />
             </Collapse>
         </div>
@@ -265,11 +249,10 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                   name='harmonization'
                   direction='vertical'
                   value={filterData.harmonization?.toString() || '1'}
-                  onChange={(value: string) => {setFilterData({...filterData, harmonization: parseInt(value)})}}
+                  onChange={(value: string) => {filterSubmit({...filterData, harmonization: parseInt(value)})}}
                 />
             </Collapse>
         </div>
-        <Button onClick={() => filterSubmit(filterData)} isFilled className={styles.submitButton}>Найти</Button>
     </div>
   )
 }
