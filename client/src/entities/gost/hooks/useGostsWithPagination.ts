@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { axiosInstance } from 'shared/configs/axiosConfig';
 import { Gost } from '../model/gostModel';
 
-const baseLimit = 1
+const baseLimit = 10
 
 export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [gosts, setGosts] = useState<Gost[]>([]);
@@ -15,7 +15,6 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [page, setPage] = useState(1)
 
     const fetchGostsData = (limit: number) => {
-        console.log(lastId)
         return axiosInstance
             .get(url, {params: {...gostsParams, lastId: lastId, limit: limit}})
             .then((res) => {
@@ -43,7 +42,6 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
 
     const changePage = (page: number) => {
         setPage(page)
-        console.log(page, gosts)
         if(page * baseLimit > gosts.length) {
             fetchGostsData(page * baseLimit - gosts.length)
         } else {
@@ -52,7 +50,6 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     }
 
     useEffect(() => {
-        console.log(',,')
         setloading(true)
         fetchCountData()
         .then(() => fetchGostsData(baseLimit)
