@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { axiosInstance } from "shared/configs/axiosConfig";
 
 const useAxios = <T>(url: string, defaultParams?:any) => {
     const [response, setResponse] = useState<T | null>(null);
@@ -9,8 +10,8 @@ const useAxios = <T>(url: string, defaultParams?:any) => {
 
     const fetchData = () => {
         console.log(params)
-        axios
-            .get(url, {headers: {Authorization: `Bearer ${localStorage.getItem('jwt_token')}`}, params: {...params}})
+        axiosInstance
+            .get(url, {params: {...params}})
             .then((res) => {
                 setResponse(res.data || null);
                 console.log(res)

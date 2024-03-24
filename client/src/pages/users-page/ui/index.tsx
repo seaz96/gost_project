@@ -8,7 +8,7 @@ import { userModel } from 'entities/user';
 import classNames from 'classnames';
 
 const UsersPage = () => {
-  const {response, loading, error} = useAxios<userModel.User[]>('https://backend-seaz96.kexogg.ru/api/accounts/list')
+  const {response, loading, error} = useAxios<userModel.User[]>('/accounts/list')
 
   if(loading) return <></>
 

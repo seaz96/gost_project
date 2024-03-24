@@ -2,6 +2,7 @@ import axios from "axios";
 import { UserContext, userModel } from "entities/user";
 import { useEffect, useState } from "react";
 import { Loader } from "shared/components";
+import { axiosInstance } from "shared/configs/axiosConfig";
 
 export const withUser = (component: () => React.ReactNode) => () => {
     const [user, setUser] = useState<userModel.User | null>(null)
@@ -10,11 +11,7 @@ export const withUser = (component: () => React.ReactNode) => () => {
     useEffect(() => {
       if(localStorage.getItem('jwt_token')) {
         setLoading(true)
-        axios.get<userModel.User>('https://backend-seaz96.kexogg.ru/api/accounts/self-info', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-          }
-        })
+        axiosInstance.get<userModel.User>('/accounts/self-info')
         .then((repsonce) => {
           setLoading(false)
           setUser(repsonce.data)

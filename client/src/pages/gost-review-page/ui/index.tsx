@@ -11,7 +11,7 @@ import classNames from 'classnames';
 
 const GostReviewPage = () => {
   const gostId = useParams().id;
-  const {response, error, loading} = useAxios<gostModel.Gost>(`https://backend-seaz96.kexogg.ru/api/docs/${gostId}`)
+  const {response, error, loading} = useAxios<gostModel.Gost>(`/docs/${gostId}`)
 
 
   if(response) {

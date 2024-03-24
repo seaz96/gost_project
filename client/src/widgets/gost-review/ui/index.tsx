@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom"
 import { useAxios } from 'shared/hooks';
 import { UserContext } from 'entities/user';
+import { axiosInstance } from 'shared/configs/axiosConfig';
 
 interface GostReviewProps {
     gost: gostModel.Gost,
@@ -22,7 +23,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
         gostId
     } = props
     const navigate = useNavigate()
-    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('https://backend-seaz96.kexogg.ru/api/docs/all-general-info')
+    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
     const {user} = useContext(UserContext)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
@@ -34,10 +35,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     const actualCommissionDate = gost.actual.acceptanceDate ? new Date(gost.actual.commissionDate) : null
 
     useEffect(() => {
-        axios.post(`https://backend-seaz96.kexogg.ru/api/stats/update-views/${gostId}`, {}, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-            },
+        axiosInstance.post(`/stats/update-views/${gostId}`, {}, {
             params: {
                 docId: gostId
             }
@@ -45,36 +43,24 @@ const GostReview:React.FC<GostReviewProps> = props => {
     }, [])
 
     const onDeleteSubmit = () => {
-        axios.delete(`https://backend-seaz96.kexogg.ru/api/docs/delete/${gostId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-            }
-        })
-        .then(response => navigate('/'))
+        axiosInstance.delete(`/docs/delete/${gostId}`)
+        .then(() => navigate('/'))
     }
 
     const recoverDoc = () => {
-        axios.put(`https://backend-seaz96.kexogg.ru/api/docs/change-status`, {
+        axiosInstance.put(`/docs/change-status`, {
             id: gostId,
             status: 0
-        }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-            }
         })
-        .then(response => {navigate('/')})
+        .then(() => {navigate('/')})
     }
 
     const cancelDoc = () => {
-        axios.put(`https://backend-seaz96.kexogg.ru/api/docs/change-status`, {
+        axiosInstance.put(`/docs/change-status`, {
             id: gostId,
             status: 1
-        }, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`
-            }
         })
-        .then(response => {navigate('/')})
+        .then(() => {navigate('/')})
     }
 
     return (

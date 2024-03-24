@@ -7,6 +7,7 @@ import { GostForm, newGostModel } from 'widgets/gost-form'
 import styles from './GostReplacePage.module.scss'
 import { gostModel } from 'entities/gost'
 import { useAxios } from 'shared/hooks'
+import { axiosInstance } from 'shared/configs/axiosConfig'
 
 function getGostStub() {
     return {
@@ -36,23 +37,15 @@ function getGostStub() {
 const GostReplacePage = () => {
     const navigate = useNavigate()
     const gostToReplaceId = useParams().id
-    const {response, loading} = useAxios<gostModel.Gost>('https://backend-seaz96.kexogg.ru/api/docs/' + gostToReplaceId)
+    const {response, loading} = useAxios<gostModel.Gost>('/docs/' + gostToReplaceId)
 
 
     const addNewDocument = (gost: newGostModel.GostToSave) => {
-      axios.post('https://backend-seaz96.kexogg.ru/api/docs/add', gost, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-        }
-      })
+      axiosInstance.post('/docs/add', gost)
       .then(() => {
-          axios.put(`https://backend-seaz96.kexogg.ru/api/docs/change-status`, {
+        axiosInstance.put(`/docs/change-status`, {
               id: gostToReplaceId,
               status: 2
-          }, {
-              headers: {
-                  Authorization: `Bearer ${localStorage.getItem('jwt_token')}`
-              }
           })
       }).then(() => navigate('/'))
     }
