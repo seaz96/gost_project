@@ -5,9 +5,7 @@ namespace Gost_Project.Data.Models;
 
 public class SearchParametersModel
 {
-    public string? Designation { get; set; }
-
-    public string? FullName { get; set; }
+    public string? Name { get; set; }
 
     public string? CodeOKS { get; set; }
 
