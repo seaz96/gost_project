@@ -45,7 +45,7 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
 
     const changePage = (page: number) => {
         setPage(page)
-        if(page * baseLimit > gosts.length) {
+        if((page-1) * baseLimit >= gosts.length) {
             fetchGostsData(page * baseLimit - gosts.length)
         } else {
             setActiveGosts(gosts.slice((page-1)*baseLimit, page*baseLimit))
