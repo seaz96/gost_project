@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { axiosInstance } from 'shared/configs/axiosConfig';
 import { Gost } from '../model/gostModel';
 
@@ -19,8 +19,7 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
             .get(url, {params: {...gostsParams, lastId: id, limit: limit}})
             .then((res) => {
                 const data = res.data as Gost[]
-                console.log(data)
-                setActiveGosts(data.slice(res.data.length - baseLimit));
+                setActiveGosts(data);
                 if(refetch) {
                     setGosts(data);
                 } else {
