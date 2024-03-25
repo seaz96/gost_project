@@ -11,17 +11,34 @@ import { Collapse } from '@mui/material';
 
 interface FilterProps {
   filterSubmit: Function
-  inputSubmit: Function
 }
 
 const Filter: React.FC<FilterProps> = props => {
   const {
     filterSubmit,
-    inputSubmit
   } = props
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const [filterData, setFilterData] = useState<Partial<gostModel.GostFields> & {name?: string}>({
+    "name": '',
+    "designation": '',
+    "fullName": '',
+    "codeOKS": '',
+    "activityField": '',
+    "acceptanceDate": '',
+    "commissionDate":  '',
+    "author": '',
+    "acceptedFirstTimeOrReplaced": '',
+    "content": '',
+    "keyWords": '',
+    "keyPhrases": '',
+    "applicationArea": '',
+    "documentText": '',
+    "changes": '',
+    "amendments": '',
+})
 
-  const handleSubmit = (filterData: gostModel.GostFields) => {
+
+  const handleSubmit = () => {
     setFilterOpen(false);
     filterSubmit(filterData)
   }
@@ -38,7 +55,6 @@ const Filter: React.FC<FilterProps> = props => {
     document.addEventListener('click', (event) => closeListener(event))
   }
 
-  const [inputValue, setInputValue] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
 
   return (
@@ -46,8 +62,8 @@ const Filter: React.FC<FilterProps> = props => {
       <input 
         type='text' 
         className={styles.input} 
-        value={inputValue} 
-        onChange={(event) => setInputValue(event.target.value)}
+        value={filterData.name} 
+        onChange={(event) => setFilterData({...filterData, name: event.target.value})}
         placeholder='Поиск по обозначению или наименованию...'
       />
       <div className={styles.buttonsContainer}>
@@ -61,12 +77,15 @@ const Filter: React.FC<FilterProps> = props => {
         >
           <img src={filter} alt='filter'/>
         </IconButton>
-        <IconButton onClick={() => inputSubmit(inputValue)} isFilled className={styles.searchButton}>
+        <IconButton onClick={() => handleSubmit()} isFilled className={styles.searchButton}>
           <img src={search} alt='search'/>
         </IconButton>
         <Collapse className={styles.filterDropdown} in={filterOpen}>
           <div ref={dropdownRef}>
-            <FilterDropdown filterSubmit={(filterData: gostModel.GostFields) => handleSubmit(filterData)}/>
+            <FilterDropdown 
+              filterData={filterData}
+              filterSubmit={(filterData) => setFilterData(filterData)}
+            />
           </div>
         </Collapse>
       </div>

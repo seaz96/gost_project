@@ -9,19 +9,17 @@ import { Pagination } from '@mui/material';
 import { useGostsWithPagination } from 'entities/gost';
 
 const GostsPage = () => {
-  const [inputValue, setInputValue] = useState('')
   const {activeGosts, page, count, changePage, setGostParams } = useGostsWithPagination('/docs/all-valid')
 
   return (
     <div className='container contentContainer'>
         <section className={styles.filterSection}>
           <Filter 
-            filterSubmit={(filterData: gostModel.GostFields) => setGostParams(filterData)}
-            inputSubmit={(inputData: string) => setInputValue(inputData)}
+            filterSubmit={(filterData: gostModel.GostFields & {name? :string}) => setGostParams(filterData)}
           />
         </section>
         <section className={styles.gostSection}>
-          <GostsTable gosts={activeGosts || []} filterValue={inputValue}/>
+          <GostsTable gosts={activeGosts || []} />
         </section>
         <Pagination
           count={count}
