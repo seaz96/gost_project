@@ -41,5 +41,7 @@ public class FieldEntity : BaseEntity
     public HarmonizationLevels? Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
+    
+    public long DocId { get; set; }
 }
 

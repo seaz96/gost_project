@@ -7,6 +7,8 @@ public interface IFieldsRepository
     public Task<List<FieldEntity>> GetAllAsync();
 
     public FieldEntity? GetById(long? id);
+
+    public Task<ICollection<FieldEntity>> GetFieldsByDocIds(ICollection<long> docIds);
     
     public Task<FieldEntity?> GetByIdAsync(long? id);
 

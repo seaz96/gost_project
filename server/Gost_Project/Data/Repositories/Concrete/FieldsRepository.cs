@@ -18,6 +18,11 @@ public class FieldsRepository(DataContext context) : IFieldsRepository
         return _context.Fields.FirstOrDefault(field => field.Id == id);
     }
 
+    public async Task<ICollection<FieldEntity>> GetFieldsByDocIds(ICollection<long> docIds)
+    {
+        return await _context.Fields.Where(f => docIds.Contains(f.DocId)).ToListAsync();
+    }
+
     public async Task<FieldEntity?> GetByIdAsync(long? id)
     {
         return await _context.Fields.FirstOrDefaultAsync(field => field.Id == id);

@@ -20,7 +20,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
     public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, _context);
-        
+
         var docs = _context.Docs
             .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
             .Distinct()
@@ -28,7 +28,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Where(x => x.Id > lastId)
             .Take(limit)
             .ToList();
-
+        
         return docs;
     }
     

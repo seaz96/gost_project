@@ -117,15 +117,15 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
         var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, lastId);
-
-        var docsWithFields = docs.Select(doc => new GetDocumentResponseModel
+        var fields = await _fieldsRepository.GetFieldsByDocIds(docs.Select(x => x.Id).ToList());
+        var docsWithFields = docs.AsParallel().Select(doc => new GetDocumentResponseModel
         {
-            Primary = _fieldsRepository.GetById(doc.PrimaryFieldId),
-            Actual = _fieldsRepository.GetById(doc.ActualFieldId),
+            Primary = fields.FirstOrDefault(f => f.DocId == doc.Id && f.IsPrimary),
+            Actual = fields.FirstOrDefault(f => f.DocId == doc.Id && !f.IsPrimary),
             DocId = doc.Id
-        });
+        }).ToList();
 
-        return docsWithFields.ToList();
+        return docsWithFields;
     }
     
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)

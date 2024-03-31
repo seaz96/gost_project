@@ -197,6 +197,18 @@
         <member name="M:Gost_Project.Data.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Gost_Project.Data.Migrations.AddDocIdToFields">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddDocIdToFields.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddDocIdToFields.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gost_Project.Data.Migrations.AddDocIdToFields.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:Gost_Project.Helpers.RegexHelper.EmailRegex">
             <remarks>
             Pattern:<br/>
