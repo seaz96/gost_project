@@ -27,6 +27,12 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         var doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
         var docId = await _docsRepository.AddAsync(doc);
+        
+        primaryField.DocId = docId;
+        actualField.DocId = docId; 
+        
+        await _fieldsRepository.UpdateAsync(primaryField);
+        await _fieldsRepository.UpdateAsync(actualField);
 
         return docId;
     }
