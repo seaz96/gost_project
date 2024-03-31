@@ -7,6 +7,8 @@ public class GetViewsModel
     public string? CodeOKS { get; set; }
 
     public string? ActivityField { get; set; }
+
+    public string? OrgBranch { get; set; }
     
     public DateTime? StartDate { get; set; }
     

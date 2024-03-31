@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <ExcludeXmlAssemblyFiles>false</ExcludeXmlAssemblyFiles>
+        <StartupObject>Gost_Project.Program</StartupObject>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

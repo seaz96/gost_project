@@ -7,6 +7,7 @@ using Gost_Project.Middlewares.Extensions;
 using Gost_Project.Profiles;
 using Gost_Project.Services.Abstract;
 using Gost_Project.Services.Concrete;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -53,10 +54,10 @@ class Program
             });
 
         var mapper = new MapperConfiguration(config =>
-            {
-                config.AddProfile(new MapperProfile());
-            })
-            .CreateMapper();
+        {
+            config.AddProfile(new MapperProfile());
+        })
+        .CreateMapper();
 
         builder.Services.AddSingleton(mapper);
         builder.Services.AddLoggerServices();
@@ -99,14 +100,19 @@ class Program
                         Reference = new OpenApiReference 
                         { 
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer" 
+                            Id = JwtBearerDefaults.AuthenticationScheme
                         } 
                     },
-                    new string[] { } 
+                    Array.Empty<string>()
                 } 
             });
-            
+
+#if DEBUG
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Gost_Project.xml");
+#else
             var filePath = Path.Combine(AppContext.BaseDirectory, "Gost_Project.xml");
+#endif
+
             c.IncludeXmlComments(filePath);
         });
 

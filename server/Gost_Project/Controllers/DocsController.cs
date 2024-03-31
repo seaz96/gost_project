@@ -5,6 +5,7 @@ using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Data.Models.Docs;
+using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +19,15 @@ public class DocsController(
     IMapper mapper,
     IReferencesService referencesService,
     IFieldsService fieldsService,
-    IDocStatisticsService docStatisticsService) : ControllerBase
+    IDocStatisticsService docStatisticsService,
+    IUsersRepository usersRepository) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly IDocsService _docsService = docsService;
     private readonly IReferencesService _referencesService = referencesService;
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
+    private readonly IUsersRepository _usersRepository = usersRepository;
 
     /// <summary>
     /// Add new doc
@@ -44,7 +47,9 @@ public class DocsController(
         await _referencesService.AddReferencesAsync(dto.ReferencesId, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok(docId);
     }
@@ -85,7 +90,9 @@ public class DocsController(
         await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -107,7 +114,9 @@ public class DocsController(
         await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity {OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -125,7 +134,9 @@ public class DocsController(
         }
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
         
         return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }

@@ -15,5 +15,6 @@ public class DataContext : DbContext
         : base(options)
     {
         //Database.Migrate();
+        //Database.EnsureCreated();
     }
 }

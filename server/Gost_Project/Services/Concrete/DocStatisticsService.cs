@@ -32,24 +32,25 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
         return new OkObjectResult(statistics.Where(stat =>      
-            {
-                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                return doc is not null && IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
-            })
-            .GroupBy(stat => stat.DocId)
-            .Select(group => new
-            {
-                DocId = group.Key,
-                Views = group.Count()
-            })
-            .OrderByDescending(stat => stat.Views)
-            .Select(stat =>
-            {
-                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                return new DocWithViewsModel {DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
-                    Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName};
-            })
-            .ToList());
+        {
+            var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId && (string.IsNullOrEmpty(model.OrgBranch) || stat.OrgBranch == model.OrgBranch));
+
+            return doc is not null && IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
+        })
+        .GroupBy(stat => stat.DocId)
+        .Select(group => new
+        {
+            DocId = group.Key,
+            Views = group.Count()
+        })
+        .OrderByDescending(stat => stat.Views)
+        .Select(stat =>
+        {
+            var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+            return new DocWithViewsModel {DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName};
+        })
+        .ToList());
     }
 
     public async Task<IActionResult> GetCount(GetCountOfDocsModel model)
@@ -85,7 +86,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         
     }
     
-    private bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
+    private static bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
         GetViewsModel model, DocStatisticEntity statistic)
     {
         return (model.Designation is not null ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) : true) &&

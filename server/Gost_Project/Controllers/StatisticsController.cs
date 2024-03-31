@@ -3,17 +3,20 @@ using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Data.Models.Stats;
+using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Controllers;
 
 [ApiController]
 [Route("api/stats")]
-public class StatisticsController(IDocStatisticsService docStatisticsService) : ControllerBase
+public class StatisticsController(IDocStatisticsService docStatisticsService, IUsersRepository usersRepository) : ControllerBase
 {
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
+    private readonly IUsersRepository _usersRepository = usersRepository;
     
     /// <summary>
     /// Get views of every document bu filters
@@ -43,7 +46,9 @@ public class StatisticsController(IDocStatisticsService docStatisticsService) : 
     public async Task<IActionResult> UpdateViews(long docId)
     {
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok("Views updated succesfully!");
     }

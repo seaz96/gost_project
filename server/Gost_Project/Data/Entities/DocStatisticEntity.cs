@@ -10,5 +10,7 @@ public class DocStatisticEntity : BaseEntity
     
     public ActionType Action { get; set; }
     
+    public string? OrgBranch { get; set; }
+
     public DateTime Date { get; set; }
 }
