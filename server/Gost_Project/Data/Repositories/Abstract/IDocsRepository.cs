@@ -1,5 +1,6 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Docs;
 
 namespace Gost_Project.Data.Repositories.Abstract;
 

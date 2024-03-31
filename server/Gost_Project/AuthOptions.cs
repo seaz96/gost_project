@@ -1,7 +1,7 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
-namespace CorsairMessengerServer
+namespace Gost_Project
 {
     public static class AuthOptions
     {

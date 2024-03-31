@@ -1,9 +1,10 @@
 using System.Security.Claims;
 using AutoMapper;
-using CorsairMessengerServer.Attributes;
+using Gost_Project.Attributes;
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Docs;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

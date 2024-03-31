@@ -1,5 +1,4 @@
-﻿using CorsairMessengerServer;
-using Gost_Project.Data.Entities;
+﻿using Gost_Project.Data.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

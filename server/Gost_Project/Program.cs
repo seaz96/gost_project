@@ -1,10 +1,9 @@
-using Anomaly.Middlewares.Extensions;
 using AutoMapper;
-using CorsairMessengerServer;
 using Gost_Project.Data;
-using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
+using Gost_Project.Helpers;
+using Gost_Project.Middlewares.Extensions;
 using Gost_Project.Profiles;
 using Gost_Project.Services.Abstract;
 using Gost_Project.Services.Concrete;
@@ -12,6 +11,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+
+namespace Gost_Project;
 
 class Program
 {
@@ -24,6 +26,8 @@ class Program
         ArgumentNullException.ThrowIfNull(securityKey);
         AuthOptions.Initialize(securityKey);
 
+        builder.Host.UseSerilog((ctx, lc) => lc.GetConfiguration());
+        
         builder.Services.AddControllers();
         builder.Services.AddAuthentication();
 
@@ -49,12 +53,13 @@ class Program
             });
 
         var mapper = new MapperConfiguration(config =>
-        {
-            config.AddProfile(new MapperProfile());
-        })
-        .CreateMapper();
+            {
+                config.AddProfile(new MapperProfile());
+            })
+            .CreateMapper();
 
         builder.Services.AddSingleton(mapper);
+        builder.Services.AddLoggerServices();
 
         builder.Services.AddScoped<IUsersRepository, UsersRepository>();
         builder.Services.AddScoped<IFieldsRepository, FieldsRepository>();
@@ -66,6 +71,7 @@ class Program
         builder.Services.AddScoped<IReferencesService, ReferencesService>();
         builder.Services.AddScoped<IFieldsService, FieldsService>();
         builder.Services.AddScoped<IDocStatisticsService, DocStatisticsService>();
+        
         
         builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
 
@@ -100,7 +106,7 @@ class Program
                 } 
             });
             
-            var filePath = Path.Combine(System.AppContext.BaseDirectory, "Gost_Project.xml");
+            var filePath = Path.Combine(AppContext.BaseDirectory, "Gost_Project.xml");
             c.IncludeXmlComments(filePath);
         });
 

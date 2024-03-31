@@ -1,4 +1,4 @@
-namespace Gost_Project.Data.Models;
+namespace Gost_Project.Data.Models.Accounts;
 
 public class ChangeUserRoleModel
 {

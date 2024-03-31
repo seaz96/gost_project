@@ -1,4 +1,4 @@
-namespace Gost_Project.Data.Models;
+namespace Gost_Project.Data.Models.Docs;
 
 public class DocWithGeneralInfoModel
 {

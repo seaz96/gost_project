@@ -1,6 +1,7 @@
 using Gost_Project.Data;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Docs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gost_Project.Helpers;

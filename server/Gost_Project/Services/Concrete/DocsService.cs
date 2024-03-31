@@ -1,6 +1,7 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Docs;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Data.Repositories.Concrete;
 using Gost_Project.Helpers;

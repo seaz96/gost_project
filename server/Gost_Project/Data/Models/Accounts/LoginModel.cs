@@ -1,8 +1,7 @@
-﻿using Gost_Project.Data.Entities.Constraints;
-using Gost_Project.Helpers;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using Gost_Project.Data.Entities.Constraints;
 
-namespace Gost_Project.Data.Models
+namespace Gost_Project.Data.Models.Accounts
 {
     public class LoginModel
     {

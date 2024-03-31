@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Gost_Project.Data.Models
+namespace Gost_Project.Data.Models.Accounts
 {
     public class AuthResponseModel
     {

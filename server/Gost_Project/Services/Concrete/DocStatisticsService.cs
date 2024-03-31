@@ -1,6 +1,8 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Docs;
+using Gost_Project.Data.Models.Stats;
 using Gost_Project.Data.Repositories.Abstract;
 using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;

@@ -1,7 +1,6 @@
 ﻿using System.Text.Json.Serialization;
-using Gost_Project.Data.Models.Attributes;
 
-namespace Gost_Project.Data.Models
+namespace Gost_Project.Data.Models.Accounts
 {
     public class UserSelfEditModel
     {

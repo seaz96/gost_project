@@ -1,4 +1,4 @@
-﻿namespace Anomaly.Middlewares
+﻿namespace Gost_Project.Middlewares
 {
     public class SecurityHeadersComplementaryMiddleware(RequestDelegate next)
     {

@@ -1,6 +1,6 @@
 using Gost_Project.Data.Entities;
 
-namespace Gost_Project.Data.Repositories.Concrete;
+namespace Gost_Project.Data.Repositories.Abstract;
 
 public interface IFieldsRepository
 {

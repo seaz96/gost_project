@@ -1,5 +1,6 @@
 using Gost_Project.Data.Entities;
 using Gost_Project.Data.Models;
+using Gost_Project.Data.Models.Stats;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gost_Project.Services.Abstract;

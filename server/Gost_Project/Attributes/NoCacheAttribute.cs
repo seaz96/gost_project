@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace CorsairMessengerServer.Attributes;
+namespace Gost_Project.Attributes;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class NoCacheAttribute : ActionFilterAttribute

@@ -1,6 +1,6 @@
 using Gost_Project.Data.Entities.Navigations;
 
-namespace Gost_Project.Data.Models;
+namespace Gost_Project.Data.Models.Docs;
 
 public class ChangeStatusRequestModel
 {

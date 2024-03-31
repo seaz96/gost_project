@@ -1,4 +1,4 @@
-﻿namespace Anomaly.Middlewares.Extensions
+﻿namespace Gost_Project.Middlewares.Extensions
 {
     public static class SecurityHeadersComplementaryMiddlewareExtensions
     {

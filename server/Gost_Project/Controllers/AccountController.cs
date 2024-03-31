@@ -1,6 +1,4 @@
-﻿using Anomaly.Middlewares;
-using CorsairMessengerServer;
-using Gost_Project.Data.Entities;
+﻿using Gost_Project.Data.Entities;
 using Gost_Project.Data.Entities.Navigations;
 using Gost_Project.Data.Models;
 using Gost_Project.Data.Repositories.Abstract;
@@ -11,6 +9,7 @@ using Gost_Project.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Gost_Project.Data.Models.Accounts;
 
 namespace Gost_Project.Controllers;
 
