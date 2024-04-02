@@ -34,13 +34,16 @@ services:
       - project
     depends_on: 
       - db
+    environment:
+      DATABASE_HOST: postgres_db
+      DATABASE_PASSWORD: password
   
   db:
     container_name: postgres_db
     image: postgres:16
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: postgres
     ports:
       - "5432:5432"
