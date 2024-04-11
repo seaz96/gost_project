@@ -71,6 +71,15 @@ public class DocsRepository(DataContext context) : IDocsRepository
         return await _context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
     }
 
+    public async Task<DocEntity?> GetByDesignationAsync(string designation)
+    {
+        return (await _context.Docs.Join(_context.Fields,
+                doc => doc.Id,
+                field => field.DocId,
+                (doc, field) => new { Doc = doc, Field = field })
+            .FirstOrDefaultAsync(x => designation == x.Field.Designation))?.Doc;
+    }
+
     public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
     {
         return await _context.Docs.Join(_context.Fields,

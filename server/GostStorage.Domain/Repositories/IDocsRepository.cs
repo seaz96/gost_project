@@ -14,6 +14,8 @@ public interface IDocsRepository
 
     public Task<DocEntity?> GetByIdAsync(long id);
 
+    public Task<DocEntity?> GetByDesignationAsync(string designation);
+
     public Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations);
 
     public Task<long> AddAsync(DocEntity document);

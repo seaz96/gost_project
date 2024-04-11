@@ -8,14 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Services.Concrete;
 
-public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository) : IDocsService
+public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
+    IReferencesRepository referencesRepository, IFieldsService fieldsService) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
+    private readonly IFieldsService _fieldsService = fieldsService;
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
+        var doc = await _docsRepository.GetByDesignationAsync(primaryField.Designation);
+        
+        if (doc is not null)
+        {
+            await _fieldsService.UpdateAsync(primaryField, doc.Id);
+            await ChangeStatusAsync(doc.Id, primaryField.Status);
+            return doc.Id;
+        }
+        
         var actualField = new FieldEntity
         {
             LastEditTime = DateTime.UtcNow
@@ -23,7 +34,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         var primaryId = await _fieldsRepository.AddAsync(primaryField);
         var actualId = await _fieldsRepository.AddAsync(actualField);
 
-        var doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
+        doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
         var docId = await _docsRepository.AddAsync(doc);
         
         primaryField.DocId = docId;

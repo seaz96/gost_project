@@ -43,6 +43,7 @@ public class DocsController(
         }
 
         var newField = _mapper.Map<FieldEntity>(dto);
+        
         var docId = await _docsService.AddNewDocAsync(newField);
         await _referencesService.AddReferencesAsync(dto.References, docId);
 
