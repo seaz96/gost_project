@@ -44,7 +44,7 @@ public class DocsController(
 
         var newField = _mapper.Map<FieldEntity>(dto);
         var docId = await _docsService.AddNewDocAsync(newField);
-        await _referencesService.AddReferencesAsync(dto.ReferencesId, docId);
+        await _referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
@@ -87,7 +87,7 @@ public class DocsController(
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
         var result = await _fieldsService.UpdateAsync(updatedField, docId);
-        await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
+        await _referencesService.UpdateReferencesAsync(dto.References, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
@@ -111,7 +111,7 @@ public class DocsController(
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
         var result = await _fieldsService.ActualizeAsync(updatedField, docId);
-        await _referencesService.UpdateReferencesAsync(dto.ReferencesId, docId);
+        await _referencesService.UpdateReferencesAsync(dto.References, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);

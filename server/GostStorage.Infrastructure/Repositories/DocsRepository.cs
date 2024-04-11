@@ -1,3 +1,4 @@
+using System.Configuration;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Repositories;
@@ -68,6 +69,19 @@ public class DocsRepository(DataContext context) : IDocsRepository
     public async Task<DocEntity?> GetByIdAsync(long id)
     {
         return await _context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
+    }
+
+    public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
+    {
+        return await _context.Docs.Join(_context.Fields,
+                doc => doc.Id,
+                field => field.DocId,
+                (doc, field) => new { doc.Id, field.Designation })
+                    .Where(doc => docDesignations.Contains(doc.Designation))
+                    .GroupBy(doc => doc.Id)
+                    .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
+                    .AsSingleQuery()
+                    .ToListAsync();
     }
 
     public async Task<long> AddAsync(DocEntity document)

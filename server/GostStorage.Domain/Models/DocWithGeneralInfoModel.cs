@@ -1,4 +1,4 @@
-namespace GostStorage.Services.Models.Docs;
+namespace GostStorage.Domain.Models;
 
 public class DocWithGeneralInfoModel
 {

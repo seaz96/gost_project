@@ -43,5 +43,5 @@ public class UpdateFieldDtoModel
 
     public bool IsPrimary { get; set; }
     
-    public List<long> ReferencesId { get; set; }
+    public List<string> References { get; set; }
 }

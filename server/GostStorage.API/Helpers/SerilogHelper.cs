@@ -1,7 +1,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace GostStorage.Services.Helpers;
+namespace GostStorage.API.Helpers;
 
 public static class SerilogHelper
 {
