@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using GostStorage.Domain.Entities.Base;
 using GostStorage.Domain.Navigations;
 
@@ -13,9 +14,11 @@ public class FieldEntity : BaseEntity
 
     public string? ActivityField { get; set; }
 
-    public DateTime? AcceptanceDate { get; set; }
+    [Range(1000, 9999)]
+    public int? AcceptanceYear { get; set; }
 
-    public DateTime? CommissionDate { get; set; }   
+    [Range(1000, 9999)]
+    public int? CommissionYear { get; set; }   
 
     public string? Author { get; set; }
 
@@ -24,8 +27,6 @@ public class FieldEntity : BaseEntity
     public string? Content { get; set; }
 
     public string? KeyWords { get; set; }
-
-    public string? KeyPhrases { get; set; }
 
     public string? ApplicationArea { get; set; }
 
@@ -44,5 +45,7 @@ public class FieldEntity : BaseEntity
     public bool IsPrimary { get; set; }
     
     public long DocId { get; set; }
+    
+    public DateTime? LastEditTime { get; set; }
 }
 

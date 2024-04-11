@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using GostStorage.Domain.Navigations;
 
 namespace GostStorage.Services.Models.Docs;
@@ -11,10 +12,12 @@ public class AddNewDocDtoModel
     public string? CodeOKS { get; set; }
 
     public string? ActivityField { get; set; }
+    
+    [Range(1000, 9999)]
+    public int? AcceptanceYear { get; set; }
 
-    public DateTime? AcceptanceDate { get; set; }
-
-    public DateTime? CommissionDate { get; set; }
+    [Range(1000, 9999)]
+    public int? CommissionYear { get; set; }
 
     public string? Author { get; set; }
 
@@ -23,8 +26,6 @@ public class AddNewDocDtoModel
     public string? Content { get; set; }
 
     public string? KeyWords { get; set; }
-
-    public string? KeyPhrases { get; set; }
 
     public string? ApplicationArea { get; set; }
 

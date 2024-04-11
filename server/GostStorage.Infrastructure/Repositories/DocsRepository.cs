@@ -3,6 +3,7 @@ using GostStorage.Domain.Models;
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Helpers;
 using GostStorage.Infrastructure.Persistence;
+using GostStorage.Services.Models.Docs;
 using Microsoft.EntityFrameworkCore;
 
 namespace GostStorage.Infrastructure.Repositories;
@@ -29,6 +30,29 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .ToList();
         
         return docs;
+    }
+    
+    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
+    {
+        var docs = _context.Fields
+            .Join(_context.Docs,
+                f => f.DocId,
+                d => d.Id,
+                (f, d) => new { d.Id, f.Designation })
+            .Where(x => designations.Contains(x.Designation))
+            .Select(x => new { x.Id, x.Designation })
+            .Distinct()
+            .ToList();
+        
+        return _context.Docs
+            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
+            .Distinct()
+            .Select(x => new DocWithGeneralInfoModel
+            {
+                Id = x.Id,
+                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
+            })
+            .ToList();
     }
     
     public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)

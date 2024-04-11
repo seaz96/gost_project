@@ -16,8 +16,10 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
-        var actualField = new FieldEntity();
-
+        var actualField = new FieldEntity
+        {
+            LastEditTime = DateTime.UtcNow
+        };
         var primaryId = await _fieldsRepository.AddAsync(primaryField);
         var actualId = await _fieldsRepository.AddAsync(actualField);
 

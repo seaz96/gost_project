@@ -10,9 +10,9 @@ public class SearchParametersModel
 
     public string? ActivityField { get; set; }
 
-    public DateTime? AcceptanceDate { get; set; }
+    public int? AcceptanceYear { get; set; }
 
-    public DateTime? CommissionDate { get; set; }
+    public int? CommissionYear { get; set; }
 
     public string? Author { get; set; }
 

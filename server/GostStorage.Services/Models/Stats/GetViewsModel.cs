@@ -10,7 +10,7 @@ public class GetViewsModel
 
     public string? OrgBranch { get; set; }
     
-    public DateTime? StartDate { get; set; }
+    public DateTime? StartYear { get; set; }
     
-    public DateTime? EndDate { get; set; }
+    public DateTime? EndYear { get; set; }
 }

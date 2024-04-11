@@ -91,8 +91,8 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         return (model.Designation is not null ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) : true) &&
                (model.ActivityField is not null ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) : true) && 
                (model.CodeOKS is not null ? (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) : true) &&
-               (model.StartDate is not null ? model.StartDate <= statistic.Date : true) &&
-               (model.EndDate is not null ? statistic.Date <= model.EndDate : true) && 
+               (model.StartYear is not null ? model.StartYear <= statistic.Date : true) &&
+               (model.EndYear is not null ? statistic.Date <= model.EndYear : true) && 
                statistic.Action == ActionType.View;
     }
 }
