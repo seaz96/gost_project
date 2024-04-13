@@ -18,6 +18,7 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
         return axiosInstance
             .get(url, {params: {...gostsParams, lastId: id, limit: limit}})
             .then((res) => {
+                console.log(res)
                 const data = res.data as Gost[]
                 setActiveGosts(data);
                 if(refetch) {
