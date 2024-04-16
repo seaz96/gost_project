@@ -13,7 +13,6 @@ const GostEditorPage = () => {
   const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave) => {
-    console.log(gost)
     axiosInstance.post('/docs/add', gost)
     .then(responce => navigate('/gost-review/'+responce.data))
   }
