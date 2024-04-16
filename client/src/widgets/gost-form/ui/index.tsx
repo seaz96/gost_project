@@ -19,13 +19,12 @@ function getGostStub() {
         "fullName": '',
         "codeOKS": '',
         "activityField": '',
-        "acceptanceDate": '',
-        "commissionDate":  '',
+        "acceptanceYear": '',
+        "commissionYear":  '',
         "author": '',
         "acceptedFirstTimeOrReplaced": '',
         "content": '',
         "keyWords": '',
-        "keyPhrases": '',
         "applicationArea": '',
         "adoptionLevel": 0,
         "documentText": '',
@@ -83,8 +82,6 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
       event.preventDefault()
       handleSubmit({
         ...newGost,
-        acceptanceDate: new Date(newGost.acceptanceDate).toISOString(),
-        commissionDate: new Date(newGost.commissionDate).toISOString(),
       })
     }
     }>
@@ -129,18 +126,18 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
           <tr>
               <td>Дата принятия</td>
               <td>
-                <Input type='date'
-                  value={newGost.acceptanceDate}
-                  onChange={(value: string) => setNewGost({...newGost, acceptanceDate:value})}
+                <Input type='text'
+                  value={newGost.acceptanceYear}
+                  onChange={(value: string) => setNewGost({...newGost, acceptanceYear:value})}
                 />
               </td>
           </tr>
           <tr>
               <td>Дата введения</td>
               <td>
-                <Input type='date'
-                  value={newGost.commissionDate}
-                  onChange={(value: string) => setNewGost({...newGost, commissionDate:value})}
+                <Input type='text'
+                  value={newGost.commissionYear}
+                  onChange={(value: string) => setNewGost({...newGost, commissionYear:value})}
                 />
               </td>
           </tr>
@@ -186,15 +183,6 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
                 <TextArea
                   value={newGost.keyWords}
                   onChange={(value: string) => setNewGost({...newGost, keyWords:value})}
-                />
-              </td>
-          </tr>
-          <tr>
-              <td>Ключевые фразы</td>
-              <td>
-                <TextArea
-                  value={newGost.keyPhrases}
-                  onChange={(value: string) => setNewGost({...newGost, keyPhrases:value})}
                 />
               </td>
           </tr>

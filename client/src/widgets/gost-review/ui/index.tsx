@@ -28,12 +28,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
     const [recoverModalOpen, setRecoverModalOpen] = useState(false)
-
-    const primaryAcceptanceDate = new Date(gost.primary.acceptanceDate)
-    const primaryCommissionDate = new Date(gost.primary.commissionDate)
-    const actualAcceptanceDate = gost.actual.acceptanceDate ? new Date(gost.actual.acceptanceDate) : null
-    const actualCommissionDate = gost.actual.acceptanceDate ? new Date(gost.actual.commissionDate) : null
-
+    console.log(gost)
     useEffect(() => {
         axiosInstance.post(`/stats/update-views/${gostId}`, {}, {
             params: {
@@ -109,29 +104,13 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         </tr>
                         <tr>
                             <td>Дата принятия</td>
-                            <td>
-                            {
-                            `${primaryAcceptanceDate.getUTCDate()}.${primaryAcceptanceDate.getUTCMonth()}.${primaryAcceptanceDate.getUTCFullYear()}`
-                            }
-                            </td>
-                            <td>
-                            { actualAcceptanceDate &&
-                            `${actualAcceptanceDate.getUTCDate()}.${actualAcceptanceDate.getUTCMonth()}.${actualAcceptanceDate.getUTCFullYear()}`
-                            }
-                            </td>
+                            <td>{gost.primary.acceptanceYear}</td>
+                            <td>{gost.actual.acceptanceYear}</td>
                         </tr>
                         <tr>
                             <td>Дата введения</td>
-                            <td> 
-                            {
-                            `${primaryCommissionDate.getUTCDate()}.${primaryCommissionDate.getUTCMonth()}.${primaryCommissionDate.getUTCFullYear()}`
-                            }
-                            </td>
-                            <td>
-                            { actualCommissionDate &&
-                            `${actualCommissionDate.getUTCDate()}.${actualCommissionDate.getUTCMonth()}.${actualCommissionDate.getUTCFullYear()}`
-                            }
-                            </td>
+                            <td>{gost.primary.commissionYear}</td>
+                            <td>{gost.actual.commissionYear}</td>
                         </tr>
                         <tr>
                             <td>Разработчик</td>
@@ -157,11 +136,6 @@ const GostReview:React.FC<GostReviewProps> = props => {
                             <td>Ключевые слова</td>
                             <td>{gost.primary.keyWords}</td>
                             <td>{gost.actual.keyWords}</td>
-                        </tr>
-                        <tr>
-                            <td>Ключевые фразы</td>
-                            <td>{gost.primary.keyPhrases}</td>
-                            <td>{gost.actual.keyPhrases}</td>
                         </tr>
                         <tr>
                             <td>Уровень принятия</td>

@@ -23,13 +23,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
         "fullName": '',
         "codeOKS": false,
         "activityField": false,
-        "acceptanceDate": false,
-        "commissionDate":  false,
+        "acceptanceYear": false,
+        "commissionYear":  false,
         "author": false,
         "acceptedFirstTimeOrReplaced": false,
         "content": false,
         "keyWords": false,
-        "keyPhrases": false, 
         "applicationArea": false,
         "adoptionLevel": false,
         "documentText": false,
@@ -70,28 +69,28 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
             </Collapse>
         </div>
         <div className={styles.dropdownItem}>
-            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, acceptanceDate: !filterStatus.acceptanceDate})}> 
-                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.acceptanceDate ? styles.arrowUp : '')}/>
+            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, acceptanceYear: !filterStatus.acceptanceYear})}> 
+                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.acceptanceYear ? styles.arrowUp : '')}/>
                 <p className={styles.dropdownItemName}>Год принятия</p>
             </div>
-            <Collapse className={styles.dropdownItemFilter} in={filterStatus.acceptanceDate}>
+            <Collapse className={styles.dropdownItemFilter} in={filterStatus.acceptanceYear}>
                 <Input 
-                    type='date' 
-                    value={filterData.acceptanceDate} 
-                    onChange={(value: string) => filterSubmit({...filterData, acceptanceDate: value})} 
+                    type='text' 
+                    value={filterData.acceptanceYear} 
+                    onChange={(value: string) => filterSubmit({...filterData, acceptanceYear: value})} 
                 />
             </Collapse>
         </div>
         <div className={styles.dropdownItem}>
-            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, commissionDate: !filterStatus.commissionDate})}>
-                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.commissionDate ? styles.arrowUp : '')}/>
+            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, commissionYear: !filterStatus.commissionYear})}>
+                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.commissionYear ? styles.arrowUp : '')}/>
                 <p className={styles.dropdownItemName}>Год введения</p>
             </div>
-            <Collapse className={styles.dropdownItemFilter} in={filterStatus.commissionDate}>
+            <Collapse className={styles.dropdownItemFilter} in={filterStatus.commissionYear}>
                 <Input 
-                    type='date' 
-                    value={filterData.commissionDate} 
-                    onChange={(value: string) => filterSubmit({...filterData, commissionDate: value})} 
+                    type='text' 
+                    value={filterData.commissionYear} 
+                    onChange={(value: string) => filterSubmit({...filterData, commissionYear: value})} 
                 />
             </Collapse>
         </div>
@@ -157,19 +156,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
                     type='text' 
                     value={filterData.keyWords} 
                     onChange={(value: string) => filterSubmit({...filterData, keyWords: value})} 
-                />
-            </Collapse>
-        </div>
-        <div className={styles.dropdownItem}>
-            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, keyPhrases: !filterStatus.keyPhrases})}>
-                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.keyPhrases ? styles.arrowUp : '')}/>
-                <p className={styles.dropdownItemName}>Ключевые фразы</p>
-            </div>
-            <Collapse className={styles.dropdownItemFilter} in={filterStatus.keyPhrases}>
-                <Input 
-                    type='text' 
-                    value={filterData.keyPhrases} 
-                    onChange={(value: string) => filterSubmit({...filterData, keyPhrases: value})} 
                 />
             </Collapse>
         </div>

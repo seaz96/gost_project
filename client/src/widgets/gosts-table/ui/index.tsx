@@ -11,43 +11,34 @@ import { IconButton, Popover } from '@mui/material';
 import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
-  gosts: gostModel.Gost[],
-  filterValue?: string
+  gosts: gostModel.Gost[]
 }
 
 const GostsTable: React.FC<GostsTableProps> = props => {
-  const {gosts, filterValue} = props
+  const {gosts} = props
 
   return (
     <table className={styles.table}>
         <thead>
           <tr className={styles.tableRow}>
-            <th>№</th>
             <th>Код ОКС</th>
             <th>Обозначение</th>
             <th>Наименование</th>
             <th>Действия</th>
           </tr>
         </thead>
-        {filterValue 
-          ? 
-          gosts.map((gost, index) =>
-            (gost.primary.designation.includes(filterValue) || gost.primary.fullName.includes(filterValue)) &&
-              <GostRow gost={gost} number={index + 1} />
-          ) 
-          :
-            gosts.map((gost, index) => <GostRow gost={gost} number={index + 1} />)
+        { 
+          gosts.map((gost, index) => <GostRow gost={gost} />)
         }   
     </table>
   )
 }
 
 interface GostRowProps {
-  gost: gostModel.Gost,
-  number: number
+  gost: gostModel.Gost
 }
 
-const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
+const GostRow:React.FC<GostRowProps> = ({gost}) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const {user} = useContext(UserContext)
@@ -85,7 +76,6 @@ const GostRow:React.FC<GostRowProps> = ({gost, number}) => {
           </div>
         </Popover>
         <tr>
-          <td>{number}</td>
           <td>{currentGostData.codeOKS}</td>
           <td>{currentGostData.designation}</td>
           <td className={styles.gostDescription}>{currentGostData.fullName}</td>
