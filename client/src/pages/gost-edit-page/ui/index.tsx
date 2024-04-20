@@ -31,7 +31,7 @@ const GostEditPage = () => {
             gost={
               {
                 ...response.primary,
-                referencesId: response.references.map(reference => reference.docId)
+                references: response.references.map(reference => reference.designation)
               }
             }
           />

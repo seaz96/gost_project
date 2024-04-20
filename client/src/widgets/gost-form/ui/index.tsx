@@ -33,56 +33,18 @@ function getGostStub() {
         "status": 0,
         "harmonization": 1,
         "isPrimary": true,
-        "referencesId": []
+        "references": []
     } as GostToSave
 }
 
 const GostForm = ({handleSubmit, gost}: GostFormProps) => {
-    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
-    const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
-    const [references, setReferences] = useState('')
-    const [referencesError, setReferencesError] = useState<string[] | null>(null)
-
-    useEffect(() => {
-        if (gost)
-            setReferences(getLinksById(gost.referencesId))
-    }, [gost, response])
-
-
-  function handleLinks(value: string) {
-    let result: number[] = []
-    let linksArr = value.split(',')
-    response?.forEach(gostInfo => {
-      linksArr.forEach(link => {
-        if(link === gostInfo.designation) {
-          linksArr = linksArr.filter(filterLink => filterLink !== link)
-          result.push(gostInfo.id)
-        }
-      })
-    });
-    setNewGost({...newGost, referencesId: result})
-    setReferencesError(
-      (linksArr.length === 1  && linksArr[0].length === 0) || linksArr.length === 0
-      ? null : linksArr)
-  }
-
-  function getLinksById(value?: number[]) {
-    let result: string[] = []
-    response?.forEach(gostInfo => {
-      value?.forEach(id => {
-        if(id === gostInfo.id)
-        result.push(gostInfo.designation)
-      })
-    });
-    return result.join(', ')
-  }
+  const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
 
   return (
     <form onSubmit={(event) => {
       event.preventDefault()
-      handleSubmit({
-        ...newGost,
-      })
+      console.log(newGost)
+      handleSubmit(newGost)
     }
     }>
       <table className={styles.gostTable}>
@@ -214,16 +176,12 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Нормативные ссылки</td>
+              <td>Нормативные ссылки (через запятую и пробел)</td>
               <td>
-              <Input type='text'
-                  value={references}
-                  onChange={(value: string) => setReferences(value)}
-                  onBlur={(value: string) => handleLinks(value)}
+                <Input type='text'
+                  value={newGost?.references.join(' ')}
+                  onChange={(value: string) => setNewGost((prevGost) => {return {...prevGost, references: value.split(', ')}})}
                 />
-                {referencesError &&
-                  `${referencesError.join(', ')} не существует в базе!`
-                }
               </td>
           </tr>
           <tr>

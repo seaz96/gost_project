@@ -17,5 +17,5 @@ export type GostToSave = {
     "status": number,
     "harmonization": number,
     "isPrimary": boolean,
-    "referencesId": number[]
+    "references": string[]
 }
