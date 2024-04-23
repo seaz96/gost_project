@@ -29,7 +29,7 @@ function getGostStub() {
         "status": 0,
         "harmonization": 1,
         "isPrimary": true,
-        "referencesId": []
+        "references": []
     } as newGostModel.GostToSave
 }
 

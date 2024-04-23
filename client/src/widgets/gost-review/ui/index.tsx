@@ -28,7 +28,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
     const [recoverModalOpen, setRecoverModalOpen] = useState(false)
-    console.log(gost)
+
     useEffect(() => {
         axiosInstance.post(`/stats/update-views/${gostId}`, {}, {
             params: {
