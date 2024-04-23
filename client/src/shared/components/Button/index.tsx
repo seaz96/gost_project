@@ -23,7 +23,7 @@ const Button:React.FC<ButtonProps> = props => {
     onClick,
     prefix,
     suffix,
-    type
+    type = 'button'
   } = props
 
   return (

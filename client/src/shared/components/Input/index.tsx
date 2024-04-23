@@ -21,6 +21,7 @@ interface InputProps {
  onChange?: Function
  onBlur?: Function
  value?: string | number | undefined
+ onKeyUp?: Function
 }
  
 const Input: React.FC<InputProps> = props => {
@@ -32,6 +33,7 @@ const Input: React.FC<InputProps> = props => {
     className,
     onChange = () => {},
     onBlur = () => {},
+    onKeyUp = () => {},
     value
   } = props
 
@@ -60,6 +62,7 @@ const Input: React.FC<InputProps> = props => {
         required={required ?? false}
         value={value}
         className={styles.baseInput}
+        onKeyUp={(event) => onKeyUp(event)}
       />
     </div>
   )
