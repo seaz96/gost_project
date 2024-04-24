@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-
+import React, { useRef, useState } from 'react'
+import CloseIcon from '@mui/icons-material/Close';
 import styles from './GostForm.module.scss'
 import { Button, Input, RadioGroup } from 'shared/components'
 import { newGostModel } from '..'
@@ -7,6 +7,8 @@ import TextArea from 'shared/components/TextArea'
 import { GostToSave } from '../model/newGostModel'
 import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
+import classNames from 'classnames'
+import IconButton from 'shared/components/IconButton'
 
 interface GostFormProps {
   handleSubmit: Function,
@@ -38,15 +40,25 @@ function getGostStub() {
 }
 
 const GostForm = ({handleSubmit, gost}: GostFormProps) => {
+  const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
   const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
+  const [reference, setReference] = useState('')
+  const [references, setReferences] = useState<string[]>([])
+  const ref = useRef<HTMLInputElement>(null)
+
+  function handleLinks() {
+    if(reference.length !== 0 && !references.includes(reference)) {
+      setReferences((prevReferences) => [...prevReferences, reference])
+      setReference('')
+    }
+  }
+
+  function submit() {
+    handleSubmit({...newGost, references: references})
+  }
 
   return (
-    <form onSubmit={(event) => {
-      event.preventDefault()
-      console.log(newGost)
-      handleSubmit(newGost)
-    }
-    }>
+    <form>
       <table className={styles.gostTable}>
         <tbody>
           <tr>
@@ -176,18 +188,43 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Нормативные ссылки (через запятую и пробел)</td>
+              <td>Нормативные ссылки</td>
               <td>
-                <Input type='text'
-                  value={newGost?.references.join(' ')}
-                  onChange={(value: string) => setNewGost((prevGost) => {return {...prevGost, references: value.split(', ')}})}
-                />
+                <div className={styles.referencesContainer} onClick={() => ref.current?.focus()}>
+                  <Input 
+                    type="text" 
+                    value={reference}
+                    onChange={(value: string) => setReference(value)}
+                    className={styles.referencesInput}
+                  />
+                  <Button onClick={() => handleLinks()} className='baseButton filledButton'>
+                    Добавить
+                  </Button>
+                </div>
+                <ul className={styles.acceptedLinks}>
+                  {references?.map(reference => {
+                    const existedGost = response?.filter(gost => gost.designation === reference)[0]
+                    return <li key={reference} className={classNames(styles.acceptedLink
+
+
+                    )}
+                    >
+                      {reference}
+                      <IconButton
+                        onClick={() => setReferences(references.filter(ref => ref !== reference))}
+                        className='baseButton filledButton'
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    </li>
+                  })}
+                </ul>
               </td>
           </tr>
           <tr>
               <td>Изменения</td>
               <td>
-              <Input type='text'
+                <Input type='text'
                   value={newGost.changes}
                   onChange={(value: string) => setNewGost({...newGost, changes:value})}
                 />
@@ -234,7 +271,7 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
           </tr>
         </tbody>
       </table>
-      <Button type='submit' onClick={() => {}} isFilled className={styles.saveButton}>Сохранить</Button>
+      <Button onClick={() => submit()} isFilled className={styles.saveButton}>Сохранить</Button>
     </form>
   )
 }

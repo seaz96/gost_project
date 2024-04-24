@@ -23,7 +23,6 @@ const GostReview:React.FC<GostReviewProps> = props => {
         gostId
     } = props
     const navigate = useNavigate()
-    const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
     const {user} = useContext(UserContext)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [cancelModalOpen, setCancelModalOpen] = useState(false)
