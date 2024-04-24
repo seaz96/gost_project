@@ -98,7 +98,7 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Дата принятия</td>
+              <td>Год принятия</td>
               <td>
                 <Input type='text'
                   value={newGost.acceptanceYear}
@@ -107,7 +107,7 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               </td>
           </tr>
           <tr>
-              <td>Дата введения</td>
+              <td>Год введения</td>
               <td>
                 <Input type='text'
                   value={newGost.commissionYear}

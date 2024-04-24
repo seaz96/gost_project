@@ -29,14 +29,15 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         
         var actualField = new FieldEntity
         {
-            LastEditTime = DateTime.UtcNow
+            LastEditTime = DateTime.UtcNow,
+            Status = primaryField.Status
         };
         var primaryId = await _fieldsRepository.AddAsync(primaryField);
         var actualId = await _fieldsRepository.AddAsync(actualField);
 
         doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
-        var docId = await _docsRepository.AddAsync(doc);
         
+        var docId = await _docsRepository.AddAsync(doc);
         primaryField.DocId = docId;
         actualField.DocId = docId; 
         

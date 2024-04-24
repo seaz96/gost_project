@@ -41,7 +41,7 @@ public static class SearchHelper
             .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
             .Where(f => isValid == null || isValid.Value
                                                     ? f.Status == DocStatuses.Valid
-                                                    : f.Status != DocStatuses.Valid)
+                                                    : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
             .AsSingleQuery()
             .Select(f => f.Id)
             .ToListAsync();

@@ -102,12 +102,12 @@ const GostReview:React.FC<GostReviewProps> = props => {
                             <td>{gost.actual.activityField}</td>
                         </tr>
                         <tr>
-                            <td>Дата принятия</td>
+                            <td>Год принятия</td>
                             <td>{gost.primary.acceptanceYear}</td>
                             <td>{gost.actual.acceptanceYear}</td>
                         </tr>
                         <tr>
-                            <td>Дата введения</td>
+                            <td>Год введения</td>
                             <td>{gost.primary.commissionYear}</td>
                             <td>{gost.actual.commissionYear}</td>
                         </tr>
