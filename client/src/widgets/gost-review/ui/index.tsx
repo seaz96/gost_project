@@ -60,7 +60,7 @@ const GostReview:React.FC<GostReviewProps> = props => {
     return (
         <>
             <div className={styles.reviewContainer}>
-                <h2 className={styles.title}>Просмотр документа</h2>
+                <h2 className={styles.title}>Просмотр документа {gost.primary.designation}</h2>
                 {(user?.role === 'Admin' || user?.role === 'Heisenberg') 
                 &&
                 <div className={styles.buttonsContainer}>
