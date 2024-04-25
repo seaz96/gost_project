@@ -149,13 +149,39 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         <tr>
                             <td>Нормативные ссылки</td>
                             <td>
-                                {gost.references.map(refId => 
-                                    <Link to={`/gost-review/${refId.docId}`}>{refId.designation}</Link>
+                                {gost.references.map(ref =>
+                                    <>
+                                    {
+                                        ref.status === 3 
+                                        ?
+                                        <p>{ref.designation}</p>
+                                        :
+                                        <Link to={`/gost-review/${ref.docId}`}>
+                                            <p className={classNames(
+                                                ref.status === 0 && styles.activeRef,
+                                                (ref.status === 1 || ref.status === 2) && styles.oldRef
+                                            )}>{ref.designation}</p>
+                                        </Link>
+                                    }
+                                    </>
                                 )}
                             </td>
                             <td>
-                                {gost.references.map(refId => 
-                                    <Link to={`/gost-review/${refId.docId}`}>{refId.designation}</Link>
+                                {gost.references.map(ref =>
+                                    <>
+                                    {
+                                        ref.status === 3 
+                                        ?
+                                        <p>{ref.designation}</p>
+                                        :
+                                        <Link to={`/gost-review/${ref.docId}`}>
+                                            <p className={classNames(
+                                                ref.status === 0 && styles.activeRef,
+                                                (ref.status === 1 || ref.status === 2) && styles.oldRef
+                                            )}>{ref.designation}</p>
+                                        </Link>
+                                    }
+                                    </>
                                 )}
                             </td>
                         </tr>

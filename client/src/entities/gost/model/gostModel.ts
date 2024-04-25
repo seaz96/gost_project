@@ -6,7 +6,7 @@ export type Gost = {
     {
         "docId": number,
         "designation": string,
-        "status": 0 | 1 | 2,
+        "status": 0 | 1 | 2 | 3,
     }[]
 }
 
