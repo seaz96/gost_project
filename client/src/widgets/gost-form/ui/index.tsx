@@ -43,9 +43,9 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
   const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
   const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
   const [reference, setReference] = useState('')
-  const [references, setReferences] = useState<string[]>([])
+  const [references, setReferences] = useState<string[]>(gost?.references ?? [])
   const ref = useRef<HTMLInputElement>(null)
-
+    console.log(newGost)
   function handleLinks() {
     if(reference.length !== 0 && !references.includes(reference)) {
       setReferences((prevReferences) => [...prevReferences, reference])
