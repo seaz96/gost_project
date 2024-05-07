@@ -87,6 +87,7 @@ public class DocsController(
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
+        updatedField.DocId = docId;
         var result = await _fieldsService.UpdateAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.References, docId);
         
@@ -111,6 +112,7 @@ public class DocsController(
         }
 
         var updatedField = _mapper.Map<FieldEntity>(dto);
+        updatedField.DocId = docId;
         var result = await _fieldsService.ActualizeAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.References, docId);
         
