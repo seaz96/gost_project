@@ -12,7 +12,7 @@ const GostsPage = () => {
   return (
     <div className='container contentContainer'>
         <InfiniteScroll
-          dataLength={countFetched} //This is important field to render the next data
+          dataLength={countFetched}
           next={fetchGostsData}
           hasMore={count > countFetched}
           loader={<h4>Loading...</h4>}

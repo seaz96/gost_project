@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { axiosInstance } from 'shared/configs/axiosConfig';
 import { Gost } from '../model/gostModel';
 
-const baseLimit = 10
+const baseLimit = 20
 
 export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [gosts, setGosts] = useState<Gost[]>([]);
