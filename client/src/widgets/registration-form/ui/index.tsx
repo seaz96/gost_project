@@ -22,9 +22,6 @@ const RegistrationForm:React.FC<RegistrationFormProps> = props => {
     orgActivity: ''
   })
 
-
-
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     onSubmit({
