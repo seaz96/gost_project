@@ -6,30 +6,26 @@ const baseLimit = 10
 
 export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [gosts, setGosts] = useState<Gost[]>([]);
-    const [activeGosts, setActiveGosts] = useState<Gost[]>([])
     const [error, setError] = useState<string>('');
     const [loading, setloading] = useState<boolean>(true);
     const [gostsParams, setGostParams] = useState<any>(defaultParams)
     const [lastId, setLastId] = useState(0)
     const [count, setCount] = useState(0)
-    const [page, setPage] = useState(1)
+    const [countFetched, setCountFetched] = useState(0)
 
-    const fetchGostsData = (limit: number, id: number = lastId, refetch: boolean = false) => {
+    const fetchGostsData = async (limit: number = baseLimit, id: number = lastId) => {
+        console.log(count, countFetched)
         return axiosInstance
             .get(url, {params: {...gostsParams, lastId: id, limit: limit}})
             .then((res) => {
                 console.log(res)
                 const data = res.data as Gost[]
-                setActiveGosts(data);
-                if(refetch) {
-                    setGosts(data);
-                } else {
-                    setGosts((prevGosts) => [...prevGosts, ...data]);
-                }
+                setGosts((prevGosts) => [...prevGosts, ...data]);
                 setLastId(data[data.length - 1].docId);
+                setCountFetched((prev) => prev + limit)
             })
             .catch((err: any) => {
-                setError(err);
+                console.log(err);
             })
     };
 
@@ -37,30 +33,22 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
         return axiosInstance
             .get(url + '-count', {params: {...gostsParams}})
             .then((res) => {
-                setCount(Math.ceil(res.data / baseLimit));
+                setCount(res.data);
             })
             .catch((err: any) => {
-                setError(err);
+                console.log(err);
             })
     };
 
-    const changePage = (page: number) => {
-        setPage(page)
-        if((page-1) * baseLimit >= gosts.length) {
-            fetchGostsData(page * baseLimit - gosts.length)
-        } else {
-            setActiveGosts(gosts.slice((page-1)*baseLimit, page*baseLimit))
-        }
-    }
 
     useEffect(() => {
         setloading(true)
         setLastId(0)
         fetchCountData()
-        .then(() => fetchGostsData(baseLimit, 0, true)
+        .then(() => fetchGostsData(baseLimit, 0)
         .then(() => setloading(false)));
     }, [gostsParams, url]);
 
 
-    return { activeGosts, count, page, error, loading, setGostParams, changePage };
+    return { gosts, count, countFetched, error, loading, setGostParams, fetchGostsData };
 }
