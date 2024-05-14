@@ -42,10 +42,12 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
 
 
     useEffect(() => {
+        setGosts([])
         setloading(true)
         setLastId(0)
+        setCountFetched(0)
         fetchCountData()
-        .then(() => fetchGostsData(baseLimit, 0)
+        .then(() => fetchGostsData(baseLimit)
         .then(() => setloading(false)));
     }, [gostsParams, url]);
 
