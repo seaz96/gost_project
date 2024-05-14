@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { axiosInstance } from 'shared/configs/axiosConfig';
 import { Gost } from '../model/gostModel';
 
-const baseLimit = 20
+const baseLimit = 10
 
 export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [gosts, setGosts] = useState<Gost[]>([]);
@@ -13,14 +13,17 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     const [count, setCount] = useState(0)
     const [countFetched, setCountFetched] = useState(0)
 
-    const fetchGostsData = async (limit: number = baseLimit, id: number = lastId) => {
+    const fetchGostsData = async (limit: number = baseLimit, id: number = lastId, refetch: boolean = false) => {
         console.log(count, countFetched)
         return axiosInstance
             .get(url, {params: {...gostsParams, lastId: id, limit: limit}})
             .then((res) => {
-                console.log(res)
                 const data = res.data as Gost[]
-                setGosts((prevGosts) => [...prevGosts, ...data]);
+                if(refetch) {
+                    setGosts(data);
+                } else {
+                    setGosts((prevGosts) => [...prevGosts, ...data]);
+                }
                 setLastId(data[data.length - 1].docId);
                 setCountFetched((prev) => prev + limit)
             })
@@ -47,7 +50,7 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
         setLastId(0)
         setCountFetched(0)
         fetchCountData()
-        .then(() => fetchGostsData(baseLimit)
+        .then(() => fetchGostsData(baseLimit, 0, true)
         .then(() => setloading(false)));
     }, [gostsParams, url]);
 
