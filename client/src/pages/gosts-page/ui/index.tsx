@@ -29,6 +29,11 @@ const GostsPage = () => {
 
     return (
         <div className='container contentContainer'>
+            <section className={styles.filterSection}>
+                <Filter
+                    filterSubmit={(filterData: gostModel.GostFields & { name?: string }) => setGostParams(filterData)}
+                />
+            </section>
             <InfiniteScroll
                 dataLength={countFetched}
                 next={fetchGostsData}
@@ -37,13 +42,8 @@ const GostsPage = () => {
                     <b>Загрузка...</b>
                 </p>}
             >
-                <section className={styles.filterSection}>
-                    <Filter
-                        filterSubmit={(filterData: gostModel.GostFields & {name? :string}) => setGostParams(filterData)}
-                    />
-                </section>
                 <section className={styles.gostSection}>
-                    <GostsTable gosts={gosts || []} />
+                    <GostsTable gosts={gosts || []}/>
                 </section>
             </InfiniteScroll>
         </div>
