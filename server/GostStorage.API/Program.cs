@@ -1,17 +1,16 @@
+using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using GostStorage.API.Helpers;
 using GostStorage.API.Middlewares.Extensions;
 using GostStorage.Infrastructure;
 using GostStorage.Services;
-using GostStorage.Services.Helpers;
 using GostStorage.Services.Profiles;
 using GostStorage.Services.Services.Abstract;
 using GostStorage.Services.Services.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace GostStorage.API;
 
@@ -44,6 +43,7 @@ static class Program
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     IssuerSigningKey = AuthOptions.SymmetricSecurityKey,
+                    RoleClaimType = ClaimTypes.Role
                 };
             });
 
@@ -93,11 +93,12 @@ static class Program
         app.UseSecurityHeadersComplementaryMiddleware();
         app.Use(async (context, next) =>
         {
-            using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+            if (context.Request.Method == "POST")
             {
+                using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
                 var body = await reader.ReadToEndAsync();
                 Console.WriteLine("HTTP request body: " + body);
-                var byteArray = Encoding.ASCII.GetBytes(body);
+                var byteArray = Encoding.UTF8.GetBytes(body);
                 var stream = new MemoryStream(byteArray);
                 context.Request.Body = stream;
             }
