@@ -21,8 +21,7 @@ public class DocsController(
     IReferencesService referencesService,
     IFieldsService fieldsService,
     IDocStatisticsService docStatisticsService,
-    IUsersRepository usersRepository,
-    ILogger logger) : ControllerBase
+    IUsersRepository usersRepository) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly IDocsService _docsService = docsService;
@@ -30,7 +29,6 @@ public class DocsController(
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
     private readonly IUsersRepository _usersRepository = usersRepository;
-    private readonly ILogger _logger = logger;
 
     /// <summary>
     /// Add new doc
