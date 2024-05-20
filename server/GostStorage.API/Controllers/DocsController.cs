@@ -52,8 +52,6 @@ public class DocsController(
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
-
-        _logger.Log(LogLevel.Information, JsonConvert.SerializeObject(dto));
         
         await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 

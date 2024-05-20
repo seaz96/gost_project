@@ -1,3 +1,4 @@
+using System.Text;
 using AutoMapper;
 using GostStorage.API.Helpers;
 using GostStorage.API.Middlewares.Extensions;
@@ -10,6 +11,7 @@ using GostStorage.Services.Services.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace GostStorage.API;
 
@@ -75,7 +77,7 @@ static class Program
         });
         
         var app = builder.Build();
-
+    
         app.UseSwagger();
         app.UseSwaggerUI();
         
@@ -89,6 +91,14 @@ static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
+        app.Use(async (context, next) =>
+        {
+            using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
+            {
+                Console.WriteLine("HTTP request body: " + await reader.ReadToEndAsync());
+            }
+            await next.Invoke();
+        });
         app.MapControllers();
 
         app.Run();
