@@ -95,7 +95,11 @@ static class Program
         {
             using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
             {
-                Console.WriteLine("HTTP request body: " + await reader.ReadToEndAsync());
+                var body = await reader.ReadToEndAsync();
+                Console.WriteLine("HTTP request body: " + body);
+                var byteArray = Encoding.ASCII.GetBytes(body);
+                var stream = new MemoryStream(byteArray);
+                context.Request.Body = stream;
             }
             await next.Invoke();
         });
