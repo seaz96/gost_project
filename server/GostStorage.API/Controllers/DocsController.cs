@@ -9,6 +9,7 @@ using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GostStorage.API.Controllers;
 
@@ -20,7 +21,8 @@ public class DocsController(
     IReferencesService referencesService,
     IFieldsService fieldsService,
     IDocStatisticsService docStatisticsService,
-    IUsersRepository usersRepository) : ControllerBase
+    IUsersRepository usersRepository,
+    ILogger logger) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly IDocsService _docsService = docsService;
@@ -28,6 +30,7 @@ public class DocsController(
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
     private readonly IUsersRepository _usersRepository = usersRepository;
+    private readonly ILogger _logger = logger;
 
     /// <summary>
     /// Add new doc
@@ -50,6 +53,8 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
 
+        _logger.Log(LogLevel.Information, JsonConvert.SerializeObject(dto));
+        
         await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok(docId);
