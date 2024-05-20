@@ -21,7 +21,8 @@ const LoginPage = () => {
         axiosInstance.post<userModel.User>('/accounts/register', user)
         .then(response => {
             setUser(response.data);
-            localStorage.setItem('jwt_token', response.data.token)
+            localStorage.setItem('jwt_token', response.data.token);
+            window.location.href = "/";
         })
         .catch(error => console.log(error))
     }
@@ -30,7 +31,8 @@ const LoginPage = () => {
         axiosInstance.post<userModel.User>('/accounts/login', user)
         .then((response) => {
             setUser(response.data);
-            localStorage.setItem('jwt_token', response.data.token)
+            localStorage.setItem('jwt_token', response.data.token);
+            window.location.href = "/";
         })
         .catch(error => console.log(error))
     }

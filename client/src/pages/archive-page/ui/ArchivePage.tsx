@@ -10,26 +10,31 @@ const ArchivePage = () => {
 
     return (
       <div className='container contentContainer'>
-        <InfiniteScroll
-          dataLength={count} //This is important field to render the next data
-          next={fetchGostsData}
-          hasMore={count > countFetched}
-          loader={<h4>Loading...</h4>}
-          endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
-        >
-          <section className={styles.filterSection}>
-            <Filter 
-              filterSubmit={(filterData: gostModel.GostFields & {name? :string}) => setGostParams(filterData)}
-            />
-          </section>
-          <section className={styles.gostSection}>
-            <GostsTable gosts={gosts || []} />
-          </section>
-        </InfiniteScroll>
+          <InfiniteScroll
+              dataLength={countFetched}
+              next={fetchGostsData}
+              hasMore={count > countFetched}
+              loader={<p style={{textAlign: 'center'}}>
+                  <b>Загрузка...</b>
+              </p>}
+          >
+
+              <section className={styles.filterSection}>
+                  <Filter
+                      filterSubmit={(filterData: gostModel.GostFields & { name?: string }) => setGostParams(filterData)}
+                  />
+              </section>
+              <section className={styles.gostSection}>
+                  <GostsTable gosts={gosts || []}/>
+              </section>
+              <section>
+                  {count === 0 ? (
+                      <p style={{textAlign: 'center'}}>
+                          <b>Документов нет.</b>
+                      </p>
+                  ) : null}
+              </section>
+          </InfiniteScroll>
       </div>
     )
 }
