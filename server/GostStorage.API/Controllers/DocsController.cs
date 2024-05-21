@@ -239,7 +239,7 @@ public class DocsController(
     [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("{docId}/upload-file")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> UploadFileForDocumentAsync(IFormFile file, long docId)
+    public async Task<IActionResult> UploadFileForDocumentAsync([FromForm] UploadFileModel file, long docId)
     {
         if (!ModelState.IsValid)
         {
