@@ -19,7 +19,10 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
-        primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
+        if (primaryField.Designation is not null)
+        {
+            primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
+        }
         var doc = await _docsRepository.GetByDesignationAsync(primaryField.Designation);
         
         if (doc is not null)
@@ -134,7 +137,11 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
     public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
-        parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
+
         var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, lastId);
         var fields = await _fieldsRepository.GetFieldsByDocIds(docs.Select(x => x.Id).ToList());
         var docsWithFields = docs.AsParallel().Select(doc => new GetDocumentResponseModel
@@ -149,7 +156,11 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
     {
-        parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
+
         return await _docsRepository.GetCountOfDocumentsAsync(parameters, isValid);
     }
 
