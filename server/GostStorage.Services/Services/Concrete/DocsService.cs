@@ -4,6 +4,7 @@ using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
 using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Services.Concrete;
@@ -166,5 +167,10 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
                 };
             })
             .ToList();
+    }
+
+    public async Task<IActionResult> UploadFileForDocumentAsync(IFormFile file, long docId)
+    {
+        return new OkResult();
     }
 }

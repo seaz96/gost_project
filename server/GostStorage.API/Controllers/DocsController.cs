@@ -235,4 +235,26 @@ public class DocsController(
     {
         return Ok(await _docsService.GetDocsWithGeneralInfoAsync());
     }
+
+    [Authorize(Roles = "Admin,Heisenberg")]
+    [HttpPost("{docId}/upload-file")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadFileForDocumentAsync(IFormFile file, long docId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Model is not valid");
+        }
+
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        var user = await _usersRepository.GetUserAsync(userId);
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity
+        {
+            OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow,
+            UserId = userId
+        });
+
+        return Ok(await _docsService.UploadFileForDocumentAsync(file, docId));
+    }
 }
