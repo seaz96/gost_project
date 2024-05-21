@@ -1,5 +1,6 @@
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Repositories;
+using GostStorage.Services.Helpers;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
 
     public async Task<IActionResult> UpdateAsync(FieldEntity updatedField, long docId)
     {
+        updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
         var doc = await _docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
@@ -29,6 +31,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
 
     public async Task<IActionResult> ActualizeAsync(FieldEntity actualizedField, long docId)
     {
+        actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
         var doc = await _docsRepository.GetByIdAsync(docId);
         
         if (doc is null)

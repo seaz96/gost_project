@@ -1,6 +1,7 @@
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
+using GostStorage.Services.Helpers;
 using GostStorage.Services.Services.Abstract;
 
 namespace GostStorage.Services.Services.Concrete;
@@ -15,6 +16,7 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
 
     public async Task AddReferencesAsync(List<string> docChildren, long parentId)
     {
+        docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
         var existingDocs = await _docsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>
@@ -45,6 +47,7 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
 
     public async Task UpdateReferencesAsync(List<string> docChildren, long parentId)
     {
+        docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
         var existingDocs = await _docsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>

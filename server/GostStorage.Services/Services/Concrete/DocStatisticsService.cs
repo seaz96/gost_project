@@ -2,6 +2,7 @@ using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
+using GostStorage.Services.Helpers;
 using GostStorage.Services.Models.Stats;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetViews(GetViewsModel model)
     {
+        model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
         var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
