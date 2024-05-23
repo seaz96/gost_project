@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Services.Concrete;
 
-public class AccountService(IUsersRepository usersRepository, IPasswordHasher passwordHasher) : IAccountService
+public class AccountService(IUsersRepository usersRepository, IPasswordHasher passwordHasher, IUserSessionsRepository userSessionsRepository) : IAccountService
 {
     private readonly IUsersRepository _usersRepository = usersRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IUserSessionsRepository _userSessionsRepository = userSessionsRepository;
     
     public async Task<IActionResult> LoginAsync(LoginModel loginModel)
     {
@@ -30,7 +31,9 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             return new BadRequestObjectResult(new { Field = nameof(loginModel.Password) });
         }
 
-        var token = SecurityHelper.GetAuthToken(user);
+        var sessionId = await RegisterUserSessionAsync(user.Id);
+
+        var token = SecurityHelper.GetAuthToken(user, sessionId);
 
         return new OkObjectResult(new
         {
@@ -58,9 +61,11 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
 
         var task = _usersRepository.AddAsync(user);
 
-        var token = SecurityHelper.GetAuthToken(user);
+        var sessionId = await RegisterUserSessionAsync(user.Id);
 
-        task.Wait();
+        var token = SecurityHelper.GetAuthToken(user, sessionId);
+
+        await task;
 
         return new OkObjectResult(new
         {
@@ -86,6 +91,9 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
 
         await _usersRepository.UpdatePasswordAsync(user.Id, _passwordHasher.Hash(passwordRestoreModel.NewPassword));
 
+        await EraseUserSessionsAsync(user.Id);
+        await RegisterUserSessionAsync(user.Id);
+
         return new OkResult();
     }
     
@@ -104,6 +112,9 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
         }
         
         await _usersRepository.UpdatePasswordAsync(user.Id, _passwordHasher.Hash(passwordChangeModel.NewPassword));
+
+        await EraseUserSessionsAsync(user.Id);
+        await RegisterUserSessionAsync(user.Id);
 
         return new OkResult();
     }
@@ -231,5 +242,19 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             OrgActivity = registerModel.OrgActivity,
             OrgName = registerModel.OrgName
         };
+    }
+
+    private async Task<string> RegisterUserSessionAsync(long userId)
+    {
+        var sessionId = Guid.NewGuid().ToString("n");
+
+        await _userSessionsRepository.RegisterSessionAsync(userId, sessionId);
+
+        return sessionId;
+    }
+
+    private async Task EraseUserSessionsAsync(long userId)
+    {
+        await _userSessionsRepository.EraseUserSessionsAsync(userId);
     }
 }

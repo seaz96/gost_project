@@ -7,7 +7,9 @@ namespace GostStorage.Services.Models.Accounts
     {
         public required string Login {  get; set; }
 
-        [MinLength(LoginModelConstraints.PASSWORD_MIN_LENGTH)]
+        [MinLength(
+            LoginModelConstraints.PASSWORD_MIN_LENGTH, 
+            ErrorMessage = "Пароль слишком короткий")]
         public required string Password { get; set; }
     }
 }

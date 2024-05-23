@@ -7,7 +7,7 @@ namespace GostStorage.Services.Helpers
 {
     public class SecurityHelper
     {
-        public static string GetAuthToken(UserEntity user)
+        public static string GetAuthToken(UserEntity user, string sessionId)
         {
             var userId = user.Id.ToString();
             var role = user.Role.ToString();
@@ -15,7 +15,8 @@ namespace GostStorage.Services.Helpers
             var claims = new List<Claim>
             {
                 new(ClaimTypes.NameIdentifier, userId),
-                new(ClaimTypes.Role, role)
+                new(ClaimTypes.Role, role),
+                new(ClaimTypes.Sid, sessionId),
             };
 
             var jwt = new JwtSecurityToken(

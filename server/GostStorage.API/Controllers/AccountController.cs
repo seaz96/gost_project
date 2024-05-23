@@ -23,6 +23,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await _accountService.LoginAsync(loginModel);
     }
+
     /// <summary>
     /// Create a new account and log in
     /// </summary>
