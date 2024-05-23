@@ -23,6 +23,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
+        serviceCollection.AddScoped<IUserSessionsRepository, UsersSessionsRepository>();
         
         return serviceCollection;
     }
