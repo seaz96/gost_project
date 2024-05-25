@@ -16,7 +16,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IFieldsService _fieldsService = fieldsService;
-    
+
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
         if (primaryField.Designation is not null)
@@ -24,14 +24,14 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
         }
         var doc = await _docsRepository.GetByDesignationAsync(primaryField.Designation);
-        
+
         if (doc is not null)
         {
             await _fieldsService.UpdateAsync(primaryField, doc.Id);
             await ChangeStatusAsync(doc.Id, primaryField.Status);
             return doc.Id;
         }
-        
+
         var actualField = new FieldEntity
         {
             LastEditTime = DateTime.UtcNow,
@@ -41,11 +41,11 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         var actualId = await _fieldsRepository.AddAsync(actualField);
 
         doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
-        
+
         var docId = await _docsRepository.AddAsync(doc);
         primaryField.DocId = docId;
-        actualField.DocId = docId; 
-        
+        actualField.DocId = docId;
+
         await _fieldsRepository.UpdateAsync(primaryField);
         await _fieldsRepository.UpdateAsync(actualField);
 
@@ -58,15 +58,15 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+            return new UnprocessableEntityObjectResult($"???????? ? ??????????????? {id} ?? ??????");
         }
-        
+
         await _fieldsRepository.DeleteAsync(doc.PrimaryFieldId);
         await _fieldsRepository.DeleteAsync(doc.ActualFieldId);
-        
+
         await _docsRepository.DeleteAsync(id);
 
-        return new OkObjectResult("Document deleted successfully.");
+        return new OkObjectResult("???????? ??????? ??????");
     }
 
     public async Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status)
@@ -75,12 +75,12 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+            return new UnprocessableEntityObjectResult($"???????? ? ??????????????? {id} ?? ??????");
         }
-        
+
         var primaryField = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
         var actualField = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId);
-        
+
         if (primaryField is not null)
         {
             primaryField.Status = status;
@@ -92,21 +92,21 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             await _fieldsRepository.UpdateAsync(actualField);
         }
 
-        return new OkObjectResult("Status changed successfully.");
+        return new OkObjectResult("?????? ??????? ????????");
     }
 
     public async Task<ActionResult<GetDocumentResponseModel>> GetDocumentAsync(long id)
     {
         var doc = await _docsRepository.GetByIdAsync(id);
-        
+
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+            return new UnprocessableEntityObjectResult($"???????? ? ??????????????? {id} ?? ??????");
         }
-        
+
         var docs = await _docsRepository.GetAllAsync();
         var fields = await _fieldsRepository.GetAllAsync();
-        
+
         var references = (await _referencesRepository.GetAllAsync())
             .Where(reference => reference.ParentalDocId == id)
             .Select(reference =>
@@ -123,7 +123,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
                 };
             })
             .ToList();
-        
+
         var result = new GetDocumentResponseModel
         {
             Primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
@@ -153,7 +153,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         return docsWithFields;
     }
-    
+
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
     {
         if (parameters.Name is not null)
@@ -173,11 +173,14 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             {
                 var primary = fields.Find(field => field.Id == doc.PrimaryFieldId);
                 var actual = fields.Find(field => field.Id == doc.ActualFieldId);
-                
+
                 return new DocWithGeneralInfoModel
                 {
-                    Id = doc.Id, Designation = actual.Designation ?? primary?.Designation, FullName = actual.FullName ?? primary?.FullName,
-                    ApplicationArea = actual.ApplicationArea ?? primary?.ApplicationArea, CodeOKS = actual.CodeOKS ?? primary?.CodeOKS
+                    Id = doc.Id,
+                    Designation = actual.Designation ?? primary?.Designation,
+                    FullName = actual.FullName ?? primary?.FullName,
+                    ApplicationArea = actual.ApplicationArea ?? primary?.ApplicationArea,
+                    CodeOKS = actual.CodeOKS ?? primary?.CodeOKS
                 };
             })
             .ToList();

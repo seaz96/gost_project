@@ -2,11 +2,6 @@
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GostStorage.Infrastructure.Repositories
 {
@@ -17,16 +12,18 @@ namespace GostStorage.Infrastructure.Repositories
         public async Task EraseUserSessionsAsync(long userId)
         {
             await _context.UserSessions.Where(us => us.UserId == userId).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<string?> GetUserSessions(long userId)
+        public async Task<bool> IsSessionRegistered(long userId, string sessionId)
         {
-            return _context.UserSessions.Where(us => us.UserId == userId).Select(us => us.SessionId).AsEnumerable();
+            return await _context.UserSessions.AnyAsync(us => us.UserId == userId && us.SessionId == sessionId);
         }
 
         public async Task RegisterSessionAsync(long userId, string sessionId)
         {
             await _context.UserSessions.AddAsync(new UserSession { UserId = userId, SessionId = sessionId });
+            await _context.SaveChangesAsync();
         }
     }
 }

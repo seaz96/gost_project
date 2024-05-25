@@ -46,7 +46,7 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
         await _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId).ExecuteDeleteAsync();
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task DeleteAllByChildIdAsync(long parentId)
     {
         await _context.DocsReferences.Where(reference => reference.ChildDocId == parentId).ExecuteDeleteAsync();
@@ -57,7 +57,7 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
     {
         var references = _context.DocsReferences.Where(reference => reference.ParentalDocId == parentId);
         var toDelete = new List<long>();
-        
+
         foreach (var reference in references)
         {
             if (referenceIds.Contains(reference.ChildDocId))
@@ -73,9 +73,9 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
 
         await _context.DocsReferences.Where(reference =>
             reference.ParentalDocId == parentId && toDelete.Contains(reference.ChildDocId)).ExecuteDeleteAsync();
-        
-        await AddRangeAsync(referenceIds.Select(id => new DocReferenceEntity {ChildDocId = id, ParentalDocId = parentId}).ToList());
-        
+
+        await AddRangeAsync(referenceIds.Select(id => new DocReferenceEntity { ChildDocId = id, ParentalDocId = parentId }).ToList());
+
         await _context.SaveChangesAsync();
     }
 }

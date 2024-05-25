@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using GostStorage.API.Helpers;
 using GostStorage.API.Middlewares.Extensions;
@@ -11,6 +9,8 @@ using GostStorage.Services.Services.Concrete;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Security.Claims;
+using System.Text;
 
 namespace GostStorage.API;
 
@@ -26,7 +26,7 @@ static class Program
         AuthOptions.Initialize(securityKey);
 
         builder.Host.UseSerilog((ctx, lc) => lc.GetConfiguration());
-        
+
         builder.Services.AddControllers();
         builder.Services.AddAuthentication();
 
@@ -75,12 +75,12 @@ static class Program
                         .AllowCredentials();
                 });
         });
-        
+
         var app = builder.Build();
-    
+
         app.UseSwagger();
         app.UseSwaggerUI();
-        
+
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.Use(async (context, next) =>
@@ -91,6 +91,8 @@ static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
+        app.UseSessionValidityCheckMiddlewareMiddleware();
+        app.UseAuthTokenRefreshMiddleware();
         app.Use(async (context, next) =>
         {
             if (context.Request.Method == "POST")

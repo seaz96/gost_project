@@ -9,8 +9,8 @@ public class GetViewsModel
     public string? ActivityField { get; set; }
 
     public string? OrgBranch { get; set; }
-    
+
     public DateTime? StartYear { get; set; }
-    
+
     public DateTime? EndYear { get; set; }
 }

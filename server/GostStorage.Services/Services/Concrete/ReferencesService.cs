@@ -26,12 +26,12 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
-            
+            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive });
+
             docId.Wait();
             return docId.Result;
-        }); 
-        
+        });
+
         var references = referenceIds
             .Select(childId => new DocReferenceEntity { ParentalDocId = parentId, ChildDocId = childId })
             .ToList();
@@ -57,11 +57,11 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
+            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive });
             docId.Wait();
             return docId.Result;
-        }).ToList(); 
-        
+        }).ToList();
+
         await _referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
     }
 }

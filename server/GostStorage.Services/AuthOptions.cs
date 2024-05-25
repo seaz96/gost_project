@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace GostStorage.Services
 {
@@ -11,7 +11,7 @@ namespace GostStorage.Services
 
         public static readonly TimeSpan AuthTokenLifetime = TimeSpan.FromDays(14);
 
-        public static string? SecurityKey { get; private set; }
+        public static string SecurityKey { get; private set; } = "DefaultDevelopmentSecurityKey0123456789";
 
         public static SymmetricSecurityKey SymmetricSecurityKey
         {

@@ -7,7 +7,7 @@ namespace GostStorage.Domain.Navigations;
 /// </summary>
 public enum ActionType
 {
-    Create, 
+    Create,
     Update,
     View
 }

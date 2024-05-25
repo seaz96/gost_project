@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
@@ -6,6 +5,7 @@ using GostStorage.Services.Models.Stats;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GostStorage.API.Controllers;
 
@@ -15,7 +15,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
 {
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
     private readonly IUsersRepository _usersRepository = usersRepository;
-    
+
     /// <summary>
     /// Get views of every document bu filters
     /// </summary>
@@ -35,7 +35,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
     {
         return await _docStatisticsService.GetCount(model);
     }
-    
+
     /// <summary>
     /// Updating document views
     /// </summary>
@@ -46,7 +46,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId });
 
         return Ok("Views updated succesfully!");
     }

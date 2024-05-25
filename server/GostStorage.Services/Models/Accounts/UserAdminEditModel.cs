@@ -6,10 +6,10 @@ namespace GostStorage.Services.Models.Accounts
     {
         [JsonPropertyName("login")]
         public required string Login { get; set; }
-        
+
         [JsonPropertyName("name")]
         public string? Name { get; set; }
-        
+
         [JsonPropertyName("org_name")]
         public string? OrgName { get; set; }
 

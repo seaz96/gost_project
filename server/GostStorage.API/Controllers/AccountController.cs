@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GostStorage.Services.Models.Accounts;
+using GostStorage.Services.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using GostStorage.Services.Models.Accounts;
-using GostStorage.Services.Services.Abstract;
 
 namespace GostStorage.API.Controllers;
 
@@ -65,7 +65,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await _accountService.GetUsersListAsync();
     }
-    
+
     /// <summary>
     /// Get full user info
     /// </summary>
@@ -112,7 +112,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await _accountService.MakeAdminAsync(requestModel);
     }
-    
+
     /// <summary>
     /// Get self user info (authorized only)
     /// </summary>

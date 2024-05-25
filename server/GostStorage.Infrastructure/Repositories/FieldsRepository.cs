@@ -38,13 +38,13 @@ public class FieldsRepository(DataContext context) : IFieldsRepository
 
     public async Task DeleteAsync(long? id)
     {
-       await _context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
+        await _context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
     }
 
     public async Task UpdateAsync(FieldEntity newField)
     {
         _context.Fields.Update(newField);
-        
+
         await _context.SaveChangesAsync();
     }
 }

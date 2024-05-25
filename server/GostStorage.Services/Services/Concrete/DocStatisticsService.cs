@@ -15,7 +15,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IDocStatisticsRepository _docStatisticsRepository = docStatisticsRepository;
     private readonly IDocsService _docsService = docsService;
-    
+
     public async Task AddAsync(DocStatisticEntity statistic)
     {
         await _docStatisticsRepository.AddAsync(statistic);
@@ -32,7 +32,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
         var statistics = await _docStatisticsRepository.GetAllAsync();
 
-        return new OkObjectResult(statistics.Where(stat =>      
+        return new OkObjectResult(statistics.Where(stat =>
         {
             var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId && (string.IsNullOrEmpty(model.OrgBranch) || stat.OrgBranch == model.OrgBranch));
 
@@ -48,8 +48,13 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         .Select(stat =>
         {
             var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-            return new DocWithViewsModel {DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
-                Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName};
+            return new DocWithViewsModel
+            {
+                DocId = doc.DocId,
+                Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                Views = stat.Views,
+                FullName = doc.Actual.FullName ?? doc.Primary.FullName
+            };
         })
         .ToList());
     }
@@ -61,7 +66,7 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
         var filteredStats = statistics
             .Where(stat => (model.StartDate is not null ? model.StartDate <= stat.Date : true) &&
-                           (model.EndDate is not null ? stat.Date <= model.EndDate : true) 
+                           (model.EndDate is not null ? stat.Date <= model.EndDate : true)
                            && stat.Action != ActionType.View)
             .Where(stat =>
             {
@@ -70,8 +75,10 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
             });
 
         var count = filteredStats.GroupBy(stat => stat.DocId).Count();
-        
-        return new OkObjectResult(new { Count = count,
+
+        return new OkObjectResult(new
+        {
+            Count = count,
             Stats = filteredStats.Select(x =>
             {
                 var doc = docs.FirstOrDefault(doc => doc.DocId == x.DocId);
@@ -83,18 +90,19 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                     Action = x.Action.ToString(),
                     Date = x.Date
                 };
-            })});
-        
+            })
+        });
+
     }
-    
+
     private static bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
         GetViewsModel model, DocStatisticEntity statistic)
     {
         return (model.Designation is not null ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) : true) &&
-               (model.ActivityField is not null ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) : true) && 
+               (model.ActivityField is not null ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) : true) &&
                (model.CodeOKS is not null ? (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) : true) &&
                (model.StartYear is not null ? model.StartYear <= statistic.Date : true) &&
-               (model.EndYear is not null ? statistic.Date <= model.EndYear : true) && 
+               (model.EndYear is not null ? statistic.Date <= model.EndYear : true) &&
                statistic.Action == ActionType.View;
     }
 }

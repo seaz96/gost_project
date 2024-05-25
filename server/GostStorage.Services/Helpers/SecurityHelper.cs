@@ -1,7 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using GostStorage.Domain.Entities;
+﻿using GostStorage.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace GostStorage.Services.Helpers
 {
@@ -23,12 +23,31 @@ namespace GostStorage.Services.Helpers
                     claims: claims,
                     issuer: AuthOptions.AUTH_TOKEN_ISSUER,
                     audience: AuthOptions.AUTH_TOKEN_ISSUER,
-                    expires: DateTime.UtcNow + AuthOptions.AuthTokenLifetime,
+                    expires: GetNewTokenExpireDateTime(),
                     signingCredentials: new SigningCredentials(AuthOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return token;
+        }
+
+        public static string GetAuthToken(JwtSecurityToken token)
+        {
+            var jwt = new JwtSecurityToken(
+                    claims: token.Claims,
+                    issuer: AuthOptions.AUTH_TOKEN_ISSUER,
+                    audience: AuthOptions.AUTH_TOKEN_ISSUER,
+                    expires: GetNewTokenExpireDateTime(),
+                    signingCredentials: new SigningCredentials(AuthOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
+
+            var newToken = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            return newToken;
+        }
+
+        public static DateTime GetNewTokenExpireDateTime()
+        {
+            return DateTime.UtcNow + AuthOptions.AuthTokenLifetime;
         }
     }
 }

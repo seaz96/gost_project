@@ -13,18 +13,19 @@ public static class InfrastructureStartUp
     {
         var dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
         var dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+
         serviceCollection.AddDbContext<DataContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection") + $"Host={dbHost};" + $"Password={dbPassword};");
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         }, ServiceLifetime.Transient);
-        
+
         serviceCollection.AddScoped<IUsersRepository, UsersRepository>();
         serviceCollection.AddScoped<IFieldsRepository, FieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
         serviceCollection.AddScoped<IUserSessionsRepository, UsersSessionsRepository>();
-        
+
         return serviceCollection;
     }
 }

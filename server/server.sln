@@ -1,12 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.API", "GostStorage.API\GostStorage.API.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GostStorage.API", "GostStorage.API\GostStorage.API.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Domain", "GostStorage.Domain\GostStorage.Domain.csproj", "{A82FCEEB-7B61-498C-8E36-B6B059550157}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GostStorage.Domain", "GostStorage.Domain\GostStorage.Domain.csproj", "{A82FCEEB-7B61-498C-8E36-B6B059550157}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Infrastructure", "GostStorage.Infrastructure\GostStorage.Infrastructure.csproj", "{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GostStorage.Infrastructure", "GostStorage.Infrastructure\GostStorage.Infrastructure.csproj", "{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Services", "GostStorage.Services\GostStorage.Services.csproj", "{7C8E00EC-78D1-4881-B214-970061076917}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GostStorage.Services", "GostStorage.Services\GostStorage.Services.csproj", "{7C8E00EC-78D1-4881-B214-970061076917}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Tests", "GostStorage.Tests\GostStorage.Tests.csproj", "{87EA8034-B3CF-4F35-898F-5E4B1C23A980}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +35,15 @@ Global
 		{7C8E00EC-78D1-4881-B214-970061076917}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C8E00EC-78D1-4881-B214-970061076917}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C8E00EC-78D1-4881-B214-970061076917}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87EA8034-B3CF-4F35-898F-5E4B1C23A980}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87EA8034-B3CF-4F35-898F-5E4B1C23A980}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87EA8034-B3CF-4F35-898F-5E4B1C23A980}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87EA8034-B3CF-4F35-898F-5E4B1C23A980}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCE50D7A-C5BC-4AD8-8DF8-3DF167F7DEB7}
 	EndGlobalSection
 EndGlobal

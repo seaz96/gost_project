@@ -27,10 +27,10 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Where(x => x.Id > lastId)
             .Take(limit)
             .ToList();
-        
+
         return docs;
     }
-    
+
     public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
     {
         var docs = _context.Fields
@@ -42,7 +42,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Select(x => new { x.Id, x.Designation })
             .Distinct()
             .ToList();
-        
+
         return _context.Docs
             .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
             .Distinct()
@@ -53,7 +53,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
             })
             .ToList();
     }
-    
+
     public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, _context);

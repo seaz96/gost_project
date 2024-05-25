@@ -13,7 +13,7 @@ public static class ServicesStartUp
         serviceCollection.AddScoped<IReferencesService, ReferencesService>();
         serviceCollection.AddScoped<IFieldsService, FieldsService>();
         serviceCollection.AddScoped<IDocStatisticsService, DocStatisticsService>();
-        
+
         return serviceCollection;
     }
 }

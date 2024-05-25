@@ -20,7 +20,7 @@ public class DocStatisticsRepository(DataContext context) : IDocStatisticsReposi
 
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task DeleteAsync(long docId)
     {
         var statistic = await _context.DocStatistics.FirstOrDefaultAsync(stat => stat.DocId == docId);

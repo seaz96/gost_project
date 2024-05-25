@@ -17,32 +17,32 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
     {
         updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
         var doc = await _docsRepository.GetByIdAsync(docId);
-        
+
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {docId} not found.");
+            return new UnprocessableEntityObjectResult($"???????? ? ??????????????? {docId} ?? ??????");
         }
-        
+
         updatedField.Id = doc.PrimaryFieldId;
         await _fieldsRepository.UpdateAsync(updatedField);
 
-        return new OkObjectResult("Document updated successfully.");
+        return new OkObjectResult("???????? ??????? ????????");
     }
 
     public async Task<IActionResult> ActualizeAsync(FieldEntity actualizedField, long docId)
     {
         actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
         var doc = await _docsRepository.GetByIdAsync(docId);
-        
+
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {docId} not found.");
+            return new UnprocessableEntityObjectResult($"???????? ? ???????????????  {docId} ?? ??????");
         }
-        
+
         actualizedField.Id = doc.ActualFieldId.Value;
-        
+
         await _fieldsRepository.UpdateAsync(actualizedField);
 
-        return new OkObjectResult("Document actualized successfully");
+        return new OkObjectResult("???????? ??????? ??????????????");
     }
 }

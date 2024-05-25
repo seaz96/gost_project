@@ -9,7 +9,7 @@ namespace GostStorage.Services.Models.Accounts
 
         [JsonPropertyName("new_password")]
         public required string NewPassword { get; set; }
-        
+
         [JsonPropertyName("old_password")]
         public required string OldPassword { get; set; }
     }

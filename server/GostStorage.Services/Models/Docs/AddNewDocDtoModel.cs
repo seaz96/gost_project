@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using GostStorage.Domain.Navigations;
+using System.ComponentModel.DataAnnotations;
 
 namespace GostStorage.Services.Models.Docs;
 
@@ -12,7 +12,7 @@ public class AddNewDocDtoModel
     public string? CodeOKS { get; set; }
 
     public string? ActivityField { get; set; }
-    
+
     [Range(1000, 9999)]
     public int? AcceptanceYear { get; set; }
 
@@ -42,6 +42,6 @@ public class AddNewDocDtoModel
     public HarmonizationLevels Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
-    
+
     public List<string> References { get; set; }
 }

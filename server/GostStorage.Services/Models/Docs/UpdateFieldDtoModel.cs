@@ -1,5 +1,5 @@
-using System.ComponentModel.DataAnnotations;
 using GostStorage.Domain.Navigations;
+using System.ComponentModel.DataAnnotations;
 
 namespace GostStorage.Services.Models.Docs;
 
@@ -42,6 +42,6 @@ public class UpdateFieldDtoModel
     public HarmonizationLevels Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
-    
+
     public List<string> References { get; set; }
 }

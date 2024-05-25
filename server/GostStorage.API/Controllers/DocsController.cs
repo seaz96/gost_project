@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using AutoMapper;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
@@ -9,6 +8,7 @@ using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace GostStorage.API.Controllers;
 
@@ -43,14 +43,14 @@ public class DocsController(
         }
 
         var newField = _mapper.Map<FieldEntity>(dto);
-        
+
         var docId = await _docsService.AddNewDocAsync(newField);
         await _referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
-        
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId });
 
         return Ok(docId);
     }
@@ -90,11 +90,11 @@ public class DocsController(
         updatedField.DocId = docId;
         var result = await _fieldsService.UpdateAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.References, docId);
-        
+
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId });
 
         return result;
     }
@@ -115,11 +115,11 @@ public class DocsController(
         updatedField.DocId = docId;
         var result = await _fieldsService.ActualizeAsync(updatedField, docId);
         await _referencesService.UpdateReferencesAsync(dto.References, docId);
-        
+
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId });
 
         return result;
     }
@@ -139,8 +139,8 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await _usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
-        
+        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId });
+
         return await _docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
@@ -175,7 +175,7 @@ public class DocsController(
     public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
+        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, lastId));
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public class DocsController(
     {
         return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, lastId));
     }
-    
+
     /// <summary>
     /// Get count of all documents without references
     /// </summary>
@@ -211,7 +211,7 @@ public class DocsController(
     public async Task<ActionResult<int>> GetValidDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetDocumentsCountAsync(parameters, true));    
+        return Ok(await _docsService.GetDocumentsCountAsync(parameters, true));
     }
 
     /// <summary>

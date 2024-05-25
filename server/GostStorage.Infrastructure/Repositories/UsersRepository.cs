@@ -51,7 +51,7 @@ public class UsersRepository(DataContext context) : IUsersRepository
     public async Task UpdateNameAsync(long id, string? name)
     {
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
-        
+
         if (user is not null)
         {
             user.Name = name;

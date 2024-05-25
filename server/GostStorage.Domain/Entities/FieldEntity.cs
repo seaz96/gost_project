@@ -1,6 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using GostStorage.Domain.Entities.Base;
 using GostStorage.Domain.Navigations;
+using System.ComponentModel.DataAnnotations;
 
 namespace GostStorage.Domain.Entities;
 
@@ -18,7 +18,7 @@ public class FieldEntity : BaseEntity
     public int? AcceptanceYear { get; set; }
 
     [Range(1000, 9999)]
-    public int? CommissionYear { get; set; }   
+    public int? CommissionYear { get; set; }
 
     public string? Author { get; set; }
 
@@ -43,9 +43,9 @@ public class FieldEntity : BaseEntity
     public HarmonizationLevels? Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
-    
+
     public long DocId { get; set; }
-    
+
     public DateTime? LastEditTime { get; set; }
 }
 

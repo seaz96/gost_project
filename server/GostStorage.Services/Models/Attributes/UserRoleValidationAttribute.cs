@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using GostStorage.Domain.Navigations;
+﻿using GostStorage.Domain.Navigations;
 using GostStorage.Services.Extensions;
+using System.ComponentModel.DataAnnotations;
 
 namespace GostStorage.Services.Models.Attributes
 {
