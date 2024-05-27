@@ -4,6 +4,7 @@ using GostStorage.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio.AspNetCore;
 
 namespace GostStorage.Infrastructure;
 
@@ -13,6 +14,8 @@ public static class InfrastructureStartUp
     {
         var dbHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
         var dbPassword = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+        var minioPublicKey = Environment.GetEnvironmentVariable("MINIO_PUBLIC_KEY");
+        var minioPrivateKey = Environment.GetEnvironmentVariable("MINIO_PRIVATE_KEY");
         serviceCollection.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection") + $"Host={dbHost};" + $"Password={dbPassword};");
@@ -23,6 +26,8 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
+        serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@minio:9000/"));
+        serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
         
         return serviceCollection;
     }

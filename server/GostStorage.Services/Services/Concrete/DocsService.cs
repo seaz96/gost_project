@@ -10,12 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace GostStorage.Services.Services.Concrete;
 
 public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository, IFieldsService fieldsService) : IDocsService
+    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IFieldsService _fieldsService = fieldsService;
+    private readonly IFilesRepository _filesRepository = filesRepository;
+    
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
@@ -181,5 +183,12 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
                 };
             })
             .ToList();
+    }
+
+    public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
+    {
+        await _filesRepository.UploadFileAsync(file.File, file.Extension, docId);
+        
+        return new OkResult();
     }
 }

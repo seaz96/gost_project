@@ -2,6 +2,7 @@ using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
 using GostStorage.Services.Models.Docs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Services.Abstract;
@@ -21,4 +22,6 @@ public interface IDocsService
     public Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
 
     public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
+
+    public Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
 }

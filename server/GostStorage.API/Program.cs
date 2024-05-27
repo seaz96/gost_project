@@ -91,19 +91,19 @@ static class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseSecurityHeadersComplementaryMiddleware();
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Method == "POST")
-            {
-                using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
-                var body = await reader.ReadToEndAsync();
-                Console.WriteLine("HTTP request body: " + body);
-                var byteArray = Encoding.UTF8.GetBytes(body);
-                var stream = new MemoryStream(byteArray);
-                context.Request.Body = stream;
-            }
-            await next.Invoke();
-        });
+        // app.Use(async (context, next) =>
+        // {
+        //     if (context.Request.Method == "POST")
+        //     {
+        //         using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
+        //         var body = await reader.ReadToEndAsync();
+        //         Console.WriteLine("HTTP request body: " + body);
+        //         var byteArray = Encoding.UTF8.GetBytes(body);
+        //         var stream = new MemoryStream(byteArray);
+        //         context.Request.Body = stream;
+        //     }
+        //     await next.Invoke();
+        // });
         app.MapControllers();
 
         app.Run();

@@ -1,6 +1,7 @@
 using GostStorage.Services.Services.Abstract;
 using GostStorage.Services.Services.Concrete;
 using Microsoft.Extensions.DependencyInjection;
+using Minio.AspNetCore;
 
 namespace GostStorage.Services;
 
