@@ -7,9 +7,9 @@ namespace GostStorage.Infrastructure.Helpers;
 
 public static class SearchHelper
 {
-    public static async Task<List<long>> SearchFields(SearchParametersModel parameters, bool? isValid, DataContext _context)
+    public static async Task<IQueryable<long>> SearchFields(SearchParametersModel parameters, bool? isValid, DataContext _context)
     {
-        return await _context.Fields
+        return _context.Fields
             .Where(f => parameters.CodeOKS == null || (f.CodeOKS ?? "").ToLower()
                 .Contains(parameters.CodeOKS.ToLower()))
             .Where(f => parameters.ActivityField == null || (f.ActivityField ?? "").ToLower()
@@ -17,14 +17,15 @@ public static class SearchHelper
             .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
             .Where(f => parameters.Name == null ||
                         (f.Designation ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()) ||
+                        .Contains(parameters.Name.ToLower()) ||
                         (f.FullName ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()))
+                        .Contains(parameters.Name.ToLower()))
             .Where(f => parameters.AcceptanceYear == null || f.AcceptanceYear.Value == parameters.AcceptanceYear.Value)
             .Where(f => parameters.CommissionYear == null || f.CommissionYear.Value == parameters.CommissionYear.Value)
             .Where(f => parameters.Author == null || (f.Author ?? "").ToLower()
                 .Contains(parameters.Author.ToLower()))
-            .Where(f => parameters.AcceptedFirstTimeOrReplaced == null || (f.AcceptedFirstTimeOrReplaced ?? "").ToLower()
+            .Where(f => parameters.AcceptedFirstTimeOrReplaced == null || (f.AcceptedFirstTimeOrReplaced ?? "")
+                .ToLower()
                 .Contains(parameters.AcceptedFirstTimeOrReplaced.ToLower()))
             .Where(f => parameters.KeyWords == null || (f.KeyWords ?? "").ToLower()
                 .Contains(parameters.KeyWords.ToLower()))
@@ -40,10 +41,9 @@ public static class SearchHelper
                 .Contains(parameters.Content.ToLower()))
             .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
             .Where(f => isValid == null || isValid.Value
-                                                    ? f.Status == DocStatuses.Valid
-                                                    : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
+                ? f.Status == DocStatuses.Valid
+                : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
             .AsSingleQuery()
-            .Select(f => f.Id)
-            .ToListAsync();
+            .Select(f => f.Id);
     }
 }

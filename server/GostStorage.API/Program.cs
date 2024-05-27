@@ -93,19 +93,7 @@ static class Program
         app.UseSecurityHeadersComplementaryMiddleware();
         app.UseSessionValidityCheckMiddlewareMiddleware();
         app.UseAuthTokenRefreshMiddleware();
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Method == "POST")
-            {
-                using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
-                var body = await reader.ReadToEndAsync();
-                Console.WriteLine("HTTP request body: " + body);
-                var byteArray = Encoding.UTF8.GetBytes(body);
-                var stream = new MemoryStream(byteArray);
-                context.Request.Body = stream;
-            }
-            await next.Invoke();
-        });
+        app.UseRequestLoggingMiddleware();
         app.MapControllers();
 
         app.Run();
