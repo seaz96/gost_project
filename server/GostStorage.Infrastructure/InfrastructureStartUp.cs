@@ -4,6 +4,7 @@ using GostStorage.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio.AspNetCore;
 
 namespace GostStorage.Infrastructure;
 
@@ -23,6 +24,8 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
+        serviceCollection.AddMinio(new Uri("s3://EV9fjF0qebstRDG6qzrK:QHFGTdz0p4qiRhPcQjLTpeZZuJONpn3bs8c9guHh@localhost:9000/"));
+        serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
         
         return serviceCollection;
     }

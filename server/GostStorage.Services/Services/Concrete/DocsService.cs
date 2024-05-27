@@ -4,25 +4,19 @@ using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
 using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Minio;
-using Minio.DataModel.Args;
-using IMinioClientFactory = Minio.AspNetCore.IMinioClientFactory;
 
 namespace GostStorage.Services.Services.Concrete;
 
 public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository, IFieldsService fieldsService, IMinioClientFactory minioClientFactory,
-    IHostingEnvironment hostingEnvironment) : IDocsService
+    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IFieldsService _fieldsService = fieldsService;
-    private readonly IMinioClient _minioClient = minioClientFactory.CreateClient();
-    private readonly IHostingEnvironment _hostingEnvironment = hostingEnvironment;
+    private readonly IFilesRepository _filesRepository = filesRepository;
+    
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
@@ -178,22 +172,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
     public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
     {
-        var doc = (GetDocumentResponseModel)((OkObjectResult)(await GetDocumentAsync(docId)).Result).Value;
-        if (file.File.Length > 0)
-        {
-            using var stream = new MemoryStream();
-            await file.File.CopyToAsync(stream);
-            stream.Position = 0;
-
-            var putObjectArgs = new PutObjectArgs()
-                .WithBucket("documents")
-                .WithObject(doc.Primary.Designation + '.' + file.Extension)
-                .WithStreamData(stream)
-                .WithObjectSize(stream.Length)
-                .WithContentType("application/octet-stream");
-            
-            _ = await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-        }
+        await _filesRepository.UploadFileAsync(file.File, file.Extension, docId);
         
         return new OkResult();
     }
