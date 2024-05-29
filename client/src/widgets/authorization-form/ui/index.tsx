@@ -2,32 +2,65 @@ import React, { useState } from 'react'
 import { Button, Input } from 'shared/components';
 
 import styles from './AuthorizationForm.module.scss'
+import { useFormik } from 'formik';
+import { AxiosError } from 'axios';
+import { UserAuthorization } from '../model/authorizationModel';
 
 interface AuthorizationFormProps {
   changeForm: Function,
-  onSubmit: Function
+  onSubmit: (user: UserAuthorization) => Promise<null | AxiosError>
 }
 
 const AuthorizationForm: React.FC<AuthorizationFormProps> = props => {
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
   const {changeForm, onSubmit} = props
+  const [error, setError] = useState('')
 
-  const handleSubmit = () => {
-    onSubmit({login, password})
-  }
+  const validate = (values: {login: string, password: string}) => {
+    const errors: {login?: string, password?: string} = {};
+  
+    if (!values.login) {
+      errors.login = 'Заполните поле';
+    } /* else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.login)) {
+      errors.login = 'Некорректный логин';
+    } */
+  
+   if(values.password.length < 7) {
+    errors.password = 'Пароль должен быть не меньше 7 символов'
+   }
+  
+    return errors;
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      login: '',
+      password: ''
+    },
+    validate,
+    onSubmit: values => {
+      onSubmit(values)
+      .catch((err: AxiosError) => {
+        if(err.response?.status === 400) {
+          setError('Неправильный логин или пароль')
+        }
+      });
+    },
+
+  });
 
   return (
     <form className={styles.form} onSubmit={(event) => {
       event.preventDefault()
-      handleSubmit()
-      }}>
-      <Input type='text' label='Логин' value={login} onChange={(value: string) => setLogin(value)}/>
-      <Input type='password' label='Пароль' value={password} onChange={(value: string) => setPassword(value)}/>
+      formik.handleSubmit()
+    }}>
+      <Input type='text' id="login" name="login" label='Логин' onChange={formik.handleChange('login')} value={formik.values.login} error={formik.errors.login}/>
+      <Input type='password' label='Пароль' id="password" name="password" value={formik.values.password} onChange={formik.handleChange('password')} error={formik.errors.password}/>
       <div className={styles.buttonsContainer}>
-          <Button onClick={() => {}} isFilled className={styles.formButton} type='submit'>Войти</Button>
+          <Button isFilled className={styles.formButton} type='submit'>Войти</Button>
           <Button className={styles.formButton} onClick={() => changeForm()} isColoredText>Зарегистрироваться</Button>
       </div>
+      {error && 
+      <p className={styles.error}>{error}</p>}
 </form>
   )
 }

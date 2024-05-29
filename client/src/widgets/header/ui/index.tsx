@@ -28,7 +28,7 @@ const ProfileDropdown = () => {
             </Link>
             <button className={styles.exitButton} onClick={() => {
                 setUser(null)
-                localStorage.setItem('jwt_token', '')
+                localStorage.removeItem('jwt_token')
             }}>
                 <img src={exit} className={styles.dropdownImage} alt='exit' />
                 Выйти

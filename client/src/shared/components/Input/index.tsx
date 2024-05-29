@@ -22,6 +22,9 @@ interface InputProps {
  onBlur?: Function
  value?: string | number | undefined
  onKeyUp?: Function
+ id?: string
+ name?: string
+ error?: string
 }
  
 const Input: React.FC<InputProps> = props => {
@@ -34,14 +37,17 @@ const Input: React.FC<InputProps> = props => {
     onChange = () => {},
     onBlur = () => {},
     onKeyUp = () => {},
-    value
+    value,
+    id,
+    name,
+    error
   } = props
 
   const renderRequiredLabel = (): JSX.Element => (
     <span className='input-required'>*</span>
   )
 
-  const inputID: string = label?.toLowerCase() || ''
+  const inputID: string = id || label?.toLowerCase() || ''
   
   return (
     <div className={classNames(styles.inputContainer, className)}>
@@ -55,7 +61,7 @@ const Input: React.FC<InputProps> = props => {
       <input
         id={inputID}
         type={type}
-        name={inputID}
+        name={name || inputID}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
         onBlur={(event) => onBlur(event.target.value)}
@@ -64,6 +70,9 @@ const Input: React.FC<InputProps> = props => {
         className={styles.baseInput}
         onKeyUp={(event) => onKeyUp(event)}
       />
+      {error && 
+        <p className={styles.error}>{error}</p>
+      }
     </div>
   )
 }
