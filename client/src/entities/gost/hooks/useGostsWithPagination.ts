@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { axiosInstance } from 'shared/configs/axiosConfig';
-import { Gost } from '../model/gostModel';
+import { Gost, GostViewInfo } from '../model/gostModel';
 
 const baseLimit = 10
 
 export const useGostsWithPagination = (url: string, defaultParams?:any) => {
-    const [gosts, setGosts] = useState<Gost[]>([]);
+    const [gosts, setGosts] = useState<GostViewInfo[]>([]);
     const [error, setError] = useState<string>('');
     const [loading, setloading] = useState<boolean>(true);
     const [gostsParams, setGostParams] = useState<any>(defaultParams)
@@ -18,13 +18,13 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
         return axiosInstance
             .get(url, {params: {...gostsParams, lastId: id, limit: limit}})
             .then((res) => {
-                const data = res.data as Gost[]
+                const data = res.data as GostViewInfo[]
                 if(refetch) {
                     setGosts(data);
                 } else {
                     setGosts((prevGosts) => [...prevGosts, ...data]);
                 }
-                setLastId(data[data.length - 1].docId);
+                setLastId(data[data.length - 1].id);
                 setCountFetched((prev) => prev + limit)
             })
             .catch((err: any) => {
