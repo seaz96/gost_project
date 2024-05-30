@@ -1,3 +1,5 @@
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
@@ -154,6 +156,73 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         }).ToList();
 
         return docsWithFields;
+    }
+    
+    public async Task<List<DocumentESModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
+    {
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
+        
+        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200/"))
+            .Authentication(new ApiKey("XzhCSXlJOEJja09OTXRrQmpUSGQ6WGsySnZ5T0lUdk9qbUh0UHBaS0x4QQ=="))
+            .DefaultIndex("index");
+        var client = new ElasticsearchClient(settings);
+        var response = await client.SearchAsync<FieldEntity>(s => s
+            .Index("index")
+            .From(offset)
+            .Size(limit)
+            .TrackScores()
+            .Query(q =>
+                {
+                    q.Bool(b => b.Should(s =>
+                    {
+                        if (parameters.Name is not null)
+                            s.Match(m =>
+                                m.Field(new Field("fullName")).Query(parameters.Name));
+                    }, s =>
+                    {
+                        if (parameters.Name is not null)
+                            s.Match(m =>
+                                m.Field(new Field("content")).Query(parameters.Name));
+                    }));
+                    if (parameters.ActivityField is not null)
+                        q.Match(m => m.Field(new Field("activityField")).Query(parameters.ActivityField));
+                    if (parameters.Author is not null)
+                        q.Match(m => m.Field(new Field("author")).Query(parameters.Author));
+                    if (parameters.AcceptedFirstTimeOrReplaced is not null)
+                        q.Match(m =>
+                            m.Field(new Field("acceptedFirstTimeOrReplaced"))
+                                .Query(parameters.AcceptedFirstTimeOrReplaced));
+                    if (parameters.KeyWords is not null)
+                        q.Match(m => m.Field(new Field("keyWords")).Query(parameters.KeyWords));
+                    if (parameters.ApplicationArea is not null)
+                        q.Match(m => m.Field(new Field("applicationArea")).Query(parameters.ApplicationArea));
+                    if (parameters.Changes is not null)
+                        q.Match(m => m.Field(new Field("changes")).Query(parameters.Changes));
+                    if (parameters.Amendments is not null)
+                        q.Match(m => m.Field(new Field("amendments")).Query(parameters.Amendments));
+                }
+                
+            ));
+        var r = response.Hits.ToList();
+        var docResults = new Dictionary<long, DocumentESModel>();
+        var maxScore = response.HitsMetadata.MaxScore;
+        foreach (var hit in response.Hits)
+        {
+            var fieldEntity = hit.Source;
+            Console.WriteLine($"{maxScore}, {hit.Score.Value}, {maxScore / hit.Score.Value * 5}");
+            if (docResults.ContainsKey(fieldEntity.DocId))
+                continue;
+            docResults[fieldEntity.DocId] = new DocumentESModel
+            {
+                CodeOKS = fieldEntity.CodeOKS, Designation = fieldEntity.Designation, FullName = fieldEntity.FullName,
+                Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
+            };
+        }
+        
+        return docResults.Values.ToList();
     }
     
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
