@@ -11,11 +11,12 @@ import { IconButton, Popover } from '@mui/material';
 import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
-  gosts: gostModel.Gost[]
+  gosts: gostModel.GostViewInfo[]
 }
 
 const GostsTable: React.FC<GostsTableProps> = props => {
   const {gosts} = props
+  console.log(gosts)
 
   return (
     <table className={styles.table}>
@@ -24,6 +25,7 @@ const GostsTable: React.FC<GostsTableProps> = props => {
             <th>Код ОКС</th>
             <th>Обозначение</th>
             <th>Наименование</th>
+            <th>Рейтинг релевантности</th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -35,20 +37,19 @@ const GostsTable: React.FC<GostsTableProps> = props => {
 }
 
 interface GostRowProps {
-  gost: gostModel.Gost
+  gost: gostModel.GostViewInfo
 }
 
 const GostRow:React.FC<GostRowProps> = ({gost}) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const {user} = useContext(UserContext)
-  const currentGostData = gost.primary || gost.actual
 
-  if(currentGostData.designation)
+  if(gost.designation)
     return (
       <tbody>
         <IconButton  
-          id={gost.docId.toString()}
+          id={gost.id.toString()}
           className={styles.loop}
           onClick={(event) => {
             setAnchorEl(event.currentTarget);
@@ -57,7 +58,7 @@ const GostRow:React.FC<GostRowProps> = ({gost}) => {
           <img src={loop} alt='открыть сводку по сфере применения'/>
         </IconButton>
         <Popover
-          id={gost.docId.toString()}
+          id={gost.id.toString()}
           open={open}
           onClose={() => setAnchorEl(null)}
           anchorEl={anchorEl}
@@ -72,23 +73,24 @@ const GostRow:React.FC<GostRowProps> = ({gost}) => {
           }}
         >
           <div className={styles.applicationAreaContainer} style={{whiteSpace: "pre-line"}}>
-            {currentGostData.applicationArea}
+            {gost.applicationArea}
           </div>
         </Popover>
         <tr>
-          <td>{currentGostData.codeOKS}</td>
-          <td>{currentGostData.designation}</td>
-          <td className={styles.gostDescription}>{currentGostData.fullName}</td>
+          <td>{gost.codeOKS}</td>
+          <td>{gost.designation}</td>
+          <td className={styles.gostDescription}>{gost.fullName}</td>
+          <td>{gost.relevanceMark}</td>
           <td>
             <div className={styles.buttons}>
-              <Link to={`/gost-review/${gost.docId}`}
+              <Link to={`/gost-review/${gost.id}`}
                     className={classNames(styles.tableButton, 'baseButton', 'coloredText')}>
                 <img src={eye} alt='eye' className={styles.buttonIcon}/>
                 Просмотр
               </Link>
               {
                 (user?.role === 'Admin' || user?.role === 'Heisenberg') &&
-                <Link to={`/gost-edit/${gost.docId}`}
+                <Link to={`/gost-edit/${gost.id}`}
                       className={classNames(styles.tableButton, 'baseButton', 'filledButton')}>
                   <img src={pen} alt='pen' className={styles.buttonIcon}/>
                   Редактирование
