@@ -12,13 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace GostStorage.Services.Services.Concrete;
 
 public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository) : IDocsService
+    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository,
+    ISearchRepository searchRepository) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IFilesRepository _filesRepository = filesRepository;
+    private readonly ISearchRepository _searchRepository = searchRepository;
     
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
@@ -164,51 +166,11 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         {
             parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
         }
-        
-        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200/"))
-            .Authentication(new ApiKey("XzhCSXlJOEJja09OTXRrQmpUSGQ6WGsySnZ5T0lUdk9qbUh0UHBaS0x4QQ=="))
-            .DefaultIndex("index");
-        var client = new ElasticsearchClient(settings);
-        var response = await client.SearchAsync<FieldEntity>(s => s
-            .Index("index")
-            .From(offset)
-            .Size(limit)
-            .TrackScores()
-            .Query(q =>
-                {
-                    q.Bool(b => b.Should(s =>
-                    {
-                        if (parameters.Name is not null)
-                            s.Match(m =>
-                                m.Field(new Field("fullName")).Query(parameters.Name));
-                    }, s =>
-                    {
-                        if (parameters.Name is not null)
-                            s.Match(m =>
-                                m.Field(new Field("content")).Query(parameters.Name));
-                    }));
-                    if (parameters.ActivityField is not null)
-                        q.Match(m => m.Field(new Field("activityField")).Query(parameters.ActivityField));
-                    if (parameters.Author is not null)
-                        q.Match(m => m.Field(new Field("author")).Query(parameters.Author));
-                    if (parameters.AcceptedFirstTimeOrReplaced is not null)
-                        q.Match(m =>
-                            m.Field(new Field("acceptedFirstTimeOrReplaced"))
-                                .Query(parameters.AcceptedFirstTimeOrReplaced));
-                    if (parameters.KeyWords is not null)
-                        q.Match(m => m.Field(new Field("keyWords")).Query(parameters.KeyWords));
-                    if (parameters.ApplicationArea is not null)
-                        q.Match(m => m.Field(new Field("applicationArea")).Query(parameters.ApplicationArea));
-                    if (parameters.Changes is not null)
-                        q.Match(m => m.Field(new Field("changes")).Query(parameters.Changes));
-                    if (parameters.Amendments is not null)
-                        q.Match(m => m.Field(new Field("amendments")).Query(parameters.Amendments));
-                }
-                
-            ));
-        var r = response.Hits.ToList();
+
+        var response = await _searchRepository.SearchValidFieldsAsync<FieldEntity>(parameters, limit, offset);
         var docResults = new Dictionary<long, DocumentESModel>();
         var maxScore = response.HitsMetadata.MaxScore;
+        
         foreach (var hit in response.Hits)
         {
             var fieldEntity = hit.Source;
