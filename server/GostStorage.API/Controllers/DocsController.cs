@@ -240,38 +240,13 @@ public class DocsController(
         return Ok(await _docsService.GetDocsWithGeneralInfoAsync());
     }
     
-    [NoCache]
-    [HttpPost("indexing")]
-    public async Task<ActionResult> IndexingAsync()
-    {
-        var settings = new ElasticsearchClientSettings(new Uri("http://localhost:9200/"))
-            .Authentication(new ApiKey("XzhCSXlJOEJja09OTXRrQmpUSGQ6WGsySnZ5T0lUdk9qbUh0UHBaS0x4QQ=="))
-            .DefaultIndex("index");
-        var client = new ElasticsearchClient(settings);
-        var docs = _docsService.GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
-        docs = docs.OrderBy(x => x.DocId).ToList();
-        Log.Logger.Information($"I have {docs.Count} documents.");
-        foreach (var doc in docs)
-        {
-            var p = doc.Primary;
-            var a = doc.Actual;
-            var response2 =
-                await client.IndexAsync(p, x => x.Document(p));
-            Log.Logger.Information($"Added {p.Id}");
-            var response3 = await client.IndexAsync(a, x => x.Document(a));
-            Log.Logger.Information($"Added {a.Id}");
-        }
-        
-        return new OkResult();
-
-    }
-    
     [HttpGet("search-valid")]
     public async Task<ActionResult> SearchValidAsync([FromQuery] SearchParametersModel parameters,
         [FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
         return new OkObjectResult(await _docsService.SearchValidAsync(parameters, limit, offset));
     }
+
 
     [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("{docId}/upload-file")]

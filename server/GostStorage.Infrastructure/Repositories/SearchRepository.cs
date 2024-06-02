@@ -15,7 +15,7 @@ public class SearchRepository : ISearchRepository
     public async Task<SearchResponse<FieldEntity>> SearchValidFieldsAsync<T>(SearchParametersModel parameters, int limit, int offset)
     {
         var response = await _client.SearchAsync<FieldEntity>(s => s
-            .Index("index")
+            .Index("fields")
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -67,7 +67,7 @@ public class SearchRepository : ISearchRepository
     public async Task<SearchResponse<FieldEntity>> SearchCanceledFieldsAsync<T>(SearchParametersModel parameters, int limit, int offset)
     {
         var response = await _client.SearchAsync<FieldEntity>(s => s
-            .Index("index")
+            .Index("fields")
             .From(0)
             .Size(10000)
             .TrackScores()

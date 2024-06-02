@@ -25,7 +25,7 @@ const GostsTable: React.FC<GostsTableProps> = props => {
             <th>Код ОКС</th>
             <th>Обозначение</th>
             <th>Наименование</th>
-            <th>Рейтинг релевантности</th>
+            <th>Соответствие запросу</th>
             <th>Действия</th>
           </tr>
         </thead>
