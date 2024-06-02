@@ -7,8 +7,10 @@ public static class ElasticsearchSettings
 {
     public static ElasticsearchClientSettings GetSettings()
     {
-        return new ElasticsearchClientSettings(new Uri("http://localhost:9200/"))
-            .Authentication(new ApiKey("XzhCSXlJOEJja09OTXRrQmpUSGQ6WGsySnZ5T0lUdk9qbUh0UHBaS0x4QQ=="))
-            .DefaultIndex("index");
+        var password = Environment.GetEnvironmentVariable("ELASTIC_PASSWORD");
+        
+        return new ElasticsearchClientSettings(new Uri("http://elasticsearch:9200/"))
+            .Authentication(new BasicAuthentication("elastic", password))
+            .DefaultIndex("fields");
     }
 }
