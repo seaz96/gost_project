@@ -1,5 +1,8 @@
 using System.Security.Claims;
 using AutoMapper;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Clients.Elasticsearch.Ingest;
+using Elastic.Transport;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
@@ -9,6 +12,7 @@ using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace GostStorage.API.Controllers;
 
@@ -235,6 +239,14 @@ public class DocsController(
     {
         return Ok(await _docsService.GetDocsWithGeneralInfoAsync());
     }
+    
+    [HttpGet("search-valid")]
+    public async Task<ActionResult> SearchValidAsync([FromQuery] SearchParametersModel parameters,
+        [FromQuery] int limit = 10, [FromQuery] int offset = 0)
+    {
+        return new OkObjectResult(await _docsService.SearchValidAsync(parameters, limit, offset));
+    }
+
 
     [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("{docId}/upload-file")]

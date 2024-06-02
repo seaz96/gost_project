@@ -2,6 +2,7 @@ export type Gost = {
     "docId": number,
     "primary": GostFields,
     "actual": GostFields,
+
     "references":
     {
         "docId": number,
@@ -55,6 +56,15 @@ export type GostGeneralInfo = {
     codeOKS: string,
     fullName: string,
     applicationArea: string
+}
+
+export type GostViewInfo =   {
+    id: number
+    codeOKS: string
+    designation: string
+    fullName: string
+    applicationArea: string
+    relevanceMark: number
 }
 
 export const Statuses = [
