@@ -28,13 +28,13 @@ const LoginPage = () => {
     }
 
     const handleAuthorization = (user: authorizationModel.UserAuthorization) => {
-        axiosInstance.post<userModel.User>('/accounts/login', user)
+        return axiosInstance.post<userModel.User>('/accounts/login', user)
         .then((response) => {
             setUser(response.data);
             localStorage.setItem('jwt_token', response.data.token);
             window.location.href = "/";
+            return null
         })
-        .catch(error => console.log(error))
     }
 
     return (

@@ -8,7 +8,7 @@ interface ButtonProps {
   isFilled?: boolean
   isColoredText?: boolean
   className?: string
-  onClick: Function
+  onClick?: Function
   prefix?: React.ReactNode
   suffix?: React.ReactNode
   type?: 'button' | 'submit' | 'reset'
@@ -20,7 +20,7 @@ const Button:React.FC<ButtonProps> = props => {
     isFilled,
     isColoredText,
     className,
-    onClick,
+    onClick=() => {},
     prefix,
     suffix,
     type = 'button'
