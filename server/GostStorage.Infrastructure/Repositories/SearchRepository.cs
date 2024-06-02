@@ -5,12 +5,14 @@ using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Helpers;
+using GostStorage.Services.Services.Abstract;
 
 namespace GostStorage.Infrastructure.Repositories;
 
-public class SearchRepository : ISearchRepository
+public class SearchRepository(IDocsService docsService) : ISearchRepository
 {
     private readonly ElasticsearchClient _client = new(ElasticsearchSettings.GetSettings());
+    private readonly IDocsService _docsService = docsService;
     
     public async Task<SearchResponse<FieldEntity>> SearchValidFieldsAsync<T>(SearchParametersModel parameters, int limit, int offset)
     {
@@ -114,5 +116,20 @@ public class SearchRepository : ISearchRepository
             ));
 
         return response;
+    }
+
+    public async Task IndexAllAsync()
+    {
+        
+        var docs = _docsService.GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
+        docs = docs.OrderBy(x => x.DocId).ToList();
+        foreach (var doc in docs)
+        {
+            var p = doc.Primary;
+            var a = doc.Actual;
+            var response2 =
+                await _client.IndexAsync(p, x => x.Document(p));
+            var response3 = await _client.IndexAsync(a, x => x.Document(a));
+        }
     }
 }

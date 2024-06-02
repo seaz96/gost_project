@@ -26,4 +26,6 @@ public interface IDocsService
     public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
 
     public Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
+
+    public Task IndexAllAsync();
 }
