@@ -1,3 +1,5 @@
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
@@ -10,13 +12,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace GostStorage.Services.Services.Concrete;
 
 public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository) : IDocsService
+    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository,
+    ISearchRepository searchRepository) : IDocsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
     private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IFilesRepository _filesRepository = filesRepository;
+    private readonly ISearchRepository _searchRepository = searchRepository;
     
     
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
@@ -154,6 +158,33 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         }).ToList();
 
         return docsWithFields;
+    }
+    
+    public async Task<List<DocumentESModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
+    {
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
+
+        var response = await _searchRepository.SearchValidFieldsAsync<FieldEntity>(parameters, limit, offset);
+        var docResults = new Dictionary<long, DocumentESModel>();
+        var maxScore = response.HitsMetadata.MaxScore;
+        
+        foreach (var hit in response.Hits)
+        {
+            var fieldEntity = hit.Source;
+            Console.WriteLine($"{maxScore}, {hit.Score.Value}, {maxScore / hit.Score.Value * 5}");
+            if (docResults.ContainsKey(fieldEntity.DocId))
+                continue;
+            docResults[fieldEntity.DocId] = new DocumentESModel
+            {
+                CodeOKS = fieldEntity.CodeOKS, Designation = fieldEntity.Designation, FullName = fieldEntity.FullName,
+                Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
+            };
+        }
+        
+        return docResults.Values.ToList();
     }
     
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)

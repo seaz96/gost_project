@@ -16,6 +16,7 @@
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
         <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+        <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.13.15" />
         <PackageReference Include="EntityFramework" Version="6.4.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />

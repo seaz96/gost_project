@@ -1,3 +1,5 @@
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Persistence;
 using GostStorage.Infrastructure.Repositories;
@@ -28,6 +30,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
         serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@minio:9000/"));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
+        serviceCollection.AddScoped<ISearchRepository, SearchRepository>();
         
         return serviceCollection;
     }
