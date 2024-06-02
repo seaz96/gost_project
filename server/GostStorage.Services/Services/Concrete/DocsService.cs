@@ -222,9 +222,4 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         
         return new OkResult();
     }
-
-    public async Task IndexAllAsync()
-    {
-        await _searchRepository.IndexAllAsync();
-    }
 }

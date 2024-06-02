@@ -11,6 +11,4 @@ public interface ISearchRepository
     public Task<SearchResponse<FieldEntity>> SearchValidFieldsAsync<T>(SearchParametersModel parameters, int limit, int offset);
     
     public Task<SearchResponse<FieldEntity>> SearchCanceledFieldsAsync<T>(SearchParametersModel parameters, int limit, int offset);
-
-    public Task IndexAllAsync();
 }

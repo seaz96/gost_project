@@ -251,7 +251,20 @@ public class DocsController(
     [HttpPost("indexing")]
     public async Task<ActionResult> IndexingAsync()
     {
-        await _docsService.IndexAllAsync();
+        var password = Environment.GetEnvironmentVariable("ELASTIC_PASSWORD");
+        var client = new ElasticsearchClient(new ElasticsearchClientSettings(new Uri("http://elasticsearch:9200/"))
+            .Authentication(new BasicAuthentication("elastic", password))
+            .DefaultIndex("fields"));
+        var docs = _docsService.GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
+        docs = docs.OrderBy(x => x.DocId).ToList();
+        foreach (var doc in docs)
+        {
+            var p = doc.Primary;
+            var a = doc.Actual;
+            var response2 =
+                await client.IndexAsync(p, x => x.Document(p));
+            var response3 = await client.IndexAsync(a, x => x.Document(a));
+        }
         return Ok();
     }
 
