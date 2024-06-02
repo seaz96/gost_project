@@ -247,7 +247,7 @@ public class DocsController(
         return new OkObjectResult(await _docsService.SearchValidAsync(parameters, limit, offset));
     }
     
-    [Authorize("Heisenberg,Admin")]
+    [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("indexing")]
     public async Task<ActionResult> IndexingAsync()
     {
