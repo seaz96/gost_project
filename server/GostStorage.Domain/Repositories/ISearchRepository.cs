@@ -1,9 +1,5 @@
 using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.Core.Search;
-using GostStorage.Domain.Entities;
-using GostStorage.Domain.Entities.Base;
 using GostStorage.Domain.Models;
-using GostStorage.Services.Models.Docs;
 
 namespace GostStorage.Domain.Repositories;
 

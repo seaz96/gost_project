@@ -1,6 +1,6 @@
 using GostStorage.Domain.Entities;
 
-namespace GostStorage.Services.Models.Docs;
+namespace GostStorage.Domain.Models;
 
 public class DocumentESModel
 {

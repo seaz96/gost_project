@@ -1,6 +1,6 @@
 using GostStorage.Domain.Navigations;
 
-namespace GostStorage.Services.Models.Docs;
+namespace GostStorage.Domain.Models;
 
 public class DocWithStatusModel
 {

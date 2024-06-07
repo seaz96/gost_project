@@ -1,9 +1,5 @@
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
-using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.Ingest;
-using Elastic.Transport;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
 using GostStorage.Domain.Navigations;
@@ -13,7 +9,6 @@ using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace GostStorage.API.Controllers;
 

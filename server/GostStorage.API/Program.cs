@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using GostStorage.API.Helpers;
 using GostStorage.API.Middlewares.Extensions;

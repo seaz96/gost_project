@@ -1,12 +1,8 @@
 using Elastic.Clients.Elasticsearch;
-using Elastic.Clients.Elasticsearch.Core.Search;
-using Elastic.Transport;
 using GostStorage.Domain.Entities;
 using GostStorage.Domain.Models;
-using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Helpers;
-using GostStorage.Services.Models.Docs;
 using Serilog;
 
 namespace GostStorage.Infrastructure.Repositories;
@@ -126,7 +122,6 @@ public class SearchRepository : ISearchRepository
             .From(0)
             .Size(10000)
             .TrackScores()
-            .Sort(s => s.Field("field.codeOKS", c => c.Order(SortOrder.Asc)))
             .Query(q => q.MatchAll(ma => ma.QueryName("MatchAll"))));
 
         return response;
