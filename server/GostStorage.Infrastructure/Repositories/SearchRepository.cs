@@ -7,6 +7,7 @@ using GostStorage.Domain.Navigations;
 using GostStorage.Domain.Repositories;
 using GostStorage.Infrastructure.Helpers;
 using GostStorage.Services.Models.Docs;
+using Serilog;
 
 namespace GostStorage.Infrastructure.Repositories;
 
@@ -157,8 +158,11 @@ public class SearchRepository : ISearchRepository
                      IsPrimary = true
                  } select new DocumentESModel{ Id = doc.DocId, Field = field, Data = "" })
         {
+            Log.Logger.Information("Indexing document {docId}", d.Id);
             _ = await _client.IndexAsync(d, x => x.Document(d).Pipeline("attachment"));
         }
+        
+        Log.Logger.Information($"Indexed {docs.Count} documents");
     }
 
     public async Task IndexDocumentDataAsync(string data, long docId)
