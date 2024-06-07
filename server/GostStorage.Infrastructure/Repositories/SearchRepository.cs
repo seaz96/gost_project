@@ -126,6 +126,7 @@ public class SearchRepository : ISearchRepository
             .From(0)
             .Size(10000)
             .TrackScores()
+            .Sort(s => s.Field("field.codeOKS", c => c.Order(SortOrder.Asc)))
             .Query(q => q.MatchAll(ma => ma.QueryName("MatchAll"))));
 
         return response;
