@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.Ingest;
@@ -153,7 +154,7 @@ public class DocsController(
     /// </summary>
     /// <returns>Doc with actual and primary fields and references</returns>
     [HttpGet("{docId}")]
-    public async Task<ActionResult<GetDocumentResponseModel>> GetDocument(long docId)
+    public async Task<ActionResult<DocumentWithFieldsModel>> GetDocument(long docId)
     {
         return await _docsService.GetDocumentAsync(docId);
     }
@@ -164,7 +165,7 @@ public class DocsController(
     /// <returns>List of any status document without references</returns>
     [NoCache]
     [HttpGet("all")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetDocuments(
+    public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
         return Ok(await _docsService.GetDocumentsAsync(parameters, null, limit, lastId));
@@ -176,7 +177,7 @@ public class DocsController(
     /// <returns>List of valid documents without references</returns>
     [NoCache]
     [HttpGet("all-valid")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetValidDocuments(
+    public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetValidDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
         return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
@@ -188,7 +189,7 @@ public class DocsController(
     /// <returns>List of replaced or canceled documents without references</returns>
     [NoCache]
     [HttpGet("all-canceled")]
-    public async Task<ActionResult<List<GetDocumentResponseModel>>> GetCanceledDocuments(
+    public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetCanceledDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
         return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, lastId));
@@ -248,23 +249,10 @@ public class DocsController(
     }
     
     [Authorize(Roles = "Admin,Heisenberg")]
-    [HttpPost("indexing")]
-    public async Task<ActionResult> IndexingAsync()
+    [HttpPost("index-all")]
+    public async Task<ActionResult> IndexAllAsync()
     {
-        var password = Environment.GetEnvironmentVariable("ELASTIC_PASSWORD");
-        var client = new ElasticsearchClient(new ElasticsearchClientSettings(new Uri("http://elasticsearch:9200/"))
-            .Authentication(new BasicAuthentication("elastic", password))
-            .DefaultIndex("fields"));
-        var docs = _docsService.GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
-        docs = docs.OrderBy(x => x.DocId).ToList();
-        foreach (var doc in docs)
-        {
-            var p = doc.Primary;
-            var a = doc.Actual;
-            var response2 =
-                await client.IndexAsync(p, x => x.Document(p));
-            var response3 = await client.IndexAsync(a, x => x.Document(a));
-        }
+        _ = _docsService.IndexAllDocumentsAsync();
         return Ok();
     }
 
@@ -288,6 +276,8 @@ public class DocsController(
             UserId = userId
         });
 
+        await _docsService.IndexDocumentDataAsync(file.File, docId);
+        
         return Ok(await _docsService.UploadFileForDocumentAsync(file, docId));
     }
 }

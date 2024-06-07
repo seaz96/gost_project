@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using GostStorage.Domain.Entities;
@@ -7,6 +8,7 @@ using GostStorage.Domain.Repositories;
 using GostStorage.Services.Helpers;
 using GostStorage.Services.Models.Docs;
 using GostStorage.Services.Services.Abstract;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Services.Concrete;
@@ -101,7 +103,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult("Status changed successfully.");
     }
 
-    public async Task<ActionResult<GetDocumentResponseModel>> GetDocumentAsync(long id)
+    public async Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id)
     {
         var doc = await _docsRepository.GetByIdAsync(id);
         
@@ -130,7 +132,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             })
             .ToList();
         
-        var result = new GetDocumentResponseModel
+        var result = new DocumentWithFieldsModel
         {
             Primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
             Actual = await _fieldsRepository.GetByIdAsync(doc.ActualFieldId.Value),
@@ -141,7 +143,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return new OkObjectResult(result);
     }
 
-    public async Task<List<GetDocumentResponseModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
+    public async Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
         if (parameters.Name is not null)
         {
@@ -150,7 +152,7 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
 
         var docs = await _docsRepository.GetDocumentsAsync(parameters, isValid, limit, lastId);
         var fields = await _fieldsRepository.GetFieldsByDocIds(docs.Select(x => x.Id).ToList());
-        var docsWithFields = docs.AsParallel().Select(doc => new GetDocumentResponseModel
+        var docsWithFields = docs.AsParallel().Select(doc => new DocumentWithFieldsModel
         {
             Primary = fields.FirstOrDefault(f => f.DocId == doc.Id && f.IsPrimary),
             Actual = fields.FirstOrDefault(f => f.DocId == doc.Id && !f.IsPrimary),
@@ -160,24 +162,36 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return docsWithFields;
     }
     
-    public async Task<List<DocumentESModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
+    public async Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
     {
         if (parameters.Name is not null)
         {
             parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
         }
 
-        var response = await _searchRepository.SearchValidFieldsAsync<FieldEntity>(parameters, limit, offset);
-        var docResults = new Dictionary<long, DocumentESModel>();
+        var response = new SearchResponse<DocumentESModel>();
+        if (parameters.GetType().GetProperties()
+            .Where(pi => pi.PropertyType == typeof(string))
+            .Select(pi => pi.GetValue(parameters))
+            .All(value => value is null))
+        {
+            response = await _searchRepository.SearchAllAsync(limit, offset);
+        }
+        else
+        {
+            response = await _searchRepository.SearchValidFieldsAsync(parameters, limit, offset);
+        }
+
+        var docResults = new Dictionary<long, ShortInfoDocumentModel>();
         var maxScore = response.HitsMetadata.MaxScore;
         
         foreach (var hit in response.Hits)
         {
-            var fieldEntity = hit.Source;
+            var fieldEntity = hit.Source?.Field;
             Console.WriteLine($"{maxScore}, {hit.Score.Value}, {maxScore / hit.Score.Value * 5}");
             if (docResults.ContainsKey(fieldEntity.DocId))
                 continue;
-            docResults[fieldEntity.DocId] = new DocumentESModel
+            docResults[fieldEntity.DocId] = new ShortInfoDocumentModel
             {
                 CodeOKS = fieldEntity.CodeOKS, Designation = fieldEntity.Designation, FullName = fieldEntity.FullName,
                 Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
@@ -221,5 +235,19 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         await _filesRepository.UploadFileAsync(file.File, file.Extension, docId);
         
         return new OkResult();
+    }
+
+    public async Task IndexAllDocumentsAsync()
+    {
+        var docs = GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
+        await _searchRepository.IndexAllDocumentsAsync(docs);
+
+    }
+
+    public async Task IndexDocumentDataAsync(IFormFile file, long docId)
+    {
+        var s = new MemoryStream();
+        await file.CopyToAsync(s);
+        await _searchRepository.IndexDocumentDataAsync(Convert.ToBase64String(s.ToArray()), docId);
     }
 }

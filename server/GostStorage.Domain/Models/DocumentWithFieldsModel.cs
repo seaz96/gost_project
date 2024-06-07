@@ -2,7 +2,7 @@ using GostStorage.Domain.Entities;
 
 namespace GostStorage.Services.Models.Docs;
 
-public class GetDocumentResponseModel
+public class DocumentWithFieldsModel
 {
     public long DocId { get; set; }
     
