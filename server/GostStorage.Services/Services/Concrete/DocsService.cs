@@ -237,7 +237,10 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
     public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
     {
         await _filesRepository.UploadFileAsync(file.File, file.Extension, docId);
-        
+        var doc = await _docsRepository.GetByIdAsync(docId);
+        var primary = await _fieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
+        primary.DocumentText = $"https://gost-storage.ru/documents/{primary.Designation}.{file.Extension}";
+        await _fieldsRepository.UpdateAsync(primary);
         return new OkResult();
     }
 
