@@ -51,11 +51,6 @@ public class SearchRepository : ISearchRepository
                         q.Match(m => m.Field(new Field("field.changes")).Query(parameters.Changes));
                     if (parameters.Amendments is not null)
                         q.Match(m => m.Field(new Field("field.amendments")).Query(parameters.Amendments));
-                    if (parameters.GetType().GetProperties()
-                        .Where(pi => pi.PropertyType == typeof(string))
-                        .Select(pi => pi.GetValue(parameters))
-                        .All(value => value is null))
-                        q.MatchAll(ma => ma.QueryName("MatchAll"));
                 }
                 
             ));
@@ -161,6 +156,11 @@ public class SearchRepository : ISearchRepository
         Log.Logger.Information($"Indexed {docs.Count} documents");
     }
 
+    public async Task IndexDocument(DocumentESModel document)
+    {
+        await _client.IndexAsync(document, x => x.Document(document).Pipeline("attachment"));
+    }
+    
     public async Task IndexDocumentDataAsync(string data, long docId)
     {
         var doc = (await _client.GetAsync<DocumentESModel>(new GetRequest("fields", new Id(docId)))).Source;

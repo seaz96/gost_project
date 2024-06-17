@@ -28,7 +28,11 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetViews(GetViewsModel model)
     {
-        model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
+        if (model.Designation is not null)
+        {
+            model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
+        }
+
         var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
         var statistics = await _docStatisticsRepository.GetAllAsync();
 

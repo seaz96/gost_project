@@ -13,5 +13,7 @@ public interface ISearchRepository
 
     public Task IndexAllDocumentsAsync(List<DocumentWithFieldsModel> docs);
 
+    public Task IndexDocument(DocumentESModel document);
+
     public Task IndexDocumentDataAsync(string data, long docId);
 }

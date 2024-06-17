@@ -55,6 +55,8 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         await _fieldsRepository.UpdateAsync(primaryField);
         await _fieldsRepository.UpdateAsync(actualField);
 
+        IndexAllDocumentsAsync();
+
         return docId;
     }
 
@@ -71,6 +73,8 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         await _fieldsRepository.DeleteAsync(doc.ActualFieldId);
         
         await _docsRepository.DeleteAsync(id);
+        
+        IndexAllDocumentsAsync();
 
         return new OkObjectResult("Document deleted successfully.");
     }
@@ -97,6 +101,8 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
             actualField.Status = status;
             await _fieldsRepository.UpdateAsync(actualField);
         }
+        
+        IndexAllDocumentsAsync();
 
         return new OkObjectResult("Status changed successfully.");
     }
