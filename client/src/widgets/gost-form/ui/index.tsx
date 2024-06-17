@@ -9,11 +9,29 @@ import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
 import IconButton from 'shared/components/IconButton'
+import { TextField, styled } from '@mui/material';
+import { CloudUploadOutlined } from '@mui/icons-material';
+import axios from 'axios';
 
 interface GostFormProps {
   handleSubmit: Function,
+  handleUploadFile: Function,
   gost?: GostToSave
 }
+
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 
 function getGostStub() {
     return {
@@ -43,9 +61,10 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
   const {response, loading, error} = useAxios<gostModel.GostGeneralInfo[]>('/docs/all-general-info')
   const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub())
   const [reference, setReference] = useState('')
+  const [file, setFile] = useState<File | null>(null)
   const [references, setReferences] = useState<string[]>(gost?.references ?? [])
   const ref = useRef<HTMLInputElement>(null)
-    console.log(newGost)
+    
   function handleLinks() {
     if(reference.length !== 0 && !references.includes(reference)) {
       setReferences((prevReferences) => [...prevReferences, reference])
@@ -53,8 +72,15 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
     }
   }
 
+  const handleFileUpload = (event: any) => {
+    console.log(event)
+    const file = event.target.files[0];
+  
+    setFile(file)
+  };
+
   function submit() {
-    handleSubmit({...newGost, references: references})
+    handleSubmit({...newGost, references: references}, file)
   }
 
   return (
@@ -185,6 +211,12 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
                   value={newGost.documentText}
                   onChange={(value: string) => setNewGost({...newGost, documentText:value})}
                 />
+              </td>
+          </tr>
+          <tr>
+              <td>Файл текста стандарта</td>
+              <td>
+                <TextField type="file" onChange={(event) => handleFileUpload(event)}/>
               </td>
           </tr>
           <tr>

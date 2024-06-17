@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {useEffect} from "react";
 
 const GostsPage = () => {
-    const {gosts, countFetched, count, setGostParams, fetchGostsData } = useGostsWithPagination('/docs/search-valid')
+    const {gosts, countFetched, count, gostsParams, setGostParams, fetchGostsData } = useGostsWithPagination('/docs/search-valid')
 
     useEffect(() => {
         function checkScrollable() {
@@ -43,7 +43,7 @@ const GostsPage = () => {
                 </p>}
             >
                 <section className={styles.gostSection}>
-                    <GostsTable gosts={gosts || []}/>
+                    <GostsTable gosts={gosts || []} gostsParams={gostsParams}/>
                 </section>
             </InfiniteScroll>
         </div>

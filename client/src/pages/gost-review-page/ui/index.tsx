@@ -13,7 +13,6 @@ const GostReviewPage = () => {
   const gostId = useParams().id;
   const {response, error, loading} = useAxios<gostModel.Gost>(`/docs/${gostId}`)
 
-
   if(response) {
     return (
       <div className='container'>

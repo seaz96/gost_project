@@ -55,5 +55,5 @@ export const useGostsWithPagination = (url: string, defaultParams?:any) => {
     }, [gostsParams, url]);
 
 
-    return { gosts, count, countFetched, error, loading, setGostParams, fetchGostsData };
+    return { gosts, count, countFetched, error, loading, gostsParams, setGostParams, fetchGostsData };
 }

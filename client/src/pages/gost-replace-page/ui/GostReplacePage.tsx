@@ -38,15 +38,28 @@ const GostReplacePage = () => {
     const gostToReplaceId = useParams().id
     const {response, loading} = useAxios<gostModel.Gost>('/docs/' + gostToReplaceId)
 
-
-    const addNewDocument = (gost: newGostModel.GostToSave) => {
+    const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
       axiosInstance.post('/docs/add', gost)
       .then(() => {
         axiosInstance.put(`/docs/change-status`, {
               id: gostToReplaceId,
               status: 2
           })
-      }).then(() => navigate('/'))
+      })
+      .then(response => {handleUploadFile(file, gostToReplaceId); return gostToReplaceId})
+      .then(responce => navigate('/'))
+    }
+  
+    const handleUploadFile = (file: File, docId: string | undefined) => {
+      axiosInstance({
+        method: 'post',
+        url: `/docs/${docId}/upload-file`,
+        data: {
+          File: file,
+          Extension: file.name.split('.').pop()
+        },
+        headers: {"Content-Type": "multipart/form-data"}
+      })
     }
 
       if(loading) return <></>
@@ -54,7 +67,7 @@ const GostReplacePage = () => {
       return (
         <div className='container'>
           <section className={classNames('contentContainer', styles.reviewSection)}>
-            <GostForm handleSubmit={addNewDocument} gost={{...getGostStub(), acceptedFirstTimeOrReplaced: `Принят взамен ${response?.primary.designation}`}}/>
+            <GostForm handleUploadFile={handleUploadFile} handleSubmit={addNewDocument} gost={{...getGostStub(), acceptedFirstTimeOrReplaced: `Принят взамен ${response?.primary.designation}`}}/>
           </section>
         </div>
       )

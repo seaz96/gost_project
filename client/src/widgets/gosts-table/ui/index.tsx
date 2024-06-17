@@ -12,10 +12,11 @@ import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
   gosts: gostModel.GostViewInfo[]
+  gostsParams: gostModel.GostFields & { name?: string } | null
 }
 
 const GostsTable: React.FC<GostsTableProps> = props => {
-  const {gosts} = props
+  const {gosts, gostsParams} = props
   console.log(gosts)
 
   return (
@@ -25,12 +26,14 @@ const GostsTable: React.FC<GostsTableProps> = props => {
             <th>Код ОКС</th>
             <th>Обозначение</th>
             <th>Наименование</th>
-            <th>Соответствие запросу</th>
+            {gostsParams && Object.values(gostsParams).some(param => param) && 
+              <th>Соответствие запросу</th>
+            }
             <th>Действия</th>
           </tr>
         </thead>
         { 
-          gosts.map((gost, index) => <GostRow gost={gost} />)
+          gosts.map((gost, index) => <GostRow gostsParams={gostsParams} gost={gost} />)
         }   
     </table>
   )
@@ -38,9 +41,10 @@ const GostsTable: React.FC<GostsTableProps> = props => {
 
 interface GostRowProps {
   gost: gostModel.GostViewInfo
+  gostsParams: gostModel.GostFields & { name?: string } | null
 }
 
-const GostRow:React.FC<GostRowProps> = ({gost}) => {
+const GostRow:React.FC<GostRowProps> = ({gost, gostsParams}) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
   const open = Boolean(anchorEl);
   const {user} = useContext(UserContext)
@@ -80,7 +84,9 @@ const GostRow:React.FC<GostRowProps> = ({gost}) => {
           <td>{gost.codeOKS}</td>
           <td>{gost.designation}</td>
           <td className={styles.gostDescription}>{gost.fullName}</td>
-          <td>{gost.relevanceMark}</td>
+          {gostsParams && Object.values(gostsParams).some(param => param) && 
+            <td>{gost.relevanceMark}</td>
+          }
           <td>
             <div className={styles.buttons}>
               <Link to={`/gost-review/${gost.id}`}

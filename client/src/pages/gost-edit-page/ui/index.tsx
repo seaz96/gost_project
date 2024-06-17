@@ -9,15 +9,29 @@ import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
 import { axiosInstance } from 'shared/configs/axiosConfig'
+import { Extension } from 'typescript'
 
 const GostEditPage = () => {
   const navigate = useNavigate()
   const id = useParams().id
   const {response, loading, error} = useAxios<gostModel.Gost>(`/docs/${id}`)
 
-  const editOldDocument = (gost: newGostModel.GostToSave) => {
+  const editOldDocument = (gost: newGostModel.GostToSave, file: File) => {
     axiosInstance.put(`/docs/update/${id}`, gost)
-    .then(() => navigate('/gost-review/' + id))
+    .then(response => handleUploadFile(file, id))
+    .then(responce => navigate('/gost-review/'+id))
+  }
+
+  const handleUploadFile = (file: File, docId: string | undefined) => {
+    axiosInstance({
+      method: 'post',
+      url: `/docs/${docId}/upload-file`,
+      data: {
+        File: file,
+        Extension: file.name.split('.').pop()
+      },
+      headers: {"Content-Type": "multipart/form-data"}
+    })
   }
 
   if(loading) return <></>
@@ -26,7 +40,8 @@ const GostEditPage = () => {
     return (
       <div className='container'>
         <section className={classNames('contentContainer', styles.reviewSection)}>
-          <GostForm 
+          <GostForm
+            handleUploadFile={handleUploadFile}
             handleSubmit={editOldDocument} 
             gost={
               {

@@ -6,7 +6,7 @@ import styles from './ArchivePage.module.scss'
 import { gostModel, useGostsWithPagination } from 'entities/gost';
 import InfiniteScroll from 'react-infinite-scroll-component';
 const ArchivePage = () => {
-    const {gosts, countFetched, count, setGostParams, fetchGostsData } = useGostsWithPagination('/docs/all-canceled')
+    const {gosts, countFetched, count, setGostParams, gostsParams, fetchGostsData } = useGostsWithPagination('/docs/all-canceled')
 
     return (
       <div className='container contentContainer'>
@@ -25,7 +25,7 @@ const ArchivePage = () => {
                   />
               </section>
               <section className={styles.gostSection}>
-                  <GostsTable gosts={gosts || []}/>
+                  <GostsTable gosts={gosts || []} gostsParams={gostsParams}/>
               </section>
               <section>
                   {count === 0 ? (
