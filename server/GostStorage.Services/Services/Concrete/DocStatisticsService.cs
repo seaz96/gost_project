@@ -52,9 +52,12 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         .Select(stat =>
         {
             var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+            if (doc is null)
+                return null;
             return new DocWithViewsModel {DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
                 Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName};
         })
+        .Where(x => x is not null)
         .ToList());
     }
 
