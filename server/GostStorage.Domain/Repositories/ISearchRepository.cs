@@ -16,4 +16,6 @@ public interface ISearchRepository
     public Task IndexDocument(DocumentESModel document);
 
     public Task IndexDocumentDataAsync(string data, long docId);
+
+    public Task DeleteDocumentAsync(long docId);
 }

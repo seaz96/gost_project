@@ -20,7 +20,8 @@ public class DocsController(
     IReferencesService referencesService,
     IFieldsService fieldsService,
     IDocStatisticsService docStatisticsService,
-    IUsersRepository usersRepository) : ControllerBase
+    IUsersRepository usersRepository,
+    ISearchRepository searchRepository) : ControllerBase
 {
     private readonly IMapper _mapper = mapper;
     private readonly IDocsService _docsService = docsService;
@@ -28,6 +29,7 @@ public class DocsController(
     private readonly IFieldsService _fieldsService = fieldsService;
     private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
     private readonly IUsersRepository _usersRepository = usersRepository;
+    private readonly ISearchRepository _searchRepository = searchRepository;
 
     /// <summary>
     /// Add new doc
@@ -70,7 +72,8 @@ public class DocsController(
         var result = await _docsService.DeleteDocAsync(docId);
         await _referencesService.DeleteReferencesByIdAsync(docId);
         await _docStatisticsService.DeleteAsync(docId);
-
+        await _searchRepository.DeleteDocumentAsync(docId);
+        
         return result;
     }
 

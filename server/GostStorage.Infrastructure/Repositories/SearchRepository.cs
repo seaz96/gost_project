@@ -167,4 +167,9 @@ public class SearchRepository : ISearchRepository
         doc.Data = data;
         await _client.IndexAsync(doc, x => x.Document(doc).Pipeline("attachment"));
     }
+
+    public async Task DeleteDocumentAsync(long docId)
+    {
+        await _client.DeleteAsync(docId);
+    }
 }
