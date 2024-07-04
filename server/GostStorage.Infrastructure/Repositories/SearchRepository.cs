@@ -170,6 +170,6 @@ public class SearchRepository : ISearchRepository
 
     public async Task DeleteDocumentAsync(long docId)
     {
-        await _client.DeleteAsync(docId);
+        await _client.DeleteAsync(new Id(docId), x => x.Index("fields"));
     }
 }
