@@ -45,10 +45,16 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         };
         var primaryId = await _fieldsRepository.AddAsync(primaryField);
         var actualId = await _fieldsRepository.AddAsync(actualField);
-
+        
         doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
         
         var docId = await _docsRepository.AddAsync(doc);
+        
+        if (docId == 0)
+        {
+            await Task.Delay(1000);
+        }
+        
         primaryField.DocId = docId;
         actualField.DocId = docId; 
         
