@@ -1,9 +1,9 @@
 using System.Security.Claims;
-using GostStorage.Domain.Entities;
-using GostStorage.Domain.Navigations;
-using GostStorage.Domain.Repositories;
-using GostStorage.Services.Models.Stats;
-using GostStorage.Services.Services.Abstract;
+using GostStorage.API.Entities;
+using GostStorage.API.Models.Stats;
+using GostStorage.API.Navigations;
+using GostStorage.API.Repositories.Interfaces;
+using GostStorage.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

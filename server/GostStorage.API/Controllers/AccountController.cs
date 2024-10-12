@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using GostStorage.Services.Models.Accounts;
-using GostStorage.Services.Services.Abstract;
+using GostStorage.API.Models.Accounts;
+using GostStorage.API.Services.Interfaces;
 
 namespace GostStorage.API.Controllers;
 

@@ -39,10 +39,4 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\GostStorage.Domain\GostStorage.Domain.csproj" />
-      <ProjectReference Include="..\GostStorage.Infrastructure\GostStorage.Infrastructure.csproj" />
-      <ProjectReference Include="..\GostStorage.Services\GostStorage.Services.csproj" />
-    </ItemGroup>
-
 </Project>

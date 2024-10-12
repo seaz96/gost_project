@@ -1,12 +1,11 @@
 using System.Security.Claims;
 using AutoMapper;
-using GostStorage.Domain.Entities;
-using GostStorage.Domain.Models;
-using GostStorage.Domain.Navigations;
-using GostStorage.Domain.Repositories;
-using GostStorage.Services.Attributes;
-using GostStorage.Services.Models.Docs;
-using GostStorage.Services.Services.Abstract;
+using GostStorage.API.Attributes;
+using GostStorage.API.Entities;
+using GostStorage.API.Models.Docs;
+using GostStorage.API.Navigations;
+using GostStorage.API.Repositories.Interfaces;
+using GostStorage.API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
