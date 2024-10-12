@@ -1,4 +1,4 @@
-name: Frontend build
+name: Frontend dev build
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -8,12 +8,12 @@ name: Frontend build
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
     paths: [ "client/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -77,7 +77,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: "API_URL = https://gost-storage.ru/api"
+          build-args: "API_URL = https://test.gost-storage.ru/api"
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
