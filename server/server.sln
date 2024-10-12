@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.API", "GostStorage.API\GostStorage.API.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage", "GostStorage\GostStorage.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
