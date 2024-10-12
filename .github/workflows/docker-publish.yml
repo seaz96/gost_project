@@ -92,3 +92,23 @@ jobs:
         # This step uses the identity token to provision an ephemeral certificate
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+        
+      - name: Deploy Prod Server
+        if:  ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.UPDATE_PROD }}
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json"}'
+          ignoreStatusCodes: "204"
+          timeout: 60000
+
+      - name: Deploy Dev Server
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: ${{ secrets.UPDATE_DEV }}
+          method: 'POST'
+          customHeaders: '{"Content-Type": "application/json"}'
+          ignoreStatusCodes: "204"
+          timeout: 60000
