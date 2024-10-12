@@ -50,6 +50,7 @@ services:
       ELASTIC_PASSWORD: password
       ELASTIC_INDEX: index_name
       ELASTIC_HOST: host_name
+      ORIGINS: http://localhost:3000|https://gost-storage.ru|https://test.gost-storage.ru
   
   db:
     container_name: postgres_db

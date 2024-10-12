@@ -17,6 +17,7 @@ static class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var origins = builder.Configuration.GetValue<string>("ORIGINS")!.Split('|');
 
         var securityKey = builder.Configuration.GetSection("Security")["SecurityKey"];
 
@@ -66,7 +67,7 @@ static class Program
                 builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:3000", "https://gost-storage.ru")
+                        .WithOrigins(origins)
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader()
                         .SetIsOriginAllowedToAllowWildcardSubdomains()
