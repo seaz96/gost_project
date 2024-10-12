@@ -9,9 +9,7 @@ namespace GostStorage.API.Services.Concrete;
 public class FieldsService(IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository,
     IDocsRepository docsRepository) : IFieldsService
 {
-    private readonly IFieldsRepository _fieldsRepository = fieldsRepository;
     private readonly IReferencesRepository _referencesRepository = referencesRepository;
-    private readonly IDocsRepository _docsRepository = docsRepository;
 
     public async Task<IActionResult> UpdateAsync(FieldEntity updatedField, long docId)
     {
@@ -20,7 +18,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
             updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
         }
 
-        var doc = await _docsRepository.GetByIdAsync(docId);
+        var doc = await docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {
@@ -28,7 +26,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
         }
         
         updatedField.Id = doc.PrimaryFieldId;
-        await _fieldsRepository.UpdateAsync(updatedField);
+        await fieldsRepository.UpdateAsync(updatedField);
 
         return new OkObjectResult("Document updated successfully.");
     }
@@ -39,7 +37,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
         {
             actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
         }
-        var doc = await _docsRepository.GetByIdAsync(docId);
+        var doc = await docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {
@@ -48,7 +46,7 @@ public class FieldsService(IFieldsRepository fieldsRepository, IReferencesReposi
         
         actualizedField.Id = doc.ActualFieldId.Value;
         
-        await _fieldsRepository.UpdateAsync(actualizedField);
+        await fieldsRepository.UpdateAsync(actualizedField);
 
         return new OkObjectResult("Document actualized successfully");
     }

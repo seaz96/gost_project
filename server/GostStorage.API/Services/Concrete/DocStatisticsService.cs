@@ -13,17 +13,15 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
     : IDocStatisticsService
 {
     private readonly IDocsRepository _docsRepository = docsRepository;
-    private readonly IDocStatisticsRepository _docStatisticsRepository = docStatisticsRepository;
-    private readonly IDocsService _docsService = docsService;
-    
+
     public async Task AddAsync(DocStatisticEntity statistic)
     {
-        await _docStatisticsRepository.AddAsync(statistic);
+        await docStatisticsRepository.AddAsync(statistic);
     }
 
     public async Task DeleteAsync(long docId)
     {
-        await _docStatisticsRepository.DeleteAsync(docId);
+        await docStatisticsRepository.DeleteAsync(docId);
     }
 
     public async Task<IActionResult> GetViews(GetViewsModel model)
@@ -33,8 +31,8 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
             model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
         }
 
-        var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
-        var statistics = await _docStatisticsRepository.GetAllAsync();
+        var docs = await docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
+        var statistics = await docStatisticsRepository.GetAllAsync();
 
         return new OkObjectResult(statistics.Where(stat =>      
         {
@@ -63,8 +61,8 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetCount(GetCountOfDocsModel model)
     {
-        var docs = await _docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
-        var statistics = await _docStatisticsRepository.GetAllAsync();
+        var docs = await docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
+        var statistics = await docStatisticsRepository.GetAllAsync();
 
         var filteredStats = statistics
             .Where(stat => (model.StartDate is not null ? model.StartDate <= stat.Date : true) &&

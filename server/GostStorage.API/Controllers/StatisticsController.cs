@@ -13,9 +13,6 @@ namespace GostStorage.API.Controllers;
 [Route("api/stats")]
 public class StatisticsController(IDocStatisticsService docStatisticsService, IUsersRepository usersRepository) : ControllerBase
 {
-    private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
-    private readonly IUsersRepository _usersRepository = usersRepository;
-    
     /// <summary>
     /// Get views of every document bu filters
     /// </summary>
@@ -23,7 +20,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
     [HttpGet("get-views")]
     public async Task<IActionResult> GetViewsAsync([FromQuery] GetViewsModel model)
     {
-        return await _docStatisticsService.GetViews(model);
+        return await docStatisticsService.GetViews(model);
     }
 
     /// <summary>
@@ -33,7 +30,7 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
     [HttpGet("get-count")]
     public async Task<IActionResult> GetCountOfDocsAsync([FromQuery] GetCountOfDocsModel model)
     {
-        return await _docStatisticsService.GetCount(model);
+        return await docStatisticsService.GetCount(model);
     }
     
     /// <summary>
@@ -44,9 +41,9 @@ public class StatisticsController(IDocStatisticsService docStatisticsService, IU
     public async Task<IActionResult> UpdateViews(long docId)
     {
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.View, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok("Views updated succesfully!");
     }

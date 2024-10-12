@@ -11,7 +11,6 @@ namespace GostStorage.API.Controllers;
 public class AccountController(IPasswordHasher passwordHasher, IAccountService accountService) : ControllerBase
 {
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
-    private readonly IAccountService _accountService = accountService;
 
     /// <summary>
     /// Log in to account
@@ -21,7 +20,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
     {
-        return await _accountService.LoginAsync(loginModel);
+        return await accountService.LoginAsync(loginModel);
     }
     /// <summary>
     /// Create a new account and log in
@@ -31,7 +30,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
     {
-        return await _accountService.RegisterAsync(registerModel);
+        return await accountService.RegisterAsync(registerModel);
     }
 
     /// <summary>
@@ -41,7 +40,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> RestorePassword([FromBody] PasswordRestoreModel passwordRestoreModel)
     {
-        return await _accountService.RestorePasswordAsync(passwordRestoreModel);
+        return await accountService.RestorePasswordAsync(passwordRestoreModel);
     }
 
     /// <summary>
@@ -51,7 +50,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel passwordChangeModel)
     {
-        return await _accountService.ChangePasswordAsync(passwordChangeModel);
+        return await accountService.ChangePasswordAsync(passwordChangeModel);
     }
 
     /// <summary>
@@ -62,7 +61,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> UsersList()
     {
-        return await _accountService.GetUsersListAsync();
+        return await accountService.GetUsersListAsync();
     }
     
     /// <summary>
@@ -72,7 +71,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> GetUserInfo([FromQuery] long id)
     {
-        return await _accountService.GetUserInfoAsync(id);
+        return await accountService.GetUserInfoAsync(id);
     }
 
     /// <summary>
@@ -89,7 +88,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
             return Unauthorized();
         }
 
-        return await _accountService.SelfEditAsync(userSelfEditModel, id);
+        return await accountService.SelfEditAsync(userSelfEditModel, id);
     }
 
     /// <summary>
@@ -99,7 +98,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> AdminEdit([FromBody] UserAdminEditModel userAdminEditModel)
     {
-        return await _accountService.AdminEditAsync(userAdminEditModel, User);
+        return await accountService.AdminEditAsync(userAdminEditModel, User);
     }
 
     /// <summary>
@@ -109,7 +108,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     [Authorize(Roles = "Heisenberg")]
     public async Task<IActionResult> MakeAdmin(ChangeUserRoleModel requestModel)
     {
-        return await _accountService.MakeAdminAsync(requestModel);
+        return await accountService.MakeAdminAsync(requestModel);
     }
     
     /// <summary>
@@ -121,6 +120,6 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
 
-        return await _accountService.GetSelfInfoAsync(userId);
+        return await accountService.GetSelfInfoAsync(userId);
     }
 }

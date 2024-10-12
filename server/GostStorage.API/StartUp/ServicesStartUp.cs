@@ -5,14 +5,12 @@ namespace GostStorage.API.StartUp;
 
 public static class ServicesStartUp
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection)
+    public static void AddApplicationServices(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IAccountService, AccountService>();
         serviceCollection.AddScoped<IDocsService, DocsService>();
         serviceCollection.AddScoped<IReferencesService, ReferencesService>();
         serviceCollection.AddScoped<IFieldsService, FieldsService>();
         serviceCollection.AddScoped<IDocStatisticsService, DocStatisticsService>();
-        
-        return serviceCollection;
     }
 }

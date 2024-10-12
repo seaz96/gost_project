@@ -1,6 +1,5 @@
 using Elastic.Clients.Elasticsearch;
 using GostStorage.API.Entities;
-using GostStorage.API.Helpers;
 using GostStorage.API.Models.Docs;
 using GostStorage.API.Repositories.Interfaces;
 using Serilog;
@@ -9,7 +8,12 @@ namespace GostStorage.API.Repositories.Concrete;
 
 public class SearchRepository : ISearchRepository
 {
-    private readonly ElasticsearchClient _client = new(ElasticsearchSettings.GetSettings());
+    private readonly ElasticsearchClient _client;
+    
+    public SearchRepository(ElasticsearchClient client)
+    {
+        _client = client;
+    }
     
     public async Task<SearchResponse<DocumentESModel>> SearchValidFieldsAsync(SearchParametersModel parameters, int limit, int offset)
     {

@@ -9,15 +9,10 @@ namespace GostStorage.API.Services.Concrete;
 public class ReferencesService(IReferencesRepository referencesRepository, IDocsRepository docsRepository,
     IDocsService docsService) : IReferencesService
 {
-    private readonly IReferencesRepository _referencesRepository = referencesRepository;
-    private readonly IDocsRepository _docsRepository = docsRepository;
-    private readonly IDocsService _docsService = docsService;
-
-
     public async Task AddReferencesAsync(List<string> docChildren, long parentId)
     {
         docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
-        var existingDocs = await _docsRepository.GetDocsIdByDesignationAsync(docChildren);
+        var existingDocs = await docsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>
         {
@@ -26,7 +21,7 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
+            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
             
             docId.Wait();
             return docId.Result;
@@ -36,19 +31,19 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
             .Select(childId => new DocReferenceEntity { ParentalDocId = parentId, ChildDocId = childId })
             .ToList();
 
-        await _referencesRepository.AddRangeAsync(references);
+        await referencesRepository.AddRangeAsync(references);
     }
 
     public async Task DeleteReferencesByIdAsync(long id)
     {
-        await _referencesRepository.DeleteAllByParentIdAsync(id);
-        await _referencesRepository.DeleteAllByChildIdAsync(id);
+        await referencesRepository.DeleteAllByParentIdAsync(id);
+        await referencesRepository.DeleteAllByChildIdAsync(id);
     }
 
     public async Task UpdateReferencesAsync(List<string> docChildren, long parentId)
     {
         docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
-        var existingDocs = await _docsRepository.GetDocsIdByDesignationAsync(docChildren);
+        var existingDocs = await docsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>
         {
@@ -57,11 +52,11 @@ public class ReferencesService(IReferencesRepository referencesRepository, IDocs
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = _docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
+            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
             docId.Wait();
             return docId.Result;
         }).ToList(); 
         
-        await _referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
+        await referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
     }
 }

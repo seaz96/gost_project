@@ -22,14 +22,6 @@ public class DocsController(
     IUsersRepository usersRepository,
     ISearchRepository searchRepository) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly IDocsService _docsService = docsService;
-    private readonly IReferencesService _referencesService = referencesService;
-    private readonly IFieldsService _fieldsService = fieldsService;
-    private readonly IDocStatisticsService _docStatisticsService = docStatisticsService;
-    private readonly IUsersRepository _usersRepository = usersRepository;
-    private readonly ISearchRepository _searchRepository = searchRepository;
-
     /// <summary>
     /// Add new doc
     /// </summary>
@@ -43,15 +35,15 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var newField = _mapper.Map<FieldEntity>(dto);
+        var newField = mapper.Map<FieldEntity>(dto);
         
-        var docId = await _docsService.AddNewDocAsync(newField);
-        await _referencesService.AddReferencesAsync(dto.References, docId);
+        var docId = await docsService.AddNewDocAsync(newField);
+        await referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
         
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return Ok(docId);
     }
@@ -68,10 +60,10 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var result = await _docsService.DeleteDocAsync(docId);
-        await _referencesService.DeleteReferencesByIdAsync(docId);
-        await _docStatisticsService.DeleteAsync(docId);
-        await _searchRepository.DeleteDocumentAsync(docId);
+        var result = await docsService.DeleteDocAsync(docId);
+        await referencesService.DeleteReferencesByIdAsync(docId);
+        await docStatisticsService.DeleteAsync(docId);
+        await searchRepository.DeleteDocumentAsync(docId);
         
         return result;
     }
@@ -88,15 +80,15 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var updatedField = _mapper.Map<FieldEntity>(dto);
+        var updatedField = mapper.Map<FieldEntity>(dto);
         updatedField.DocId = docId;
-        var result = await _fieldsService.UpdateAsync(updatedField, docId);
-        await _referencesService.UpdateReferencesAsync(dto.References, docId);
+        var result = await fieldsService.UpdateAsync(updatedField, docId);
+        await referencesService.UpdateReferencesAsync(dto.References, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -113,15 +105,15 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var updatedField = _mapper.Map<FieldEntity>(dto);
+        var updatedField = mapper.Map<FieldEntity>(dto);
         updatedField.DocId = docId;
-        var result = await _fieldsService.ActualizeAsync(updatedField, docId);
-        await _referencesService.UpdateReferencesAsync(dto.References, docId);
+        var result = await fieldsService.ActualizeAsync(updatedField, docId);
+        await referencesService.UpdateReferencesAsync(dto.References, docId);
         
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity {OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity {OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
 
         return result;
     }
@@ -139,11 +131,11 @@ public class DocsController(
         }
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
         
-        return await _docsService.ChangeStatusAsync(model.Id, model.Status);
+        return await docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
     /// <summary>
@@ -153,7 +145,7 @@ public class DocsController(
     [HttpGet("{docId}")]
     public async Task<ActionResult<DocumentWithFieldsModel>> GetDocument(long docId)
     {
-        return await _docsService.GetDocumentAsync(docId);
+        return await docsService.GetDocumentAsync(docId);
     }
 
     /// <summary>
@@ -165,7 +157,7 @@ public class DocsController(
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, null, limit, lastId));
+        return Ok(await docsService.GetDocumentsAsync(parameters, null, limit, lastId));
     }
 
     /// <summary>
@@ -177,7 +169,7 @@ public class DocsController(
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetValidDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
+        return Ok(await docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
     }
 
     /// <summary>
@@ -189,7 +181,7 @@ public class DocsController(
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetCanceledDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await _docsService.GetDocumentsAsync(parameters, false, limit, lastId));
+        return Ok(await docsService.GetDocumentsAsync(parameters, false, limit, lastId));
     }
     
     /// <summary>
@@ -201,7 +193,7 @@ public class DocsController(
     public async Task<ActionResult<int>> GetDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetDocumentsCountAsync(parameters, null));
+        return Ok(await docsService.GetDocumentsCountAsync(parameters, null));
     }
 
     /// <summary>
@@ -213,7 +205,7 @@ public class DocsController(
     public async Task<ActionResult<int>> GetValidDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetDocumentsCountAsync(parameters, true));    
+        return Ok(await docsService.GetDocumentsCountAsync(parameters, true));    
     }
 
     /// <summary>
@@ -225,7 +217,7 @@ public class DocsController(
     public async Task<ActionResult<int>> GetCanceledDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await _docsService.GetDocumentsCountAsync(parameters, false));
+        return Ok(await docsService.GetDocumentsCountAsync(parameters, false));
     }
 
     /// <summary>
@@ -235,21 +227,21 @@ public class DocsController(
     [HttpGet("all-general-info")]
     public async Task<ActionResult> GetDocsWithGeneralInfo()
     {
-        return Ok(await _docsService.GetDocsWithGeneralInfoAsync());
+        return Ok(await docsService.GetDocsWithGeneralInfoAsync());
     }
     
     [HttpGet("search-valid")]
     public async Task<ActionResult> SearchValidAsync([FromQuery] SearchParametersModel parameters,
         [FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
-        return new OkObjectResult(await _docsService.SearchValidAsync(parameters, limit, offset));
+        return new OkObjectResult(await docsService.SearchValidAsync(parameters, limit, offset));
     }
     
     [Authorize(Roles = "Admin,Heisenberg")]
     [HttpPost("index-all")]
     public async Task<ActionResult> IndexAllAsync()
     {
-        _ = _docsService.IndexAllDocumentsAsync();
+        _ = docsService.IndexAllDocumentsAsync();
         return Ok();
     }
 
@@ -265,16 +257,16 @@ public class DocsController(
         }
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await _usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId);
 
-        await _docStatisticsService.AddAsync(new DocStatisticEntity
+        await docStatisticsService.AddAsync(new DocStatisticEntity
         {
             OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow,
             UserId = userId
         });
 
-        await _docsService.IndexDocumentDataAsync(file.File, docId);
+        await docsService.IndexDocumentDataAsync(file.File, docId);
         
-        return Ok(await _docsService.UploadFileForDocumentAsync(file, docId));
+        return Ok(await docsService.UploadFileForDocumentAsync(file, docId));
     }
 }

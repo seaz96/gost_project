@@ -7,44 +7,42 @@ namespace GostStorage.API.Repositories.Concrete;
 
 public class FieldsRepository(DataContext context) : IFieldsRepository
 {
-    private readonly DataContext _context = context;
-
     public async Task<List<FieldEntity>> GetAllAsync()
     {
-        return await _context.Fields.ToListAsync();
+        return await context.Fields.ToListAsync();
     }
 
     public FieldEntity? GetById(long? id)
     {
-        return _context.Fields.FirstOrDefault(field => field.Id == id);
+        return context.Fields.FirstOrDefault(field => field.Id == id);
     }
 
     public async Task<ICollection<FieldEntity>> GetFieldsByDocIds(ICollection<long> docIds)
     {
-        return await _context.Fields.Where(f => docIds.Contains(f.DocId)).ToListAsync();
+        return await context.Fields.Where(f => docIds.Contains(f.DocId)).ToListAsync();
     }
 
     public async Task<FieldEntity?> GetByIdAsync(long? id)
     {
-        return await _context.Fields.FirstOrDefaultAsync(field => field.Id == id);
+        return await context.Fields.FirstOrDefaultAsync(field => field.Id == id);
     }
 
     public async Task<long> AddAsync(FieldEntity field)
     {
-        await _context.Fields.AddAsync(field);
-        await _context.SaveChangesAsync();
+        await context.Fields.AddAsync(field);
+        await context.SaveChangesAsync();
         return field.Id;
     }
 
     public async Task DeleteAsync(long? id)
     {
-       await _context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
+       await context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
     }
 
     public async Task UpdateAsync(FieldEntity newField)
     {
-        _context.Fields.Update(newField);
+        context.Fields.Update(newField);
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

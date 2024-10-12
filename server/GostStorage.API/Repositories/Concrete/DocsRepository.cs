@@ -9,18 +9,16 @@ namespace GostStorage.API.Repositories.Concrete;
 
 public class DocsRepository(DataContext context) : IDocsRepository
 {
-    private readonly DataContext _context = context;
-
     public async Task<List<DocEntity>> GetAllAsync()
     {
-        return await _context.Docs.ToListAsync();
+        return await context.Docs.ToListAsync();
     }
 
     public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
-        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, _context);
+        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
 
-        var docs = _context.Docs
+        var docs = context.Docs
             .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
             .Distinct()
             .OrderBy(x => x.Id)
@@ -33,8 +31,8 @@ public class DocsRepository(DataContext context) : IDocsRepository
     
     public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
     {
-        var docs = _context.Fields
-            .Join(_context.Docs,
+        var docs = context.Fields
+            .Join(context.Docs,
                 f => f.DocId,
                 d => d.Id,
                 (f, d) => new { d.Id, f.Designation })
@@ -43,7 +41,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Distinct()
             .ToList();
         
-        return _context.Docs
+        return context.Docs
             .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
             .Distinct()
             .Select(x => new DocWithGeneralInfoModel
@@ -56,9 +54,9 @@ public class DocsRepository(DataContext context) : IDocsRepository
     
     public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)
     {
-        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, _context);
+        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
 
-        return _context.Docs
+        return context.Docs
             .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
             .Distinct()
             .Count();
@@ -66,12 +64,12 @@ public class DocsRepository(DataContext context) : IDocsRepository
 
     public async Task<DocEntity?> GetByIdAsync(long id)
     {
-        return await _context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
+        return await context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
     }
 
     public async Task<DocEntity?> GetByDesignationAsync(string designation)
     {
-        return (await _context.Docs.Join(_context.Fields,
+        return (await context.Docs.Join(context.Fields,
                 doc => doc.Id,
                 field => field.DocId,
                 (doc, field) => new { Doc = doc, Field = field })
@@ -80,7 +78,7 @@ public class DocsRepository(DataContext context) : IDocsRepository
 
     public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
     {
-        return await _context.Docs.Join(_context.Fields,
+        return await context.Docs.Join(context.Fields,
                 doc => doc.Id,
                 field => field.DocId,
                 (doc, field) => new { doc.Id, field.Designation })
@@ -93,13 +91,13 @@ public class DocsRepository(DataContext context) : IDocsRepository
 
     public async Task<long> AddAsync(DocEntity document)
     {
-        await _context.Docs.AddAsync(document);
-        await _context.SaveChangesAsync();
+        await context.Docs.AddAsync(document);
+        await context.SaveChangesAsync();
         return document.Id;
     }
 
     public async Task DeleteAsync(long id)
     {
-        await _context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
+        await context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
     }
 }
