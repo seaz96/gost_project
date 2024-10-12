@@ -1,4 +1,8 @@
 FROM node:21-alpine AS build
+
+ARG API_URL
+ENV API_URL=$API_URL
+
 WORKDIR /app
 COPY package*.json ./
 RUN npm install

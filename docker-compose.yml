@@ -11,7 +11,7 @@ services:
       - "80:80"
     depends_on:
       - frontend
-      - backend 
+      - backend
     networks:
       - project
   
@@ -21,9 +21,11 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - "3000:80"
+      - "80"
     networks:
       - project
+    environment:
+      API_URL: https://gost-storage.ru/api/
   
   backend:
     container_name: server
@@ -32,11 +34,22 @@ services:
       - "8080:8080"
     networks:
       - project
-    depends_on: 
+    depends_on:
       - db
     environment:
       DATABASE_HOST: postgres_db
       DATABASE_PASSWORD: password
+      DATABASE_NAME: postgres
+      DATABASE_USER: postgres
+      DATABASE_PORT: 5432
+      MINIO_PUBLIC_KEY: admin
+      MINIO_PRIVATE_KEY: password
+      MINIO_BUCKET: document
+      MINIO_HOST: minio
+      MINIO_PORT: 9000
+      ELASTIC_PASSWORD: password
+      ELASTIC_INDEX: index_name
+      ELASTIC_HOST: host_name
   
   db:
     container_name: postgres_db
@@ -51,5 +64,53 @@ services:
       - project
     volumes:
       - db-data:/var/lib/postgresql/data
+
+  minio:
+    container_name: minio
+    image: bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    networks:
+      - project
+    volumes:
+      - 'minio_data:/data'
+    environment:
+      - MINIO_ROOT_USER=admin
+      - MINIO_ROOT_PASSWORD=password
+      - MINIO_DEFAULT_BUCKETS=document
+  elasticsearch:
+    image: public.ecr.aws/elastic/elasticsearch:8.13.4
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS = -Xms1g -Xmx1g
+      - MAX_LOCKED_MEMORY = 100000
+      - ES_HEAP_SIZE = 128m
+      - ELASTIC_USERNAME= elastic
+      - ELASTIC_PASSWORD= password
+      - xpack.security.enrollment.enabled=true
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    networks:
+      - project
+  kibana:
+    container_name: kibana
+    image: public.ecr.aws/elastic/kibana:8.13.4
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - project
+    ports:
+      - "5601:5601"
 volumes:
-    db-data:
+  db-data:
+  minio_data:
+    driver: local
+  elastic-data:
+    driver: local

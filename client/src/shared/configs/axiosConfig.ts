@@ -1,9 +1,9 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'https://gost-storage.ru/api'
+axios.defaults.baseURL = process.env.API_URL
 
 const axiosInstance = axios.create({
-    baseURL: 'https://gost-storage.ru/api/'
+    baseURL: process.env.API_URL
 });
 
 axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('jwt_token')}`;

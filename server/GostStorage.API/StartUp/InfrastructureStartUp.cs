@@ -24,6 +24,8 @@ public static class InfrastructureStartUp
         // minio s3
         var minioPublicKey = configuration.GetValue<string>("MINIO_PUBLIC_KEY");
         var minioPrivateKey = configuration.GetValue<string>("MINIO_PRIVATE_KEY");
+        var minioPort = configuration.GetValue<string>("MINIO_PORT");
+        var minioHost = configuration.GetValue<string>("MINIO_HOST");
         
         // elastic
         var elasticPassword = configuration.GetValue<string>("ELASTIC_PASSWORD");
@@ -43,7 +45,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
-        serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@minio:9000/"));
+        serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@{minioHost}:{minioPort}/"));
         serviceCollection.AddScoped<ElasticsearchClient>(_ => new ElasticsearchClient(elasticSettings));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
         serviceCollection.AddScoped<ISearchRepository, SearchRepository>();
