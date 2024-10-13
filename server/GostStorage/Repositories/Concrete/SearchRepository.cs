@@ -18,7 +18,6 @@ public class SearchRepository : ISearchRepository
     public async Task<SearchResponse<DocumentESModel>> SearchValidFieldsAsync(SearchParametersModel parameters, int limit, int offset)
     {
         var response = await _client.SearchAsync<DocumentESModel>(s => s
-            .Index("fields")
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -65,7 +64,6 @@ public class SearchRepository : ISearchRepository
     public async Task<SearchResponse<DocumentESModel>> SearchCanceledFieldsAsync(SearchParametersModel parameters, int limit, int offset)
     {
         var response = await _client.SearchAsync<DocumentESModel>(s => s
-            .Index("fields")
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -117,7 +115,6 @@ public class SearchRepository : ISearchRepository
     public async Task<SearchResponse<DocumentESModel>> SearchAllAsync(int limit, int offset)
     {
         var response = await _client.SearchAsync<DocumentESModel>(s => s
-            .Index("fields")
             .From(0)
             .Size(10000)
             .TrackScores()
