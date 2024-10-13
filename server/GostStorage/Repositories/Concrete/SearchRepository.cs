@@ -6,18 +6,12 @@ using Serilog;
 
 namespace GostStorage.Repositories.Concrete;
 
-public class SearchRepository : ISearchRepository
+public class SearchRepository(ElasticsearchClient client, IConfiguration config) : ISearchRepository
 {
-    private readonly ElasticsearchClient _client;
-    
-    public SearchRepository(ElasticsearchClient client)
-    {
-        _client = client;
-    }
-    
     public async Task<SearchResponse<DocumentESModel>> SearchValidFieldsAsync(SearchParametersModel parameters, int limit, int offset)
     {
-        var response = await _client.SearchAsync<DocumentESModel>(s => s
+        var response = await client.SearchAsync<DocumentESModel>(s => s
+            .Index(config.GetValue<string>("ELASTIC_INDEX")!)
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -63,7 +57,8 @@ public class SearchRepository : ISearchRepository
 
     public async Task<SearchResponse<DocumentESModel>> SearchCanceledFieldsAsync(SearchParametersModel parameters, int limit, int offset)
     {
-        var response = await _client.SearchAsync<DocumentESModel>(s => s
+        var response = await client.SearchAsync<DocumentESModel>(s => s
+            .Index(config.GetValue<string>("ELASTIC_INDEX")!)
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -114,7 +109,8 @@ public class SearchRepository : ISearchRepository
 
     public async Task<SearchResponse<DocumentESModel>> SearchAllAsync(int limit, int offset)
     {
-        var response = await _client.SearchAsync<DocumentESModel>(s => s
+        var response = await client.SearchAsync<DocumentESModel>(s => s
+            .Index(config.GetValue<string>("ELASTIC_INDEX")!)
             .From(0)
             .Size(10000)
             .TrackScores()
@@ -151,7 +147,10 @@ public class SearchRepository : ISearchRepository
                  } select new DocumentESModel{ Id = doc.DocId, Field = field, Data = "" })
         {
             Log.Logger.Information("Indexing document {docId}", d.Id);
-            _ = await _client.IndexAsync(d, x => x.Document(d).Pipeline("attachment"));
+            _ = await client.IndexAsync(d, x => x
+                .Index(config.GetValue<string>("ELASTIC_INDEX")!)
+                .Document(d)
+                .Pipeline("attachment"));
         }
         
         Log.Logger.Information($"Indexed {docs.Count} documents");
@@ -159,18 +158,21 @@ public class SearchRepository : ISearchRepository
 
     public async Task IndexDocument(DocumentESModel document)
     {
-        await _client.IndexAsync(document, x => x.Document(document).Pipeline("attachment"));
+        await client.IndexAsync(document, x => x.Document(document).Pipeline("attachment"));
     }
     
     public async Task IndexDocumentDataAsync(string data, long docId)
     {
-        var doc = (await _client.GetAsync<DocumentESModel>(new GetRequest("fields", new Id(docId)))).Source;
+        var doc = (await client.GetAsync<DocumentESModel>(new GetRequest("fields", new Id(docId)))).Source;
         doc.Data = data;
-        await _client.IndexAsync(doc, x => x.Document(doc).Pipeline("attachment"));
+        await client.IndexAsync(doc, x => x
+            .Index(config.GetValue<string>("ELASTIC_INDEX")!)
+            .Document(doc)
+            .Pipeline("attachment"));
     }
 
     public async Task DeleteDocumentAsync(long docId)
     {
-        await _client.DeleteAsync("fields", docId);
+        await client.DeleteAsync(config.GetValue<string>("ELASTIC_INDEX")!, docId);
     }
 }
