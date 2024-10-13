@@ -1,4 +1,4 @@
-name: Frontend build
+name: Frontend dev build
 
 # This workflow uses actions that are not certified by GitHub.
 # They are provided by a third-party and are governed by
@@ -8,19 +8,19 @@ name: Frontend build
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
     paths: [ "client/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "dev" ]
 
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}-frontend
-  API_URL: https://gost-storage.ru/api
+  REACT_APP_API_URL: https://test.gost-storage.ru/api
 
 
 jobs:
@@ -79,7 +79,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            API_URL=${{ env.API_URL }}
+            REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
@@ -96,11 +96,11 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
 
-      - name: Deploy Prod Server
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      - name: Deploy Dev Server
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
         uses: fjogeleit/http-request-action@v1
         with:
-          url: ${{ secrets.UPDATE_PROD }}
+          url: ${{ secrets.UPDATE_DEV }}
           method: 'POST'
           customHeaders: '{"Content-Type": "application/json"}'
           ignoreStatusCodes: "204"

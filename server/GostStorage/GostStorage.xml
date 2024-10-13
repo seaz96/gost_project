@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GostStorage</name>
+    </assembly>
+    <members>
+        <member name="M:GostStorage.Controllers.AccountController.Login(GostStorage.Services.Models.Accounts.LoginModel)">
+            <summary>
+            Log in to account
+            </summary>
+            <returns>User info</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.Register(GostStorage.Services.Models.Accounts.RegisterModel)">
+            <summary>
+            Create a new account and log in
+            </summary>
+            <returns>Return user info with auth token</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.RestorePassword(GostStorage.Services.Models.Accounts.PasswordRestoreModel)">
+            <summary>
+            Change user password by admin
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.ChangePassword(GostStorage.Services.Models.Accounts.PasswordChangeModel)">
+            <summary>
+            Change password by old password
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.UsersList">
+            <summary>
+            Get list of all users for admin
+            </summary>
+            <returns>List of users</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.GetUserInfo(System.Int64)">
+            <summary>
+            Get full user info
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.SelfEdit(GostStorage.Services.Models.Accounts.UserSelfEditModel)">
+            <summary>
+            Edit own user info 
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.AdminEdit(GostStorage.Services.Models.Accounts.UserAdminEditModel)">
+            <summary>
+            Edit user info by admin
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.MakeAdmin(GostStorage.Services.Models.Accounts.ChangeUserRoleModel)">
+            <summary>
+            Make user admin
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.AccountController.GetSelfInfo">
+            <summary>
+            Get self user info (authorized only)
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.AddNewDoc(GostStorage.Services.Models.Docs.AddNewDocDtoModel)">
+            <summary>
+            Add new doc
+            </summary>
+            <returns>Id of new doc</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.DeleteDoc(System.Int64)">
+            <summary>
+            Delete doc by id
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.Update(GostStorage.Services.Models.Docs.UpdateFieldDtoModel,System.Int64)">
+            <summary>
+            Update primary info of doc
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.Actualize(GostStorage.Services.Models.Docs.UpdateFieldDtoModel,System.Int64)">
+            <summary>
+            Update actual field in document
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.ChangeStatus(GostStorage.Services.Models.Docs.ChangeStatusRequestModel)">
+            <summary>
+            Change status of doc
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetDocument(System.Int64)">
+            <summary>
+            Get doc by id with its references
+            </summary>
+            <returns>Doc with actual and primary fields and references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetDocuments(GostStorage.Domain.Models.SearchParametersModel,System.Int32,System.Int32)">
+            <summary>
+            Get all documents without references
+            </summary>
+            <returns>List of any status document without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetValidDocuments(GostStorage.Domain.Models.SearchParametersModel,System.Int32,System.Int32)">
+            <summary>
+            Get only valid documents
+            </summary>
+            <returns>List of valid documents without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetCanceledDocuments(GostStorage.Domain.Models.SearchParametersModel,System.Int32,System.Int32)">
+            <summary>
+            Get only not valid documents
+            </summary>
+            <returns>List of replaced or canceled documents without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetDocumentsCount(GostStorage.Domain.Models.SearchParametersModel)">
+            <summary>
+            Get count of all documents without references
+            </summary>
+            <returns>List of any status document without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetValidDocumentsCount(GostStorage.Domain.Models.SearchParametersModel)">
+            <summary>
+            Count count of only valid documents
+            </summary>
+            <returns>List of valid documents without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetCanceledDocumentsCount(GostStorage.Domain.Models.SearchParametersModel)">
+            <summary>
+            Get count of only not valid documents
+            </summary>
+            <returns>List of replaced or canceled documents without references</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.DocsController.GetDocsWithGeneralInfo">
+            <summary>
+            Get all docs with general info only
+            </summary>
+        </member>
+        <member name="M:GostStorage.Controllers.StatisticsController.GetViewsAsync(GostStorage.Services.Models.Stats.GetViewsModel)">
+            <summary>
+            Get views of every document bu filters
+            </summary>
+            <returns>List of document views with ids</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.StatisticsController.GetCountOfDocsAsync(GostStorage.Services.Models.Stats.GetCountOfDocsModel)">
+            <summary>
+            Get count of all documents by filters
+            </summary>
+            <returns>Count of docs</returns>
+        </member>
+        <member name="M:GostStorage.Controllers.StatisticsController.UpdateViews(System.Int64)">
+            <summary>
+            Updating document views
+            </summary>
+        </member>
+    </members>
+</doc>

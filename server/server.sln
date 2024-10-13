@@ -1,12 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.API", "GostStorage.API\GostStorage.API.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Domain", "GostStorage.Domain\GostStorage.Domain.csproj", "{A82FCEEB-7B61-498C-8E36-B6B059550157}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Infrastructure", "GostStorage.Infrastructure\GostStorage.Infrastructure.csproj", "{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage.Services", "GostStorage.Services\GostStorage.Services.csproj", "{7C8E00EC-78D1-4881-B214-970061076917}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GostStorage", "GostStorage\GostStorage.csproj", "{C33D332E-C369-4F38-8501-84E5394F0D7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,17 +12,5 @@ Global
 		{C33D332E-C369-4F38-8501-84E5394F0D7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33D332E-C369-4F38-8501-84E5394F0D7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C33D332E-C369-4F38-8501-84E5394F0D7A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A82FCEEB-7B61-498C-8E36-B6B059550157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A82FCEEB-7B61-498C-8E36-B6B059550157}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A82FCEEB-7B61-498C-8E36-B6B059550157}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A82FCEEB-7B61-498C-8E36-B6B059550157}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AB4AE33-37EE-4EA1-B10E-4E72B2E6BD25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C8E00EC-78D1-4881-B214-970061076917}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C8E00EC-78D1-4881-B214-970061076917}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C8E00EC-78D1-4881-B214-970061076917}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C8E00EC-78D1-4881-B214-970061076917}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
