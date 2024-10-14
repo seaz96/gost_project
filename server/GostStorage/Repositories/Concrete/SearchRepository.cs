@@ -19,19 +19,17 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                 {
                     q.Bool(b => b.Filter(f => f.Term(t => t.Field("status").Value("valid"))));
                     if (parameters.Name is not null)
-                    {
                         q.Bool(b => b.Should(s =>
-                                                {
-                                                    if (parameters.Name is not null)
-                                                        s.Match(m =>
-                                                            m.Field(new Field("field.fullName")).Query(parameters.Name));
-                                                }, s =>
-                                                {
-                                                    if (parameters.Name is not null)
-                                                        s.Match(m =>
-                                                            m.Field(new Field("field.designation")).Query(parameters.Name));
-                                                }));
-                    }
+                        {
+                            if (parameters.Name is not null)
+                                s.Match(m =>
+                                    m.Field(new Field("field.fullName")).Query(parameters.Name));
+                        }, s =>
+                        {
+                            if (parameters.Name is not null)
+                                s.Match(m =>
+                                    m.Field(new Field("field.designation")).Query(parameters.Name));
+                        }));
                     if (parameters.ActivityField is not null)
                         q.Match(m => m.Field(new Field("field.activityField")).Query(parameters.ActivityField));
                     if (parameters.Author is not null)
@@ -49,7 +47,6 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                     if (parameters.Amendments is not null)
                         q.Match(m => m.Field(new Field("field.amendments")).Query(parameters.Amendments));
                 }
-                
             ));
 
         return response;
@@ -66,19 +63,17 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                 {
                     q.Bool(b => b.MustNot(mn => mn.Bool(bb => bb.Filter(f => f.Term(t => t.Field("status").Value("valid"))))));
                     if (parameters.Name is not null)
-                    {
                         q.Bool(b => b.Should(s =>
-                                                {
-                                                    if (parameters.Name is not null)
-                                                        s.Match(m =>
-                                                            m.Field(new Field("field.fullName")).Query(parameters.Name));
-                                                }, s =>
-                                                {
-                                                    if (parameters.Name is not null)
-                                                        s.Match(m =>
-                                                            m.Field(new Field("field.designation")).Query(parameters.Name));
-                                                }));
-                    }
+                        {
+                            if (parameters.Name is not null)
+                                s.Match(m =>
+                                    m.Field(new Field("field.fullName")).Query(parameters.Name));
+                        }, s =>
+                        {
+                            if (parameters.Name is not null)
+                                s.Match(m =>
+                                    m.Field(new Field("field.designation")).Query(parameters.Name));
+                        }));
                     if (parameters.ActivityField is not null)
                         q.Match(m => m.Field(new Field("field.activityField")).Query(parameters.ActivityField));
                     if (parameters.Author is not null)
@@ -101,7 +96,6 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                         .All(value => value is null))
                         q.MatchAll(ma => ma.QueryName("MatchAll"));
                 }
-                
             ));
 
         return response;
@@ -122,8 +116,11 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
     public async Task IndexAllDocumentsAsync(List<DocumentWithFieldsModel> docs)
     {
         docs = docs.OrderBy(x => x.DocId).ToList();
-        
-        foreach (var d in from doc in docs let p = doc.Primary let a = doc.Actual let field = new FieldEntity
+
+        foreach (var d in from doc in docs
+                 let p = doc.Primary
+                 let a = doc.Actual
+                 let field = new FieldEntity
                  {
                      DocId = doc.DocId,
                      Designation = a.Designation ?? p.Designation,
@@ -144,7 +141,8 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                      AdoptionLevel = a.AdoptionLevel ?? p.AdoptionLevel,
                      Status = p.Status,
                      IsPrimary = true
-                 } select new DocumentESModel{ Id = doc.DocId, Field = field, Data = "" })
+                 }
+                 select new DocumentESModel { Id = doc.DocId, Field = field, Data = "" })
         {
             Log.Logger.Information("Indexing document {docId}", d.Id);
             _ = await client.IndexAsync(d, x => x
@@ -152,7 +150,7 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
                 .Document(d)
                 .Pipeline("attachment"));
         }
-        
+
         Log.Logger.Information($"Indexed {docs.Count} documents");
     }
 
@@ -160,7 +158,7 @@ public class SearchRepository(ElasticsearchClient client, IConfiguration config)
     {
         await client.IndexAsync(document, x => x.Document(document).Pipeline("attachment"));
     }
-    
+
     public async Task IndexDocumentDataAsync(string data, long docId)
     {
         var doc = (await client.GetAsync<DocumentESModel>(new GetRequest("fields", new Id(docId)))).Source;

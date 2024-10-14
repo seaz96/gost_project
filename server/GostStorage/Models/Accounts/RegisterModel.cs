@@ -1,25 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GostStorage.Constraints;
-using GostStorage.Helpers;
 
-namespace GostStorage.Models.Accounts
+namespace GostStorage.Models.Accounts;
+
+public class RegisterModel
 {
-    public class RegisterModel
-    {
-        [RegularExpression(RegexHelper.EmailValidationRegex)]
-        public required string Login { get; set; }
+    [RegularExpression(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,5}$")]
+    public required string Login { get; set; }
 
-        [MinLength(LoginModelConstraints.NAME_MIN_LENGTH)]
-        public required string Name { get; set; }
+    [MinLength(LoginModelConstraints.NameMinLength)]
+    public required string Name { get; set; }
 
-        [MinLength(LoginModelConstraints.PASSWORD_MIN_LENGTH)]
-        [MaxLength(LoginModelConstraints.PASSWORD_MAX_LENGTH)]
-        public required string Password { get; set; }
-        
-        public string? OrgName { get; set; }
+    [MinLength(LoginModelConstraints.PasswordMinLength)]
+    [MaxLength(LoginModelConstraints.PasswordMaxLength)]
+    public required string Password { get; set; }
 
-        public string? OrgBranch { get; set; }
-        
-        public string? OrgActivity { get; set; }
-    }
+    public string? OrgName { get; set; }
+
+    public string? OrgBranch { get; set; }
+
+    public string? OrgActivity { get; set; }
 }

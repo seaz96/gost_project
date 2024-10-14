@@ -3,8 +3,7 @@ using AutoMapper;
 using GostStorage.Helpers;
 using GostStorage.Middlewares.Extensions;
 using GostStorage.Profiles;
-using GostStorage.Services.Concrete;
-using GostStorage.Services.Interfaces;
+using GostStorage.Services;
 using GostStorage.StartUp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +11,7 @@ using Serilog;
 
 namespace GostStorage;
 
-static class Program
+internal static class Program
 {
     public static void Main(string[] args)
     {
@@ -25,7 +24,7 @@ static class Program
         AuthOptions.Initialize(securityKey);
 
         builder.Host.UseSerilog((ctx, lc) => lc.GetConfiguration());
-        
+
         builder.Services.AddControllers();
         builder.Services.AddAuthentication();
 
@@ -46,11 +45,8 @@ static class Program
                 };
             });
 
-        var mapper = new MapperConfiguration(config =>
-        {
-            config.AddProfile(new MapperProfile());
-        })
-        .CreateMapper();
+        var mapper = new MapperConfiguration(config => { config.AddProfile(new MapperProfile()); })
+            .CreateMapper();
 
         builder.Services.AddSingleton(mapper);
         builder.Services.AddLoggerServices();
@@ -74,12 +70,12 @@ static class Program
                         .AllowCredentials();
                 });
         });
-        
+
         var app = builder.Build();
-    
+
         app.UseSwagger();
         app.UseSwaggerUI();
-        
+
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.Use(async (context, next) =>

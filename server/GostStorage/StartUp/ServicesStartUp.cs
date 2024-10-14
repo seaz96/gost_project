@@ -1,5 +1,4 @@
-using GostStorage.Services.Concrete;
-using GostStorage.Services.Interfaces;
+using GostStorage.Services;
 
 namespace GostStorage.StartUp;
 

@@ -1,4 +1,4 @@
-namespace GostStorage.Services.Interfaces;
+namespace GostStorage.Services;
 
 public interface IReferencesService
 {

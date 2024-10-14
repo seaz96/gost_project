@@ -20,13 +20,13 @@ public static class InfrastructureStartUp
         var dbName = configuration.GetValue<string>("DATABASE_NAME");
         var dbUser = configuration.GetValue<string>("DATABASE_USER");
         var dbPort = configuration.GetValue<string>("DATABASE_PORT");
-        
+
         // minio s3
         var minioPublicKey = configuration.GetValue<string>("MINIO_PUBLIC_KEY");
         var minioPrivateKey = configuration.GetValue<string>("MINIO_PRIVATE_KEY");
         var minioPort = configuration.GetValue<string>("MINIO_PORT");
         var minioHost = configuration.GetValue<string>("MINIO_HOST");
-        
+
         // elastic
         var elasticPassword = configuration.GetValue<string>("ELASTIC_PASSWORD");
         var elasticIndex = configuration.GetValue<string>("ELASTIC_INDEX");
@@ -34,12 +34,11 @@ public static class InfrastructureStartUp
         var elasticSettings = new ElasticsearchClientSettings(new Uri(elasticHost!))
             .Authentication(new BasicAuthentication("elastic", elasticPassword!))
             .DefaultIndex(elasticIndex!);
-        
-        serviceCollection.AddDbContext<DataContext>(options =>
-        {
-            options.UseNpgsql($"Port={dbPort}; Database={dbName}; Username={dbUser}; Host={dbHost}; Password={dbPassword};");
-        }, ServiceLifetime.Transient);
-        
+
+        serviceCollection.AddDbContext<DataContext>(
+            options => { options.UseNpgsql($"Port={dbPort}; Database={dbName}; Username={dbUser}; Host={dbHost}; Password={dbPassword};"); },
+            ServiceLifetime.Transient);
+
         serviceCollection.AddScoped<IUsersRepository, UsersRepository>();
         serviceCollection.AddScoped<IFieldsRepository, FieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();

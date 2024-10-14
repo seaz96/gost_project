@@ -25,33 +25,10 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Where(x => x.Id > lastId)
             .Take(limit)
             .ToList();
-        
+
         return docs;
     }
-    
-    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
-    {
-        var docs = context.Fields
-            .Join(context.Docs,
-                f => f.DocId,
-                d => d.Id,
-                (f, d) => new { d.Id, f.Designation })
-            .Where(x => designations.Contains(x.Designation))
-            .Select(x => new { x.Id, x.Designation })
-            .Distinct()
-            .ToList();
-        
-        return context.Docs
-            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
-            .Distinct()
-            .Select(x => new DocWithGeneralInfoModel
-            {
-                Id = x.Id,
-                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
-            })
-            .ToList();
-    }
-    
+
     public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
@@ -82,11 +59,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
                 doc => doc.Id,
                 field => field.DocId,
                 (doc, field) => new { doc.Id, field.Designation })
-                    .Where(doc => docDesignations.Contains(doc.Designation))
-                    .GroupBy(doc => doc.Id)
-                    .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
-                    .AsSingleQuery()
-                    .ToListAsync();
+            .Where(doc => docDesignations.Contains(doc.Designation))
+            .GroupBy(doc => doc.Id)
+            .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
+            .AsSingleQuery()
+            .ToListAsync();
     }
 
     public async Task<long> AddAsync(DocEntity document)
@@ -99,5 +76,28 @@ public class DocsRepository(DataContext context) : IDocsRepository
     public async Task DeleteAsync(long id)
     {
         await context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
+    }
+
+    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
+    {
+        var docs = context.Fields
+            .Join(context.Docs,
+                f => f.DocId,
+                d => d.Id,
+                (f, d) => new { d.Id, f.Designation })
+            .Where(x => designations.Contains(x.Designation))
+            .Select(x => new { x.Id, x.Designation })
+            .Distinct()
+            .ToList();
+
+        return context.Docs
+            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
+            .Distinct()
+            .Select(x => new DocWithGeneralInfoModel
+            {
+                Id = x.Id,
+                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
+            })
+            .ToList();
     }
 }

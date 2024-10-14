@@ -18,15 +18,12 @@ public class DocStatisticsRepository(DataContext context) : IDocStatisticsReposi
 
         await context.SaveChangesAsync();
     }
-    
+
     public async Task DeleteAsync(long docId)
     {
         var statistic = await context.DocStatistics.FirstOrDefaultAsync(stat => stat.DocId == docId);
 
-        if (statistic is not null)
-        {
-            context.DocStatistics.Remove(statistic);
-        }
+        if (statistic is not null) context.DocStatistics.Remove(statistic);
 
         await context.SaveChangesAsync();
     }

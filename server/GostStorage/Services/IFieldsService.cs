@@ -1,7 +1,7 @@
 using GostStorage.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services.Interfaces;
+namespace GostStorage.Services;
 
 public interface IFieldsService
 {

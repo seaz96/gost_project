@@ -16,25 +16,27 @@ public static class SwaggerHelper
                     Version = "v1"
                 }
             );
-            
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-                In = ParameterLocation.Header, 
+
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
                 Description = "Please insert JWT with Bearer into field",
                 Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey 
+                Type = SecuritySchemeType.ApiKey
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-                { 
-                    new OpenApiSecurityScheme 
-                    { 
-                        Reference = new OpenApiReference 
-                        { 
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
                             Type = ReferenceType.SecurityScheme,
                             Id = JwtBearerDefaults.AuthenticationScheme
-                        } 
+                        }
                     },
                     Array.Empty<string>()
-                } 
+                }
             });
 
 #if DEBUG

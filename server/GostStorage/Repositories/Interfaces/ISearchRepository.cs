@@ -6,7 +6,7 @@ namespace GostStorage.Repositories.Interfaces;
 public interface ISearchRepository
 {
     public Task<SearchResponse<DocumentESModel>> SearchValidFieldsAsync(SearchParametersModel parameters, int limit, int offset);
-    
+
     public Task<SearchResponse<DocumentESModel>> SearchCanceledFieldsAsync(SearchParametersModel parameters, int limit, int offset);
 
     public Task<SearchResponse<DocumentESModel>> SearchAllAsync(int limit, int offset);

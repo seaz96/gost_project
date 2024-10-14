@@ -3,7 +3,7 @@ using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services.Interfaces;
+namespace GostStorage.Services;
 
 public interface IDocsService
 {
@@ -14,7 +14,7 @@ public interface IDocsService
     public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
 
     public Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
-    
+
     public Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
 
     public Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset);

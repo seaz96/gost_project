@@ -38,10 +38,7 @@ public class UsersRepository(DataContext context) : IUsersRepository
     {
         var user = await context.Users.FirstOrDefaultAsync(user => user.Id == id);
 
-        if (user is not null)
-        {
-            context.Users.Remove(user);
-        }
+        if (user is not null) context.Users.Remove(user);
 
         await context.SaveChangesAsync();
     }
@@ -49,11 +46,8 @@ public class UsersRepository(DataContext context) : IUsersRepository
     public async Task UpdateNameAsync(long id, string? name)
     {
         var user = await context.Users.FirstOrDefaultAsync(user => user.Id == id);
-        
-        if (user is not null)
-        {
-            user.Name = name;
-        }
+
+        if (user is not null) user.Name = name;
 
         await context.SaveChangesAsync();
     }

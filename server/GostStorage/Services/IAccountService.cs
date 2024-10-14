@@ -2,7 +2,7 @@ using System.Security.Claims;
 using GostStorage.Models.Accounts;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services.Interfaces;
+namespace GostStorage.Services;
 
 public interface IAccountService
 {

@@ -12,7 +12,7 @@ public class FilesRepository(
     : IFilesRepository
 {
     private readonly IMinioClient _minioClient = minioClientFactory.CreateClient();
-    
+
     public async Task UploadFileAsync(IFormFile file, string extension, long docId)
     {
         var primary = (await fieldsRepository.GetFieldsByDocIds(new List<long> { docId })).First(f => f.IsPrimary);
@@ -28,7 +28,7 @@ public class FilesRepository(
                 .WithStreamData(stream)
                 .WithObjectSize(stream.Length)
                 .WithContentType("application/octet-stream");
-            
+
             _ = await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
         }
     }

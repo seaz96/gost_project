@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GostStorage.Entities.Base;
 
-
 public class BaseEntity
 {
     [Key]

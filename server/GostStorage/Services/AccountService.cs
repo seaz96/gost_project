@@ -4,10 +4,9 @@ using GostStorage.Helpers;
 using GostStorage.Models.Accounts;
 using GostStorage.Navigations;
 using GostStorage.Repositories.Interfaces;
-using GostStorage.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services.Concrete;
+namespace GostStorage.Services;
 
 public class AccountService(IUsersRepository usersRepository, IPasswordHasher passwordHasher) : IAccountService
 {
@@ -15,17 +14,11 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
     {
         var user = await usersRepository.GetUserAsync(loginModel.Login);
 
-        if (user is null)
-        {
-            return new BadRequestObjectResult(new { Field = nameof(loginModel.Login) });
-        }
+        if (user is null) return new BadRequestObjectResult(new { Field = nameof(loginModel.Login) });
 
         var verified = passwordHasher.Verify(loginModel.Password, user.Password!);
 
-        if (!verified)
-        {
-            return new BadRequestObjectResult(new { Field = nameof(loginModel.Password) });
-        }
+        if (!verified) return new BadRequestObjectResult(new { Field = nameof(loginModel.Password) });
 
         var token = SecurityHelper.GetAuthToken(user);
 
@@ -41,15 +34,12 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             token
         });
     }
-    
+
     public async Task<IActionResult> RegisterAsync(RegisterModel registerModel)
     {
         var isLoginExist = await usersRepository.IsLoginExistAsync(registerModel.Login);
 
-        if (isLoginExist)
-        {
-            return new ConflictObjectResult(new { Field = nameof(registerModel.Login) });
-        }
+        if (isLoginExist) return new ConflictObjectResult(new { Field = nameof(registerModel.Login) });
 
         var user = CreateUser(registerModel, passwordHasher);
 
@@ -71,35 +61,26 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             token
         });
     }
-    
+
     public async Task<IActionResult> RestorePasswordAsync(PasswordRestoreModel passwordRestoreModel)
     {
         var user = await usersRepository.GetUserAsync(passwordRestoreModel.Login);
 
-        if (user is null)
-        {
-            return new BadRequestObjectResult(new { Field = nameof(passwordRestoreModel.Login) });
-        }
+        if (user is null) return new BadRequestObjectResult(new { Field = nameof(passwordRestoreModel.Login) });
 
         await usersRepository.UpdatePasswordAsync(user.Id, passwordHasher.Hash(passwordRestoreModel.NewPassword));
 
         return new OkResult();
     }
-    
+
     public async Task<IActionResult> ChangePasswordAsync(PasswordChangeModel passwordChangeModel)
     {
         var user = await usersRepository.GetUserAsync(passwordChangeModel.Login);
-        
-        if (user is null)
-        {
-            return new BadRequestObjectResult(new { Field = nameof(passwordChangeModel.Login) });
-        }
 
-        if (!passwordHasher.Verify(passwordChangeModel.OldPassword, user.Password!))
-        {
-            return new BadRequestObjectResult("Old password is wrong");
-        }
-        
+        if (user is null) return new BadRequestObjectResult(new { Field = nameof(passwordChangeModel.Login) });
+
+        if (!passwordHasher.Verify(passwordChangeModel.OldPassword, user.Password!)) return new BadRequestObjectResult("Old password is wrong");
+
         await usersRepository.UpdatePasswordAsync(user.Id, passwordHasher.Hash(passwordChangeModel.NewPassword));
 
         return new OkResult();
@@ -107,25 +88,22 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
 
     public async Task<IActionResult> GetUsersListAsync()
     {
-        var users = (await usersRepository.GetAllAsync()).Select(user => new 
+        var users = (await usersRepository.GetAllAsync()).Select(user => new
         {
             user.Id,
             user.Name,
             user.Login,
-            Role = user.Role.ToString(),
+            Role = user.Role.ToString()
         }).OrderBy(x => x.Id);
 
         return new OkObjectResult(users);
     }
-    
+
     public async Task<IActionResult> GetUserInfoAsync(long id)
     {
         var user = await usersRepository.GetUserAsync(id);
-        
-        if (user is null)
-        {
-            return new BadRequestObjectResult($"No user with such id {id}");
-        }
+
+        if (user is null) return new BadRequestObjectResult($"No user with such id {id}");
 
         return new OkObjectResult(new
         {
@@ -138,16 +116,13 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             Role = user.Role.ToString()
         });
     }
-    
+
     public async Task<IActionResult> SelfEditAsync(UserSelfEditModel userSelfEditModel, long id)
     {
         var user = await usersRepository.GetUserAsync(id);
 
-        if (user is null)
-        {
-            return new BadRequestResult();
-        }
-        
+        if (user is null) return new BadRequestResult();
+
         user.Name = userSelfEditModel.Name ?? user.Name;
         user.OrgName = userSelfEditModel.OrgName ?? user.OrgName;
         user.OrgBranch = userSelfEditModel.OrgBranch ?? user.OrgBranch;
@@ -157,26 +132,21 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
 
         return new OkResult();
     }
-    
+
     public async Task<IActionResult> AdminEditAsync(UserAdminEditModel userAdminEditModel, ClaimsPrincipal userPrincipal)
     {
         var user = await usersRepository.GetUserAsync(userAdminEditModel.Login);
 
-        if (user is null)
-        {
-            return new BadRequestObjectResult(new { Field = nameof(userAdminEditModel.Login) });
-        }
-        
+        if (user is null) return new BadRequestObjectResult(new { Field = nameof(userAdminEditModel.Login) });
+
         if (user.Role != UserRoles.User && userPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value != "Heisenberg")
-        {
             return new BadRequestObjectResult("You don't have permission");
-        }
-        
+
         user.Name = userAdminEditModel.Name ?? user.Name;
         user.OrgName = userAdminEditModel.OrgName ?? user.OrgName;
         user.OrgBranch = userAdminEditModel.OrgBranch ?? user.OrgBranch;
         user.OrgActivity = userAdminEditModel.OrgActivity ?? user.OrgActivity;
-        
+
         await usersRepository.UpdateAsync(user);
 
         return new OkResult();
@@ -185,19 +155,16 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
     public async Task<IActionResult> MakeAdminAsync(ChangeUserRoleModel requestModel)
     {
         var user = await usersRepository.GetUserAsync(requestModel.UserId);
-        
-        if (user is null)
-        {
-            return new BadRequestObjectResult($"User with id {requestModel.UserId} not found");
-        }
+
+        if (user is null) return new BadRequestObjectResult($"User with id {requestModel.UserId} not found");
 
         user.Role = requestModel.IsAdmin ? UserRoles.Admin : UserRoles.User;
-        
+
         await usersRepository.UpdateAsync(user);
 
         return new OkResult();
     }
-    
+
     public async Task<IActionResult> GetSelfInfoAsync(long userId)
     {
         var user = await usersRepository.GetUserAsync(userId);
@@ -213,12 +180,12 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             Role = user.Role.ToString()
         });
     }
-    
+
     private static UserEntity CreateUser(RegisterModel registerModel, IPasswordHasher hasher)
     {
         var hashedPassword = hasher.Hash(registerModel.Password);
 
-        return new UserEntity 
+        return new UserEntity
         {
             Login = registerModel.Login,
             Name = registerModel.Name,
