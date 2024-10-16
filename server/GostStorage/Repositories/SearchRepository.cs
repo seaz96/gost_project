@@ -1,10 +1,9 @@
 using Elastic.Clients.Elasticsearch;
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
-using GostStorage.Repositories.Interfaces;
 using Serilog;
 
-namespace GostStorage.Repositories.Concrete;
+namespace GostStorage.Repositories;
 
 public class SearchRepository(ElasticsearchClient client, IConfiguration config) : ISearchRepository
 {

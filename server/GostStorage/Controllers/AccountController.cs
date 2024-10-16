@@ -8,10 +8,8 @@ namespace GostStorage.Controllers;
 
 [ApiController]
 [Route("api/accounts")]
-public class AccountController(IPasswordHasher passwordHasher, IAccountService accountService) : ControllerBase
+public class AccountController(IAccountService accountService) : ControllerBase
 {
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-
     /// <summary>
     ///     Log in to account
     /// </summary>

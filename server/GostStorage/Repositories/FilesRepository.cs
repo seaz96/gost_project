@@ -1,9 +1,8 @@
-using GostStorage.Repositories.Interfaces;
 using Minio;
 using Minio.DataModel.Args;
 using IMinioClientFactory = Minio.AspNetCore.IMinioClientFactory;
 
-namespace GostStorage.Repositories.Concrete;
+namespace GostStorage.Repositories;
 
 public class FilesRepository(
     IFieldsRepository fieldsRepository,

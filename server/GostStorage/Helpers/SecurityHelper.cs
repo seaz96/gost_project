@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GostStorage.Helpers;
 
-public class SecurityHelper
+public abstract class SecurityHelper
 {
     public static string GetAuthToken(UserEntity user)
     {
@@ -20,8 +20,8 @@ public class SecurityHelper
 
         var jwt = new JwtSecurityToken(
             claims: claims,
-            issuer: AuthOptions.AUTH_TOKEN_ISSUER,
-            audience: AuthOptions.AUTH_TOKEN_ISSUER,
+            issuer: AuthOptions.AuthTokenIssuer,
+            audience: AuthOptions.AuthTokenIssuer,
             expires: DateTime.UtcNow + AuthOptions.AuthTokenLifetime,
             signingCredentials: new SigningCredentials(AuthOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
 

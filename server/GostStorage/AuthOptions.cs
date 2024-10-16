@@ -5,13 +5,12 @@ namespace GostStorage;
 
 public static class AuthOptions
 {
-    public const string AUTH_TOKEN_ISSUER = "Default";
-
-    public const string AUTH_TOKEN_AUDIENCE = "Default";
+    public const string AuthTokenIssuer = "Default";
+    public const string AuthTokenAudience = "Default";
 
     public static readonly TimeSpan AuthTokenLifetime = TimeSpan.FromDays(14);
 
-    public static string? SecurityKey { get; private set; }
+    private static string? SecurityKey { get; set; }
 
     public static SymmetricSecurityKey SymmetricSecurityKey
     {

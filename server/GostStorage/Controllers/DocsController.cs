@@ -4,7 +4,7 @@ using GostStorage.Attributes;
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
-using GostStorage.Repositories.Interfaces;
+using GostStorage.Repositories;
 using GostStorage.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

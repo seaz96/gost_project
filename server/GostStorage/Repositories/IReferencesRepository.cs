@@ -1,6 +1,6 @@
 using GostStorage.Entities;
 
-namespace GostStorage.Repositories.Interfaces;
+namespace GostStorage.Repositories;
 
 public interface IReferencesRepository
 {

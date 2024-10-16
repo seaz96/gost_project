@@ -1,7 +1,7 @@
 using Elastic.Clients.Elasticsearch;
 using GostStorage.Models.Docs;
 
-namespace GostStorage.Repositories.Interfaces;
+namespace GostStorage.Repositories;
 
 public interface ISearchRepository
 {

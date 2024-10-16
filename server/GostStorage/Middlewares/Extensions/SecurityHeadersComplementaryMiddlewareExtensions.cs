@@ -2,7 +2,7 @@
 
 public static class SecurityHeadersComplementaryMiddlewareExtensions
 {
-    public static IApplicationBuilder UseSecurityHeadersComplementaryMiddleware(this IApplicationBuilder app)
+    public static IApplicationBuilder UseSecurityHeadersComplementary(this IApplicationBuilder app)
     {
         ArgumentNullException.ThrowIfNull(nameof(app));
 

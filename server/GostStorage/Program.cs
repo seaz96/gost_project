@@ -34,8 +34,8 @@ internal static class Program
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = AuthOptions.AUTH_TOKEN_ISSUER,
-                    ValidAudience = AuthOptions.AUTH_TOKEN_AUDIENCE,
+                    ValidIssuer = AuthOptions.AuthTokenIssuer,
+                    ValidAudience = AuthOptions.AuthTokenAudience,
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
@@ -48,11 +48,16 @@ internal static class Program
         var mapper = new MapperConfiguration(config => { config.AddProfile(new MapperProfile()); })
             .CreateMapper();
 
+        var configuration = builder.Configuration;
+
         builder.Services.AddSingleton(mapper);
         builder.Services.AddLoggerServices();
-        builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddInfrastructureServices(configuration);
         builder.Services.AddApplicationServices();
-        builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
+        builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
+        var sentryService = new SentryService(configuration.GetValue<string>("SENTRY_TOKEN")!, configuration.GetValue<long>("SENTRY_CHAT_ID"));
+        builder.Services.AddSingleton<ISentryService>(sentryService);
+
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -60,9 +65,9 @@ internal static class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder =>
+                corsPolicyBuilder =>
                 {
-                    builder
+                    corsPolicyBuilder
                         .WithOrigins(origins)
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader()
@@ -73,6 +78,8 @@ internal static class Program
 
         var app = builder.Build();
 
+        app.UseBodyReader();
+        app.UseSentry();
         app.UseSwagger();
         app.UseSwaggerUI();
 
@@ -85,7 +92,7 @@ internal static class Program
         });
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseSecurityHeadersComplementaryMiddleware();
+        app.UseSecurityHeadersComplementary();
         app.MapControllers();
 
         app.Run();

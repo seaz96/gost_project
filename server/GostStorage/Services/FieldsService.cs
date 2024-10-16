@@ -1,6 +1,6 @@
 using GostStorage.Entities;
 using GostStorage.Helpers;
-using GostStorage.Repositories.Interfaces;
+using GostStorage.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services;

@@ -2,10 +2,9 @@ using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
-using GostStorage.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace GostStorage.Repositories.Concrete;
+namespace GostStorage.Repositories;
 
 public class DocsRepository(DataContext context) : IDocsRepository
 {

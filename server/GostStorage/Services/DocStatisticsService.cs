@@ -3,7 +3,7 @@ using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using GostStorage.Models.Stats;
 using GostStorage.Navigations;
-using GostStorage.Repositories.Interfaces;
+using GostStorage.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services;

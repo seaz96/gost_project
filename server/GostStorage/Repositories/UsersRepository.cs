@@ -1,9 +1,8 @@
 using GostStorage.Data;
 using GostStorage.Entities;
-using GostStorage.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace GostStorage.Repositories.Concrete;
+namespace GostStorage.Repositories;
 
 public class UsersRepository(DataContext context) : IUsersRepository
 {

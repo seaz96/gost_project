@@ -1,8 +1,7 @@
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using GostStorage.Data;
-using GostStorage.Repositories.Concrete;
-using GostStorage.Repositories.Interfaces;
+using GostStorage.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Minio.AspNetCore;
 

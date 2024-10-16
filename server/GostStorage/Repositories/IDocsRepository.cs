@@ -1,7 +1,7 @@
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
 
-namespace GostStorage.Repositories.Interfaces;
+namespace GostStorage.Repositories;
 
 public interface IDocsRepository
 {
