@@ -20,3 +20,6 @@ obj/
 
 .vs/
 .idea/
+
+./server/GostStorage/appsettings.json
+./server/GostStorage/appsettings.Development.json

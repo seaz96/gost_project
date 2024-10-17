@@ -15,11 +15,11 @@ public static class SearchHelper
             .Where(f => parameters.ActivityField == null || (f.ActivityField ?? "").ToLower()
                 .Contains(parameters.ActivityField.ToLower()))
             .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
-            .Where(f => parameters.Name == null || 
+            .Where(f => parameters.Name == null ||
                         (f.Designation ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()) || 
+                        .Contains(parameters.Name.ToLower()) ||
                         (f.FullName ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()))
+                        .Contains(parameters.Name.ToLower()))
             .Where(f => parameters.AcceptanceYear == null || f.AcceptanceYear.Value == parameters.AcceptanceYear.Value)
             .Where(f => parameters.CommissionYear == null || f.CommissionYear.Value == parameters.CommissionYear.Value)
             .Where(f => parameters.Author == null || (f.Author ?? "").ToLower()
@@ -40,8 +40,8 @@ public static class SearchHelper
                 .Contains(parameters.Content.ToLower()))
             .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
             .Where(f => isValid == null || isValid.Value
-                                                    ? f.Status == DocStatuses.Valid
-                                                    : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
+                ? f.Status == DocStatuses.Valid
+                : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
             .AsSingleQuery()
             .Select(f => f.Id)
             .ToListAsync();

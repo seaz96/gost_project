@@ -14,11 +14,9 @@ public class FieldEntity : BaseEntity
 
     public string? ActivityField { get; set; }
 
-    [Range(1000, 9999)]
-    public int? AcceptanceYear { get; set; }
+    [Range(1000, 9999)] public int? AcceptanceYear { get; set; }
 
-    [Range(1000, 9999)]
-    public int? CommissionYear { get; set; }   
+    [Range(1000, 9999)] public int? CommissionYear { get; set; }
 
     public string? Author { get; set; }
 
@@ -43,9 +41,8 @@ public class FieldEntity : BaseEntity
     public HarmonizationLevels? Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
-    
+
     public long DocId { get; set; }
-    
+
     public DateTime? LastEditTime { get; set; }
 }
-

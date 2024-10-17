@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using GostStorage.Models.Accounts;
-using GostStorage.Services.Interfaces;
+using GostStorage.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Controllers;
 
 [ApiController]
 [Route("api/accounts")]
-public class AccountController(IPasswordHasher passwordHasher, IAccountService accountService) : ControllerBase
+public class AccountController(IAccountService accountService) : ControllerBase
 {
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
-
     /// <summary>
-    /// Log in to account
+    ///     Log in to account
     /// </summary>
     /// <returns>User info</returns>
     [HttpPost("login")]
@@ -22,8 +20,9 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await accountService.LoginAsync(loginModel);
     }
+
     /// <summary>
-    /// Create a new account and log in
+    ///     Create a new account and log in
     /// </summary>
     /// <returns>Return user info with auth token</returns>
     [HttpPost("register")]
@@ -34,7 +33,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     /// <summary>
-    /// Change user password by admin
+    ///     Change user password by admin
     /// </summary>
     [HttpPost("restore-password")]
     [Authorize(Roles = "Admin,Heisenberg")]
@@ -44,7 +43,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     /// <summary>
-    /// Change password by old password
+    ///     Change password by old password
     /// </summary>
     [HttpPost("change-password")]
     [Authorize]
@@ -54,7 +53,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     /// <summary>
-    /// Get list of all users for admin
+    ///     Get list of all users for admin
     /// </summary>
     /// <returns>List of users</returns>
     [HttpGet("list")]
@@ -63,9 +62,9 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await accountService.GetUsersListAsync();
     }
-    
+
     /// <summary>
-    /// Get full user info
+    ///     Get full user info
     /// </summary>
     [HttpGet("get-user-info")]
     [Authorize(Roles = "Admin,Heisenberg")]
@@ -75,7 +74,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     /// <summary>
-    /// Edit own user info 
+    ///     Edit own user info
     /// </summary>
     [Authorize]
     [HttpPost("self-edit")]
@@ -83,16 +82,13 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         var idClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (idClaim is null || !int.TryParse(idClaim, out var id))
-        {
-            return Unauthorized();
-        }
+        if (idClaim is null || !int.TryParse(idClaim, out var id)) return Unauthorized();
 
         return await accountService.SelfEditAsync(userSelfEditModel, id);
     }
 
     /// <summary>
-    /// Edit user info by admin
+    ///     Edit user info by admin
     /// </summary>
     [HttpPost("admin-edit")]
     [Authorize(Roles = "Admin,Heisenberg")]
@@ -102,7 +98,7 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     /// <summary>
-    /// Make user admin
+    ///     Make user admin
     /// </summary>
     [HttpPost("make-admin")]
     [Authorize(Roles = "Heisenberg")]
@@ -110,9 +106,9 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     {
         return await accountService.MakeAdminAsync(requestModel);
     }
-    
+
     /// <summary>
-    /// Get self user info (authorized only)
+    ///     Get self user info (authorized only)
     /// </summary>
     [Authorize]
     [HttpGet("self-info")]
