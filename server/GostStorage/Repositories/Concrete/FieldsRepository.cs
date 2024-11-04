@@ -36,7 +36,7 @@ public class FieldsRepository(DataContext context) : IFieldsRepository
 
     public async Task DeleteAsync(long? id)
     {
-       await context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
+        await context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
     }
 
     public async Task UpdateAsync(FieldEntity newField)

@@ -30,6 +30,8 @@ public static class InfrastructureStartUp
             options.UseNpgsql($"Port={dbPort}; Database={dbName}; Username={dbUser}; Host={dbHost}; Password={dbPassword};");
         }, ServiceLifetime.Transient);
         
+        
+        serviceCollection.AddScoped<HttpClient>();
         serviceCollection.AddScoped<IUsersRepository, UsersRepository>();
         serviceCollection.AddScoped<IFieldsRepository, FieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();

@@ -1,14 +1,8 @@
-﻿namespace GostStorage.Navigations
+﻿namespace GostStorage.Navigations;
+
+public enum HarmonizationLevels
 {
-    /// <summary>
-    /// Unharmonized - 0
-    /// Modified - 1
-    /// Harmonized - 2
-    /// </summary>
-    public enum HarmonizationLevels
-    {
-        Unharmonized,
-        Modified,
-        Harmonized,
-    }
+    Unharmonized,
+    Modified,
+    Harmonized,
 }

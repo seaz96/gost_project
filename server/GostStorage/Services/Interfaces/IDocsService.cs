@@ -17,7 +17,8 @@ public interface IDocsService
     
     public Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
 
-    public Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset);
+    public Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery parameters, int limit, int offset);
+    public Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset);
 
     public Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
 

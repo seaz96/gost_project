@@ -1,9 +1,8 @@
-﻿namespace GostStorage.Services.Interfaces
-{
-    public interface IPasswordHasher
-    {
-        public string Hash(string password);
+﻿namespace GostStorage.Services.Interfaces;
 
-        public bool Verify(string password, string hashedPassword);
-    }
+public interface IPasswordHasher
+{
+    public string Hash(string password);
+
+    public bool Verify(string password, string hashedPassword);
 }

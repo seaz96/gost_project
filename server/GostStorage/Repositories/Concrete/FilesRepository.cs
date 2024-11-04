@@ -6,9 +6,9 @@ using IMinioClientFactory = Minio.AspNetCore.IMinioClientFactory;
 namespace GostStorage.Repositories.Concrete;
 
 public class FilesRepository(
-    IFieldsRepository fieldsRepository,
-    IMinioClientFactory minioClientFactory,
-    IConfiguration configuration)
+        IFieldsRepository fieldsRepository,
+        IMinioClientFactory minioClientFactory,
+        IConfiguration configuration)
     : IFilesRepository
 {
     private readonly IMinioClient _minioClient = minioClientFactory.CreateClient();

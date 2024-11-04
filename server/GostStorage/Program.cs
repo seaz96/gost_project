@@ -47,10 +47,10 @@ static class Program
             });
 
         var mapper = new MapperConfiguration(config =>
-        {
-            config.AddProfile(new MapperProfile());
-        })
-        .CreateMapper();
+            {
+                config.AddProfile(new MapperProfile());
+            })
+            .CreateMapper();
 
         builder.Services.AddSingleton(mapper);
         builder.Services.AddLoggerServices();

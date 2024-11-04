@@ -1,4 +1,3 @@
-using Elastic.Clients.Elasticsearch;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
@@ -9,9 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Concrete;
 
-public class DocsService(IDocsRepository docsRepository, IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository, IFieldsService fieldsService, IFilesRepository filesRepository,
-    ISearchRepository searchRepository) : IDocsService
+public class DocsService(
+        IDocsRepository docsRepository,
+        IFieldsRepository fieldsRepository,
+        IReferencesRepository referencesRepository,
+        IFieldsService fieldsService,
+        IFilesRepository filesRepository,
+        ISearchRepository searchRepository)
+    : IDocsService
 {
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
@@ -162,25 +166,9 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
         return docsWithFields;
     }
     
-    public async Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
+    public async Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchFilters parameters, int limit, int offset)
     {
-        if (parameters.Name is not null)
-        {
-            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
-        }
-
-        var response = new SearchResponse<DocumentESModel>();
-        if (parameters.GetType().GetProperties()
-            .Where(pi => pi.PropertyType == typeof(string))
-            .Select(pi => pi.GetValue(parameters))
-            .All(value => value is null))
-        {
-            response = await searchRepository.SearchAllAsync(limit, offset);
-        }
-        else
-        {
-            response = await searchRepository.SearchValidFieldsAsync(parameters, limit, offset);
-        }
+        var response = await searchRepository.SearchAsync(parameters, limit, offset);
 
         var docResults = new Dictionary<long, ShortInfoDocumentModel>();
         var maxScore = response.HitsMetadata.MaxScore;
@@ -197,6 +185,13 @@ public class DocsService(IDocsRepository docsRepository, IFieldsRepository field
                 Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
             };
         }
+        
+        return docResults.Values.ToList();
+    }
+    
+    public async Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset)
+    {
+        var response = await searchRepository.SearchAllAsync();
         
         return docResults.Values.ToList();
     }

@@ -6,8 +6,11 @@ using GostStorage.Services.Interfaces;
 
 namespace GostStorage.Services.Concrete;
 
-public class ReferencesService(IReferencesRepository referencesRepository, IDocsRepository docsRepository,
-    IDocsService docsService) : IReferencesService
+public class ReferencesService(
+        IReferencesRepository referencesRepository,
+        IDocsRepository docsRepository,
+        IDocsService docsService)
+    : IReferencesService
 {
     public async Task AddReferencesAsync(List<string> docChildren, long parentId)
     {

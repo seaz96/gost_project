@@ -82,11 +82,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
                 doc => doc.Id,
                 field => field.DocId,
                 (doc, field) => new { doc.Id, field.Designation })
-                    .Where(doc => docDesignations.Contains(doc.Designation))
-                    .GroupBy(doc => doc.Id)
-                    .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
-                    .AsSingleQuery()
-                    .ToListAsync();
+            .Where(doc => docDesignations.Contains(doc.Designation))
+            .GroupBy(doc => doc.Id)
+            .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
+            .AsSingleQuery()
+            .ToListAsync();
     }
 
     public async Task<long> AddAsync(DocEntity document)
