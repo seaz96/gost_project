@@ -1,21 +1,16 @@
-using Elastic.Clients.Elasticsearch;
 using GostStorage.Models.Docs;
 
 namespace GostStorage.Repositories.Interfaces;
 
 public interface ISearchRepository
 {
-    public Task<SearchResponse<DocumentESModel>> SearchValidFieldsAsync(SearchParametersModel parameters, int limit, int offset);
-    
-    public Task<SearchResponse<DocumentESModel>> SearchCanceledFieldsAsync(SearchParametersModel parameters, int limit, int offset);
+    public Task<FtsSearchEntity> SearchValidFieldsAsync(FtsSearchQuery query);
 
-    public Task<SearchResponse<DocumentESModel>> SearchAllAsync(int limit, int offset);
+    public Task<FtsSearchEntity> SearchAllAsync(int limit, int offset);
 
-    public Task IndexAllDocumentsAsync(List<DocumentWithFieldsModel> docs);
+    public Task IndexAllDocumentsAsync(List<FtsIndexModel> documents);
 
-    public Task IndexDocument(DocumentESModel document);
-
-    public Task IndexDocumentDataAsync(string data, long docId);
+    public Task IndexDocument(FtsIndexModel document);
 
     public Task DeleteDocumentAsync(long docId);
 }

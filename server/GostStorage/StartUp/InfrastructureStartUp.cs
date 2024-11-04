@@ -1,5 +1,3 @@
-using Elastic.Clients.Elasticsearch;
-using Elastic.Transport;
 using GostStorage.Data;
 using GostStorage.Repositories.Concrete;
 using GostStorage.Repositories.Interfaces;
@@ -27,14 +25,6 @@ public static class InfrastructureStartUp
         var minioPort = configuration.GetValue<string>("MINIO_PORT");
         var minioHost = configuration.GetValue<string>("MINIO_HOST");
         
-        // elastic
-        var elasticPassword = configuration.GetValue<string>("ELASTIC_PASSWORD");
-        var elasticIndex = configuration.GetValue<string>("ELASTIC_INDEX");
-        var elasticHost = configuration.GetValue<string>("ELASTIC_HOST");
-        var elasticSettings = new ElasticsearchClientSettings(new Uri(elasticHost!))
-            .Authentication(new BasicAuthentication("elastic", elasticPassword!))
-            .DefaultIndex(elasticIndex!);
-        
         serviceCollection.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql($"Port={dbPort}; Database={dbName}; Username={dbUser}; Host={dbHost}; Password={dbPassword};");
@@ -46,8 +36,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
         serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@{minioHost}:{minioPort}/"));
-        serviceCollection.AddScoped<ElasticsearchClient>(_ => new ElasticsearchClient(elasticSettings));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
-        serviceCollection.AddScoped<ISearchRepository, SearchRepository>();
+        serviceCollection.AddScoped<ISearchRepository, FtsRepository>();
     }
 }
