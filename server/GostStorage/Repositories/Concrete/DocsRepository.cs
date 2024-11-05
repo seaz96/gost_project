@@ -14,7 +14,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
         return await context.Docs.ToListAsync();
     }
 
-    public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
+    public async Task<List<DocEntity>> GetDocumentsAsync(
+        SearchParametersModel parameters,
+        bool? isValid,
+        int limit,
+        int lastId)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
 
@@ -42,7 +46,8 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .ToList();
         
         return context.Docs
-            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
+            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || 
+                        docs.Any(f => f.Id == x.ActualFieldId.Value))
             .Distinct()
             .Select(x => new DocWithGeneralInfoModel
             {
@@ -84,7 +89,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
                 (doc, field) => new { doc.Id, field.Designation })
             .Where(doc => docDesignations.Contains(doc.Designation))
             .GroupBy(doc => doc.Id)
-            .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
+            .Select(group => new DocWithGeneralInfoModel
+                {
+                    Id = group.First().Id,
+                    Designation = group.First().Designation
+                })
             .AsSingleQuery()
             .ToListAsync();
     }

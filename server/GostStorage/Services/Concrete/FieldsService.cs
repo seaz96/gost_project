@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Concrete;
 
-public class FieldsService(IFieldsRepository fieldsRepository, IReferencesRepository referencesRepository,
-    IDocsRepository docsRepository) : IFieldsService
+public class FieldsService(
+        IFieldsRepository fieldsRepository,
+        IReferencesRepository referencesRepository,
+        IDocsRepository docsRepository)
+    : IFieldsService
 {
-    private readonly IReferencesRepository _referencesRepository = referencesRepository;
-
     public async Task<IActionResult> UpdateAsync(FieldEntity updatedField, long docId)
     {
         if (updatedField.Designation is not null)

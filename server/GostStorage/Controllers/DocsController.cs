@@ -14,16 +14,16 @@ namespace GostStorage.Controllers;
 [ApiController]
 [Route("api/docs")]
 public class DocsController(
-        IDocsService docsService,
-        IReferencesService referencesService,
-        IFieldsService fieldsService,
-        IDocStatisticsService docStatisticsService,
-        IUsersRepository usersRepository,
-        ISearchRepository searchRepository,
-        IMapper mapper)
+    IDocsService docsService,
+    IReferencesService referencesService,
+    IFieldsService fieldsService,
+    IDocStatisticsService docStatisticsService,
+    IUsersRepository usersRepository,
+    ISearchRepository searchRepository,
+    IMapper mapper)
     : ControllerBase
 {
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("add")]
     public async Task<IActionResult> AddNewDoc([FromBody] AddNewDocDtoModel dto)
     {
@@ -33,19 +33,26 @@ public class DocsController(
         }
 
         var newField = mapper.Map<FieldEntity>(dto);
-        
+
         var docId = await docsService.AddNewDocAsync(newField);
         await referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
-        
-        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Create, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+
+        await docStatisticsService.AddAsync(new DocStatisticEntity
+        {
+            OrgBranch = user!.OrgBranch,
+            Action = ActionType.Create,
+            DocId = docId,
+            Date = DateTime.UtcNow,
+            UserId = userId
+        });
 
         return Ok(docId);
     }
 
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpDelete("delete/{docId}")]
     public async Task<IActionResult> DeleteDoc(long docId)
     {
@@ -58,11 +65,11 @@ public class DocsController(
         await referencesService.DeleteReferencesByIdAsync(docId);
         await docStatisticsService.DeleteAsync(docId);
         await searchRepository.DeleteDocumentAsync(docId);
-        
+
         return result;
     }
 
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPut("update/{docId}")]
     public async Task<IActionResult> Update([FromBody] UpdateFieldDtoModel dto, long docId)
     {
@@ -75,16 +82,23 @@ public class DocsController(
         updatedField.DocId = docId;
         var result = await fieldsService.UpdateAsync(updatedField, docId);
         await referencesService.UpdateReferencesAsync(dto.References, docId);
-        
+
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity
+        {
+            OrgBranch = user!.OrgBranch,
+            Action = ActionType.Update,
+            DocId = docId,
+            Date = DateTime.UtcNow,
+            UserId = userId
+        });
 
         return result;
     }
 
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPut("actualize/{docId}")]
     public async Task<IActionResult> Actualize([FromBody] UpdateFieldDtoModel dto, long docId)
     {
@@ -97,16 +111,23 @@ public class DocsController(
         updatedField.DocId = docId;
         var result = await fieldsService.ActualizeAsync(updatedField, docId);
         await referencesService.UpdateReferencesAsync(dto.References, docId);
-        
+
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new DocStatisticEntity {OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow, UserId = userId});
+        await docStatisticsService.AddAsync(new DocStatisticEntity
+        {
+            OrgBranch = user!.OrgBranch,
+            Action = ActionType.Update,
+            DocId = docId,
+            Date = DateTime.UtcNow,
+            UserId = userId
+        });
 
         return result;
     }
 
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPut("change-status")]
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequestModel model)
     {
@@ -118,11 +139,19 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new DocStatisticEntity { OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = model.Id, Date = DateTime.UtcNow, UserId = userId});
-        
+        await docStatisticsService.AddAsync(new DocStatisticEntity
+        {
+            OrgBranch = user!.OrgBranch,
+            Action = ActionType.Update,
+            DocId = model.Id,
+            Date = DateTime.UtcNow,
+            UserId = userId
+        });
+
         return await docsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
+    [Authorize]
     [HttpGet("{docId}")]
     public async Task<ActionResult<DocumentWithFieldsModel>> GetDocument(long docId)
     {
@@ -130,6 +159,7 @@ public class DocsController(
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all")]
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
@@ -138,14 +168,16 @@ public class DocsController(
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all-valid")]
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetValidDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
     {
-        return Ok(await docsService.GetDocumentsAsync(parameters, true, limit, lastId));    
+        return Ok(await docsService.GetDocumentsAsync(parameters, true, limit, lastId));
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all-canceled")]
     public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetCanceledDocuments(
         [FromQuery] SearchParametersModel parameters, [FromQuery] int limit = 10, [FromQuery] int lastId = 0)
@@ -154,6 +186,7 @@ public class DocsController(
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all-count")]
     public async Task<ActionResult<int>> GetDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
@@ -162,14 +195,16 @@ public class DocsController(
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all-valid-count")]
     public async Task<ActionResult<int>> GetValidDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
     {
-        return Ok(await docsService.GetDocumentsCountAsync(parameters, true));    
+        return Ok(await docsService.GetDocumentsCountAsync(parameters, true));
     }
 
     [NoCache]
+    [Authorize]
     [HttpGet("all-canceled-count")]
     public async Task<ActionResult<int>> GetCanceledDocumentsCount(
         [FromQuery] SearchParametersModel parameters)
@@ -178,20 +213,22 @@ public class DocsController(
     }
 
     [NoCache]
-    [HttpGet("all-general-info")]
-    public async Task<ActionResult> GetDocsWithGeneralInfo()
+    [Authorize]
+    [HttpGet("search")]
+    public async Task<ActionResult> SearchValidAsync([FromQuery] FtsSearchQuery parameters)
     {
-        return Ok(await docsService.GetDocsWithGeneralInfoAsync());
+        return new OkObjectResult(await docsService.SearchAsync(parameters));
     }
-    
-    [HttpGet("search-valid")]
-    public async Task<ActionResult> SearchValidAsync([FromQuery] SearchParametersModel parameters,
-        [FromQuery] int limit = 10, [FromQuery] int offset = 0)
+
+    [NoCache]
+    [Authorize]
+    [HttpGet("search-all")]
+    public async Task<ActionResult> SearchValidAsync([FromQuery] int limit = 10, [FromQuery] int offset = 0)
     {
-        return new OkObjectResult(await docsService.SearchValidAsync(parameters, limit, offset));
+        return new OkObjectResult(await docsService.SearchAllAsync(limit, offset));
     }
-    
-    [Authorize(Roles = "Admin,Heisenberg")]
+
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("index-all")]
     public async Task<ActionResult> IndexAllAsync()
     {
@@ -199,8 +236,7 @@ public class DocsController(
         return Ok();
     }
 
-
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("{docId}/upload-file")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadFileForDocumentAsync([FromForm] UploadFileModel file, long docId)
@@ -219,8 +255,8 @@ public class DocsController(
             UserId = userId
         });
 
-        await docsService.IndexDocumentDataAsync(file.File, docId);
-        
+        //TODO(azanov.n): нужно набахать сюда логику с переиндексацией документа
+
         return Ok(await docsService.UploadFileForDocumentAsync(file, docId));
     }
 }

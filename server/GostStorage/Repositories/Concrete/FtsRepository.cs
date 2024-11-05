@@ -5,7 +5,7 @@ namespace GostStorage.Repositories.Concrete;
 
 public class FtsRepository : ISearchRepository
 {
-    public Task<FtsSearchEntity> SearchValidFieldsAsync(FtsSearchQuery query)
+    public Task<FtsSearchEntity> SearchAsync(FtsSearchQuery query)
     {
         throw new NotImplementedException();
     }

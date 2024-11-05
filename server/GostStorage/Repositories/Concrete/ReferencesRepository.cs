@@ -72,7 +72,13 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
         await context.DocsReferences.Where(reference =>
             reference.ParentalDocId == parentId && toDelete.Contains(reference.ChildDocId)).ExecuteDeleteAsync();
         
-        await AddRangeAsync(referenceIds.Select(id => new DocReferenceEntity {ChildDocId = id, ParentalDocId = parentId}).ToList());
+        await AddRangeAsync(referenceIds
+            .Select(id => new DocReferenceEntity
+                {
+                    ChildDocId = id, 
+                    ParentalDocId = parentId
+                })
+            .ToList());
         
         await context.SaveChangesAsync();
     }

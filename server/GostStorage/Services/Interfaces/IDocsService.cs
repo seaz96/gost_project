@@ -7,26 +7,27 @@ namespace GostStorage.Services.Interfaces;
 
 public interface IDocsService
 {
-    public Task<long> AddNewDocAsync(FieldEntity primaryField);
+    Task<long> AddNewDocAsync(FieldEntity primaryField);
 
-    public Task<IActionResult> DeleteDocAsync(long id);
+    Task<IActionResult> DeleteDocAsync(long id);
 
-    public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
-
-    public Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
+    Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
     
-    public Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
+    Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
 
-    public Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery parameters, int limit, int offset);
-    public Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset);
+    Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(
+        SearchParametersModel parameters,
+        bool? isValid,
+        int limit,
+        int lastId);
 
-    public Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
+    Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
 
-    public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
+    Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
 
-    public Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
+    Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query);
 
-    public Task IndexAllDocumentsAsync();
+    Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset);
 
-    public Task IndexDocumentDataAsync(IFormFile file, long docId);
+    Task IndexAllDocumentsAsync();
 }

@@ -27,28 +27,28 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
     }
 
     [HttpPost("restore-password")]
-    [Authorize(Roles = "Admin,Heisenberg")]
+    [Authorize(Roles = "Heisenberg,Admin")]
     public async Task<IActionResult> RestorePassword([FromBody] PasswordRestoreModel passwordRestoreModel)
     {
         return await accountService.RestorePasswordAsync(passwordRestoreModel);
     }
 
-    [HttpPost("change-password")]
     [Authorize]
+    [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeModel passwordChangeModel)
     {
         return await accountService.ChangePasswordAsync(passwordChangeModel);
     }
 
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpGet("list")]
-    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> UsersList()
     {
         return await accountService.GetUsersListAsync();
     }
 
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpGet("get-user-info")]
-    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> GetUserInfo([FromQuery] long id)
     {
         return await accountService.GetUserInfoAsync(id);
@@ -68,15 +68,15 @@ public class AccountController(IPasswordHasher passwordHasher, IAccountService a
         return await accountService.SelfEditAsync(userSelfEditModel, id);
     }
 
+    [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("admin-edit")]
-    [Authorize(Roles = "Admin,Heisenberg")]
     public async Task<IActionResult> AdminEdit([FromBody] UserAdminEditModel userAdminEditModel)
     {
         return await accountService.AdminEditAsync(userAdminEditModel, User);
     }
 
-    [HttpPost("make-admin")]
     [Authorize(Roles = "Heisenberg")]
+    [HttpPost("make-admin")]
     public async Task<IActionResult> MakeAdmin(ChangeUserRoleModel requestModel)
     {
         return await accountService.MakeAdminAsync(requestModel);

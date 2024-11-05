@@ -166,36 +166,6 @@ public class DocsService(
         return docsWithFields;
     }
     
-    public async Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchFilters parameters, int limit, int offset)
-    {
-        var response = await searchRepository.SearchAsync(parameters, limit, offset);
-
-        var docResults = new Dictionary<long, ShortInfoDocumentModel>();
-        var maxScore = response.HitsMetadata.MaxScore;
-        
-        foreach (var hit in response.Hits)
-        {
-            var fieldEntity = hit.Source?.Field;
-            Console.WriteLine($"{maxScore}, {hit.Score.Value}, {maxScore / hit.Score.Value * 5}");
-            if (docResults.ContainsKey(fieldEntity.DocId))
-                continue;
-            docResults[fieldEntity.DocId] = new ShortInfoDocumentModel
-            {
-                CodeOKS = fieldEntity.CodeOKS, Designation = fieldEntity.Designation, FullName = fieldEntity.FullName,
-                Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
-            };
-        }
-        
-        return docResults.Values.ToList();
-    }
-    
-    public async Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset)
-    {
-        var response = await searchRepository.SearchAllAsync();
-        
-        return docResults.Values.ToList();
-    }
-    
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
     {
         if (parameters.Name is not null)
@@ -204,25 +174,6 @@ public class DocsService(
         }
 
         return await docsRepository.GetCountOfDocumentsAsync(parameters, isValid);
-    }
-
-    public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync()
-    {
-        var docs = await docsRepository.GetAllAsync();
-        var fields = await fieldsRepository.GetAllAsync();
-
-        return docs.Select(doc =>
-            {
-                var primary = fields.Find(field => field.Id == doc.PrimaryFieldId);
-                var actual = fields.Find(field => field.Id == doc.ActualFieldId);
-                
-                return new DocWithGeneralInfoModel
-                {
-                    Id = doc.Id, Designation = actual.Designation ?? primary?.Designation, FullName = actual.FullName ?? primary?.FullName,
-                    ApplicationArea = actual.ApplicationArea ?? primary?.ApplicationArea, CodeOKS = actual.CodeOKS ?? primary?.CodeOKS
-                };
-            })
-            .ToList();
     }
 
     public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
@@ -234,18 +185,19 @@ public class DocsService(
         await fieldsRepository.UpdateAsync(primary);
         return new OkResult();
     }
+    
+    public async Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public async Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset)
+    {
+        throw new NotImplementedException();
+    }
 
     public async Task IndexAllDocumentsAsync()
     {
-        var docs = GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
-        await searchRepository.IndexAllDocumentsAsync(docs);
-
-    }
-
-    public async Task IndexDocumentDataAsync(IFormFile file, long docId)
-    {
-        var s = new MemoryStream();
-        await file.CopyToAsync(s);
-        await searchRepository.IndexDocumentDataAsync(Convert.ToBase64String(s.ToArray()), docId);
+        throw new NotImplementedException();
     }
 }

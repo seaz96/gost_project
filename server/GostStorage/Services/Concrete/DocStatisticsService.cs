@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Concrete;
 
+//note(azanov.n): этот класс выглядит очень страшно, переделать бы
 public class DocStatisticsService(
-        IDocsRepository docsRepository,
         IDocStatisticsRepository docStatisticsRepository,
         IDocsService docsService)
     : IDocStatisticsService

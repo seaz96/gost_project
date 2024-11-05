@@ -167,7 +167,8 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
             return new BadRequestObjectResult(new { Field = nameof(userAdminEditModel.Login) });
         }
         
-        if (user.Role != UserRoles.User && userPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value != "Heisenberg")
+        if (user.Role != UserRoles.User &&
+            userPrincipal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value != "Heisenberg")
         {
             return new BadRequestObjectResult("You don't have permission");
         }
