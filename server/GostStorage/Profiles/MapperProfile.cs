@@ -10,5 +10,10 @@ public class MapperProfile : Profile
     {
         CreateMap<AddNewDocDtoModel, FieldEntity>();
         CreateMap<UpdateFieldDtoModel, FieldEntity>();
+        CreateMap<FieldEntity, GostsFtsDocument>();
+        CreateMap<FtsSearchEntity, ShortInfoDocumentModel>()
+            .ForMember(
+                dest => dest.RelevanceMark,
+                options => options.MapFrom(x => Math.Round(x.Score * 5)));
     }
 }

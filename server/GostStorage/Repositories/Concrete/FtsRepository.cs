@@ -21,10 +21,10 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
 
     public async Task IndexAllDocumentsAsync(List<FtsIndexModel> documents)
     {
-        await Task.WhenAll(documents.Select(IndexDocument)).ConfigureAwait(false);
+        await Task.WhenAll(documents.Select(IndexDocumentAsync)).ConfigureAwait(false);
     }
 
-    public async Task IndexDocument(FtsIndexModel document)
+    public async Task IndexDocumentAsync(FtsIndexModel document)
     {
          var request = new HttpRequestMessage(HttpMethod.Post, $"{ftsApiUrl}/index")
          {

@@ -1,3 +1,4 @@
+using AutoMapper;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
@@ -14,7 +15,8 @@ public class DocsService(
         IReferencesRepository referencesRepository,
         IFieldsService fieldsService,
         IFilesRepository filesRepository,
-        ISearchRepository searchRepository)
+        ISearchRepository searchRepository,
+        IMapper mapper)
     : IDocsService
 {
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
@@ -55,7 +57,10 @@ public class DocsService(
         await fieldsRepository.UpdateAsync(primaryField);
         await fieldsRepository.UpdateAsync(actualField);
 
-        IndexAllDocumentsAsync();
+        var ftsDocument = mapper.Map<GostsFtsDocument>(primaryField);
+        ftsDocument.Id = docId;
+        var indexModel = new FtsIndexModel { Document = ftsDocument };
+        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
         return docId;
     }
@@ -73,8 +78,7 @@ public class DocsService(
         await fieldsRepository.DeleteAsync(doc.ActualFieldId);
         
         await docsRepository.DeleteAsync(id);
-        
-        IndexAllDocumentsAsync();
+        await searchRepository.DeleteDocumentAsync(id);
 
         return new OkObjectResult("Document deleted successfully.");
     }
@@ -102,7 +106,10 @@ public class DocsService(
             await fieldsRepository.UpdateAsync(actualField);
         }
         
-        IndexAllDocumentsAsync();
+        var ftsDocument = mapper.Map<GostsFtsDocument>(actualField);
+        ftsDocument.Id = id;
+        var indexModel = new FtsIndexModel { Document = ftsDocument };
+        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
         return new OkObjectResult("Status changed successfully.");
     }
@@ -188,12 +195,14 @@ public class DocsService(
     
     public async Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query)
     {
-        throw new NotImplementedException();
+        var result = await searchRepository.SearchAsync(query);
+        return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
     }
     
     public async Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset)
     {
-        throw new NotImplementedException();
+        var result = await searchRepository.SearchAllAsync(limit, offset);
+        return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
     }
 
     public async Task IndexAllDocumentsAsync()

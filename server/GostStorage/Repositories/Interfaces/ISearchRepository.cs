@@ -10,7 +10,7 @@ public interface ISearchRepository
 
     public Task IndexAllDocumentsAsync(List<FtsIndexModel> documents);
 
-    public Task IndexDocument(FtsIndexModel document);
+    public Task IndexDocumentAsync(FtsIndexModel document);
 
     public Task DeleteDocumentAsync(long docId);
 }
