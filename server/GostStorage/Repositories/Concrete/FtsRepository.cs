@@ -1,37 +1,84 @@
-﻿using GostStorage.Models.Docs;
+﻿using System.Collections;
+using GostStorage.Models.Docs;
 using GostStorage.Repositories.Interfaces;
+using Newtonsoft.Json;
 
 namespace GostStorage.Repositories.Concrete;
 
-public class FtsRepository : ISearchRepository
+public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRepository
 {
-    public Task<FtsSearchEntity> SearchAsync(FtsSearchQuery query)
+    public async Task<List<FtsSearchEntity>?> SearchAsync(FtsSearchQuery query)
     {
-        throw new NotImplementedException();
+        var queryParams = CreateQuery(query);
+        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search?{queryParams}").ConfigureAwait(false);
     }
 
-    public Task<FtsSearchEntity> SearchAllAsync(int limit, int offset)
+    public async Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset)
     {
-        throw new NotImplementedException();
+        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?limit={limit}&offset={offset}")
+            .ConfigureAwait(false);
     }
 
-    public Task IndexAllDocumentsAsync(List<FtsIndexModel> documentss)
+    public async Task IndexAllDocumentsAsync(List<FtsIndexModel> documents)
     {
-        throw new NotImplementedException();
+        await Task.WhenAll(documents.Select(IndexDocument)).ConfigureAwait(false);
     }
 
-    public Task IndexDocument(FtsIndexModel document)
+    public async Task IndexDocument(FtsIndexModel document)
     {
-        throw new NotImplementedException();
+         var request = new HttpRequestMessage(HttpMethod.Post, $"{ftsApiUrl}/index")
+         {
+             Content = new StringContent(JsonConvert.SerializeObject(document))
+         };
+        
+         await httpClient.SendAsync(request).ConfigureAwait(false);
     }
-
-    public Task IndexDocumentDataAsync(string data, long docId)
+    
+    public async Task DeleteDocumentAsync(long docId)
     {
-        throw new NotImplementedException();
+        var request = new HttpRequestMessage(HttpMethod.Delete, $"{ftsApiUrl}/delete/{docId}");
+        await httpClient.SendAsync(request).ConfigureAwait(false);
     }
-
-    public Task DeleteDocumentAsync(long docId)
+    
+    private async Task<TResult?> SendGetRequestAsync<TResult>(string url)
     {
-        throw new NotImplementedException();
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        
+        var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+        
+        return JsonConvert.DeserializeObject<TResult>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+    }
+    
+    private string CreateQuery(object request, string separator = ",")
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var properties = request.GetType().GetProperties()
+            .Where(x => x.CanRead)
+            .Where(x => x.GetValue(request, null) != null)
+            .ToDictionary(x => x.Name, x => x.GetValue(request, null));
+
+        var propertyNames = properties
+            .Where(x => !(x.Value is string) && x.Value is IEnumerable)
+            .Select(x => x.Key)
+            .ToList();
+
+        foreach (var key in propertyNames)
+        {
+            var valueType = properties[key].GetType();
+            var valueElemType = valueType.IsGenericType
+                ? valueType.GetGenericArguments()[0]
+                : valueType.GetElementType();
+            if (valueElemType.IsPrimitive || valueElemType == typeof (string))
+            {
+                var enumerable = properties[key] as IEnumerable;
+                properties[key] = string.Join(separator, enumerable.Cast<object>());
+            }
+        }
+
+        return string.Join("&", properties
+            .Select(x => string.Concat(
+                Uri.EscapeDataString(x.Key), "=",
+                Uri.EscapeDataString(x.Value.ToString()))));
     }
 }

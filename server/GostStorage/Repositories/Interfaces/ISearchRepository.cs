@@ -4,9 +4,9 @@ namespace GostStorage.Repositories.Interfaces;
 
 public interface ISearchRepository
 {
-    public Task<FtsSearchEntity> SearchAsync(FtsSearchQuery query);
+    public Task<List<FtsSearchEntity>?> SearchAsync(FtsSearchQuery query);
 
-    public Task<FtsSearchEntity> SearchAllAsync(int limit, int offset);
+    public Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset);
 
     public Task IndexAllDocumentsAsync(List<FtsIndexModel> documents);
 

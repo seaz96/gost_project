@@ -25,6 +25,9 @@ public static class InfrastructureStartUp
         var minioPort = configuration.GetValue<string>("MINIO_PORT");
         var minioHost = configuration.GetValue<string>("MINIO_HOST");
         
+        // ftsApi
+        var ftsApiUrl = configuration.GetValue<string>("FULLTEXTSEARCH_URL");
+        
         serviceCollection.AddDbContext<DataContext>(options =>
         {
             options.UseNpgsql($"Port={dbPort}; Database={dbName}; Username={dbUser}; Host={dbHost}; Password={dbPassword};");
@@ -39,6 +42,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
         serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@{minioHost}:{minioPort}/"));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
-        serviceCollection.AddScoped<ISearchRepository, FtsRepository>();
+        serviceCollection.AddScoped<ISearchRepository>(
+            serviceProvider => new FtsRepository(serviceProvider.GetService<HttpClient>()!, ftsApiUrl!));
     }
 }
