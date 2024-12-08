@@ -16,10 +16,7 @@ public class SentryService(string token, long chatId) : ISentryService
 
         await _botClient.SendTextMessageAsync(chatId,
             "@qwuipss443 @seaz96\n\n" +
-            $"{exception.Message}\n\n{exception.StackTrace}\n\n" +
-            "\nHeaders:\n" + string.Join(string.Empty, request.Headers.Select(h => $"{h.Key}: {h.Value}\n")) +
-            "\nQuery:\n" + string.Join(string.Empty, request.Query.Select(p => $"{p.Key}: {p.Value}\n")) +
-            "\nContentType: " + request.ContentType +
-            "\n\nBody:\n" + body);
+            $"{exception.Message}\n\n" 
+            + httpContext.TraceIdentifier);
     }
 }
