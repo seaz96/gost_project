@@ -81,7 +81,7 @@ const GostRow:React.FC<GostRowProps> = ({gost, gostsParams}) => {
           </div>
         </Popover>
         <tr>
-          <td>{gost.codeOKS}</td>
+          <td>{gost.codeOks}</td>
           <td>{gost.designation}</td>
           <td className={styles.gostDescription}>{gost.fullName}</td>
           {gostsParams && Object.values(gostsParams).some(param => param) && 

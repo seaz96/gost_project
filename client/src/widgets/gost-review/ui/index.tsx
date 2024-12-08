@@ -93,8 +93,8 @@ const GostReview:React.FC<GostReviewProps> = props => {
                         </tr>
                         <tr>
                             <td>Код ОКС</td>
-                            <td>{gost.primary.codeOKS}</td>
-                            <td>{gost.actual.codeOKS}</td>
+                            <td>{gost.primary.codeOks}</td>
+                            <td>{gost.actual.codeOks}</td>
                         </tr>
                         <tr>
                             <td>Сфера деятельности</td>

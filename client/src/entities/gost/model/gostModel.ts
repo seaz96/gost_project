@@ -14,7 +14,7 @@ export type Gost = {
 export type GostFields = {
     "designation": string,
     "fullName": string,
-    "codeOKS": string,
+    "codeOks": string,
     "activityField": string,
     "acceptanceYear": string,
     "commissionYear": string,
@@ -53,14 +53,14 @@ export type GostChanges = {
 export type GostGeneralInfo = {
     id: number,
     designation: string,
-    codeOKS: string,
+    codeOks: string,
     fullName: string,
     applicationArea: string
 }
 
 export type GostViewInfo =   {
     id: number
-    codeOKS: string
+    codeOks: string
     designation: string
     fullName: string
     applicationArea: string

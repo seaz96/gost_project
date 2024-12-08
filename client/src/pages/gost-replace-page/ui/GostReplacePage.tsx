@@ -13,7 +13,7 @@ function getGostStub() {
     return {
         "designation": '',
         "fullName": '',
-        "codeOKS": '',
+        "codeOks": '',
         "activityField": '',
         "acceptanceYear": '',
         "commissionYear":  '',

@@ -1,7 +1,7 @@
 export type GostToSave = {
     "designation": string,
     "fullName": string,
-    "codeOKS": string,
+    "codeOks": string,
     "activityField": string,
     "acceptanceYear": string,
     "commissionYear": string,

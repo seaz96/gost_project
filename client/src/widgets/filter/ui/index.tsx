@@ -22,7 +22,7 @@ const Filter: React.FC<FilterProps> = props => {
     "name": '',
     "designation": '',
     "fullName": '',
-    "codeOKS": '',
+    "codeOks": '',
     "activityField": '',
     "acceptanceYear": '',
     "commissionYear":  '',
