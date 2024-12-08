@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Newtonsoft.Json;
 using Telegram.Bot;
 
@@ -16,7 +17,7 @@ public class SentryService(string token, long chatId) : ISentryService
 
         await _botClient.SendTextMessageAsync(chatId,
             "@qwuipss443 @seaz96\n\n" +
-            $"{exception.Message}\n\n" 
-            + httpContext.TraceIdentifier);
+            $"{exception.Message}\n\n"
+            + $"Trace id: {Activity.Current?.TraceId}");
     }
 }

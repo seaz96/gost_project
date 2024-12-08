@@ -8,7 +8,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import {useEffect} from "react";
 
 const GostsPage = () => {
-    const {gosts, countFetched, count, gostsParams, setGostParams, fetchGostsData } = useGostsWithPagination('/docs/search-valid')
+    const {gosts, countFetched, count, gostsParams, setGostParams, fetchGostsData } = useGostsWithPagination('/docs/search')
 
     useEffect(() => {
         function checkScrollable() {
