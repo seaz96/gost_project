@@ -220,7 +220,7 @@ public class DocsService(
             if (primary.Status is DocStatuses.Inactive)
                 continue;
             
-            Log.Logger.Information($"indexing {doc.ActualFieldId}");
+            Log.Logger.Information($"indexing {doc.Id}");
             await searchRepository.IndexDocumentAsync(new FtsIndexModel
             {
                 Document = new GostsFtsDocument
