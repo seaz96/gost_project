@@ -59,7 +59,7 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
     private string CreateQuery(FtsSearchQuery request)
     {
         var query = new StringBuilder();
-        query.Append($"take={request.Take}&skip={request.Skip}");
+        query.Append($"take={request.Limit}&skip={request.Offset}");
 
         if (request.Text is not null)
             query.Append($"&text={request.Text}");
