@@ -6,6 +6,7 @@ using GostStorage.Navigations;
 using GostStorage.Repositories.Interfaces;
 using GostStorage.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace GostStorage.Services.Concrete;
 
@@ -207,6 +208,41 @@ public class DocsService(
 
     public async Task IndexAllDocumentsAsync()
     {
-        throw new NotImplementedException();
+        var docs = await docsRepository.GetAllAsync();
+        var fields = await fieldsRepository.GetAllAsync();
+
+        foreach (var doc in docs)
+        {
+            var primary = fields.FirstOrDefault(x => x.Id == doc.PrimaryFieldId);
+            var actual = fields.FirstOrDefault(x => x.Id == doc.ActualFieldId);
+            
+            if (primary.Status is DocStatuses.Inactive)
+                continue;
+            
+            Log.Logger.Information($"indexing {doc.ActualFieldId}");
+            await searchRepository.IndexDocumentAsync(new FtsIndexModel
+            {
+                Document = new GostsFtsDocument
+                {
+                    Id = doc.Id,
+                    Designation = actual.Designation ?? primary.Designation,
+                    FullName = actual.FullName ?? primary.FullName,
+                    CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+                    ActivityField = actual.ActivityField ?? primary.ActivityField,
+                    AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
+                    CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
+                    Author = actual.Author ?? primary.Author,
+                    AcceptedFirstTimeOrReplaced = actual.AcceptedFirstTimeOrReplaced ?? primary.AcceptedFirstTimeOrReplaced,
+                    Content = actual.Content ?? primary.Content,
+                    KeyWords = actual.KeyWords ?? primary.KeyWords,
+                    ApplicationArea = actual.ApplicationArea ?? primary.ApplicationArea,
+                    AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
+                    Changes = actual.Changes ?? primary.Changes,
+                    Amendments = actual.Amendments ?? primary.Amendments,
+                    Status = primary.Status,
+                    Harmonization = primary.Harmonization,
+                }
+            });
+        }
     }
 }

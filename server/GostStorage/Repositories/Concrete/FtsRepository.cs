@@ -1,7 +1,9 @@
 ﻿using System.Collections;
+using System.Text;
 using GostStorage.Models.Docs;
 using GostStorage.Repositories.Interfaces;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace GostStorage.Repositories.Concrete;
 
@@ -15,7 +17,7 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
 
     public async Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset)
     {
-        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?limit={limit}&offset={offset}")
+        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?take={limit}&skip={offset}")
             .ConfigureAwait(false);
     }
 
@@ -28,10 +30,16 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
     {
          var request = new HttpRequestMessage(HttpMethod.Post, $"{ftsApiUrl}/index")
          {
-             Content = new StringContent(JsonConvert.SerializeObject(document))
+             Content = new StringContent(
+                 JsonConvert.SerializeObject(document),
+                 Encoding.UTF8, 
+                 "application/json")
          };
         
-         await httpClient.SendAsync(request).ConfigureAwait(false);
+         Log.Logger.Information($"Indexing document {JsonConvert.SerializeObject(document)}");
+         
+         var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+         response.EnsureSuccessStatusCode();
     }
     
     public async Task DeleteDocumentAsync(long docId)
@@ -42,21 +50,29 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
     
     private async Task<TResult?> SendGetRequestAsync<TResult>(string url)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, url);
-        
+        var request = new HttpRequestMessage(HttpMethod.Get, url);
         var response = await httpClient.SendAsync(request).ConfigureAwait(false);
         
         return JsonConvert.DeserializeObject<TResult>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
     }
-    
-    private string CreateQuery(object request, string separator = ",")
-    {
-        ArgumentNullException.ThrowIfNull(request);
 
-        var properties = request.GetType().GetProperties()
+    private string CreateQuery(FtsSearchQuery request)
+    {
+        var query = new StringBuilder();
+        query.Append($"take={request.Take}&skip={request.Skip}");
+
+        if (request.Text is not null)
+            query.Append($"&text={request.Text}");
+
+        var filters = request.SearchFilters;
+
+        if (filters is null) 
+            return query.ToString();
+        
+        var properties = filters.GetType().GetProperties()
             .Where(x => x.CanRead)
-            .Where(x => x.GetValue(request, null) != null)
-            .ToDictionary(x => x.Name, x => x.GetValue(request, null));
+            .Where(x => x.GetValue(filters, null) != null)
+            .ToDictionary(x => x.Name, x => x.GetValue(filters, null));
 
         var propertyNames = properties
             .Where(x => !(x.Value is string) && x.Value is IEnumerable)
@@ -69,16 +85,19 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
             var valueElemType = valueType.IsGenericType
                 ? valueType.GetGenericArguments()[0]
                 : valueType.GetElementType();
-            if (valueElemType.IsPrimitive || valueElemType == typeof (string))
+            if (valueElemType.IsPrimitive || valueElemType == typeof(string))
             {
                 var enumerable = properties[key] as IEnumerable;
-                properties[key] = string.Join(separator, enumerable.Cast<object>());
+                properties[key] = string.Join(',', enumerable.Cast<object>());
             }
+
+            query.Append(string.Join("&", properties
+                .Select(x => string.Concat(
+                    "SearchFilters.",
+                    Uri.EscapeDataString(x.Key), "=",
+                    Uri.EscapeDataString(x.Value.ToString())))));
         }
 
-        return string.Join("&", properties
-            .Select(x => string.Concat(
-                Uri.EscapeDataString(x.Key), "=",
-                Uri.EscapeDataString(x.Value.ToString()))));
+        return query.ToString();
     }
 }

@@ -232,7 +232,7 @@ public class DocsController(
     [HttpPost("index-all")]
     public async Task<ActionResult> IndexAllAsync()
     {
-        _ = docsService.IndexAllDocumentsAsync();
+        await docsService.IndexAllDocumentsAsync();
         return Ok();
     }
 
