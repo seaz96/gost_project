@@ -4,7 +4,7 @@ using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using Microsoft.EntityFrameworkCore;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Concrete;
 
 public class DocsRepository(DataContext context) : IDocsRepository
 {
@@ -13,7 +13,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
         return await context.Docs.ToListAsync();
     }
 
-    public async Task<List<DocEntity>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
+    public async Task<List<DocEntity>> GetDocumentsAsync(
+        SearchParametersModel parameters,
+        bool? isValid,
+        int limit,
+        int lastId)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
 
@@ -24,10 +28,34 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .Where(x => x.Id > lastId)
             .Take(limit)
             .ToList();
-
+        
         return docs;
     }
-
+    
+    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
+    {
+        var docs = context.Fields
+            .Join(context.Docs,
+                f => f.DocId,
+                d => d.Id,
+                (f, d) => new { d.Id, f.Designation })
+            .Where(x => designations.Contains(x.Designation))
+            .Select(x => new { x.Id, x.Designation })
+            .Distinct()
+            .ToList();
+        
+        return context.Docs
+            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || 
+                        docs.Any(f => f.Id == x.ActualFieldId.Value))
+            .Distinct()
+            .Select(x => new DocWithGeneralInfoModel
+            {
+                Id = x.Id,
+                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
+            })
+            .ToList();
+    }
+    
     public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)
     {
         var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
@@ -60,7 +88,11 @@ public class DocsRepository(DataContext context) : IDocsRepository
                 (doc, field) => new { doc.Id, field.Designation })
             .Where(doc => docDesignations.Contains(doc.Designation))
             .GroupBy(doc => doc.Id)
-            .Select(group => new DocWithGeneralInfoModel { Id = group.First().Id, Designation = group.First().Designation })
+            .Select(group => new DocWithGeneralInfoModel
+                {
+                    Id = group.First().Id,
+                    Designation = group.First().Designation
+                })
             .AsSingleQuery()
             .ToListAsync();
     }
@@ -75,28 +107,5 @@ public class DocsRepository(DataContext context) : IDocsRepository
     public async Task DeleteAsync(long id)
     {
         await context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
-    }
-
-    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
-    {
-        var docs = context.Fields
-            .Join(context.Docs,
-                f => f.DocId,
-                d => d.Id,
-                (f, d) => new { d.Id, f.Designation })
-            .Where(x => designations.Contains(x.Designation))
-            .Select(x => new { x.Id, x.Designation })
-            .Distinct()
-            .ToList();
-
-        return context.Docs
-            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || docs.Any(f => f.Id == x.ActualFieldId.Value))
-            .Distinct()
-            .Select(x => new DocWithGeneralInfoModel
-            {
-                Id = x.Id,
-                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
-            })
-            .ToList();
     }
 }

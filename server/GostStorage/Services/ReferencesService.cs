@@ -2,13 +2,15 @@ using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Services.Interfaces;
 
-namespace GostStorage.Services;
+namespace GostStorage.Services.Concrete;
 
 public class ReferencesService(
-    IReferencesRepository referencesRepository,
-    IDocsRepository docsRepository,
-    IDocsService docsService) : IReferencesService
+        IReferencesRepository referencesRepository,
+        IDocsRepository docsRepository,
+        IDocsService docsService)
+    : IReferencesService
 {
     public async Task AddReferencesAsync(List<string> docChildren, long parentId)
     {
@@ -17,14 +19,17 @@ public class ReferencesService(
 
         var referenceIds = docChildren.Select(designation =>
         {
-            if (existingDocs.Any(x => x.Designation == designation)) return existingDocs.First(x => x.Designation == designation).Id;
+            if (existingDocs.Any(x => x.Designation == designation))
+            {
+                return existingDocs.First(x => x.Designation == designation).Id;
+            }
 
-            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive });
-
+            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
+            
             docId.Wait();
             return docId.Result;
-        });
-
+        }); 
+        
         var references = referenceIds
             .Select(childId => new DocReferenceEntity { ParentalDocId = parentId, ChildDocId = childId })
             .ToList();
@@ -45,13 +50,16 @@ public class ReferencesService(
 
         var referenceIds = docChildren.Select(designation =>
         {
-            if (existingDocs.Any(x => x.Designation == designation)) return existingDocs.First(x => x.Designation == designation).Id;
+            if (existingDocs.Any(x => x.Designation == designation))
+            {
+                return existingDocs.First(x => x.Designation == designation).Id;
+            }
 
-            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive });
+            var docId = docsService.AddNewDocAsync(new FieldEntity { Designation = designation, Status = DocStatuses.Inactive});
             docId.Wait();
             return docId.Result;
-        }).ToList();
-
+        }).ToList(); 
+        
         await referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
     }
 }

@@ -1,33 +1,41 @@
-using Elastic.Clients.Elasticsearch;
+using AutoMapper;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Repositories.Interfaces;
+using GostStorage.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
-namespace GostStorage.Services;
+namespace GostStorage.Services.Concrete;
 
 public class DocsService(
-    IDocsRepository docsRepository,
-    IFieldsRepository fieldsRepository,
-    IReferencesRepository referencesRepository,
-    IFieldsService fieldsService,
-    IFilesRepository filesRepository,
-    ISearchRepository searchRepository) : IDocsService
+        IDocsRepository docsRepository,
+        IFieldsRepository fieldsRepository,
+        IReferencesRepository referencesRepository,
+        IFieldsService fieldsService,
+        IFilesRepository filesRepository,
+        ISearchRepository searchRepository,
+        IMapper mapper)
+    : IDocsService
 {
     public async Task<long> AddNewDocAsync(FieldEntity primaryField)
     {
-        if (primaryField.Designation is not null) primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
+        if (primaryField.Designation is not null)
+        {
+            primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
+        }
         var doc = await docsRepository.GetByDesignationAsync(primaryField.Designation);
-
+        
         if (doc is not null)
         {
             await fieldsService.UpdateAsync(primaryField, doc.Id);
             await ChangeStatusAsync(doc.Id, primaryField.Status);
             return doc.Id;
         }
-
+        
         var actualField = new FieldEntity
         {
             LastEditTime = DateTime.UtcNow,
@@ -35,20 +43,26 @@ public class DocsService(
         };
         var primaryId = await fieldsRepository.AddAsync(primaryField);
         var actualId = await fieldsRepository.AddAsync(actualField);
-
+        
         doc = new DocEntity { ActualFieldId = actualId, PrimaryFieldId = primaryId };
-
+        
         var docId = await docsRepository.AddAsync(doc);
-
-        if (docId == 0) await Task.Delay(1000);
-
+        
+        if (docId == 0)
+        {
+            await Task.Delay(1000);
+        }
+        
         primaryField.DocId = docId;
-        actualField.DocId = docId;
-
+        actualField.DocId = docId; 
+        
         await fieldsRepository.UpdateAsync(primaryField);
         await fieldsRepository.UpdateAsync(actualField);
 
-        IndexAllDocumentsAsync();
+        var ftsDocument = mapper.Map<GostsFtsDocument>(primaryField);
+        ftsDocument.Id = docId;
+        var indexModel = new FtsIndexModel { Document = ftsDocument };
+        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
         return docId;
     }
@@ -57,14 +71,16 @@ public class DocsService(
     {
         var doc = await docsRepository.GetByIdAsync(id);
 
-        if (doc is null) return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
-
+        if (doc is null)
+        {
+            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+        }
+        
         await fieldsRepository.DeleteAsync(doc.PrimaryFieldId);
         await fieldsRepository.DeleteAsync(doc.ActualFieldId);
-
+        
         await docsRepository.DeleteAsync(id);
-
-        IndexAllDocumentsAsync();
+        await searchRepository.DeleteDocumentAsync(id);
 
         return new OkObjectResult("Document deleted successfully.");
     }
@@ -73,24 +89,29 @@ public class DocsService(
     {
         var doc = await docsRepository.GetByIdAsync(id);
 
-        if (doc is null) return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
-
+        if (doc is null)
+        {
+            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+        }
+        
         var primaryField = await fieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
         var actualField = await fieldsRepository.GetByIdAsync(doc.ActualFieldId);
-
+        
         if (primaryField is not null)
         {
             primaryField.Status = status;
             await fieldsRepository.UpdateAsync(primaryField);
         }
-
         if (actualField is not null)
         {
             actualField.Status = status;
             await fieldsRepository.UpdateAsync(actualField);
         }
-
-        IndexAllDocumentsAsync();
+        
+        var ftsDocument = mapper.Map<GostsFtsDocument>(actualField);
+        ftsDocument.Id = id;
+        var indexModel = new FtsIndexModel { Document = ftsDocument };
+        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
         return new OkObjectResult("Status changed successfully.");
     }
@@ -98,12 +119,15 @@ public class DocsService(
     public async Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id)
     {
         var doc = await docsRepository.GetByIdAsync(id);
-
-        if (doc is null) return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
-
+        
+        if (doc is null)
+        {
+            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+        }
+        
         var docs = await docsRepository.GetAllAsync();
         var fields = await fieldsRepository.GetAllAsync();
-
+        
         var references = (await referencesRepository.GetAllAsync())
             .Where(reference => reference.ParentalDocId == id)
             .Select(reference =>
@@ -120,7 +144,7 @@ public class DocsService(
                 };
             })
             .ToList();
-
+        
         var result = new DocumentWithFieldsModel
         {
             Primary = await fieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
@@ -134,7 +158,10 @@ public class DocsService(
 
     public async Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
     {
-        if (parameters.Name is not null) parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
 
         var docs = await docsRepository.GetDocumentsAsync(parameters, isValid, limit, lastId);
         var fields = await fieldsRepository.GetFieldsByDocIds(docs.Select(x => x.Id).ToList());
@@ -147,63 +174,15 @@ public class DocsService(
 
         return docsWithFields;
     }
-
-    public async Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset)
-    {
-        if (parameters.Name is not null) parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
-
-        var response = new SearchResponse<DocumentESModel>();
-        if (parameters.GetType().GetProperties()
-            .Where(pi => pi.PropertyType == typeof(string))
-            .Select(pi => pi.GetValue(parameters))
-            .All(value => value is null))
-            response = await searchRepository.SearchAllAsync(limit, offset);
-        else
-            response = await searchRepository.SearchValidFieldsAsync(parameters, limit, offset);
-
-        var docResults = new Dictionary<long, ShortInfoDocumentModel>();
-        var maxScore = response.HitsMetadata.MaxScore;
-
-        foreach (var hit in response.Hits)
-        {
-            var fieldEntity = hit.Source?.Field;
-            Console.WriteLine($"{maxScore}, {hit.Score.Value}, {maxScore / hit.Score.Value * 5}");
-            if (docResults.ContainsKey(fieldEntity.DocId))
-                continue;
-            docResults[fieldEntity.DocId] = new ShortInfoDocumentModel
-            {
-                CodeOKS = fieldEntity.CodeOKS, Designation = fieldEntity.Designation, FullName = fieldEntity.FullName,
-                Id = fieldEntity.DocId, RelevanceMark = Convert.ToInt32(hit.Score.Value / maxScore * 5), ApplicationArea = fieldEntity.ApplicationArea
-            };
-        }
-
-        return docResults.Values.ToList();
-    }
-
+    
     public async Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid)
     {
-        if (parameters.Name is not null) parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        if (parameters.Name is not null)
+        {
+            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+        }
 
         return await docsRepository.GetCountOfDocumentsAsync(parameters, isValid);
-    }
-
-    public async Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync()
-    {
-        var docs = await docsRepository.GetAllAsync();
-        var fields = await fieldsRepository.GetAllAsync();
-
-        return docs.Select(doc =>
-            {
-                var primary = fields.Find(field => field.Id == doc.PrimaryFieldId);
-                var actual = fields.Find(field => field.Id == doc.ActualFieldId);
-
-                return new DocWithGeneralInfoModel
-                {
-                    Id = doc.Id, Designation = actual.Designation ?? primary?.Designation, FullName = actual.FullName ?? primary?.FullName,
-                    ApplicationArea = actual.ApplicationArea ?? primary?.ApplicationArea, CodeOKS = actual.CodeOKS ?? primary?.CodeOKS
-                };
-            })
-            .ToList();
     }
 
     public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
@@ -215,17 +194,56 @@ public class DocsService(
         await fieldsRepository.UpdateAsync(primary);
         return new OkResult();
     }
+    
+    public async Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query)
+    {
+        var result = await searchRepository.SearchAsync(query);
+        return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
+    }
+    
+    public async Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset)
+    {
+        var result = await searchRepository.SearchAllAsync(limit, offset);
+        return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
+    }
 
     public async Task IndexAllDocumentsAsync()
     {
-        var docs = GetDocumentsAsync(new SearchParametersModel(), true, 100000, 0).Result;
-        await searchRepository.IndexAllDocumentsAsync(docs);
-    }
+        var docs = await docsRepository.GetAllAsync();
+        var fields = await fieldsRepository.GetAllAsync();
 
-    public async Task IndexDocumentDataAsync(IFormFile file, long docId)
-    {
-        var s = new MemoryStream();
-        await file.CopyToAsync(s);
-        await searchRepository.IndexDocumentDataAsync(Convert.ToBase64String(s.ToArray()), docId);
+        foreach (var doc in docs)
+        {
+            var primary = fields.FirstOrDefault(x => x.Id == doc.PrimaryFieldId);
+            var actual = fields.FirstOrDefault(x => x.Id == doc.ActualFieldId);
+            
+            if (primary.Status is DocStatuses.Inactive)
+                continue;
+            
+            Log.Logger.Information($"indexing {doc.ActualFieldId}");
+            await searchRepository.IndexDocumentAsync(new FtsIndexModel
+            {
+                Document = new GostsFtsDocument
+                {
+                    Id = doc.Id,
+                    Designation = actual.Designation ?? primary.Designation,
+                    FullName = actual.FullName ?? primary.FullName,
+                    CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+                    ActivityField = actual.ActivityField ?? primary.ActivityField,
+                    AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
+                    CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
+                    Author = actual.Author ?? primary.Author,
+                    AcceptedFirstTimeOrReplaced = actual.AcceptedFirstTimeOrReplaced ?? primary.AcceptedFirstTimeOrReplaced,
+                    Content = actual.Content ?? primary.Content,
+                    KeyWords = actual.KeyWords ?? primary.KeyWords,
+                    ApplicationArea = actual.ApplicationArea ?? primary.ApplicationArea,
+                    AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
+                    Changes = actual.Changes ?? primary.Changes,
+                    Amendments = actual.Amendments ?? primary.Amendments,
+                    Status = primary.Status,
+                    Harmonization = primary.Harmonization,
+                }
+            });
+        }
     }
 }

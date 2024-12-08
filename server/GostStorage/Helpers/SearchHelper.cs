@@ -15,9 +15,9 @@ public static class SearchHelper
             .Where(f => parameters.ActivityField == null || (f.ActivityField ?? "").ToLower()
                 .Contains(parameters.ActivityField.ToLower()))
             .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
-            .Where(f => parameters.Name == null ||
+            .Where(f => parameters.Name == null || 
                         (f.Designation ?? "").ToLower()
-                        .Contains(parameters.Name.ToLower()) ||
+                        .Contains(parameters.Name.ToLower()) || 
                         (f.FullName ?? "").ToLower()
                         .Contains(parameters.Name.ToLower()))
             .Where(f => parameters.AcceptanceYear == null || f.AcceptanceYear.Value == parameters.AcceptanceYear.Value)

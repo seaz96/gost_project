@@ -3,29 +3,31 @@ using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services;
+namespace GostStorage.Services.Interfaces;
 
 public interface IDocsService
 {
-    public Task<long> AddNewDocAsync(FieldEntity primaryField);
+    Task<long> AddNewDocAsync(FieldEntity primaryField);
 
-    public Task<IActionResult> DeleteDocAsync(long id);
+    Task<IActionResult> DeleteDocAsync(long id);
 
-    public Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
+    Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
+    
+    Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
 
-    public Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
+    Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(
+        SearchParametersModel parameters,
+        bool? isValid,
+        int limit,
+        int lastId);
 
-    public Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId);
+    Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
 
-    public Task<List<ShortInfoDocumentModel>> SearchValidAsync(SearchParametersModel parameters, int limit, int offset);
+    Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
 
-    public Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
+    Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query);
 
-    public Task<List<DocWithGeneralInfoModel>> GetDocsWithGeneralInfoAsync();
+    Task<List<ShortInfoDocumentModel>> SearchAllAsync(int limit, int offset);
 
-    public Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
-
-    public Task IndexAllDocumentsAsync();
-
-    public Task IndexDocumentDataAsync(IFormFile file, long docId);
+    Task IndexAllDocumentsAsync();
 }

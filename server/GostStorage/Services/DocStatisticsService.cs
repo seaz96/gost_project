@@ -4,15 +4,17 @@ using GostStorage.Models.Docs;
 using GostStorage.Models.Stats;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GostStorage.Services;
+namespace GostStorage.Services.Concrete;
 
-public class DocStatisticsService(IDocsRepository docsRepository, IDocStatisticsRepository docStatisticsRepository, IDocsService docsService)
+//note(azanov.n): этот класс выглядит очень страшно, переделать бы
+public class DocStatisticsService(
+        IDocStatisticsRepository docStatisticsRepository,
+        IDocsService docsService)
     : IDocStatisticsService
 {
-    private readonly IDocsRepository _docsRepository = docsRepository;
-
     public async Task AddAsync(DocStatisticEntity statistic)
     {
         await docStatisticsRepository.AddAsync(statistic);
@@ -25,7 +27,10 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
 
     public async Task<IActionResult> GetViews(GetViewsModel model)
     {
-        if (model.Designation is not null) model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
+        if (model.Designation is not null)
+        {
+            model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
+        }
 
         var docs = await docsService.GetDocumentsAsync(new SearchParametersModel(), null, 10000, 0);
         var statistics = await docStatisticsRepository.GetAllAsync();
@@ -33,7 +38,8 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
         return new OkObjectResult(statistics.Where(stat =>
             {
                 var doc = docs.FirstOrDefault(x =>
-                    x.DocId == stat.DocId && (string.IsNullOrEmpty(model.OrgBranch) || stat.OrgBranch == model.OrgBranch));
+                    x.DocId == stat.DocId &&
+                    (string.IsNullOrEmpty(model.OrgBranch) || stat.OrgBranch == model.OrgBranch));
 
                 return doc is not null && IsGetViewsDocPassedFilter(doc.Actual, doc.Primary, model, stat);
             })
@@ -84,11 +90,11 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
                 var doc = docs.FirstOrDefault(doc => doc.DocId == x.DocId);
                 return new
                 {
-                    x.DocId,
+                    DocId = x.DocId,
                     Designation = doc.Actual.Designation ?? doc.Primary.Designation,
                     FullName = doc.Actual.FullName ?? doc.Primary.FullName,
                     Action = x.Action.ToString(),
-                    x.Date
+                    Date = x.Date
                 };
             })
         });
@@ -97,9 +103,15 @@ public class DocStatisticsService(IDocsRepository docsRepository, IDocStatistics
     private static bool IsGetViewsDocPassedFilter(FieldEntity actualField, FieldEntity primaryField,
         GetViewsModel model, DocStatisticEntity statistic)
     {
-        return (model.Designation is not null ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation) : true) &&
-               (model.ActivityField is not null ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField) : true) &&
-               (model.CodeOKS is not null ? (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS) : true) &&
+        return (model.Designation is not null
+                   ? (actualField.Designation ?? primaryField.Designation).Contains(model.Designation)
+                   : true) &&
+               (model.ActivityField is not null
+                   ? (actualField.ActivityField ?? primaryField.ActivityField).Contains(model.ActivityField)
+                   : true) &&
+               (model.CodeOKS is not null
+                   ? (actualField.CodeOKS ?? primaryField.CodeOKS).Contains(model.CodeOKS)
+                   : true) &&
                (model.StartYear is not null ? model.StartYear <= statistic.Date : true) &&
                (model.EndYear is not null ? statistic.Date <= model.EndYear : true) &&
                statistic.Action == ActionType.View;
