@@ -3,8 +3,7 @@ using AutoMapper;
 using GostStorage.Helpers;
 using GostStorage.Middlewares.Extensions;
 using GostStorage.Profiles;
-using GostStorage.Services.Concrete;
-using GostStorage.Services.Interfaces;
+using GostStorage.Services;
 using GostStorage.StartUp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +11,7 @@ using Serilog;
 
 namespace GostStorage;
 
-static class Program
+internal static class Program
 {
     public static void Main(string[] args)
     {
@@ -25,7 +24,7 @@ static class Program
         AuthOptions.Initialize(securityKey);
 
         builder.Host.UseSerilog((ctx, lc) => lc.GetConfiguration());
-        
+
         builder.Services.AddControllers();
         builder.Services.AddAuthentication();
 
@@ -35,8 +34,8 @@ static class Program
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = AuthOptions.AUTH_TOKEN_ISSUER,
-                    ValidAudience = AuthOptions.AUTH_TOKEN_AUDIENCE,
+                    ValidIssuer = AuthOptions.AuthTokenIssuer,
+                    ValidAudience = AuthOptions.AuthTokenAudience,
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateIssuerSigningKey = true,
@@ -46,17 +45,19 @@ static class Program
                 };
             });
 
-        var mapper = new MapperConfiguration(config =>
-        {
-            config.AddProfile(new MapperProfile());
-        })
-        .CreateMapper();
+        var mapper = new MapperConfiguration(config => { config.AddProfile(new MapperProfile()); })
+            .CreateMapper();
+
+        var configuration = builder.Configuration;
 
         builder.Services.AddSingleton(mapper);
         builder.Services.AddLoggerServices();
-        builder.Services.AddInfrastructureServices(builder.Configuration);
+        builder.Services.AddInfrastructureServices(configuration);
         builder.Services.AddApplicationServices();
-        builder.Services.AddTransient<IPasswordHasher, Sha256PasswordHasher>();
+        builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
+        var sentryService = new SentryService(configuration.GetValue<string>("SENTRY_TOKEN")!, configuration.GetValue<long>("SENTRY_CHAT_ID"));
+        builder.Services.AddSingleton<ISentryService>(sentryService);
+
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -64,9 +65,9 @@ static class Program
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAll",
-                builder =>
+                corsPolicyBuilder =>
                 {
-                    builder
+                    corsPolicyBuilder
                         .WithOrigins(origins)
                         .WithMethods("POST", "GET", "DELETE", "PUT")
                         .AllowAnyHeader()
@@ -74,12 +75,14 @@ static class Program
                         .AllowCredentials();
                 });
         });
-        
+
         var app = builder.Build();
-    
+
+        app.UseBodyReader();
+        app.UseSentry();
         app.UseSwagger();
         app.UseSwaggerUI();
-        
+
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.Use(async (context, next) =>
@@ -89,7 +92,7 @@ static class Program
         });
         app.UseAuthentication();
         app.UseAuthorization();
-        app.UseSecurityHeadersComplementaryMiddleware();
+        app.UseSecurityHeadersComplementary();
         app.MapControllers();
 
         app.Run();

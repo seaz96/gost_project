@@ -12,12 +12,10 @@ public class AddNewDocDtoModel
     public string? CodeOKS { get; set; }
 
     public string? ActivityField { get; set; }
-    
-    [Range(1000, 9999)]
-    public int? AcceptanceYear { get; set; }
 
-    [Range(1000, 9999)]
-    public int? CommissionYear { get; set; }
+    [Range(1000, 9999)] public int? AcceptanceYear { get; set; }
+
+    [Range(1000, 9999)] public int? CommissionYear { get; set; }
 
     public string? Author { get; set; }
 
@@ -42,6 +40,6 @@ public class AddNewDocDtoModel
     public HarmonizationLevels Harmonization { get; set; }
 
     public bool IsPrimary { get; set; }
-    
+
     public List<string> References { get; set; }
 }

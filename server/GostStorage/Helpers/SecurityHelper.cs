@@ -3,31 +3,30 @@ using System.Security.Claims;
 using GostStorage.Entities;
 using Microsoft.IdentityModel.Tokens;
 
-namespace GostStorage.Helpers
+namespace GostStorage.Helpers;
+
+public abstract class SecurityHelper
 {
-    public class SecurityHelper
+    public static string GetAuthToken(UserEntity user)
     {
-        public static string GetAuthToken(UserEntity user)
+        var userId = user.Id.ToString();
+        var role = user.Role.ToString();
+
+        var claims = new List<Claim>
         {
-            var userId = user.Id.ToString();
-            var role = user.Role.ToString();
+            new(ClaimTypes.NameIdentifier, userId),
+            new(ClaimTypes.Role, role)
+        };
 
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, userId),
-                new(ClaimTypes.Role, role)
-            };
+        var jwt = new JwtSecurityToken(
+            claims: claims,
+            issuer: AuthOptions.AuthTokenIssuer,
+            audience: AuthOptions.AuthTokenIssuer,
+            expires: DateTime.UtcNow + AuthOptions.AuthTokenLifetime,
+            signingCredentials: new SigningCredentials(AuthOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
 
-            var jwt = new JwtSecurityToken(
-                    claims: claims,
-                    issuer: AuthOptions.AUTH_TOKEN_ISSUER,
-                    audience: AuthOptions.AUTH_TOKEN_ISSUER,
-                    expires: DateTime.UtcNow + AuthOptions.AuthTokenLifetime,
-                    signingCredentials: new SigningCredentials(AuthOptions.SymmetricSecurityKey, SecurityAlgorithms.HmacSha256));
+        var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-            var token = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return token;
-        }
+        return token;
     }
 }

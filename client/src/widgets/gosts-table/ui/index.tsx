@@ -12,7 +12,7 @@ import { UserContext } from 'entities/user';
 
 interface GostsTableProps {
   gosts: gostModel.GostViewInfo[]
-  gostsParams: gostModel.GostFields & { name?: string } | null
+  gostsParams: gostModel.GostFields & { text?: string } | null
 }
 
 const GostsTable: React.FC<GostsTableProps> = props => {
@@ -41,7 +41,7 @@ const GostsTable: React.FC<GostsTableProps> = props => {
 
 interface GostRowProps {
   gost: gostModel.GostViewInfo
-  gostsParams: gostModel.GostFields & { name?: string } | null
+  gostsParams: gostModel.GostFields & { text?: string } | null
 }
 
 const GostRow:React.FC<GostRowProps> = ({gost, gostsParams}) => {
@@ -81,7 +81,7 @@ const GostRow:React.FC<GostRowProps> = ({gost, gostsParams}) => {
           </div>
         </Popover>
         <tr>
-          <td>{gost.codeOKS}</td>
+          <td>{gost.codeOks}</td>
           <td>{gost.designation}</td>
           <td className={styles.gostDescription}>{gost.fullName}</td>
           {gostsParams && Object.values(gostsParams).some(param => param) && 

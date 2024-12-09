@@ -20,7 +20,7 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
 
   const [reviewsData, setReviewsData] = useState({
     designation: '',
-    codeOKS: '',
+    codeOks: '',
     activityField: '',
     startDate: '',  
     endDate: ''
@@ -66,8 +66,8 @@ const ReviewsStatisticForm:React.FC<ReviewsStatisticFormProps> = props => {
         <Input 
           label='Код ОКС' 
           type='text' 
-          value={reviewsData.codeOKS}
-          onChange={(value: string) => setReviewsData({...reviewsData, codeOKS: value})}
+          value={reviewsData.codeOks}
+          onChange={(value: string) => setReviewsData({...reviewsData, codeOks: value})}
         />
         <Input 
           label='Сфера деятельности' 

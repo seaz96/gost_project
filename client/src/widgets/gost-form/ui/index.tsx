@@ -37,7 +37,7 @@ function getGostStub() {
     return {
         "designation": '',
         "fullName": '',
-        "codeOKS": '',
+        "codeOks": '',
         "activityField": '',
         "acceptanceYear": '',
         "commissionYear":  '',
@@ -109,8 +109,8 @@ const GostForm = ({handleSubmit, gost}: GostFormProps) => {
               <td>Код ОКС</td>
               <td>
               <Input type='text'
-                  value={newGost.codeOKS}
-                  onChange={(value: string) => setNewGost({...newGost, codeOKS:value})}
+                  value={newGost.codeOks}
+                  onChange={(value: string) => setNewGost({...newGost, codeOks:value})}
                 />
               </td>
           </tr>

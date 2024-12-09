@@ -21,7 +21,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
     const [filterStatus, setFilterStatus] = useState({
         "designation": '',
         "fullName": '',
-        "codeOKS": false,
+        "codeOks": false,
         "activityField": false,
         "acceptanceYear": false,
         "commissionYear":  false,
@@ -43,15 +43,15 @@ const FilterDropdown: React.FC<FilterDropdownProps> = props => {
   return (
     <div className={styles.dropdown}>
         <div className={styles.dropdownItem}>
-            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, codeOKS: !filterStatus.codeOKS})}>
-                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.codeOKS ? styles.arrowUp : '')}/>
+            <div className={styles.dropdownItemInfo} onClick={() => setFilterStatus({...filterStatus, codeOks: !filterStatus.codeOks})}>
+                <img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.codeOks ? styles.arrowUp : '')}/>
                 <p className={styles.dropdownItemName}>Код ОКС</p>
             </div>
-            <Collapse className={styles.dropdownItemFilter} in={filterStatus.codeOKS}>
+            <Collapse className={styles.dropdownItemFilter} in={filterStatus.codeOks}>
                 <Input 
                     type='text' 
-                    value={filterData.codeOKS} 
-                    onChange={(value: string) => filterSubmit({...filterData, codeOKS: value})} 
+                    value={filterData.codeOks} 
+                    onChange={(value: string) => filterSubmit({...filterData, codeOks: value})} 
                 />
             </Collapse>
         </div>

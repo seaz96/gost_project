@@ -1,4 +1,5 @@
 using GostStorage.Data;
+using GostStorage.Entities;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ public static class SearchHelper
             .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
             .Where(f => parameters.Name == null || 
                         (f.Designation ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()) || 
+                        .Contains(parameters.Name.ToLower()) || 
                         (f.FullName ?? "").ToLower()
-                            .Contains(parameters.Name.ToLower()))
+                        .Contains(parameters.Name.ToLower()))
             .Where(f => parameters.AcceptanceYear == null || f.AcceptanceYear.Value == parameters.AcceptanceYear.Value)
             .Where(f => parameters.CommissionYear == null || f.CommissionYear.Value == parameters.CommissionYear.Value)
             .Where(f => parameters.Author == null || (f.Author ?? "").ToLower()
@@ -40,10 +41,34 @@ public static class SearchHelper
                 .Contains(parameters.Content.ToLower()))
             .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
             .Where(f => isValid == null || isValid.Value
-                                                    ? f.Status == DocStatuses.Valid
-                                                    : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
+                ? f.Status == DocStatuses.Valid
+                : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
             .AsSingleQuery()
             .Select(f => f.Id)
             .ToListAsync();
+    }
+
+    public static GostsFtsDocument SplitFieldsToIndexDocument(long documentId, FieldEntity primary, FieldEntity actual)
+    {
+        return new GostsFtsDocument
+        {
+            Id = documentId,
+            Designation = actual.Designation ?? primary.Designation,
+            FullName = actual.FullName ?? primary.FullName,
+            CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+            ActivityField = actual.ActivityField ?? primary.ActivityField,
+            AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
+            CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
+            Author = actual.Author ?? primary.Author,
+            AcceptedFirstTimeOrReplaced = actual.AcceptedFirstTimeOrReplaced ?? primary.AcceptedFirstTimeOrReplaced,
+            Content = actual.Content ?? primary.Content,
+            KeyWords = actual.KeyWords ?? primary.KeyWords,
+            ApplicationArea = actual.ApplicationArea ?? primary.ApplicationArea,
+            AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
+            Changes = actual.Changes ?? primary.Changes,
+            Amendments = actual.Amendments ?? primary.Amendments,
+            Status = primary.Status,
+            Harmonization = primary.Harmonization,
+        };
     }
 }
