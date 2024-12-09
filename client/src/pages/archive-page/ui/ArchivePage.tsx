@@ -21,7 +21,7 @@ const ArchivePage = () => {
 
               <section className={styles.filterSection}>
                   <Filter
-                      filterSubmit={(filterData: gostModel.GostFields & { name?: string }) => setGostParams(filterData)}
+                      filterSubmit={(filterData: gostModel.GostFields & { text?: string }) => setGostParams(filterData)}
                   />
               </section>
               <section className={styles.gostSection}>
