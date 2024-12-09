@@ -12,12 +12,15 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
     public async Task<List<FtsSearchEntity>?> SearchAsync(FtsSearchQuery query)
     {
         var queryParams = CreateQuery(query);
+        
+        Log.Logger.Information($"Begin search request to indexes: {queryParams}");
         return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search?{queryParams}").ConfigureAwait(false);
     }
 
     //todo(azanov.n): убрать хардкод макс количества документов, когда фронт пофиксится
     public async Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset)
     {
+        Log.Logger.Information($"Begin search-all request to indexes: {limit} offset: {offset}");
         return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?take=1000&skip={offset}")
             .ConfigureAwait(false);
     }
