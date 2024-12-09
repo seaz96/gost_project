@@ -10,22 +10,22 @@ namespace GostStorage.Controllers;
 [Route("api/accounts")]
 public class AccountController(IAccountService accountService) : ControllerBase
 {
-    [HttpPost("login")]
     [AllowAnonymous]
+    [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
     {
         return await accountService.LoginAsync(loginModel);
     }
     
-    [HttpPost("register")]
     [AllowAnonymous]
+    [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel registerModel)
     {
         return await accountService.RegisterAsync(registerModel);
     }
 
-    [HttpPost("restore-password")]
     [Authorize(Roles = "Heisenberg,Admin")]
+    [HttpPost("restore-password")]
     public async Task<IActionResult> RestorePassword([FromBody] PasswordRestoreModel passwordRestoreModel)
     {
         return await accountService.RestorePasswordAsync(passwordRestoreModel);
