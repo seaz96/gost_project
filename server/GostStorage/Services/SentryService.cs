@@ -25,13 +25,14 @@ public class SentryService(string token, long chatId) : ISentryService
             $"{exception.Message}\n\n"
             + $"Trace id: {Activity.Current?.TraceId}");
 
-        await _botClient.SendDocumentAsync(_chatId,
-            new InputFileStream(
-                exception.StackTrace?.ToStream()
-                ?? "Exception contains no stacktrace".ToStream(),
-                "stacktrace.txt"));
+        if (exception.StackTrace is not null && exception.StackTrace.Length is not 0)
+            await _botClient.SendDocumentAsync(_chatId,
+                new InputFileStream(
+                    exception.StackTrace.ToStream(),
+                    "stacktrace.txt"));
 
-        await _botClient.SendDocumentAsync(_chatId,
-            new InputFileStream(body.ToStream(), "body.txt"));
+        if (body.Length is not 0)
+            await _botClient.SendDocumentAsync(_chatId,
+                new InputFileStream(body.ToStream(), "body.txt"));
     }
 }
