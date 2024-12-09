@@ -15,9 +15,10 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
         return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search?{queryParams}").ConfigureAwait(false);
     }
 
+    //todo(azanov.n): убрать хардкод макс количества документов, когда фронт пофиксится
     public async Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset)
     {
-        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?take={limit}&skip={offset}")
+        return await SendGetRequestAsync<List<FtsSearchEntity>>($"{ftsApiUrl}/search-all?take=1000&skip={offset}")
             .ConfigureAwait(false);
     }
 
@@ -59,7 +60,7 @@ public class FtsRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRep
     private string CreateQuery(FtsSearchQuery request)
     {
         var query = new StringBuilder();
-        query.Append($"take={request.Limit}&skip={request.Offset}");
+        query.Append($"take=10000&skip={request.Offset}");
 
         if (request.Text is not null)
             query.Append($"&text={request.Text}");
