@@ -18,8 +18,8 @@ const Filter: React.FC<FilterProps> = props => {
     filterSubmit,
   } = props
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const [filterData, setFilterData] = useState<Partial<gostModel.GostFields> & {name?: string}>({
-    "name": '',
+  const [filterData, setFilterData] = useState<Partial<gostModel.GostFields> & {text?: string}>({
+    "text": '',
     "designation": '',
     "fullName": '',
     "codeOks": '',
@@ -61,8 +61,8 @@ const Filter: React.FC<FilterProps> = props => {
       <input 
         type='text' 
         className={styles.input} 
-        value={filterData.name} 
-        onChange={(event) => setFilterData({...filterData, name: event.target.value})}
+        value={filterData.text}
+        onChange={(event) => setFilterData({...filterData, text: event.target.value})}
         placeholder='Поиск по обозначению или наименованию...'
       />
       <div className={styles.buttonsContainer}>

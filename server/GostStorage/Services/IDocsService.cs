@@ -13,7 +13,7 @@ public interface IDocsService
 
     Task<IActionResult> ChangeStatusAsync(long id, DocStatuses status);
     
-    Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id);
+    Task<DocumentWithFieldsModel?> GetDocumentAsync(long id);
 
     Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(
         SearchParametersModel parameters,

@@ -116,13 +116,13 @@ public class DocsService(
         return new OkObjectResult("Status changed successfully.");
     }
 
-    public async Task<ActionResult<DocumentWithFieldsModel>> GetDocumentAsync(long id)
+    public async Task<DocumentWithFieldsModel?> GetDocumentAsync(long id)
     {
         var doc = await docsRepository.GetByIdAsync(id);
         
         if (doc is null)
         {
-            return new UnprocessableEntityObjectResult($"Document with id {id} not found.");
+            return null;
         }
         
         var docs = await docsRepository.GetAllAsync();
@@ -153,7 +153,7 @@ public class DocsService(
             References = references
         };
 
-        return new OkObjectResult(result);
+        return result;
     }
 
     public async Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(SearchParametersModel parameters, bool? isValid, int limit, int lastId)
@@ -223,26 +223,7 @@ public class DocsService(
             Log.Logger.Information($"indexing {doc.Id}");
             await searchRepository.IndexDocumentAsync(new FtsIndexModel
             {
-                Document = new GostsFtsDocument
-                {
-                    Id = doc.Id,
-                    Designation = actual.Designation ?? primary.Designation,
-                    FullName = actual.FullName ?? primary.FullName,
-                    CodeOks = actual.CodeOKS ?? primary.CodeOKS,
-                    ActivityField = actual.ActivityField ?? primary.ActivityField,
-                    AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
-                    CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
-                    Author = actual.Author ?? primary.Author,
-                    AcceptedFirstTimeOrReplaced = actual.AcceptedFirstTimeOrReplaced ?? primary.AcceptedFirstTimeOrReplaced,
-                    Content = actual.Content ?? primary.Content,
-                    KeyWords = actual.KeyWords ?? primary.KeyWords,
-                    ApplicationArea = actual.ApplicationArea ?? primary.ApplicationArea,
-                    AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
-                    Changes = actual.Changes ?? primary.Changes,
-                    Amendments = actual.Amendments ?? primary.Amendments,
-                    Status = primary.Status,
-                    Harmonization = primary.Harmonization,
-                }
+                Document = SearchHelper.SplitFieldsToIndexDocument(doc.Id, primary, actual)
             });
         }
     }

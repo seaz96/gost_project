@@ -31,7 +31,7 @@ const GostsPage = () => {
         <div className='container contentContainer'>
             <section className={styles.filterSection}>
                 <Filter
-                    filterSubmit={(filterData: gostModel.GostFields & { name?: string }) => setGostParams(filterData)}
+                    filterSubmit={(filterData: gostModel.GostFields & { text?: string }) => setGostParams(filterData)}
                 />
             </section>
             <InfiniteScroll

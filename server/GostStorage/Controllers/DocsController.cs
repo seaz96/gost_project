@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using GostStorage.Attributes;
 using GostStorage.Entities;
+using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
@@ -155,9 +157,10 @@ public class DocsController(
 
     [Authorize]
     [HttpGet("{docId}")]
-    public async Task<ActionResult<DocumentWithFieldsModel>> GetDocument(long docId)
+    public async Task<ActionResult<DocumentWithFieldsModel?>> GetDocument(long docId)
     {
-        return await docsService.GetDocumentAsync(docId);
+        var document = await docsService.GetDocumentAsync(docId);
+        return document is null ? NotFound() : new OkObjectResult(document);
     }
 
     [NoCache]
@@ -249,16 +252,32 @@ public class DocsController(
         }
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await usersRepository.GetUserAsync(userId);
+        var user = await usersRepository.GetUserAsync(userId).ConfigureAwait(false);
 
-        await docStatisticsService.AddAsync(new DocStatisticEntity
+        await docStatisticsService
+            .AddAsync(new DocStatisticEntity
+                {
+                    OrgBranch = user!.OrgBranch,
+                    Action = ActionType.Update,
+                    DocId = docId,
+                    Date = DateTime.UtcNow,
+                    UserId = userId
+                })
+            .ConfigureAwait(false);
+
+        await docsService.UploadFileForDocumentAsync(file, docId);
+
+        var fileContent = new MemoryStream();
+        await file.File.CopyToAsync(fileContent).ConfigureAwait(false);
+        var document = await docsService.GetDocumentAsync(docId);
+
+        var indexModel = new FtsIndexModel
         {
-            OrgBranch = user!.OrgBranch, Action = ActionType.Update, DocId = docId, Date = DateTime.UtcNow,
-            UserId = userId
-        });
-
-        //TODO(azanov.n): нужно набахать сюда логику с переиндексацией документа
-
-        return Ok(await docsService.UploadFileForDocumentAsync(file, docId));
+            Document = SearchHelper.SplitFieldsToIndexDocument(document.DocId, document.Primary, document.Actual),
+            Text = Encoding.UTF8.GetString(fileContent.ToArray()),
+        };
+        
+        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
+        return Ok();
     }
 }

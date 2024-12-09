@@ -1,4 +1,5 @@
 using GostStorage.Data;
+using GostStorage.Entities;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 using Microsoft.EntityFrameworkCore;
@@ -45,5 +46,29 @@ public static class SearchHelper
             .AsSingleQuery()
             .Select(f => f.Id)
             .ToListAsync();
+    }
+
+    public static GostsFtsDocument SplitFieldsToIndexDocument(long documentId, FieldEntity primary, FieldEntity actual)
+    {
+        return new GostsFtsDocument
+        {
+            Id = documentId,
+            Designation = actual.Designation ?? primary.Designation,
+            FullName = actual.FullName ?? primary.FullName,
+            CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+            ActivityField = actual.ActivityField ?? primary.ActivityField,
+            AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
+            CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
+            Author = actual.Author ?? primary.Author,
+            AcceptedFirstTimeOrReplaced = actual.AcceptedFirstTimeOrReplaced ?? primary.AcceptedFirstTimeOrReplaced,
+            Content = actual.Content ?? primary.Content,
+            KeyWords = actual.KeyWords ?? primary.KeyWords,
+            ApplicationArea = actual.ApplicationArea ?? primary.ApplicationArea,
+            AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
+            Changes = actual.Changes ?? primary.Changes,
+            Amendments = actual.Amendments ?? primary.Amendments,
+            Status = primary.Status,
+            Harmonization = primary.Harmonization,
+        };
     }
 }
