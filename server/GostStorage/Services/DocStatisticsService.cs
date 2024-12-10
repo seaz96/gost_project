@@ -6,6 +6,7 @@ using GostStorage.Navigations;
 using GostStorage.Repositories;
 using GostStorage.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace GostStorage.Services.Concrete;
 
@@ -52,14 +53,22 @@ public class DocStatisticsService(
             .OrderByDescending(stat => stat.Views)
             .Select(stat =>
             {
-                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                if (doc is null)
-                    return null;
-                return new DocWithViewsModel
+
+                try
                 {
-                    DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
-                    Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName
-                };
+                    var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+
+                    return new DocWithViewsModel
+                    {
+                        DocId = doc.DocId, Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                        Views = stat.Views, FullName = doc.Actual.FullName ?? doc.Primary.FullName
+                    };
+                }
+                catch (Exception e)
+                {
+                    Log.Logger.Error(e.Message);
+                    return null;
+                }
             })
             .Where(x => x is not null)
             .ToList());
@@ -76,8 +85,16 @@ public class DocStatisticsService(
                            && stat.Action != ActionType.View)
             .Where(stat =>
             {
-                var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                return doc != null && (model.Status is not null ? doc.Primary.Status == model.Status : true);
+                try
+                {
+                    var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
+                    return doc != null && (model.Status is not null ? doc.Primary.Status == model.Status : true);
+                }
+                catch (Exception e)
+                {
+                    Log.Logger.Error(e.Message);
+                    return false;
+                }
             });
 
         var count = filteredStats.GroupBy(stat => stat.DocId).Count();
@@ -87,15 +104,25 @@ public class DocStatisticsService(
             Count = count,
             Stats = filteredStats.Select(x =>
             {
-                var doc = docs.FirstOrDefault(doc => doc.DocId == x.DocId);
-                return new
+                try
                 {
-                    DocId = x.DocId,
-                    Designation = doc.Actual.Designation ?? doc.Primary.Designation,
-                    FullName = doc.Actual.FullName ?? doc.Primary.FullName,
-                    Action = x.Action.ToString(),
-                    Date = x.Date
-                };
+
+
+                    var doc = docs.FirstOrDefault(doc => doc.DocId == x.DocId);
+                    return new
+                    {
+                        DocId = x.DocId,
+                        Designation = doc.Actual.Designation ?? doc.Primary.Designation,
+                        FullName = doc.Actual.FullName ?? doc.Primary.FullName,
+                        Action = x.Action.ToString(),
+                        Date = x.Date
+                    };
+                }
+                catch (Exception e)
+                {
+                    Log.Logger.Error(e.Message);
+                    return null;
+                }
             })
         });
     }
