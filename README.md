@@ -94,7 +94,7 @@ GET /api/account/self-info
 
 
 #### Обновление собственной информации
-POST /api/account/self-edit
+POST /api/accounts/self-edit
 
 Запрос:
 ```
@@ -150,7 +150,7 @@ GET /api/accounts/list
 ```
 
 #### Информация о пользователе по id
-GET /api/account/get-user-info
+GET /api/accounts/get-user-info
 
 Ответ:
 ```
@@ -166,7 +166,7 @@ GET /api/account/get-user-info
 ```
 
 #### Обновление информации пользователя по login
-POST /api/account/self-edit
+POST /api/accounts/self-edit
 
 Запрос:
 ```
@@ -180,7 +180,7 @@ POST /api/account/self-edit
 ```
 
 #### Обновление статуса администратора по id
-POST /api/account/make-admin
+POST /api/accounts/make-admin
 
 Запрос:
 ```
@@ -190,3 +190,149 @@ POST /api/account/make-admin
 }
 ```
 
+### Поисковые запросы документов
+
+#### Документ по id
+GET /api/docs/{docId:long}
+
+Ответ:
+```
+{
+  "docId": 0,
+  "primary": {
+    "id": 0,
+    "designation": "string",
+    "fullName": "string",
+    "codeOKS": "string",
+    "activityField": "string",
+    "acceptanceYear": 9999,
+    "commissionYear": 9999,
+    "author": "string",
+    "acceptedFirstTimeOrReplaced": "string",
+    "content": "string",
+    "keyWords": "string",
+    "applicationArea": "string",
+    "adoptionLevel": 0,
+    "documentText": "string",
+    "changes": "string",
+    "amendments": "string",
+    "status": 0,
+    "harmonization": 0,
+    "isPrimary": true,
+    "docId": 0,
+    "lastEditTime": "2024-12-11T19:21:56.829Z"
+  },
+  "actual": {
+    "id": 0,
+    "designation": "string",
+    "fullName": "string",
+    "codeOKS": "string",
+    "activityField": "string",
+    "acceptanceYear": 9999,
+    "commissionYear": 9999,
+    "author": "string",
+    "acceptedFirstTimeOrReplaced": "string",
+    "content": "string",
+    "keyWords": "string",
+    "applicationArea": "string",
+    "adoptionLevel": 0,
+    "documentText": "string",
+    "changes": "string",
+    "amendments": "string",
+    "status": 0,
+    "harmonization": 0,
+    "isPrimary": true,
+    "docId": 0,
+    "lastEditTime": "2024-12-11T19:21:56.829Z"
+  },
+  "references": [
+    {
+      "docId": 0,
+      "designation": "string",
+      "status": 0
+    }
+  ]
+}
+```
+
+#### Поиск документов
+GET /api/docs/search?{queryParams}
+
+Список параметров:
+text: полнотекстовый поиск, ищет по всем полям в документе (если null, то выводятся все с сортировкой по коду ОКС)
+codeOks: фильтр с содержанием в поле
+acceptanceYear: фильтр с содержанием в поле
+commisionYear: фильтр с содержанием в поле
+author: фильтр с содержанием в поле
+acceptedFirstTimeOrReplaced: фильтр с содержанием в поле
+keyWords: фильтр с содержанием в поле
+adoptionLevel: уровень принятия International, Foreign, Regional, Organizational, National, Interstate
+status: статус документа Valid, Canceled, Replaced
+harmonization: гармонизация Unharmonized, Modified, Harmonized
+limit: количество
+offset: смещение
+
+Ответ:
+```
+[
+  {
+    "id": 429,
+    "codeOks": "01.040.35, 35.240",
+    "designation": "ГОСТ 34.201-2020",
+    "fullName": "ИТ Комплекс стандартов на автоматизированные системы. Виды, комплектность и обозначение документов при создании автоматизированных систем",
+    "relevanceMark": 5
+  },
+  {
+    "id": 4,
+    "codeOks": "01.120",
+    "designation": "ГОСТ 1.0-2015",
+    "fullName": "Межгосударственная система стандартизации. Основные положения",
+    "relevanceMark": 5
+  }
+]
+```
+
+#### Количество активных документов
+GET /api/docs/count?{queryParams}
+
+queryParams в "Поиск документов"
+
+Ответ:
+```
+123
+```
+
+
+### Запросы по статистике
+
+#### Количество просмотров
+GET /api/stats/views?{queryParams}
+
+Список параметров:
+designation: обозначение, например ГОСТ-1.0, точное совпадение
+codeOks: фильтр с содержанием в поле
+activityField: фильтр с содержанием в поле
+orgBranch: фильтр по количеству просмотра от конкретной организации
+startYear: начало диапазона поиска просмотров
+endYear: конец диапазона поиск просмотров
+
+Ответ:
+```
+[
+  {
+    "docId": 1,
+    "designation": "string",
+    "fullName": "string",
+    "views": 123,
+  }
+]
+```
+
+
+#### Действия с документами (обновление, создание)
+GET /api/stats/actions?{queryParams}
+Список параметров:
+status: статус документов
+count: количество действий
+startDate: начало диапазона поиска
+endDate: конец диапазона поиска
