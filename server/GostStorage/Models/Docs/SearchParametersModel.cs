@@ -2,7 +2,7 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public class SearchParametersModel
+public record SearchParametersModel
 {
     public string? Name { get; set; }
 

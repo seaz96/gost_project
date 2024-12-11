@@ -152,7 +152,7 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
         return new OkResult();
     }
 
-    public async Task<IActionResult> MakeAdminAsync(ChangeUserRoleModel requestModel)
+    public async Task<IActionResult> ChangeAdminStatusAsync(ChangeUserRoleModel requestModel)
     {
         var user = await usersRepository.GetUserAsync(requestModel.UserId);
 

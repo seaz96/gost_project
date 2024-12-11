@@ -185,7 +185,7 @@ public class DocsService(
         return await docsRepository.GetCountOfDocumentsAsync(parameters, isValid);
     }
 
-    public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
+    public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileRequest file, long docId)
     {
         await filesRepository.UploadFileAsync(file.File, file.Extension, docId);
         var doc = await docsRepository.GetByIdAsync(docId);
@@ -209,6 +209,8 @@ public class DocsService(
 
     public async Task IndexAllDocumentsAsync()
     {
+        //todo(azanov.n): добавить сюда загруженные документы
+        
         var docs = await docsRepository.GetAllAsync();
         var fields = await fieldsRepository.GetAllAsync();
 

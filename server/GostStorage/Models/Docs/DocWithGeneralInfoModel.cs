@@ -1,6 +1,6 @@
 namespace GostStorage.Models.Docs;
 
-public class DocWithGeneralInfoModel
+public record DocWithGeneralInfoModel
 {
     public long Id { get; set; }
 

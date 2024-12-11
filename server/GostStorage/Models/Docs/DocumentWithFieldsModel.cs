@@ -2,7 +2,7 @@ using GostStorage.Entities;
 
 namespace GostStorage.Models.Docs;
 
-public class DocumentWithFieldsModel
+public record DocumentWithFieldsModel
 {
     public long DocId { get; set; }
 

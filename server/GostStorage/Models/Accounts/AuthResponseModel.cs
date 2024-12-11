@@ -4,5 +4,6 @@ namespace GostStorage.Models.Accounts;
 
 public class AuthResponseModel
 {
-    [JsonPropertyName("token")] public required string Token { get; set; }
+    [JsonPropertyName("token")]
+    public required string Token { get; set; }
 }

@@ -2,7 +2,7 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public class ChangeStatusRequestModel
+public record ChangeStatusRequest
 {
     public long Id { get; set; }
 

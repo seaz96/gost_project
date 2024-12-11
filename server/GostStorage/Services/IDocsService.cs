@@ -23,7 +23,7 @@ public interface IDocsService
 
     Task<int> GetDocumentsCountAsync(SearchParametersModel parameters, bool? isValid);
 
-    Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
+    Task<IActionResult> UploadFileForDocumentAsync(UploadFileRequest file, long docId);
 
     Task<List<ShortInfoDocumentModel>> SearchAsync(FtsSearchQuery query);
 

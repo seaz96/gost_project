@@ -3,7 +3,7 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public class AddNewDocDtoModel
+public class UpdateDocumentRequest
 {
     public string? Designation { get; set; }
 

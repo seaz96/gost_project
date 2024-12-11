@@ -8,8 +8,8 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<AddNewDocDtoModel, FieldEntity>();
-        CreateMap<UpdateFieldDtoModel, FieldEntity>();
+        CreateMap<AddNewDocumentRequest, FieldEntity>();
+        CreateMap<UpdateDocumentRequest, FieldEntity>();
         CreateMap<FieldEntity, GostsFtsDocument>();
         CreateMap<FtsSearchEntity, ShortInfoDocumentModel>()
             .ForMember(

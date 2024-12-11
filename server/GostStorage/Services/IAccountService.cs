@@ -22,7 +22,7 @@ public interface IAccountService
 
     public Task<IActionResult> AdminEditAsync(UserAdminEditModel userAdminEditModel, ClaimsPrincipal userPrincipal);
 
-    public Task<IActionResult> MakeAdminAsync(ChangeUserRoleModel requestModel);
+    public Task<IActionResult> ChangeAdminStatusAsync(ChangeUserRoleModel requestModel);
 
     public Task<IActionResult> GetSelfInfoAsync(long userId);
 }
