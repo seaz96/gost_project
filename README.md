@@ -259,18 +259,18 @@ GET /api/docs/{docId:long}
 GET /api/docs/search?{queryParams}
 
 Список параметров:
-text: полнотекстовый поиск, ищет по всем полям в документе (если null, то выводятся все с сортировкой по коду ОКС)
-codeOks: фильтр с содержанием в поле
-acceptanceYear: фильтр с содержанием в поле
-commisionYear: фильтр с содержанием в поле
-author: фильтр с содержанием в поле
-acceptedFirstTimeOrReplaced: фильтр с содержанием в поле
-keyWords: фильтр с содержанием в поле
-adoptionLevel: уровень принятия International, Foreign, Regional, Organizational, National, Interstate
-status: статус документа Valid, Canceled, Replaced
-harmonization: гармонизация Unharmonized, Modified, Harmonized
-limit: количество
-offset: смещение
+- text: полнотекстовый поиск, ищет по всем полям в документе (если null, то выводятся все с сортировкой по коду ОКС)
+- codeOks: фильтр с содержанием в поле
+- acceptanceYear: фильтр с содержанием в поле
+- commisionYear: фильтр с содержанием в поле
+- author: фильтр с содержанием в поле
+- acceptedFirstTimeOrReplaced: фильтр с содержанием в поле
+- keyWords: фильтр с содержанием в поле
+- adoptionLevel: уровень принятия International, Foreign, Regional, Organizational, National, Interstate
+- status: статус документа Valid, Canceled, Replaced
+- harmonization: гармонизация Unharmonized, Modified, Harmonized
+- limit: количество
+- offset: смещение
 
 Ответ:
 ```
@@ -333,10 +333,10 @@ GET /api/stats/views?{queryParams}
 GET /api/stats/actions?{queryParams}
 
 Список параметров:
-- status: статус документов
-- count: количество действий
-- startDate: начало диапазона поиска
-- endDate: конец диапазона поиска
+ - status: статус документов
+ - count: количество действий
+ - startDate: начало диапазона поиска
+ - endDate: конец диапазона поиска
 
 
 Ответ:
