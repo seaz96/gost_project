@@ -309,12 +309,12 @@ queryParams в "Поиск документов"
 GET /api/stats/views?{queryParams}
 
 Список параметров:
-designation: обозначение, например ГОСТ-1.0, точное совпадение
-codeOks: фильтр с содержанием в поле
-activityField: фильтр с содержанием в поле
-orgBranch: фильтр по количеству просмотра от конкретной организации
-startYear: начало диапазона поиска просмотров
-endYear: конец диапазона поиск просмотров
+- designation: обозначение, например ГОСТ-1.0, точное совпадение
+- codeOks: фильтр с содержанием в поле
+- activityField: фильтр с содержанием в поле
+- orgBranch: фильтр по количеству просмотра от конкретной организации
+- startYear: начало диапазона поиска просмотров
+- endYear: конец диапазона поиск просмотров
 
 Ответ:
 ```
@@ -333,7 +333,147 @@ endYear: конец диапазона поиск просмотров
 GET /api/stats/actions?{queryParams}
 
 Список параметров:
-status: статус документов
-count: количество действий
-startDate: начало диапазона поиска
-endDate: конец диапазона поиска
+- status: статус документов
+- count: количество действий
+- startDate: начало диапазона поиска
+- endDate: конец диапазона поиска
+
+
+Ответ:
+```
+[
+  {
+    "docId": 1,
+    "designation": "string",
+    "fullName": "string",
+    "action": "Create",
+    "date": "2024-03-25T06:21:50.814318Z"
+  }
+]
+```
+
+### Действия с документами (только для администраторов)
+
+#### Создание нового документа
+POST /api/docs/add
+
+Запрос:
+```
+{
+  "designation": "string",
+  "fullName": "string",
+  "codeOKS": "string",
+  "activityField": "string",
+  "acceptanceYear": 9999,
+  "commissionYear": 9999,
+  "author": "string",
+  "acceptedFirstTimeOrReplaced": "string",
+  "content": "string",
+  "keyWords": "string",
+  "applicationArea": "string",
+  "adoptionLevel": 0,
+  "documentText": "string",
+  "changes": "string",
+  "amendments": "string",
+  "status": 0,
+  "harmonization": 0,
+  "isPrimary": true,
+  "references": [
+    "string"
+  ]
+}
+```
+
+Ответ: id документа
+
+#### Удаление документа
+DELETE /api/docs/delete/{docId}
+
+#### Обновление полей документа (первичные)
+PUT /api/docs/update/{docId}
+
+Запрос:
+```
+{
+  "designation": "string",
+  "fullName": "string",
+  "codeOKS": "string",
+  "activityField": "string",
+  "acceptanceYear": 9999,
+  "commissionYear": 9999,
+  "author": "string",
+  "acceptedFirstTimeOrReplaced": "string",
+  "content": "string",
+  "keyWords": "string",
+  "applicationArea": "string",
+  "adoptionLevel": 0,
+  "documentText": "string",
+  "changes": "string",
+  "amendments": "string",
+  "status": 0,
+  "harmonization": 0,
+  "isPrimary": true,
+  "references": [
+    "string"
+  ]
+}
+```
+
+#### Актуализация полей документа (актуализированные)
+PUT /api/docs/actualize/{docId}
+
+Запрос:
+```
+{
+  "designation": "string",
+  "fullName": "string",
+  "codeOKS": "string",
+  "activityField": "string",
+  "acceptanceYear": 9999,
+  "commissionYear": 9999,
+  "author": "string",
+  "acceptedFirstTimeOrReplaced": "string",
+  "content": "string",
+  "keyWords": "string",
+  "applicationArea": "string",
+  "adoptionLevel": 0,
+  "documentText": "string",
+  "changes": "string",
+  "amendments": "string",
+  "status": 0,
+  "harmonization": 0,
+  "isPrimary": true,
+  "references": [
+    "string"
+  ]
+}
+```
+
+#### Обновление статуса документа
+PUT /api/docs/change-status
+
+Запрос:
+```
+{
+  "id": 0,
+  "status": "Canceled"
+}
+```
+
+
+#### Загрузка файла
+POST /api/docs/{docId}/upload-file
+
+"Content-Type": "multipart/form-data"
+
+Запрос:
+```
+[
+  "file": "content",
+  "extension": "docx"
+]
+```
+
+
+#### Реиндексация всех документов
+POST /api/docs/index-all
