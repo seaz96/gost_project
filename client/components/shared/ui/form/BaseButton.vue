@@ -1,8 +1,8 @@
 <template>
   <button 
-    @click.prevent="action"
     class="baseButton"
     :class="['baseButton', isColored && 'baseButton_colored']"
+    @click.prevent="action"
   >
     <img v-if="prefixIcon" :src="prefixIcon" alt="" class="baseButton__icon baseButton__icon_prefix">
     <p>{{ text }}</p>
@@ -41,18 +41,17 @@ withDefaults(defineProps<ButtonProps>(), {
   font-weight: 700;
   background-color: inherit;
   border: none;
+  border-radius: 5px;
   outline: none;
+  background-color: #fff;
   color: rgba(209, 41, 101, 1);
 
   &_colored {
     background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
-    border-radius: 5px;
     color: #ffffff;
   }
 
   &__icon {
-    width: 16px;
-    height: 16px;
 
     &_prefix {
       margin-right: 8px;

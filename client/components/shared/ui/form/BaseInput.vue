@@ -1,12 +1,16 @@
 <template>
   <div class="baseInput">
-    <p class="baseInput__label">
+    <p v-if="label" class="baseInput__label">
       {{ label }}
     </p>
     <input
       v-model="value"
       :type="type"
+      :placeholder="placeholder"
       :class="['baseInput__input', error && error.length && 'baseInput__input_error']"
+      @input="() => {
+        inputChange()
+      }"
     >
     <p
       class="baseInput__error"
@@ -17,16 +21,20 @@
 </template>
 
 <script setup lang="ts">
-  const value = defineModel()
+  const value = defineModel<string>()
 
   withDefaults(defineProps<{
     type?: string,
     error?: string,
-    label?: string
+    label?: string,
+    placeholder?: string,
+    inputChange: () => void
   }>(), {
     type:'text',
     error: '',
-    label: ''
+    label: '',
+    placeholder: '',
+    inputChange: () => {}
   })
 </script>
 
