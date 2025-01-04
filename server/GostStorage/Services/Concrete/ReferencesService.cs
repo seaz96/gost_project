@@ -24,7 +24,7 @@ public class ReferencesService(
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = docsService.AddDocumentAsync(new Field { Designation = designation, Status = DocumentStatus.Inactive});
+            var docId = docsService.AddDocumentAsync(new PrimaryField { Designation = designation}, DocumentStatus.Inactive);
             
             docId.Wait();
             return docId.Result;
@@ -55,7 +55,7 @@ public class ReferencesService(
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = docsService.AddDocumentAsync(new Field { Designation = designation, Status = DocumentStatus.Inactive});
+            var docId = docsService.AddDocumentAsync(new PrimaryField { Designation = designation }, DocumentStatus.Inactive);
             docId.Wait();
             return docId.Result;
         }).ToList(); 

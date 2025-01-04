@@ -40,11 +40,7 @@ public class Field : BaseEntity
 
     public string? Amendments { get; set; }
 
-    public DocumentStatus Status { get; set; }
-
     public HarmonizationLevel? Harmonization { get; set; }
-
-    public bool IsPrimary { get; set; }
     
     public long DocId { get; set; }
     

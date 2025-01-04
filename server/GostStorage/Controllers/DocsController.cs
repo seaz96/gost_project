@@ -35,9 +35,9 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var newField = mapper.Map<Field>(dto);
+        var newField = mapper.Map<PrimaryField>(dto);
 
-        var docId = await docsService.AddDocumentAsync(newField);
+        var docId = await docsService.AddDocumentAsync(newField, DocumentStatus.Valid);
         await referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);

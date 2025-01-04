@@ -96,7 +96,7 @@ public class DocStatisticsService(
                 try
                 {
                     var doc = docs.FirstOrDefault(x => x.DocId == stat.DocId);
-                    return doc != null && doc.Primary.Status == model.Status;
+                    return doc != null && doc.Status == model.Status;
                 }
                 catch (Exception e)
                 {

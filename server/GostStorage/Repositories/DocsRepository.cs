@@ -2,6 +2,7 @@ using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
+using GostStorage.Navigations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GostStorage.Repositories;
@@ -50,16 +51,12 @@ public class DocsRepository(DataContext context) : IDocsRepository
 
     public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
     {
-        return await context.Documents.Join(context.Fields,
-                doc => doc.Id,
-                field => field.DocId,
-                (doc, field) => new { doc.Id, field.Designation })
+        return await context.Documents
             .Where(doc => docDesignations.Contains(doc.Designation))
-            .GroupBy(doc => doc.Id)
-            .Select(group => new DocWithGeneralInfoModel
+            .Select(doc => new DocWithGeneralInfoModel
                 {
-                    Id = group.First().Id,
-                    Designation = group.First().Designation
+                    Id = doc.Id,
+                    Designation = doc.Designation
                 })
             .AsSingleQuery()
             .ToListAsync();
@@ -75,5 +72,16 @@ public class DocsRepository(DataContext context) : IDocsRepository
     public async Task DeleteAsync(long id)
     {
         await context.Documents.Where(doc => doc.Id == id).ExecuteDeleteAsync();
+    }
+
+    public async Task UpdateStatusAsync(long id, DocumentStatus status)
+    {
+        var document = await context.Documents.FirstOrDefaultAsync(d => d.Id == id);
+
+        if (document is null) return;
+        
+        document.Status = status;
+        context.Documents.Update(document);
+        await context.SaveChangesAsync();
     }
 }

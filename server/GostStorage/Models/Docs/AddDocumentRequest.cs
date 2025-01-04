@@ -39,7 +39,5 @@ public record AddDocumentRequest
 
     public HarmonizationLevel Harmonization { get; init; }
 
-    public bool IsPrimary { get; init; }
-
     public List<string> References { get; init; }
 }

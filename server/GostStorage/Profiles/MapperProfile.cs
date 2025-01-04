@@ -9,8 +9,12 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<AddDocumentRequest, Field>();
+        CreateMap<AddDocumentRequest, PrimaryField>();
         CreateMap<UpdateDocumentRequest, Field>();
+
+        CreateMap<PrimaryField, Field>().ReverseMap();
+        CreateMap<ActualField, Field>().ReverseMap();
+        
         CreateMap<Field, SearchDocument>();
         CreateMap<SearchEntity, ShortInfoDocumentModel>()
             .ForMember(

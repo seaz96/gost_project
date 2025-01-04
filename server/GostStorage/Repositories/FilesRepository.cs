@@ -5,7 +5,7 @@ using IMinioClientFactory = Minio.AspNetCore.IMinioClientFactory;
 namespace GostStorage.Repositories;
 
 public class FilesRepository(
-        IFieldsRepository fieldsRepository,
+        IPrimaryFieldsRepository primaryFieldsRepository,
         IMinioClientFactory minioClientFactory,
         IConfiguration configuration)
     : IFilesRepository
@@ -14,7 +14,7 @@ public class FilesRepository(
 
     public async Task UploadFileAsync(IFormFile file, string extension, long docId)
     {
-        var primary = (await fieldsRepository.GetFieldsByDocIds(new List<long> { docId })).First(f => f.IsPrimary);
+        var primary = (await primaryFieldsRepository.GetFieldsByDocIds(new List<long> { docId })).First();
         if (file.Length > 0)
         {
             using var stream = new MemoryStream();

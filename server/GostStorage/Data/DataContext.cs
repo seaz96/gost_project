@@ -14,7 +14,8 @@ public class DataContext : DbContext
 
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Document> Documents { get; set; } = null!;
-    public DbSet<Field> Fields { get; set; } = null!;
+    public DbSet<PrimaryField> PrimaryFields { get; set; } = null!;
+    public DbSet<ActualField> ActualFields { get; set; } = null!;
     public DbSet<DocumentReference> References { get; set; } = null!;
     public DbSet<UserAction> UserActions { get; set; } = null!;
 }

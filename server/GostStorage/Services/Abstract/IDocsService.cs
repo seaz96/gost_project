@@ -8,7 +8,7 @@ namespace GostStorage.Services.Abstract;
 
 public interface IDocsService
 {
-    Task<long> AddDocumentAsync(Field primaryField);
+    Task<long> AddDocumentAsync(PrimaryField primaryField, DocumentStatus status);
 
     Task<bool> DeleteDocumentAsync(long id);
 

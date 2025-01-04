@@ -1,3 +1,4 @@
+using AutoMapper;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Repositories;
@@ -7,17 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace GostStorage.Services.Concrete;
 
 public class FieldsService(
-        IFieldsRepository fieldsRepository,
-        IReferencesRepository referencesRepository,
-        IDocsRepository docsRepository)
+        IPrimaryFieldsRepository primaryFieldsRepository,
+        IActualFieldsRepository actualFieldsRepository,
+        IDocsRepository docsRepository,
+        IMapper mapper)
     : IFieldsService
 {
     public async Task<IActionResult> UpdateAsync(Field updatedField, long docId)
     {
-        if (updatedField.Designation is not null)
-        {
-            updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
-        }
+        updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
 
         var doc = await docsRepository.GetByIdAsync(docId);
         
@@ -27,17 +26,14 @@ public class FieldsService(
         }
         
         updatedField.Id = doc.PrimaryFieldId;
-        await fieldsRepository.UpdateAsync(updatedField);
+        await primaryFieldsRepository.UpdateAsync(mapper.Map<PrimaryField>(updatedField));
 
         return new OkObjectResult("Document updated successfully.");
     }
 
     public async Task<IActionResult> ActualizeAsync(Field actualizedField, long docId)
     {
-        if (actualizedField.Designation is not null)
-        {
-            actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
-        }
+        actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
         var doc = await docsRepository.GetByIdAsync(docId);
         
         if (doc is null)
@@ -47,7 +43,7 @@ public class FieldsService(
         
         actualizedField.Id = doc.ActualFieldId;
         
-        await fieldsRepository.UpdateAsync(actualizedField);
+        await actualFieldsRepository.UpdateAsync(mapper.Map<ActualField>(actualizedField));
 
         return new OkObjectResult("Document actualized successfully");
     }

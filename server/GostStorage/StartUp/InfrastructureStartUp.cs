@@ -35,7 +35,8 @@ public static class InfrastructureStartUp
         
         serviceCollection.AddScoped<HttpClient>();
         serviceCollection.AddScoped<IUsersRepository, UsersRepository>();
-        serviceCollection.AddScoped<IFieldsRepository, FieldsRepository>();
+        serviceCollection.AddScoped<IPrimaryFieldsRepository, PrimaryFieldsRepository>();
+        serviceCollection.AddScoped<IActualFieldsRepository, ActualFieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
         serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
