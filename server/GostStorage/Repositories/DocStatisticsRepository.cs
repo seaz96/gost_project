@@ -6,23 +6,23 @@ namespace GostStorage.Repositories;
 
 public class DocStatisticsRepository(DataContext context) : IDocStatisticsRepository
 {
-    public async Task<List<DocStatisticEntity>> GetAllAsync()
+    public async Task<List<UserAction>> GetAllAsync()
     {
-        return await context.DocStatistics.ToListAsync();
+        return await context.UserActions.ToListAsync();
     }
 
-    public async Task AddAsync(DocStatisticEntity statistic)
+    public async Task AddAsync(UserAction statistic)
     {
-        await context.DocStatistics.AddAsync(statistic);
+        await context.UserActions.AddAsync(statistic);
 
         await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(long docId)
     {
-        var statistic = await context.DocStatistics.FirstOrDefaultAsync(stat => stat.DocId == docId);
+        var statistic = await context.UserActions.FirstOrDefaultAsync(stat => stat.DocId == docId);
 
-        if (statistic is not null) context.DocStatistics.Remove(statistic);
+        if (statistic is not null) context.UserActions.Remove(statistic);
 
         await context.SaveChangesAsync();
     }

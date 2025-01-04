@@ -5,7 +5,7 @@ namespace GostStorage.Helpers;
 
 public static class SwaggerHelper
 {
-    public static IServiceCollection AddSwaggerGen(this IServiceCollection serviceCollection)
+    public static void AddSwaggerGen(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddSwaggerGen(c =>
         {
@@ -38,16 +38,6 @@ public static class SwaggerHelper
                     Array.Empty<string>()
                 }
             });
-
-#if DEBUG
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "GostStorage.xml");
-#else
-            var filePath = Path.Combine(AppContext.BaseDirectory, "GostStorage.xml");
-#endif
-
-            c.IncludeXmlComments(filePath);
         });
-
-        return serviceCollection;
     }
 }

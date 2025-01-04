@@ -1,16 +1,14 @@
-using GostStorage.Models.Docs;
+using GostStorage.Models.Search;
 
-namespace GostStorage.Repositories.Interfaces;
+namespace GostStorage.Repositories;
 
 public interface ISearchRepository
 {
-    public Task<List<FtsSearchEntity>?> SearchAsync(FtsSearchQuery query);
+    public Task<List<SearchEntity>> SearchAsync(SearchQuery query);
 
-    public Task<List<FtsSearchEntity>?> SearchAllAsync(int limit, int offset);
+    public Task IndexAllDocumentsAsync(List<SearchIndexModel> documents);
 
-    public Task IndexAllDocumentsAsync(List<FtsIndexModel> documents);
-
-    public Task IndexDocumentAsync(FtsIndexModel document);
+    public Task IndexDocumentAsync(SearchIndexModel document);
 
     public Task DeleteDocumentAsync(long docId);
 }

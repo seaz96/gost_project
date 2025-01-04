@@ -1,6 +1,7 @@
 using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
+using GostStorage.Models.Search;
 using GostStorage.Navigations;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +9,11 @@ namespace GostStorage.Helpers;
 
 public static class SearchHelper
 {
-    public static async Task<List<long>> SearchFields(SearchParametersModel parameters, bool? isValid, DataContext _context)
+    public static async Task<List<long>> SearchFields(GetDocumentRequest parameters, DataContext _context)
     {
         return await _context.Fields
-            .Where(f => parameters.CodeOKS == null || (f.CodeOKS ?? "").ToLower()
-                .Contains(parameters.CodeOKS.ToLower()))
+            .Where(f => parameters.CodeOks == null || (f.CodeOks ?? "").ToLower()
+                .Contains(parameters.CodeOks.ToLower()))
             .Where(f => parameters.ActivityField == null || (f.ActivityField ?? "").ToLower()
                 .Contains(parameters.ActivityField.ToLower()))
             .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
@@ -40,22 +41,20 @@ public static class SearchHelper
             .Where(f => parameters.Content == null || (f.Content ?? "").ToLower()
                 .Contains(parameters.Content.ToLower()))
             .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
-            .Where(f => isValid == null || isValid.Value
-                ? f.Status == DocStatuses.Valid
-                : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
+            .Where(f => f.Status == parameters.Status)
             .AsSingleQuery()
             .Select(f => f.Id)
             .ToListAsync();
     }
 
-    public static GostsFtsDocument SplitFieldsToIndexDocument(long documentId, FieldEntity primary, FieldEntity actual)
+    public static SearchDocument SplitFieldsToIndexDocument(long documentId, Field primary, Field actual)
     {
-        return new GostsFtsDocument
+        return new SearchDocument
         {
             Id = documentId,
             Designation = actual.Designation ?? primary.Designation,
             FullName = actual.FullName ?? primary.FullName,
-            CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+            CodeOks = actual.CodeOks ?? primary.CodeOks,
             ActivityField = actual.ActivityField ?? primary.ActivityField,
             AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
             CommissionYear = actual.CommissionYear ?? primary.CommissionYear,

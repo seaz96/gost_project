@@ -1,0 +1,17 @@
+﻿using System.ComponentModel.DataAnnotations;
+using GostStorage.Navigations;
+
+namespace GostStorage.Models.Search;
+
+public class SearchFilters
+{
+    public string? CodeOks { get; set; }
+    [Range(1000, 9999)] public int? AcceptanceYear { get; set; }
+    [Range(1000, 9999)] public int? CommissionYear { get; set; }
+    public string? Author { get; set; }
+    public string? AcceptedFirstTimeOrReplaced { get; set; }
+    public string? KeyWords { get; set; }
+    public AdoptionLevel? AdoptionLevel { get; set; }
+    public DocumentStatus Status { get; set; }
+    public HarmonizationLevel? Harmonization { get; set; }
+}

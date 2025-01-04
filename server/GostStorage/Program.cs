@@ -3,10 +3,12 @@ using AutoMapper;
 using GostStorage.Helpers;
 using GostStorage.Middlewares.Extensions;
 using GostStorage.Profiles;
-using GostStorage.Services;
+using GostStorage.Services.Abstract;
+using GostStorage.Services.Concrete;
 using GostStorage.StartUp;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Converters;
 using Serilog;
 
 namespace GostStorage;
@@ -57,7 +59,6 @@ internal static class Program
         builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
         var sentryService = new SentryService(configuration.GetValue<string>("SENTRY_TOKEN")!, configuration.GetValue<long>("SENTRY_CHAT_ID"));
         builder.Services.AddSingleton<ISentryService>(sentryService);
-
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

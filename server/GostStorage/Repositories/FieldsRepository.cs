@@ -6,27 +6,27 @@ namespace GostStorage.Repositories;
 
 public class FieldsRepository(DataContext context) : IFieldsRepository
 {
-    public async Task<List<FieldEntity>> GetAllAsync()
+    public async Task<List<Field>> GetAllAsync()
     {
         return await context.Fields.ToListAsync();
     }
 
-    public FieldEntity? GetById(long? id)
+    public Field? GetById(long? id)
     {
         return context.Fields.FirstOrDefault(field => field.Id == id);
     }
 
-    public async Task<ICollection<FieldEntity>> GetFieldsByDocIds(ICollection<long> docIds)
+    public async Task<ICollection<Field>> GetFieldsByDocIds(ICollection<long> docIds)
     {
         return await context.Fields.Where(f => docIds.Contains(f.DocId)).ToListAsync();
     }
 
-    public async Task<FieldEntity?> GetByIdAsync(long? id)
+    public async Task<Field?> GetByIdAsync(long? id)
     {
         return await context.Fields.FirstOrDefaultAsync(field => field.Id == id);
     }
 
-    public async Task<long> AddAsync(FieldEntity field)
+    public async Task<long> AddAsync(Field field)
     {
         await context.Fields.AddAsync(field);
         await context.SaveChangesAsync();
@@ -38,7 +38,7 @@ public class FieldsRepository(DataContext context) : IFieldsRepository
         await context.Fields.Where(field => field.Id == id).ExecuteDeleteAsync();
     }
 
-    public async Task UpdateAsync(FieldEntity newField)
+    public async Task UpdateAsync(Field newField)
     {
         context.Fields.Update(newField);
 

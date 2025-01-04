@@ -5,9 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GostStorage.Helpers;
 
-public abstract class SecurityHelper
+public class SecurityHelper
 {
-    public static string GetAuthToken(UserEntity user)
+    public static string GetAuthToken(User user)
     {
         var userId = user.Id.ToString();
         var role = user.Role.ToString();

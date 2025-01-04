@@ -8,5 +8,5 @@ public class DocWithStatusModel
 
     public string? Designation { get; set; }
 
-    public DocStatuses Status { get; set; }
+    public DocumentStatus Status { get; set; }
 }

@@ -4,17 +4,17 @@ namespace GostStorage.Repositories;
 
 public interface IFieldsRepository
 {
-    public Task<List<FieldEntity>> GetAllAsync();
+    public Task<List<Field>> GetAllAsync();
 
-    public FieldEntity? GetById(long? id);
+    public Field? GetById(long? id);
 
-    public Task<ICollection<FieldEntity>> GetFieldsByDocIds(ICollection<long> docIds);
+    public Task<ICollection<Field>> GetFieldsByDocIds(ICollection<long> docIds);
 
-    public Task<FieldEntity?> GetByIdAsync(long? id);
+    public Task<Field?> GetByIdAsync(long? id);
 
-    public Task<long> AddAsync(FieldEntity field);
+    public Task<long> AddAsync(Field field);
 
     public Task DeleteAsync(long? id);
 
-    public Task UpdateAsync(FieldEntity newField);
+    public Task UpdateAsync(Field newField);
 }

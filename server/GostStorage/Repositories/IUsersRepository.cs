@@ -4,9 +4,9 @@ namespace GostStorage.Repositories;
 
 public interface IUsersRepository
 {
-    public Task<List<UserEntity>> GetAllAsync();
+    public Task<List<User>> GetAllAsync();
 
-    public Task AddAsync(UserEntity user);
+    public Task AddAsync(User user);
 
     public Task DeleteAsync(long id);
 
@@ -14,11 +14,11 @@ public interface IUsersRepository
 
     public Task<bool> IsLoginExistAsync(string login);
 
-    public Task<UserEntity?> GetUserAsync(string login);
+    public Task<User?> GetUserAsync(string login);
 
     public Task UpdatePasswordAsync(long id, string password);
 
-    public Task UpdateAsync(UserEntity user);
+    public Task UpdateAsync(User user);
 
-    public Task<UserEntity?> GetUserAsync(long id);
+    public Task<User?> GetUserAsync(long id);
 }

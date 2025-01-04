@@ -6,22 +6,22 @@ namespace GostStorage.Repositories;
 
 public class UsersRepository(DataContext context) : IUsersRepository
 {
-    public async Task<List<UserEntity>> GetAllAsync()
+    public async Task<List<User>> GetAllAsync()
     {
         return await context.Users.ToListAsync();
     }
 
-    public async Task<UserEntity?> GetUserAsync(string login)
+    public async Task<User?> GetUserAsync(string login)
     {
         return await context.Users.FirstOrDefaultAsync(u => u.Login == login);
     }
 
-    public async Task<UserEntity?> GetUserAsync(long id)
+    public async Task<User?> GetUserAsync(long id)
     {
         return await context.Users.FirstOrDefaultAsync(u => u.Id == id);
     }
 
-    public async Task AddAsync(UserEntity user)
+    public async Task AddAsync(User user)
     {
         await context.Users.AddAsync(user);
 
@@ -63,7 +63,7 @@ public class UsersRepository(DataContext context) : IUsersRepository
         }
     }
 
-    public async Task UpdateAsync(UserEntity user)
+    public async Task UpdateAsync(User user)
     {
         context.Users.Update(user);
         await context.SaveChangesAsync();

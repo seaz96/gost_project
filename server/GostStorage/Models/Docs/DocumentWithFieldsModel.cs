@@ -6,9 +6,9 @@ public class DocumentWithFieldsModel
 {
     public long DocId { get; set; }
 
-    public FieldEntity Primary { get; set; }
+    public Field Primary { get; set; }
 
-    public FieldEntity Actual { get; set; }
+    public Field Actual { get; set; }
 
     public List<DocWithStatusModel> References { get; set; }
 }

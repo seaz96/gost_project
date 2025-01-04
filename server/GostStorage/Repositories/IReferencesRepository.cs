@@ -4,17 +4,17 @@ namespace GostStorage.Repositories;
 
 public interface IReferencesRepository
 {
-    public Task<List<DocReferenceEntity>> GetAllAsync();
+    public Task<List<DocumentReference>> GetAllAsync();
 
-    public Task<DocReferenceEntity?> GetByIdAsync(long id);
+    public Task<DocumentReference?> GetByIdAsync(long id);
 
-    public Task<DocReferenceEntity?> GetByParentIdAsync(long id);
+    public Task<DocumentReference?> GetByParentIdAsync(long id);
 
-    public Task<DocReferenceEntity?> GetByChildIdAsync(long id);
+    public Task<DocumentReference?> GetByChildIdAsync(long id);
 
-    public Task AddAsync(DocReferenceEntity reference);
+    public Task AddAsync(DocumentReference reference);
 
-    public Task AddRangeAsync(List<DocReferenceEntity> references);
+    public Task AddRangeAsync(List<DocumentReference> references);
 
     public Task DeleteAllByParentIdAsync(long parentId);
 

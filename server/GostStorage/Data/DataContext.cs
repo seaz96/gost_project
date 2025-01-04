@@ -12,9 +12,9 @@ public class DataContext : DbContext
         //Database.EnsureCreated();
     }
 
-    public DbSet<UserEntity> Users { get; set; } = null!;
-    public DbSet<DocEntity> Docs { get; set; } = null!;
-    public DbSet<FieldEntity> Fields { get; set; } = null!;
-    public DbSet<DocReferenceEntity> DocsReferences { get; set; } = null!;
-    public DbSet<DocStatisticEntity> DocStatistics { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Document> Documents { get; set; } = null!;
+    public DbSet<Field> Fields { get; set; } = null!;
+    public DbSet<DocumentReference> References { get; set; } = null!;
+    public DbSet<UserAction> UserActions { get; set; } = null!;
 }

@@ -5,23 +5,19 @@ namespace GostStorage.Repositories;
 
 public interface IDocsRepository
 {
-    public Task<List<DocEntity>> GetAllAsync();
+    public Task<List<Document>> GetAllAsync();
 
-    public Task<List<DocEntity>> GetDocumentsAsync(
-        SearchParametersModel parameters,
-        bool? isValid,
-        int limit,
-        int lastId);
+    public Task<List<Document>> GetDocumentsAsync(GetDocumentRequest parameters);
 
-    public Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid);
+    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest parameters);
 
-    public Task<DocEntity?> GetByIdAsync(long id);
+    public Task<Document?> GetByIdAsync(long id);
 
-    public Task<DocEntity?> GetByDesignationAsync(string designation);
+    public Task<Document?> GetByDesignationAsync(string designation);
 
     public Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations);
 
-    public Task<long> AddAsync(DocEntity document);
+    public Task<long> AddAsync(Document document);
 
     public Task DeleteAsync(long id);
 }

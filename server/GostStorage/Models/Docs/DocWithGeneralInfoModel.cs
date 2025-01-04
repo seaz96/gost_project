@@ -6,7 +6,7 @@ public class DocWithGeneralInfoModel
 
     public string? Designation { get; set; }
 
-    public string? CodeOKS { get; set; }
+    public string? CodeOks { get; set; }
 
     public string? FullName { get; set; }
 

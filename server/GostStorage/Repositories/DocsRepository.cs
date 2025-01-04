@@ -4,85 +4,53 @@ using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using Microsoft.EntityFrameworkCore;
 
-namespace GostStorage.Repositories.Concrete;
+namespace GostStorage.Repositories;
 
 public class DocsRepository(DataContext context) : IDocsRepository
 {
-    public async Task<List<DocEntity>> GetAllAsync()
+    public async Task<List<Document>> GetAllAsync()
     {
-        return await context.Docs.ToListAsync();
+        return await context.Documents.ToListAsync();
     }
 
-    public async Task<List<DocEntity>> GetDocumentsAsync(
-        SearchParametersModel parameters,
-        bool? isValid,
-        int limit,
-        int lastId)
+    public async Task<List<Document>> GetDocumentsAsync(GetDocumentRequest parameters)
     {
-        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
+        var fieldIds = await SearchHelper.SearchFields(parameters, context);
 
-        var docs = context.Docs
-            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
+        var docs = context.Documents
+            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId))
             .Distinct()
             .OrderBy(x => x.Id)
-            .Where(x => x.Id > lastId)
-            .Take(limit)
+            .Skip(parameters.Offset)
+            .Take(parameters.Limit)
             .ToList();
         
         return docs;
     }
     
-    public async Task<List<DocWithGeneralInfoModel>> GetDocumentsByDesignationAsync(IList<string> designations)
+    public async Task<int> GetCountOfDocumentsAsync(GetDocumentRequest parameters)
     {
-        var docs = context.Fields
-            .Join(context.Docs,
-                f => f.DocId,
-                d => d.Id,
-                (f, d) => new { d.Id, f.Designation })
-            .Where(x => designations.Contains(x.Designation))
-            .Select(x => new { x.Id, x.Designation })
-            .Distinct()
-            .ToList();
-        
-        return context.Docs
-            .Where(x => docs.Any(f => f.Id == x.PrimaryFieldId) || 
-                        docs.Any(f => f.Id == x.ActualFieldId.Value))
-            .Distinct()
-            .Select(x => new DocWithGeneralInfoModel
-            {
-                Id = x.Id,
-                Designation = docs.FirstOrDefault(f => f.Id == x.PrimaryFieldId).Designation
-            })
-            .ToList();
-    }
-    
-    public async Task<int> GetCountOfDocumentsAsync(SearchParametersModel parameters, bool? isValid)
-    {
-        var fieldIds = await SearchHelper.SearchFields(parameters, isValid, context);
+        var fieldIds = await SearchHelper.SearchFields(parameters, context);
 
-        return context.Docs
-            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId.Value))
+        return context.Documents
+            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId))
             .Distinct()
             .Count();
     }
 
-    public async Task<DocEntity?> GetByIdAsync(long id)
+    public Task<Document?> GetByIdAsync(long id)
     {
-        return await context.Docs.FirstOrDefaultAsync(doc => doc.Id == id);
+        return context.Documents.FirstOrDefaultAsync(doc => doc.Id == id);
     }
 
-    public async Task<DocEntity?> GetByDesignationAsync(string designation)
+    public Task<Document?> GetByDesignationAsync(string designation)
     {
-        return (await context.Docs.Join(context.Fields,
-                doc => doc.Id,
-                field => field.DocId,
-                (doc, field) => new { Doc = doc, Field = field })
-            .FirstOrDefaultAsync(x => designation == x.Field.Designation))?.Doc;
+        return context.Documents.Where(x => x.Designation == designation).FirstOrDefaultAsync();
     }
 
     public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
     {
-        return await context.Docs.Join(context.Fields,
+        return await context.Documents.Join(context.Fields,
                 doc => doc.Id,
                 field => field.DocId,
                 (doc, field) => new { doc.Id, field.Designation })
@@ -97,15 +65,15 @@ public class DocsRepository(DataContext context) : IDocsRepository
             .ToListAsync();
     }
 
-    public async Task<long> AddAsync(DocEntity document)
+    public async Task<long> AddAsync(Document document)
     {
-        await context.Docs.AddAsync(document);
+        await context.Documents.AddAsync(document);
         await context.SaveChangesAsync();
         return document.Id;
     }
 
     public async Task DeleteAsync(long id)
     {
-        await context.Docs.Where(doc => doc.Id == id).ExecuteDeleteAsync();
+        await context.Documents.Where(doc => doc.Id == id).ExecuteDeleteAsync();
     }
 }
