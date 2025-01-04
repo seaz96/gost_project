@@ -21,7 +21,7 @@ public class SentryService(string token, long chatId) : ISentryService
             ? JsonConvert.SerializeObject(httpContext.Items[SerializedBodyItemsKey])
             : string.Empty;
 
-        /*await _botClient.SendTextMessageAsync(_chatId,
+        await _botClient.SendTextMessageAsync(_chatId,
             "@qwuipss443 @seaz96\n\n" +
             $"{exception.Message}\n\n"
             + $"Trace id: {Activity.Current?.TraceId}");
@@ -34,6 +34,6 @@ public class SentryService(string token, long chatId) : ISentryService
 
         if (body.Length is not 0)
             await _botClient.SendDocumentAsync(_chatId,
-                new InputFileStream(body.ToStream(), "body.txt"));*/
+                new InputFileStream(body.ToStream(), "body.txt"));
     }
 }

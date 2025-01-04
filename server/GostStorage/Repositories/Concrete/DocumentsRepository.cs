@@ -3,29 +3,16 @@ using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
+using GostStorage.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Concrete;
 
 public class DocumentsRepository(DataContext context) : IDocumentsRepository
 {
     public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters)
     {
-        return context.Documents
-            .Join(context.PrimaryFields,
-                d => d.Id,
-                f => f.DocId,
-                (d, p) => new { d, p })
-            .Join(context.ActualFields,
-                g => g.d.Id,
-                f => f.DocId,
-                (g, a) => new FullDocument
-                {
-                    DocId = g.d.Id,
-                    Actual = a,
-                    Primary = g.p,
-                    Status = g.d.Status
-                })
+        return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
             .CountAsync();
     }
@@ -37,7 +24,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
 
     public Task<Document?> GetByDesignationAsync(string designation)
     {
-        return context.Documents.Where(x => x.Designation == designation).FirstOrDefaultAsync();
+        return context.Documents.FirstOrDefaultAsync(x => x.Designation == designation);
     }
 
     public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
@@ -45,52 +32,24 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
         return await context.Documents
             .Where(doc => docDesignations.Contains(doc.Designation))
             .Select(doc => new DocWithGeneralInfoModel
-                {
-                    Id = doc.Id,
-                    Designation = doc.Designation
-                })
+            {
+                Id = doc.Id,
+                Designation = doc.Designation
+            })
             .AsSingleQuery()
             .ToListAsync();
     }
 
     public Task<FullDocument?> GetDocumentWithFields(long docId)
     {
-        return context.Documents
-            .Join(context.PrimaryFields,
-                d => d.Id,
-                f => f.DocId,
-                (d, p) => new { d, p })
-            .Join(context.ActualFields,
-                g => g.d.Id,
-                f => f.DocId,
-                (g, a) => new FullDocument
-                {
-                    DocId = g.d.Id,
-                    Actual = a,
-                    Primary = g.p,
-                    Status = g.d.Status
-                })
+        return SearchHelper.GetFullDocumentQueryable(context)
             .Where(x => x.DocId == docId)
             .FirstOrDefaultAsync();
     }
-    
+
     public Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters)
     {
-        return context.Documents
-            .Join(context.PrimaryFields,
-                d => d.Id,
-                f => f.DocId,
-                (d, p) => new { d, p })
-            .Join(context.ActualFields,
-                g => g.d.Id,
-                f => f.DocId,
-                (g, a) => new FullDocument
-                {
-                    DocId = g.d.Id,
-                    Actual = a,
-                    Primary = g.p,
-                    Status = g.d.Status
-                })
+        return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
             .ToListAsync();
     }
@@ -112,7 +71,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
         var document = await context.Documents.FirstOrDefaultAsync(d => d.Id == id);
 
         if (document is null) return;
-        
+
         document.Status = status;
         context.Documents.Update(document);
         await context.SaveChangesAsync();

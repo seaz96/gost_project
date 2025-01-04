@@ -9,7 +9,7 @@ public class UserAction : BaseEntity
 
     public long UserId { get; set; }
 
-    public ActionType Action { get; set; }
+    public ActionType Type { get; set; }
 
     public string? OrgBranch { get; set; }
 

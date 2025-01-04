@@ -1,6 +1,6 @@
 using GostStorage.Models.Search;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Abstract;
 
 public interface ISearchRepository
 {

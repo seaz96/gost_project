@@ -2,7 +2,7 @@ using GostStorage.Entities;
 using GostStorage.Models.Docs;
 using GostStorage.Navigations;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Abstract;
 
 public interface IDocumentsRepository
 {

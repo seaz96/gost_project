@@ -5,6 +5,7 @@ using GostStorage.Models.Docs;
 using GostStorage.Models.Search;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Repositories.Abstract;
 using GostStorage.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
@@ -42,7 +43,7 @@ public class DocumentsService(
         var primaryId = await primaryFieldsRepository.AddAsync(primaryField);
         var actualId = await actualFieldsRepository.AddAsync(actualField);
         
-        doc = new Entities.Document
+        doc = new Document
         {
             Designation = primaryField.Designation,
             ActualFieldId = actualId,
@@ -51,6 +52,7 @@ public class DocumentsService(
         
         var docId = await documentsRepository.AddAsync(doc);
         
+        // костыль: возможно еще не присвоился айди для документа, нужно подождать
         if (docId == 0)
         {
             await Task.Delay(1000);
@@ -152,11 +154,6 @@ public class DocumentsService(
         var result = await searchRepository.SearchAsync(query);
         
         return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
-    }
-
-    public async Task UpdateStatus(long docId, DocumentStatus status)
-    {
-        await documentsRepository.UpdateStatusAsync(docId, status);
     }
 
     public async Task IndexAllDocumentsAsync()

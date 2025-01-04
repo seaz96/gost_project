@@ -4,6 +4,7 @@ using GostStorage.Helpers;
 using GostStorage.Models.Accounts;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Repositories.Abstract;
 using GostStorage.Services.Abstract;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,11 +44,9 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
         if (isLoginExist) return new ConflictObjectResult(new { Field = nameof(registerModel.Login) });
 
         var user = CreateUser(registerModel, passwordHasher);
-
         var task = usersRepository.AddAsync(user);
 
         var token = SecurityHelper.GetAuthToken(user);
-
         task.Wait();
 
         return new OkObjectResult(new

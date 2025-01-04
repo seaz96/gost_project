@@ -12,5 +12,5 @@ public interface IUserActionsService
 
     public Task<IActionResult> GetViews(GetViewsModel model);
 
-    public Task<IActionResult> GetCount(DocumentCountRequest model);
+    public Task<IActionResult> GetActionsAsync(DocumentCountRequest model);
 }

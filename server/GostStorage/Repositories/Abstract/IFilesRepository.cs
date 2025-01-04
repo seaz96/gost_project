@@ -1,4 +1,4 @@
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Abstract;
 
 public interface IFilesRepository
 {

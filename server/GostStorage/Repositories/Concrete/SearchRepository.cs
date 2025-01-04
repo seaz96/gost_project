@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Text;
 using GostStorage.Models.Search;
+using GostStorage.Repositories.Abstract;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Concrete;
 
 public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearchRepository
 {

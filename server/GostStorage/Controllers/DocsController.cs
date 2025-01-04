@@ -8,6 +8,7 @@ using GostStorage.Models.Docs;
 using GostStorage.Models.Search;
 using GostStorage.Navigations;
 using GostStorage.Repositories;
+using GostStorage.Repositories.Abstract;
 using GostStorage.Services.Abstract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,7 @@ public class DocsController(
         await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
-            Action = ActionType.Create,
+            Type = ActionType.Create,
             DocId = docId,
             Date = DateTime.UtcNow,
             UserId = userId
@@ -94,7 +95,7 @@ public class DocsController(
         await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
-            Action = ActionType.Update,
+            Type = ActionType.Update,
             DocId = docId,
             Date = DateTime.UtcNow,
             UserId = userId
@@ -123,7 +124,7 @@ public class DocsController(
         await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
-            Action = ActionType.Update,
+            Type = ActionType.Update,
             DocId = docId,
             Date = DateTime.UtcNow,
             UserId = userId
@@ -147,7 +148,7 @@ public class DocsController(
         await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
-            Action = ActionType.Update,
+            Type = ActionType.Update,
             DocId = model.Id,
             Date = DateTime.UtcNow,
             UserId = userId
@@ -166,7 +167,7 @@ public class DocsController(
         await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
-            Action = ActionType.View,
+            Type = ActionType.View,
             DocId = docId,
             Date = DateTime.UtcNow,
             UserId = userId
@@ -227,7 +228,7 @@ public class DocsController(
             .AddAsync(new UserAction
                 {
                     OrgBranch = user!.OrgBranch,
-                    Action = ActionType.Update,
+                    Type = ActionType.Update,
                     DocId = docId,
                     Date = DateTime.UtcNow,
                     UserId = userId

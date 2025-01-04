@@ -1,6 +1,6 @@
 using GostStorage.Entities;
 
-namespace GostStorage.Repositories;
+namespace GostStorage.Repositories.Abstract;
 
 public interface IActualFieldsRepository
 {
