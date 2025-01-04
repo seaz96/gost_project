@@ -159,4 +159,23 @@ public static class SearchHelper
             Harmonization = primary.Harmonization,
         };
     }
+    
+    internal static IQueryable<FullDocument> GetFullDocumentQueryable(DataContext context)
+    {
+        return context.Documents
+            .Join(context.PrimaryFields,
+                d => d.Id,
+                f => f.DocId,
+                (d, p) => new { d, p })
+            .Join(context.ActualFields,
+                g => g.d.Id,
+                f => f.DocId,
+                (g, a) => new FullDocument
+                {
+                    DocId = g.d.Id,
+                    Actual = a,
+                    Primary = g.p,
+                    Status = g.d.Status
+                });
+    }
 }

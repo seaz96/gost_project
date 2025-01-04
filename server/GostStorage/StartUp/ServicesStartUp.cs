@@ -11,6 +11,6 @@ public static class ServicesStartUp
         serviceCollection.AddScoped<IDocumentsService, DocumentsService>();
         serviceCollection.AddScoped<IReferencesService, ReferencesService>();
         serviceCollection.AddScoped<IFieldsService, FieldsService>();
-        serviceCollection.AddScoped<IDocStatisticsService, DocStatisticsService>();
+        serviceCollection.AddScoped<IUserActionsService, UserActionsService>();
     }
 }

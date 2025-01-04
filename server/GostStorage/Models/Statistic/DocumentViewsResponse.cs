@@ -1,6 +1,6 @@
 namespace GostStorage.Models.Statistic;
 
-public class DocumentViewsRequest
+public class DocumentViewsResponse
 {
     public long DocId { get; set; }
 

@@ -9,26 +9,6 @@ namespace GostStorage.Repositories;
 
 public class DocumentsRepository(DataContext context) : IDocumentsRepository
 {
-    public async Task<List<Document>> GetAllAsync()
-    {
-        return await context.Documents.ToListAsync();
-    }
-
-    public async Task<List<Document>> GetDocumentsAsync(GetDocumentRequest parameters)
-    {
-        var fieldIds = await SearchHelper.SearchFields(parameters, context);
-
-        var docs = context.Documents
-            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId))
-            .Distinct()
-            .OrderBy(x => x.Id)
-            .Skip(parameters.Offset)
-            .Take(parameters.Limit)
-            .ToList();
-        
-        return docs;
-    }
-    
     public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters)
     {
         return context.Documents

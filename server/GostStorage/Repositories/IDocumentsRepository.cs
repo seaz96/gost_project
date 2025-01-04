@@ -6,10 +6,6 @@ namespace GostStorage.Repositories;
 
 public interface IDocumentsRepository
 {
-    public Task<List<Document>> GetAllAsync();
-
-    public Task<List<Document>> GetDocumentsAsync(GetDocumentRequest parameters);
-
     public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters);
 
     public Task<Document?> GetByIdAsync(long id);

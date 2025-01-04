@@ -20,7 +20,7 @@ public class DocsController(
     IDocumentsService documentsService,
     IReferencesService referencesService,
     IFieldsService fieldsService,
-    IDocStatisticsService docStatisticsService,
+    IUserActionsService userActionsService,
     IUsersRepository usersRepository,
     ISearchRepository searchRepository,
     IMapper mapper)
@@ -43,7 +43,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new UserAction
+        await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
             Action = ActionType.Create,
@@ -65,7 +65,7 @@ public class DocsController(
         }
 
         await referencesService.DeleteReferencesByIdAsync(docId);
-        await docStatisticsService.DeleteAsync(docId);
+        await userActionsService.DeleteAsync(docId);
         await searchRepository.DeleteDocumentAsync(docId);
         var result = await documentsService.DeleteDocumentAsync(docId);
 
@@ -91,7 +91,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new UserAction
+        await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
             Action = ActionType.Update,
@@ -120,7 +120,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new UserAction
+        await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
             Action = ActionType.Update,
@@ -144,7 +144,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new UserAction
+        await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
             Action = ActionType.Update,
@@ -163,7 +163,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await docStatisticsService.AddAsync(new UserAction
+        await userActionsService.AddAsync(new UserAction
         {
             OrgBranch = user!.OrgBranch,
             Action = ActionType.View,
@@ -223,7 +223,7 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId).ConfigureAwait(false);
 
-        await docStatisticsService
+        await userActionsService
             .AddAsync(new UserAction
                 {
                     OrgBranch = user!.OrgBranch,

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Abstract;
 
-public interface IDocStatisticsService
+public interface IUserActionsService
 {
     public Task AddAsync(UserAction statistic);
 
