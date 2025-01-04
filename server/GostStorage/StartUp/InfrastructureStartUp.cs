@@ -38,7 +38,7 @@ public static class InfrastructureStartUp
         serviceCollection.AddScoped<IPrimaryFieldsRepository, PrimaryFieldsRepository>();
         serviceCollection.AddScoped<IActualFieldsRepository, ActualFieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
-        serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
+        serviceCollection.AddScoped<IDocumentsRepository, DocumentsRepository>();
         serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
         serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@{minioHost}:{minioPort}/"));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();

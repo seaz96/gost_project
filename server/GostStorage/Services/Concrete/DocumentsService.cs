@@ -11,8 +11,8 @@ using Serilog;
 
 namespace GostStorage.Services.Concrete;
 
-public class DocsService(
-        IDocsRepository docsRepository,
+public class DocumentsService(
+        IDocumentsRepository documentsRepository,
         IPrimaryFieldsRepository primaryFieldsRepository,
         IActualFieldsRepository actualFieldsRepository,
         IReferencesRepository referencesRepository,
@@ -20,12 +20,12 @@ public class DocsService(
         IFilesRepository filesRepository,
         ISearchRepository searchRepository,
         IMapper mapper)
-    : IDocsService
+    : IDocumentsService
 {
     public async Task<long> AddDocumentAsync(PrimaryField primaryField, DocumentStatus status)
     {
         primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
-        var doc = await docsRepository.GetByDesignationAsync(primaryField.Designation);
+        var doc = await documentsRepository.GetByDesignationAsync(primaryField.Designation);
         
         if (doc is not null)
         {
@@ -42,14 +42,14 @@ public class DocsService(
         var primaryId = await primaryFieldsRepository.AddAsync(primaryField);
         var actualId = await actualFieldsRepository.AddAsync(actualField);
         
-        doc = new Document
+        doc = new Entities.Document
         {
             Designation = primaryField.Designation,
             ActualFieldId = actualId,
             PrimaryFieldId = primaryId
         };
         
-        var docId = await docsRepository.AddAsync(doc);
+        var docId = await documentsRepository.AddAsync(doc);
         
         if (docId == 0)
         {
@@ -72,7 +72,7 @@ public class DocsService(
 
     public async Task<bool> DeleteDocumentAsync(long id)
     {
-        var doc = await docsRepository.GetByIdAsync(id);
+        var doc = await documentsRepository.GetByIdAsync(id);
 
         if (doc is null)
         {
@@ -82,7 +82,7 @@ public class DocsService(
         await primaryFieldsRepository.DeleteAsync(doc.PrimaryFieldId);
         await primaryFieldsRepository.DeleteAsync(doc.ActualFieldId);
         
-        await docsRepository.DeleteAsync(id);
+        await documentsRepository.DeleteAsync(id);
         await searchRepository.DeleteDocumentAsync(id);
 
         return true;
@@ -91,7 +91,7 @@ public class DocsService(
     //todo
     public async Task<IActionResult> ChangeStatusAsync(long id, DocumentStatus status)
     {
-        await docsRepository.UpdateStatusAsync(id, status);
+        await documentsRepository.UpdateStatusAsync(id, status);
         
         /*var ftsDocument = mapper.Map<SearchDocument>(actualField);
         ftsDocument.Id = id;
@@ -101,80 +101,48 @@ public class DocsService(
         return new OkObjectResult("Status changed successfully.");
     }
 
-    public async Task<DocumentWithFieldsModel?> GetDocumentAsync(long id)
+    public async Task<FullDocument?> GetDocumentAsync(long id)
     {
-        var doc = await docsRepository.GetByIdAsync(id);
+        var doc = await documentsRepository.GetDocumentWithFields(id);
         
         if (doc is null)
         {
             return null;
         }
-        
-        var docs = await docsRepository.GetAllAsync();
-        var fields = await primaryFieldsRepository.GetAllAsync();
-        
-        var references = (await referencesRepository.GetAllAsync())
-            .Where(reference => reference.ParentalDocId == id)
-            .Select(reference =>
-            {
-                var docRef = docs.FirstOrDefault(x => x.Id == reference.ChildDocId);
-                var primary = fields.Find(field => field.Id == docRef.PrimaryFieldId);
-                var actual = fields.Find(field => field.Id == docRef.ActualFieldId);
 
-                return new DocWithStatusModel
-                {
-                    DocId = docRef.Id,
-                    Designation = actual.Designation ?? primary.Designation,
-                    Status = doc.Status
-                };
-            })
-            .ToList();
-        
-        var result = new DocumentWithFieldsModel
-        {
-            Primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
-            Actual = await primaryFieldsRepository.GetByIdAsync(doc.ActualFieldId),
-            DocId = doc.Id,
-            References = references
-        };
+        var references = await referencesRepository.GetDocumentsByParentIdAsync(id);
+        doc.References = references;
 
-        return result;
+        return doc;
     }
 
-    public async Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(GetDocumentRequest parameters)
+    public async Task<List<FullDocument>> GetDocumentsAsync(GetDocumentRequest? parameters)
     {
-        if (parameters.Name is not null)
+        if (!string.IsNullOrEmpty(parameters.Name))
         {
             parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
         }
 
-        var docs = await docsRepository.GetDocumentsAsync(parameters);
-        var docsWithFields = docs.AsParallel().Select(async doc => new DocumentWithFieldsModel
-        {
-            Primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
-            Actual = await actualFieldsRepository.GetByIdAsync(doc.PrimaryFieldId),
-            DocId = doc.Id
-        }).ToList();
-
-        return (await Task.WhenAll(docsWithFields)).ToList();
+        return await documentsRepository.GetDocumentsWithFields(parameters);
     }
     
-    public async Task<int> GetDocumentsCountAsync(GetDocumentRequest parameters)
+    public async Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters)
     {
         if (parameters.Name is not null)
         {
             parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
         }
 
-        return await docsRepository.GetCountOfDocumentsAsync(parameters);
+        return await documentsRepository.GetCountOfDocumentsAsync(parameters);
     }
 
+    //todo: исправить хардкод бы
     public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
     {
         await filesRepository.UploadFileAsync(file.File, file.Extension, docId);
-        var doc = await docsRepository.GetByIdAsync(docId);
+        var doc = await documentsRepository.GetByIdAsync(docId);
         var primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
-        primary.DocumentText = $"https://gost-storage.ru/documents/{primary.Designation}.{file.Extension}";
+        primary.DocumentText = $"https://gost-storage.ru/documents/{doc.Designation}.{file.Extension}";
         await primaryFieldsRepository.UpdateAsync(primary);
         return new OkResult();
     }
@@ -188,26 +156,19 @@ public class DocsService(
 
     public async Task UpdateStatus(long docId, DocumentStatus status)
     {
-        await docsRepository.UpdateStatusAsync(docId, status);
+        await documentsRepository.UpdateStatusAsync(docId, status);
     }
 
     public async Task IndexAllDocumentsAsync()
     {
-        var docs = await docsRepository.GetAllAsync();
-        var fields = await primaryFieldsRepository.GetAllAsync();
+        var documents = await documentsRepository.GetDocumentsWithFields(null);
 
-        foreach (var doc in docs)
+        foreach (var documnet in documents)
         {
-            if (doc.Status is DocumentStatus.Inactive)
-                continue;
-            
-            var primary = fields.FirstOrDefault(x => x.Id == doc.PrimaryFieldId);
-            var actual = fields.FirstOrDefault(x => x.Id == doc.ActualFieldId);
-            
-            Log.Logger.Information($"indexing {doc.Id}");
+            Log.Logger.Information($"indexing {documnet.DocId}");
             await searchRepository.IndexDocumentAsync(new SearchIndexModel
             {
-                Document = SearchHelper.SplitFieldsToIndexDocument(doc.Id, primary, actual)
+                Document = SearchHelper.SplitFieldsToIndexDocument(documnet.DocId, documnet.Primary, documnet.Actual)
             });
         }
     }

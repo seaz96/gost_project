@@ -10,7 +10,7 @@ namespace GostStorage.Services.Concrete;
 public class FieldsService(
         IPrimaryFieldsRepository primaryFieldsRepository,
         IActualFieldsRepository actualFieldsRepository,
-        IDocsRepository docsRepository,
+        IDocumentsRepository documentsRepository,
         IMapper mapper)
     : IFieldsService
 {
@@ -18,7 +18,7 @@ public class FieldsService(
     {
         updatedField.Designation = TextFormattingHelper.FormatDesignation(updatedField.Designation);
 
-        var doc = await docsRepository.GetByIdAsync(docId);
+        var doc = await documentsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {
@@ -34,7 +34,7 @@ public class FieldsService(
     public async Task<IActionResult> ActualizeAsync(Field actualizedField, long docId)
     {
         actualizedField.Designation = TextFormattingHelper.FormatDesignation(actualizedField.Designation);
-        var doc = await docsRepository.GetByIdAsync(docId);
+        var doc = await documentsRepository.GetByIdAsync(docId);
         
         if (doc is null)
         {

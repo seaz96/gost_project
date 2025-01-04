@@ -17,7 +17,7 @@ namespace GostStorage.Controllers;
 [ApiController]
 [Route("api/docs")]
 public class DocsController(
-    IDocsService docsService,
+    IDocumentsService documentsService,
     IReferencesService referencesService,
     IFieldsService fieldsService,
     IDocStatisticsService docStatisticsService,
@@ -37,7 +37,7 @@ public class DocsController(
 
         var newField = mapper.Map<PrimaryField>(dto);
 
-        var docId = await docsService.AddDocumentAsync(newField, DocumentStatus.Valid);
+        var docId = await documentsService.AddDocumentAsync(newField, DocumentStatus.Valid);
         await referencesService.AddReferencesAsync(dto.References, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
@@ -64,10 +64,10 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        var result = await docsService.DeleteDocumentAsync(docId);
         await referencesService.DeleteReferencesByIdAsync(docId);
         await docStatisticsService.DeleteAsync(docId);
         await searchRepository.DeleteDocumentAsync(docId);
+        var result = await documentsService.DeleteDocumentAsync(docId);
 
         return result
             ? new OkObjectResult("Document deleted successfully.")
@@ -153,12 +153,12 @@ public class DocsController(
             UserId = userId
         });
 
-        return await docsService.ChangeStatusAsync(model.Id, model.Status);
+        return await documentsService.ChangeStatusAsync(model.Id, model.Status);
     }
 
     [Authorize]
     [HttpGet("{docId}")]
-    public async Task<ActionResult<DocumentWithFieldsModel?>> GetDocument(long docId)
+    public async Task<ActionResult<FullDocument?>> GetDocument(long docId)
     {
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
@@ -172,26 +172,26 @@ public class DocsController(
             UserId = userId
         });
         
-        var document = await docsService.GetDocumentAsync(docId);
+        var document = await documentsService.GetDocumentAsync(docId);
         return document is null ? NotFound() : new OkObjectResult(document);
     }
 
     [NoCache]
     [Authorize]
     [HttpGet("all")]
-    public async Task<ActionResult<List<DocumentWithFieldsModel>>> GetDocuments(
-        [FromQuery] GetDocumentRequest parameters)
+    public async Task<ActionResult<List<FullDocument>>> GetDocuments(
+        [FromQuery] GetDocumentRequest? parameters)
     {
-        return Ok(await docsService.GetDocumentsAsync(parameters));
+        return Ok(await documentsService.GetDocumentsAsync(parameters));
     }
 
     [NoCache]
     [Authorize]
     [HttpGet("all-count")]
     public async Task<ActionResult<int>> GetDocumentsCount(
-        [FromQuery] GetDocumentRequest parameters)
+        [FromQuery] GetDocumentRequest? parameters)
     {
-        return Ok(await docsService.GetDocumentsCountAsync(parameters));
+        return Ok(await documentsService.GetDocumentsCountAsync(parameters));
     }
 
     [NoCache]
@@ -199,14 +199,14 @@ public class DocsController(
     [HttpGet("search")]
     public async Task<ActionResult> SearchAsync([FromQuery] SearchQuery parameters)
     {
-        return new OkObjectResult(await docsService.SearchAsync(parameters));
+        return new OkObjectResult(await documentsService.SearchAsync(parameters));
     }
     
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("index-all")]
     public async Task<ActionResult> IndexAllAsync()
     {
-        await docsService.IndexAllDocumentsAsync();
+        await documentsService.IndexAllDocumentsAsync();
         return Ok();
     }
 
@@ -234,11 +234,11 @@ public class DocsController(
                 })
             .ConfigureAwait(false);
 
-        await docsService.UploadFileForDocumentAsync(file, docId);
+        await documentsService.UploadFileForDocumentAsync(file, docId);
 
         var fileContent = new MemoryStream();
         await file.File.CopyToAsync(fileContent).ConfigureAwait(false);
-        var document = await docsService.GetDocumentAsync(docId);
+        var document = await documentsService.GetDocumentAsync(docId);
 
         var indexModel = new SearchIndexModel
         {

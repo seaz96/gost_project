@@ -4,17 +4,19 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Repositories;
 
-public interface IDocsRepository
+public interface IDocumentsRepository
 {
     public Task<List<Document>> GetAllAsync();
 
     public Task<List<Document>> GetDocumentsAsync(GetDocumentRequest parameters);
 
-    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest parameters);
+    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters);
 
     public Task<Document?> GetByIdAsync(long id);
 
     public Task<Document?> GetByDesignationAsync(string designation);
+    
+    Task<FullDocument?> GetDocumentWithFields(long docId);
 
     public Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations);
 
@@ -23,4 +25,6 @@ public interface IDocsRepository
     public Task DeleteAsync(long id);
 
     public Task UpdateStatusAsync(long id, DocumentStatus status);
+
+    Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters);
 }

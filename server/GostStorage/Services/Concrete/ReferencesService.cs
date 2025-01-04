@@ -8,14 +8,14 @@ namespace GostStorage.Services.Concrete;
 
 public class ReferencesService(
         IReferencesRepository referencesRepository,
-        IDocsRepository docsRepository,
-        IDocsService docsService)
+        IDocumentsRepository documentsRepository,
+        IDocumentsService documentsService)
     : IReferencesService
 {
     public async Task AddReferencesAsync(List<string> docChildren, long parentId)
     {
         docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
-        var existingDocs = await docsRepository.GetDocsIdByDesignationAsync(docChildren);
+        var existingDocs = await documentsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>
         {
@@ -24,7 +24,7 @@ public class ReferencesService(
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = docsService.AddDocumentAsync(new PrimaryField { Designation = designation}, DocumentStatus.Inactive);
+            var docId = documentsService.AddDocumentAsync(new PrimaryField { Designation = designation}, DocumentStatus.Inactive);
             
             docId.Wait();
             return docId.Result;
@@ -46,7 +46,7 @@ public class ReferencesService(
     public async Task UpdateReferencesAsync(List<string> docChildren, long parentId)
     {
         docChildren = docChildren.Select(TextFormattingHelper.FormatDesignation).ToList();
-        var existingDocs = await docsRepository.GetDocsIdByDesignationAsync(docChildren);
+        var existingDocs = await documentsRepository.GetDocsIdByDesignationAsync(docChildren);
 
         var referenceIds = docChildren.Select(designation =>
         {
@@ -55,7 +55,7 @@ public class ReferencesService(
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = docsService.AddDocumentAsync(new PrimaryField { Designation = designation }, DocumentStatus.Inactive);
+            var docId = documentsService.AddDocumentAsync(new PrimaryField { Designation = designation }, DocumentStatus.Inactive);
             docId.Wait();
             return docId.Result;
         }).ToList(); 

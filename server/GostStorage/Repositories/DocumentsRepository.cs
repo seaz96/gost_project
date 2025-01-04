@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GostStorage.Repositories;
 
-public class DocsRepository(DataContext context) : IDocsRepository
+public class DocumentsRepository(DataContext context) : IDocumentsRepository
 {
     public async Task<List<Document>> GetAllAsync()
     {
@@ -29,14 +29,25 @@ public class DocsRepository(DataContext context) : IDocsRepository
         return docs;
     }
     
-    public async Task<int> GetCountOfDocumentsAsync(GetDocumentRequest parameters)
+    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters)
     {
-        var fieldIds = await SearchHelper.SearchFields(parameters, context);
-
         return context.Documents
-            .Where(x => fieldIds.Contains(x.PrimaryFieldId) || fieldIds.Contains(x.ActualFieldId))
-            .Distinct()
-            .Count();
+            .Join(context.PrimaryFields,
+                d => d.Id,
+                f => f.DocId,
+                (d, p) => new { d, p })
+            .Join(context.ActualFields,
+                g => g.d.Id,
+                f => f.DocId,
+                (g, a) => new FullDocument
+                {
+                    DocId = g.d.Id,
+                    Actual = a,
+                    Primary = g.p,
+                    Status = g.d.Status
+                })
+            .ApplyFilters(parameters)
+            .CountAsync();
     }
 
     public Task<Document?> GetByIdAsync(long id)
@@ -59,6 +70,48 @@ public class DocsRepository(DataContext context) : IDocsRepository
                     Designation = doc.Designation
                 })
             .AsSingleQuery()
+            .ToListAsync();
+    }
+
+    public Task<FullDocument?> GetDocumentWithFields(long docId)
+    {
+        return context.Documents
+            .Join(context.PrimaryFields,
+                d => d.Id,
+                f => f.DocId,
+                (d, p) => new { d, p })
+            .Join(context.ActualFields,
+                g => g.d.Id,
+                f => f.DocId,
+                (g, a) => new FullDocument
+                {
+                    DocId = g.d.Id,
+                    Actual = a,
+                    Primary = g.p,
+                    Status = g.d.Status
+                })
+            .Where(x => x.DocId == docId)
+            .FirstOrDefaultAsync();
+    }
+    
+    public Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters)
+    {
+        return context.Documents
+            .Join(context.PrimaryFields,
+                d => d.Id,
+                f => f.DocId,
+                (d, p) => new { d, p })
+            .Join(context.ActualFields,
+                g => g.d.Id,
+                f => f.DocId,
+                (g, a) => new FullDocument
+                {
+                    DocId = g.d.Id,
+                    Actual = a,
+                    Primary = g.p,
+                    Status = g.d.Status
+                })
+            .ApplyFilters(parameters)
             .ToListAsync();
     }
 

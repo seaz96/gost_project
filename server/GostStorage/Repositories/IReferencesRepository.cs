@@ -21,4 +21,6 @@ public interface IReferencesRepository
     public Task DeleteAllByChildIdAsync(long parentId);
 
     public Task UpdateByParentIdAsync(List<long> referenceIds, long parentId);
+
+    Task<List<Document>> GetDocumentsByParentIdAsync(long id);
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GostStorage.Services.Abstract;
 
-public interface IDocsService
+public interface IDocumentsService
 {
     Task<long> AddDocumentAsync(PrimaryField primaryField, DocumentStatus status);
 
@@ -14,12 +14,12 @@ public interface IDocsService
 
     Task<IActionResult> ChangeStatusAsync(long id, DocumentStatus status);
     
-    Task<DocumentWithFieldsModel?> GetDocumentAsync(long id);
+    Task<FullDocument?> GetDocumentAsync(long id);
 
-    Task<List<DocumentWithFieldsModel>> GetDocumentsAsync(
-        GetDocumentRequest parameters);
+    Task<List<FullDocument>> GetDocumentsAsync(
+        GetDocumentRequest? parameters);
 
-    Task<int> GetDocumentsCountAsync(GetDocumentRequest parameters);
+    Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters);
 
     Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
 

@@ -26,6 +26,18 @@ public class ReferencesRepository(DataContext context) : IReferencesRepository
         return await context.References.FirstOrDefaultAsync(reference => reference.ChildDocId == id);
     }
 
+    public Task<List<Document>> GetDocumentsByParentIdAsync(long id)
+    {
+        return context.References
+            .Where(x => x.ParentalDocId == id)
+            .Join(
+                context.Documents,
+                r => r.ChildDocId,
+                d => d.Id,
+                (r, d) => d)
+            .ToListAsync();
+    }
+
     public async Task AddAsync(DocumentReference reference)
     {
         await context.References.AddAsync(reference);

@@ -3,7 +3,7 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public class DocumentWithFieldsModel
+public class FullDocument
 {
     public long DocId { get; set; }
 
@@ -13,5 +13,5 @@ public class DocumentWithFieldsModel
 
     public Field Actual { get; set; }
 
-    public List<DocWithStatusModel> References { get; set; }
+    public List<Document> References { get; set; }
 }

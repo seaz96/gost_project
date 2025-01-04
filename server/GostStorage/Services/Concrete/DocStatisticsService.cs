@@ -13,7 +13,7 @@ namespace GostStorage.Services.Concrete;
 //note(azanov.n): этот класс выглядит очень страшно, переделать бы
 public class DocStatisticsService(
         IDocStatisticsRepository docStatisticsRepository,
-        IDocsService docsService)
+        IDocumentsService documentsService)
     : IDocStatisticsService
 {
     public async Task AddAsync(UserAction statistic)
@@ -33,7 +33,7 @@ public class DocStatisticsService(
             model.Designation = TextFormattingHelper.FormatDesignation(model.Designation);
         }
 
-        var docs = await docsService.GetDocumentsAsync(new GetDocumentRequest
+        var docs = await documentsService.GetDocumentsAsync(new GetDocumentRequest
         {
             Name = model.Designation,
             ActivityField = model.ActivityField,
@@ -81,7 +81,7 @@ public class DocStatisticsService(
 
     public async Task<IActionResult> GetCount(DocumentCountRequest model)
     {
-        var docs = await docsService.GetDocumentsAsync(new GetDocumentRequest
+        var docs = await documentsService.GetDocumentsAsync(new GetDocumentRequest
         {
             Status = model.Status
         });
