@@ -14,7 +14,7 @@ public interface IAccountService
 
     public Task<IActionResult> ChangePasswordAsync(PasswordChangeModel passwordChangeModel);
 
-    public Task<IActionResult> GetUsersListAsync();
+    public Task<IActionResult> GetUsersListAsync(int limit, int offset);
 
     public Task<IActionResult> GetUserInfoAsync(long id);
 

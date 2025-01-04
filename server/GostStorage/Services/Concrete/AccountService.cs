@@ -87,7 +87,7 @@ public class AccountService(IUsersRepository usersRepository, IPasswordHasher pa
         return new OkResult();
     }
 
-    public async Task<IActionResult> GetUsersListAsync()
+    public async Task<IActionResult> GetUsersListAsync(int limit, int offset)
     {
         var users = (await usersRepository.GetAllAsync()).Select(user => new
         {
