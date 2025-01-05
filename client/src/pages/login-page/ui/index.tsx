@@ -45,6 +45,7 @@ const LoginPage = () => {
 				<section className={styles.authorizationForm}>
 					<AuthorizationForm
 						changeForm={() => setState(states.registration)}
+						error={error}
 						onSubmit={(user: UserAuthorization) => handleAuthorization(user)}
 					/>
 				</section>
@@ -52,11 +53,11 @@ const LoginPage = () => {
 				<section className={styles.registrationForm}>
 					<RegistrationForm
 						changeForm={() => setState(states.authorization)}
+						error={error}
 						onSubmit={(user: UserRegistration) => handleRegistration(user)}
 					/>
 				</section>
 			)}
-			{error && <div className={styles.error}>{error}</div>}
 		</div>
 	);
 };

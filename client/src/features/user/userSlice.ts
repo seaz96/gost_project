@@ -65,7 +65,7 @@ export const userSlice = createSlice({
 			})
 			.addCase(fetchUser.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.error.message || "Failed to fetch user";
+				state.error = `Ошибка загрузки данных пользователя (${action.error.message})`;
 			})
 			.addCase(loginUser.pending, (state) => {
 				state.loading = true;
@@ -79,7 +79,7 @@ export const userSlice = createSlice({
 			.addCase(loginUser.rejected, (state, action) => {
 				state.loading = false;
 				state.user = null;
-				state.error = action.error.message || "Invalid credentials";
+				state.error = action.error.code === 'ERR_BAD_REQUEST' ? "Неверный логин или пароль" : `Ошибка входа в систему (${action.error.message})`;
 			})
 			.addCase(logoutUser.pending, (state) => {
 				state.loading = true;
@@ -101,7 +101,7 @@ export const userSlice = createSlice({
 			.addCase(registerUser.rejected, (state, action) => {
 				state.loading = false;
 				state.user = null;
-				state.error = action.error.message || "Failed to register";
+				state.error = action.error.code === 'ERR_BAD_REQUEST' ? "Пользователь с таким логином уже существует" : `Ошибка регистрации (${action.error.message})`;
 			});
 	},
 });

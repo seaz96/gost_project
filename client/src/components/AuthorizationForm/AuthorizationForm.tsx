@@ -1,21 +1,16 @@
-import type React from "react";
-import { useState } from "react";
-import { Button, Input } from "../../shared/components";
-
-import type { AxiosError } from "axios";
 import { useFormik } from "formik";
-import type {UserRegistration} from "../RegistrationForm/registrationModel.ts";
+import { Button, Input } from "../../shared/components";
 import styles from "./AuthorizationForm.module.scss";
 import type { UserAuthorization } from "./authorizationModel.ts";
 
 interface AuthorizationFormProps {
 	changeForm: () => void;
 	onSubmit: (user: UserAuthorization) => Promise<void>;
+	error: string | null;
 }
 
 const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
-	const { changeForm, onSubmit } = props;
-	const [error, setError] = useState("");
+	const { changeForm, onSubmit, error } = props;
 
 	const validate = (values: { login: string; password: string }) => {
 		const errors: { login?: string; password?: string } = {};
@@ -40,11 +35,7 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 		},
 		validate,
 		onSubmit: (values) => {
-			onSubmit(values).catch((err: AxiosError) => {
-				if (err.response?.status === 400) {
-					setError("Неправильный логин или пароль");
-				}
-			});
+			onSubmit(values);
 		},
 	});
 
@@ -76,6 +67,7 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 				onChange={formik.handleChange("password")}
 				error={formik.errors.password}
 			/>
+			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
 				<Button isFilled className={styles.formButton} type="submit">
 					Войти
@@ -84,7 +76,6 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 					Зарегистрироваться
 				</Button>
 			</div>
-			{error && <p className={styles.error}>{error}</p>}
 		</form>
 	);
 };

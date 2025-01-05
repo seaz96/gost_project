@@ -1,20 +1,17 @@
+import {useFormik} from "formik";
 import type React from "react";
-import { useState } from "react";
-import { Button, Input } from "../../shared/components";
-
-import type { AxiosError } from "axios";
-import { useFormik } from "formik";
+import {Button, Input} from "../../shared/components";
 import styles from "./RegistrationForm.module.scss";
-import type { UserRegistration } from "./registrationModel.ts";
+import type {UserRegistration} from "./registrationModel.ts";
 
 interface RegistrationFormProps {
 	changeForm: () => void;
 	onSubmit: (user: UserRegistration) => Promise<void>;
+	error: string | null;
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {
-	const { changeForm, onSubmit } = props;
-	const [error, setError] = useState("");
+	const { changeForm, onSubmit, error } = props;
 
 	const validate = (values: UserRegistration & { repeatedPassword: string }) => {
 		const errors: Partial<UserRegistration & { repeatedPassword: string }> = {};
@@ -49,11 +46,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {
 		},
 		validate,
 		onSubmit: (values) => {
-			onSubmit({ ...values, role: "Admin" }).catch((err: AxiosError) => {
-				if (err.response?.status === 400) {
-					setError("Неправильный логин или пароль");
-				}
-			});
+			onSubmit({ ...values, role: "Admin" });
 		},
 	});
 
@@ -114,6 +107,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {
 				value={formik.values.orgActivity}
 				error={formik.errors.orgActivity}
 			/>
+			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
 				<Button onClick={() => {}} isFilled className={styles.formButton} type="submit">
 					Зарегистрироваться
