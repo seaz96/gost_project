@@ -221,28 +221,13 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
-        if (await documentsService.GetDocumentAsync(docId) is null)
+        var document = await documentsService.GetDocumentAsync(docId);
+        if (document is null)
         {
             return NotFound($"Document with id {docId} not found");
         }
 
-        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
-        var user = await usersRepository.GetUserAsync(userId).ConfigureAwait(false);
-
-        await userActionsService
-            .AddAsync(new UserAction
-                {
-                    OrgBranch = user!.OrgBranch,
-                    Type = ActionType.Update,
-                    DocId = docId,
-                    Date = DateTime.UtcNow,
-                    UserId = userId
-                })
-            .ConfigureAwait(false);
-
         await documentsService.UploadFileForDocumentAsync(file, docId);
-
-        var document = await documentsService.GetDocumentAsync(docId);
 
         var indexModel = new SearchIndexModel
         {
@@ -251,6 +236,21 @@ public class DocsController(
         };
         
         await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
+
+        var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
+        var user = await usersRepository.GetUserAsync(userId).ConfigureAwait(false);
+
+        await userActionsService
+            .AddAsync(new UserAction
+            {
+                OrgBranch = user!.OrgBranch,
+                Type = ActionType.Update,
+                DocId = docId,
+                Date = DateTime.UtcNow,
+                UserId = userId
+            })
+            .ConfigureAwait(false);
+        
         return Ok();
     }
 }

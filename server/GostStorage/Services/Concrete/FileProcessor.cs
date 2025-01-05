@@ -1,36 +1,38 @@
 using GostStorage.Models.Docs;
 using GostStorage.Services.Abstract;
-using TikaOnDotNet.TextExtraction;
+using Serilog;
+using Toxy;
 
 namespace GostStorage.Services.Concrete;
 
-public class FileProcessor(TextExtractor textExtractor, ILogger logger) : IFileProcessor
+public class FileProcessor : IFileProcessor
 {
     public async Task<string> ExtractFileTextSafeAsync(UploadFileModel document)
     {
+        var path = Path.GetTempPath() + Guid.NewGuid() + document.File.FileName;
         try
         {
-            return await ProcessFileAsync(document);
-
-        }
-        catch (TextExtractionException e)
-        {
-            logger.LogError(e.Message);
-            return null;
-            //TODO(azanov.n): сюда надо прикрутить OCR на tesseract для pdf
+            await using var stream = new FileStream(
+                path,
+                FileMode.Create,
+                FileAccess.ReadWrite,
+                FileShare.ReadWrite,
+                4096,
+                FileOptions.DeleteOnClose);
+            await document.File.CopyToAsync(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var text = ParserFactory.CreateText(new ParserContext(path)).Parse();
+            return text;
         }
         catch (Exception e)
         {
-            logger.LogError(e.Message);
+            Log.Logger.Error(e.Message);
             return null;
+            //TODO(azanov.n): сюда надо прикрутить OCR на tesseract для pdf
         }
-    }
-    
-    private async Task<string> ProcessFileAsync(UploadFileModel document)
-    {
-        using var fileStream = new MemoryStream();
-        await document.File.CopyToAsync(fileStream);
-        var result = textExtractor.Extract(fileStream.ToArray());
-        return result.Text;
+        finally
+        {
+            File.Delete(path);
+        }
     }
 }

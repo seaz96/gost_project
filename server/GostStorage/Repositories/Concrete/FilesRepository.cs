@@ -29,7 +29,7 @@ public class FilesRepository(
                 .WithObjectSize(stream.Length)
                 .WithContentType("application/octet-stream");
 
-            _ = await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
+            await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
         }
     }
 }

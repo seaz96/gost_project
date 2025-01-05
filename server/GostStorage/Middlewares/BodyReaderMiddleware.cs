@@ -7,7 +7,7 @@ public class BodyReaderMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)
     {
-        if (context.Request.Method == HttpMethods.Post)
+        if (context.Request.Method == HttpMethods.Post && context.Request.ContentType == "application/json")
         {
             using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();
