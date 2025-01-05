@@ -1,1 +1,1 @@
-export {default as ChangesStatisticTable} from './ui/ChangesStatisticTable'
+export { default as ChangesStatisticTable } from "./ui/ChangesStatisticTable";

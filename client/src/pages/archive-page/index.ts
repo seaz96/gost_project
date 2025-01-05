@@ -1,1 +1,1 @@
-export {default as ArchivePage} from './ui/ArchivePage'
+export { default as ArchivePage } from "./ui/ArchivePage";

@@ -1,1 +1,1 @@
-export {default as GostReplacePage} from './ui/GostReplacePage'
+export { default as GostReplacePage } from "./ui/GostReplacePage";

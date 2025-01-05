@@ -1,1 +1,1 @@
-export {default as GostReview} from './ui'
+export { default as GostReview } from "./ui";

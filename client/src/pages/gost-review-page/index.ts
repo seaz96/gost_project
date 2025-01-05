@@ -1,1 +1,1 @@
-export {default as GostReviewPage} from './ui';
+export { default as GostReviewPage } from "./ui";

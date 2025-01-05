@@ -1,1 +1,1 @@
-export {default as UsersPage} from './ui'
+export { default as UsersPage } from "./ui";

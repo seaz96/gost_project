@@ -1,1 +1,1 @@
-export {default as GostEditorPage} from './ui'
+export { default as GostEditorPage } from "./ui";

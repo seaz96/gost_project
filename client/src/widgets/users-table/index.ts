@@ -1,1 +1,1 @@
-export {default as UsersTable} from './ui'
+export { default as UsersTable } from "./ui";

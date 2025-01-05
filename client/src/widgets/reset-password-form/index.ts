@@ -1,1 +1,1 @@
-export {default as ResetPasswordForm} from './ui'
+export { default as ResetPasswordForm } from "./ui";

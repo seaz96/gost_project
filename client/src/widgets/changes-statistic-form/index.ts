@@ -1,1 +1,1 @@
-export {default as ChangesStatisticForm} from './ui/ChangesStatisticForm'
+export { default as ChangesStatisticForm } from "./ui/ChangesStatisticForm";

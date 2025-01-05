@@ -1,1 +1,1 @@
-export {default as ReviewsStatisticForm} from './ui/ReviewsStatisticForm'
+export { default as ReviewsStatisticForm } from "./ui/ReviewsStatisticForm";

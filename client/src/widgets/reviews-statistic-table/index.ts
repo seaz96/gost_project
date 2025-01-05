@@ -1,1 +1,1 @@
-export {default as ReviewsStatisticTable} from './ui/ReviewsStatisticTable'
+export { default as ReviewsStatisticTable } from "./ui/ReviewsStatisticTable";
