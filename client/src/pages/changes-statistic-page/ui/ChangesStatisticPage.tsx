@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import classNames from "classnames";
 import type { gostModel } from "entities/gost";
-import { ChangesStatisticForm } from "widgets/changes-statistic-form";
-import { ChangesStatisticTable } from "widgets/changes-statistic-table";
+import ChangesStatisticForm from "../../../widgets/changes-statistic-form/ChangesStatisticForm.tsx";
+import ChangesStatisticTable from "../../../widgets/changes-statistic-table/ChangesStatisticTable.tsx";
 import styles from "./ChangesStatisticPage.module.scss";
 
 const ChangesStatisticPage = () => {

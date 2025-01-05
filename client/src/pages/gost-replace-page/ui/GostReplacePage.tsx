@@ -1,10 +1,11 @@
 import classNames from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
-import { GostForm, type newGostModel } from "widgets/gost-form";
 
 import type { gostModel } from "entities/gost";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
+import GostForm from "../../../widgets/gost-form/GostForm.tsx";
+import type {GostToSave} from "../../../widgets/gost-form/newGostModel.ts";
 import styles from "./GostReplacePage.module.scss";
 
 function getGostStub() {
@@ -28,15 +29,15 @@ function getGostStub() {
 		harmonization: 1,
 		isPrimary: true,
 		references: [],
-	} as newGostModel.GostToSave;
+	} as GostToSave;
 }
 
 const GostReplacePage = () => {
 	const navigate = useNavigate();
 	const gostToReplaceId = useParams().id;
-	const { response, loading } = useAxios<gostModel.Gost>("/docs/" + gostToReplaceId);
+	const { response, loading } = useAxios<gostModel.Gost>(`/docs/${gostToReplaceId}`);
 
-	const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
+	const addNewDocument = (gost: GostToSave, file: File) => {
 		axiosInstance
 			.post("/docs/add", gost)
 			.then(() => {

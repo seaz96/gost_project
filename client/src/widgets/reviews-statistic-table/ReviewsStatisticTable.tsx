@@ -1,6 +1,6 @@
 import type React from "react";
 
-import type { gostModel } from "entities/gost";
+import type { gostModel } from "../../entities/gost";
 import styles from "./ReviewsStatisticTable.module.scss";
 
 interface ReviewsStatisticTableProps {

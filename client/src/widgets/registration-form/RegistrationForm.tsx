@@ -1,15 +1,15 @@
 import type React from "react";
 import { useState } from "react";
-import { Button, Input } from "shared/components";
+import { Button, Input } from "../../shared/components";
 
 import type { AxiosError } from "axios";
 import { useFormik } from "formik";
-import type { UserRegistration } from "../model/registrationModel";
 import styles from "./RegistrationForm.module.scss";
+import type { UserRegistration } from "./registrationModel.ts";
 
 interface RegistrationFormProps {
-	changeForm: Function;
-	onSubmit: Function;
+	changeForm: () => void;
+	onSubmit: (user: UserRegistration) => Promise<void>;
 }
 
 const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {

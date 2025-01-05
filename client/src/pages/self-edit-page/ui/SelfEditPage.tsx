@@ -1,9 +1,10 @@
 import type { userModel } from "entities/user";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "shared/hooks";
-import { UserEditForm, type UserEditType } from "widgets/user-edit-form";
 
 import { axiosInstance } from "shared/configs/axiosConfig";
+import UserEditForm from "../../../widgets/user-edit-form/UserEditForm.tsx";
+import type {UserEditType} from "../../../widgets/user-edit-form/userEditModel.ts";
 import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {
@@ -22,7 +23,7 @@ const SelfEditPage = () => {
 				</section>
 			</div>
 		);
-	else return <></>;
+	return <></>;
 };
 
 export default SelfEditPage;

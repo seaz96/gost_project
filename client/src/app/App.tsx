@@ -2,7 +2,7 @@ import AppRouter from "../pages/AppRouter.tsx";
 import { withProviders } from "./providers";
 import "./styles/index.scss";
 
-const App = () => {
+export const App = () => {
 	return <AppRouter />;
 };
 

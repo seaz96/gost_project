@@ -1,14 +1,13 @@
-import { useContext } from "react";
-
 import { IconButton, Popover } from "@mui/material";
 import classNames from "classnames";
-import type { gostModel } from "entities/gost";
-import { UserContext } from "entities/user";
+import {type FC, useContext, useState} from "react";
 import { Link } from "react-router-dom";
-import eye from "shared/assets/eye.svg";
-import pen from "shared/assets/pen.svg";
-import loop from "../assets/loop.png";
+import type { gostModel } from "../../entities/gost";
+import { UserContext } from "../../entities/user";
+import eye from "../../shared/assets/eye.svg";
+import pen from "../../shared/assets/pen.svg";
 import styles from "./GostTable.module.scss";
+import loop from "./assets/loop.png";
 
 interface GostsTableProps {
 	gosts: gostModel.GostViewInfo[];
@@ -30,8 +29,8 @@ const GostsTable: React.FC<GostsTableProps> = (props) => {
 					<th>Действия</th>
 				</tr>
 			</thead>
-			{gosts.map((gost, index) => (
-				<GostRow gostsParams={gostsParams} gost={gost} />
+			{gosts.map((gost) => (
+				<GostRow key={gost.id} gostsParams={gostsParams} gost={gost} />
 			))}
 		</table>
 	);
@@ -42,8 +41,8 @@ interface GostRowProps {
 	gostsParams: (gostModel.GostFields & { text?: string }) | null;
 }
 
-const GostRow: React.FC<GostRowProps> = ({ gost, gostsParams }) => {
-	const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+const GostRow: FC<GostRowProps> = ({ gost, gostsParams }) => {
+	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const open = Boolean(anchorEl);
 	const { user } = useContext(UserContext);
 

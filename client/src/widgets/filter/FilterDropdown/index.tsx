@@ -1,11 +1,11 @@
-import type { gostModel } from "entities/gost";
 import type React from "react";
 import { useState } from "react";
+import type { gostModel } from "../../../entities/gost";
 
 import { Collapse } from "@mui/material";
 import classNames from "classnames";
-import { Input, RadioGroup } from "shared/components";
-import arrowDown from "../../assets/arrowDown.png";
+import { Input, RadioGroup } from "../../../shared/components";
+import arrowDown from "../assets/arrowDown.png";
 import styles from "./FilterDropdown.module.scss";
 
 interface FilterDropdownProps {

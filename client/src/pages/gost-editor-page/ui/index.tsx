@@ -1,14 +1,14 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
-import type { newGostModel } from "widgets/gost-form";
-import GostForm from "widgets/gost-form/ui";
+import GostForm from "../../../widgets/gost-form/GostForm.tsx";
+import type {GostToSave} from "../../../widgets/gost-form/newGostModel.ts";
 import styles from "./GostEditorPage.module.scss";
 
 const GostEditorPage = () => {
 	const navigate = useNavigate();
 
-	const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
+	const addNewDocument = (gost: GostToSave, file: File) => {
 		axiosInstance
 			.post("/docs/add", gost)
 			.then((response) => {

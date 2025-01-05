@@ -1,9 +1,9 @@
-import { GostReview } from "widgets/gost-review";
+import GostReview from "../../../widgets/gost-review/GostReview.tsx";
 
 import classNames from "classnames";
-import type { gostModel } from "entities/gost";
-import { useParams } from "react-router-dom";
-import { useAxios } from "shared/hooks";
+import type {gostModel} from "entities/gost";
+import {useParams} from "react-router-dom";
+import {useAxios} from "shared/hooks";
 import styles from "./GostReviewsPage.module.scss";
 
 const GostReviewPage = () => {
@@ -18,9 +18,8 @@ const GostReviewPage = () => {
 				</section>
 			</div>
 		);
-	} else {
-		return <></>;
 	}
+	return <></>;
 };
 
 export default GostReviewPage;

@@ -1,7 +1,7 @@
-import { UserContext } from "entities/user";
-import { lazy, useContext } from "react";
+import { useAppSelector } from "app/store/hooks";
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import { Header } from "widgets/header";
+import Header from "../widgets/header/Header.tsx";
 
 const LoginPage = lazy(() => import("./login-page").then((module) => ({ default: module.LoginPage })));
 const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));
@@ -30,7 +30,7 @@ const GostReplacePage = lazy(() =>
 const SelfEditPage = lazy(() => import("./self-edit-page").then((module) => ({ default: module.SelfEditPage })));
 
 const AppRouter = () => {
-	const { user } = useContext(UserContext);
+	const user = useAppSelector(state => state.user.user);
 
 	return (
 		<>

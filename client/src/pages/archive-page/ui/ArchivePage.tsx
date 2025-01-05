@@ -1,8 +1,7 @@
-import { Filter } from "widgets/filter";
-import { GostsTable } from "widgets/gosts-table";
-
 import { type gostModel, useGostsWithPagination } from "entities/gost";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Filter from "../../../widgets/filter/Filter.tsx";
+import GostsTable from "../../../widgets/gosts-table/GostsTable.tsx";
 import styles from "./ArchivePage.module.scss";
 const ArchivePage = () => {
 	const { gosts, countFetched, count, setGostParams, gostsParams, fetchGostsData } =

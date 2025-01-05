@@ -1,6 +1,6 @@
 import type React from "react";
 import { useState } from "react";
-import { Button, Input } from "shared/components";
+import { Button, Input } from "../../shared/components";
 
 import styles from "./ResetPasswordForm.module.scss";
 

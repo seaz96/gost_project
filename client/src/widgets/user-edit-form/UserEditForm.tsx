@@ -1,10 +1,10 @@
 import type React from "react";
 import { useContext, useState } from "react";
 
-import { UserContext, type userModel } from "entities/user";
-import { Button, Input } from "shared/components";
-import type { UserEditType } from "../model/userEditModel";
+import { UserContext, type userModel } from "../../entities/user";
+import { Button, Input } from "../../shared/components";
 import styles from "./UserEditForm.module.scss";
+import type { UserEditType } from "./userEditModel.ts";
 
 interface UserEditFormProps {
 	handleSubmit: Function;

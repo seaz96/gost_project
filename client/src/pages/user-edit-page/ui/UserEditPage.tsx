@@ -2,13 +2,14 @@ import type { userModel } from "entities/user";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
-import { UserEditForm, type UserEditType } from "widgets/user-edit-form";
+import UserEditForm from "../../../widgets/user-edit-form/UserEditForm.tsx";
+import type {UserEditType} from "../../../widgets/user-edit-form/userEditModel.ts";
 import styles from "./UserEditPage.module.scss";
 
 const UserEditPage = () => {
 	const navigate = useNavigate();
 	const id = Number.parseInt(useParams().id || "");
-	const { response, loading, error } = useAxios<userModel.User>(`/accounts/get-user-info`, { id: id });
+	const { response, loading, error } = useAxios<userModel.User>("/accounts/get-user-info", { id: id });
 	if (loading) return <></>;
 
 	const handleUserEdit = (userData: UserEditType) => {
@@ -19,7 +20,7 @@ const UserEditPage = () => {
 				if (userData.is_admin !== isAdmin) {
 					axiosInstance.post("/accounts/make-admin", {
 						userId: response?.id,
-						isAdmin: userData.is_admin && !isAdmin ? true : false,
+						isAdmin: (userData.is_admin && !isAdmin),
 					});
 				}
 			})
@@ -34,7 +35,7 @@ const UserEditPage = () => {
 				</section>
 			</div>
 		);
-	else return <></>;
+	return <></>;
 };
 
 export default UserEditPage;

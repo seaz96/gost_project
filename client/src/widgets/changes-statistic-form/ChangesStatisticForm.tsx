@@ -1,8 +1,8 @@
 import type React from "react";
 import { useState } from "react";
-import { Button, Input, RadioGroup } from "shared/components";
+import { Button, Input, RadioGroup } from "../../shared/components";
 
-import { axiosInstance } from "shared/configs/axiosConfig";
+import { axiosInstance } from "../../shared/configs/axiosConfig.ts";
 import styles from "./ChangesStatisticForm.module.scss";
 
 interface ChangesStatisticFormProps {

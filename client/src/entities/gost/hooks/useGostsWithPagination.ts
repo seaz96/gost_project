@@ -14,7 +14,6 @@ export const useGostsWithPagination = (url: string, defaultParams?: any) => {
 	const [countFetched, setCountFetched] = useState(0);
 
 	const fetchGostsData = async (limit: number = baseLimit, id: number = lastId, refetch = false) => {
-		console.log(count, countFetched);
 		return axiosInstance
 			.get(url, { params: { ...gostsParams, lastId: id, limit: limit } })
 			.then((res) => {
@@ -28,7 +27,7 @@ export const useGostsWithPagination = (url: string, defaultParams?: any) => {
 				setCountFetched((prev) => prev + limit);
 			})
 			.catch((err: any) => {
-				console.log(err);
+				console.error(err);
 			});
 	};
 
@@ -39,7 +38,7 @@ export const useGostsWithPagination = (url: string, defaultParams?: any) => {
 				setCount(res.data);
 			})
 			.catch((err: any) => {
-				console.log(err);
+				console.error(err);
 			});
 	};
 

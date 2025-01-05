@@ -1,19 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { TextField, styled } from "@mui/material";
+import {TextField} from "@mui/material";
 import classNames from "classnames";
-import type { gostModel } from "entities/gost";
-import { useRef, useState } from "react";
-import { Button, Input, RadioGroup } from "shared/components";
-import IconButton from "shared/components/IconButton";
-import TextArea from "shared/components/TextArea";
-import { useAxios } from "shared/hooks";
-import type { newGostModel } from "..";
-import type { GostToSave } from "../model/newGostModel";
+import {type ChangeEvent, useRef, useState} from "react";
+import {Button, Input, RadioGroup} from "../../shared/components";
+import IconButton from "../../shared/components/IconButton";
+import TextArea from "../../shared/components/TextArea";
 import styles from "./GostForm.module.scss";
+import type {GostToSave} from "./newGostModel.ts";
 
 interface GostFormProps {
-	handleSubmit: Function;
-	handleUploadFile: Function;
+	handleSubmit: (gost: GostToSave, file: File) => void;
+	handleUploadFile: (file: File, docId: string | undefined) => void;
 	gost?: GostToSave;
 }
 
@@ -42,8 +39,7 @@ function getGostStub() {
 }
 
 const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
-	const { response, loading, error } = useAxios<gostModel.GostGeneralInfo[]>("/docs/all-general-info");
-	const [newGost, setNewGost] = useState<newGostModel.GostToSave>(gost ?? getGostStub());
+	const [newGost, setNewGost] = useState<GostToSave>(gost ?? getGostStub());
 	const [reference, setReference] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [references, setReferences] = useState<string[]>(gost?.references ?? []);
@@ -56,15 +52,22 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 		}
 	}
 
-	const handleFileUpload = (event: any) => {
+	const handleFileUpload = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		console.log(event);
-		const file = event.target.files[0];
+		//FIXME: fix type
+		const target = event.target as HTMLInputElement;
+		if (!target.files) return;
+		const file = target.files[0];
 
 		setFile(file);
 	};
 
 	function submit() {
-		handleSubmit({ ...newGost, references: references }, file);
+		if (!file) {
+			console.error("No file selected, aborting");
+		} else {
+			handleSubmit({ ...newGost, references: references }, file);
+		}
 	}
 
 	return (
@@ -235,7 +238,6 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 							</div>
 							<ul className={styles.acceptedLinks}>
 								{references?.map((reference) => {
-									const existedGost = response?.filter((gost) => gost.designation === reference)[0];
 									return (
 										<li key={reference} className={classNames(styles.acceptedLink)}>
 											{reference}

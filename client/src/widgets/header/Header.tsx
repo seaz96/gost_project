@@ -2,20 +2,22 @@ import type React from "react";
 import { useContext, useState } from "react";
 
 import { Link } from "react-router-dom";
-import { Button } from "shared/components";
+import { Button } from "../../shared/components";
 import styles from "./Header.module.scss";
 
 import classNames from "classnames";
-import { UserContext } from "entities/user";
-import account from "../assets/account.png";
-import addIcon from "../assets/add-document.svg";
-import arrowDown from "../assets/arrow-down.svg";
-import exit from "../assets/exit.png";
-import lock from "../assets/lock.png";
-import profileIcon from "../assets/profile-icon.svg";
+import {useDispatch} from "react-redux";
+import {useAppDispatch} from "../../app/store/hooks.ts";
+import { UserContext } from "../../entities/user";
+import account from "./assets/account.png";
+import addIcon from "./assets/add-document.svg";
+import arrowDown from "./assets/arrow-down.svg";
+import exit from "./assets/exit.png";
+import lock from "./assets/lock.png";
+import profileIcon from "./assets/profile-icon.svg";
 
 const ProfileDropdown = () => {
-	const { setUser } = useContext(UserContext);
+	const dispatch = useAppDispatch();
 
 	return (
 		<div className={styles.dropdown}>
@@ -28,9 +30,10 @@ const ProfileDropdown = () => {
 				Редактировать профиль
 			</Link>
 			<button
+				type={"button"}
 				className={styles.exitButton}
 				onClick={() => {
-					setUser(null);
+					dispatch({ type: "user/logout" });
 					localStorage.removeItem("jwt_token");
 				}}
 			>

@@ -1,10 +1,9 @@
-import { Filter } from "widgets/filter";
-import { GostsTable } from "widgets/gosts-table";
-
 import type { gostModel } from "entities/gost";
 import { useGostsWithPagination } from "entities/gost";
 import { useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Filter from "../../../widgets/filter/Filter.tsx";
+import GostsTable from "../../../widgets/gosts-table/GostsTable.tsx";
 import styles from "./GostsPage.module.scss";
 
 const GostsPage = () => {

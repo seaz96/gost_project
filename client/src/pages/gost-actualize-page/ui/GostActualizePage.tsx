@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import { GostForm, type newGostModel } from "widgets/gost-form";
-
 import type { gostModel } from "entities/gost";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
+import GostForm from "../../../widgets/gost-form/GostForm.tsx";
+import type {GostToSave} from "../../../widgets/gost-form/newGostModel.ts";
 import styles from "./GostActualizePage.module.scss";
 
 const GostActualizePage = () => {
@@ -12,15 +12,15 @@ const GostActualizePage = () => {
 	const { response, loading, error } = useAxios<gostModel.Gost>(`/docs/${id}`);
 	const navigate = useNavigate();
 
-	const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
+	const addNewDocument = (gost: GostToSave, file: File) => {
 		axiosInstance
-			.put("/docs/actualize/" + id, gost, {
+			.put(`/docs/actualize/${id}`, gost, {
 				params: {
 					docId: id,
 				},
 			})
 			.then(() => handleUploadFile(file, id))
-			.then(() => navigate("/gost-review/" + id));
+			.then(() => navigate(`/gost-review/${id}`));
 	};
 
 	const handleUploadFile = (file: File, docId: string | undefined) => {
@@ -53,7 +53,7 @@ const GostActualizePage = () => {
 				</section>
 			</div>
 		);
-	else return <></>;
+	return <></>;
 };
 
 export default GostActualizePage;

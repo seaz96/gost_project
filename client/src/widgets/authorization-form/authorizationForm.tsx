@@ -1,11 +1,11 @@
 import type React from "react";
 import { useState } from "react";
-import { Button, Input } from "shared/components";
+import { Button, Input } from "../../shared/components";
 
 import type { AxiosError } from "axios";
 import { useFormik } from "formik";
-import type { UserAuthorization } from "../model/authorizationModel";
 import styles from "./AuthorizationForm.module.scss";
+import type { UserAuthorization } from "./authorizationModel.ts";
 
 interface AuthorizationFormProps {
 	changeForm: Function;
@@ -60,6 +60,7 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 				id="login"
 				name="login"
 				label="Логин"
+				placeholder="user@example.com"
 				onChange={formik.handleChange("login")}
 				value={formik.values.login}
 				error={formik.errors.login}
@@ -69,6 +70,7 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 				label="Пароль"
 				id="password"
 				name="password"
+				placeholder=""
 				value={formik.values.password}
 				onChange={formik.handleChange("password")}
 				error={formik.errors.password}

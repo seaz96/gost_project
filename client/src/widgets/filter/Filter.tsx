@@ -1,14 +1,14 @@
 import type React from "react";
 import { useRef, useState } from "react";
 
-import IconButton from "shared/components/IconButton";
+import IconButton from "../../shared/components/IconButton";
 import styles from "./Filter.module.scss";
 
 import { Collapse } from "@mui/material";
-import type { gostModel } from "entities/gost";
-import filter from "../assets/filter.svg";
-import search from "../assets/search.svg";
+import type { gostModel } from "../../entities/gost";
 import FilterDropdown from "./FilterDropdown";
+import filter from "./assets/filter.svg";
+import search from "./assets/search.svg";
 
 interface FilterProps {
 	filterSubmit: Function;

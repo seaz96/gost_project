@@ -1,10 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { GostForm, type newGostModel } from "widgets/gost-form";
 
 import classNames from "classnames";
 import type { gostModel } from "entities/gost";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
+import GostForm from "../../../widgets/gost-form/GostForm.tsx";
+import type {GostToSave} from "../../../widgets/gost-form/newGostModel.ts";
 import styles from "./GostEditPage.module.scss";
 
 const GostEditPage = () => {
@@ -12,11 +13,11 @@ const GostEditPage = () => {
 	const id = useParams().id;
 	const { response, loading, error } = useAxios<gostModel.Gost>(`/docs/${id}`);
 
-	const editOldDocument = (gost: newGostModel.GostToSave, file: File) => {
+	const editOldDocument = (gost: GostToSave, file: File) => {
 		axiosInstance
 			.put(`/docs/update/${id}`, gost)
 			.then(() => handleUploadFile(file, id))
-			.then(() => navigate("/gost-review/" + id));
+			.then(() => navigate(`/gost-review/${id}`));
 	};
 
 	const handleUploadFile = (file: File, docId: string | undefined) => {
@@ -48,7 +49,7 @@ const GostEditPage = () => {
 				</section>
 			</div>
 		);
-	else return <></>;
+	return <></>;
 };
 
 export default GostEditPage;
