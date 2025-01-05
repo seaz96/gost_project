@@ -23,6 +23,7 @@ public class DocsController(
     IUserActionsService userActionsService,
     IUsersRepository usersRepository,
     ISearchRepository searchRepository,
+    IFileProcessor fileProcessor,
     IMapper mapper)
     : ControllerBase
 {
@@ -220,6 +221,11 @@ public class DocsController(
             return BadRequest("Model is not valid");
         }
 
+        if (await documentsService.GetDocumentAsync(docId) is null)
+        {
+            return NotFound($"Document with id {docId} not found");
+        }
+
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId).ConfigureAwait(false);
 
@@ -236,14 +242,12 @@ public class DocsController(
 
         await documentsService.UploadFileForDocumentAsync(file, docId);
 
-        var fileContent = new MemoryStream();
-        await file.File.CopyToAsync(fileContent).ConfigureAwait(false);
         var document = await documentsService.GetDocumentAsync(docId);
 
         var indexModel = new SearchIndexModel
         {
             Document = SearchHelper.SplitFieldsToIndexDocument(document.DocId, document.Primary, document.Actual),
-            Text = Encoding.UTF8.GetString(fileContent.ToArray()),
+            Text = await fileProcessor.ExtractFileTextSafeAsync(file)
         };
         
         await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
