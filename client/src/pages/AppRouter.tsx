@@ -30,7 +30,7 @@ const GostReplacePage = lazy(() =>
 const SelfEditPage = lazy(() => import("./self-edit-page").then((module) => ({ default: module.SelfEditPage })));
 
 const AppRouter = () => {
-	const user = useAppSelector(state => state.user.user);
+	const user = useAppSelector((state) => state.user.user);
 
 	return (
 		<>

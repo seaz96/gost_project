@@ -4,7 +4,7 @@ import { useAxios } from "shared/hooks";
 
 import { axiosInstance } from "shared/configs/axiosConfig";
 import UserEditForm from "../../../widgets/user-edit-form/UserEditForm.tsx";
-import type {UserEditType} from "../../../widgets/user-edit-form/userEditModel.ts";
+import type { UserEditType } from "../../../widgets/user-edit-form/userEditModel.ts";
 import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {

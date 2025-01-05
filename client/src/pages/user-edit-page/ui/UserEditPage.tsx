@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
 import UserEditForm from "../../../widgets/user-edit-form/UserEditForm.tsx";
-import type {UserEditType} from "../../../widgets/user-edit-form/userEditModel.ts";
+import type { UserEditType } from "../../../widgets/user-edit-form/userEditModel.ts";
 import styles from "./UserEditPage.module.scss";
 
 const UserEditPage = () => {
@@ -20,7 +20,7 @@ const UserEditPage = () => {
 				if (userData.is_admin !== isAdmin) {
 					axiosInstance.post("/accounts/make-admin", {
 						userId: response?.id,
-						isAdmin: (userData.is_admin && !isAdmin),
+						isAdmin: userData.is_admin && !isAdmin,
 					});
 				}
 			})

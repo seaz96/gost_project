@@ -1,6 +1,6 @@
 import { IconButton, Popover } from "@mui/material";
 import classNames from "classnames";
-import {type FC, useContext, useState} from "react";
+import { type FC, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import type { gostModel } from "../../entities/gost";
 import { UserContext } from "../../entities/user";

@@ -1,9 +1,9 @@
 import type React from "react";
 
 import classNames from "classnames";
-import {Link} from "react-router-dom";
-import {useAppSelector} from "../../app/store/hooks.ts";
-import type {userModel} from "../../entities/user";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../app/store/hooks.ts";
+import type { userModel } from "../../entities/user";
 import styles from "./UsersReview.module.scss";
 
 interface UsersTableProps {
@@ -17,7 +17,7 @@ enum roles {
 }
 
 const UsersReview: React.FC<UsersTableProps> = (props) => {
-	const user= useAppSelector((state) => state.user.user);
+	const user = useAppSelector((state) => state.user.user);
 	const { users } = props;
 
 	return (

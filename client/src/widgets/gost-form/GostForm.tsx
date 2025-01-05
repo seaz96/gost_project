@@ -1,12 +1,12 @@
 import CloseIcon from "@mui/icons-material/Close";
-import {TextField} from "@mui/material";
+import { TextField } from "@mui/material";
 import classNames from "classnames";
-import {type ChangeEvent, useRef, useState} from "react";
-import {Button, Input, RadioGroup} from "../../shared/components";
+import { type ChangeEvent, useRef, useState } from "react";
+import { Button, Input, RadioGroup } from "../../shared/components";
 import IconButton from "../../shared/components/IconButton";
 import TextArea from "../../shared/components/TextArea";
 import styles from "./GostForm.module.scss";
-import type {GostToSave} from "./newGostModel.ts";
+import type { GostToSave } from "./newGostModel.ts";
 
 interface GostFormProps {
 	handleSubmit: (gost: GostToSave, file: File) => void;

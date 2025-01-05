@@ -6,8 +6,8 @@ import { Button } from "../../shared/components";
 import styles from "./Header.module.scss";
 
 import classNames from "classnames";
-import {useDispatch} from "react-redux";
-import {useAppDispatch} from "../../app/store/hooks.ts";
+import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../app/store/hooks.ts";
 import { UserContext } from "../../entities/user";
 import account from "./assets/account.png";
 import addIcon from "./assets/add-document.svg";

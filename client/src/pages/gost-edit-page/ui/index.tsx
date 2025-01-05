@@ -5,7 +5,7 @@ import type { gostModel } from "entities/gost";
 import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAxios } from "shared/hooks";
 import GostForm from "../../../widgets/gost-form/GostForm.tsx";
-import type {GostToSave} from "../../../widgets/gost-form/newGostModel.ts";
+import type { GostToSave } from "../../../widgets/gost-form/newGostModel.ts";
 import styles from "./GostEditPage.module.scss";
 
 const GostEditPage = () => {

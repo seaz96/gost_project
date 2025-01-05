@@ -6,25 +6,25 @@ import { axiosInstance } from "shared/configs/axiosConfig";
 import { useAppSelector } from "../store/hooks";
 
 export const withUser = (component: () => React.ReactNode) => () => {
-  const dispatch = useDispatch();
-  const loading = useAppSelector(state => state.user.loading);
+	const dispatch = useDispatch();
+	const loading = useAppSelector((state) => state.user.loading);
 
-  useEffect(() => {
-    if (localStorage.getItem("jwt_token")) {
-      dispatch(setLoading(true));
-      axiosInstance
-        .get("/accounts/self-info")
-        .then((response) => {
-          dispatch(setLoading(false));
-          dispatch(setUser(response.data));
-        })
-        .catch((error) => {
-          dispatch(setLoading(false));
-          console.log(error);
-        });
-    }
-  }, [dispatch]);
+	useEffect(() => {
+		if (localStorage.getItem("jwt_token")) {
+			dispatch(setLoading(true));
+			axiosInstance
+				.get("/accounts/self-info")
+				.then((response) => {
+					dispatch(setLoading(false));
+					dispatch(setUser(response.data));
+				})
+				.catch((error) => {
+					dispatch(setLoading(false));
+					console.log(error);
+				});
+		}
+	}, [dispatch]);
 
-  if (loading) return <Loader />;
-  return component();
+	if (loading) return <Loader />;
+	return component();
 };
