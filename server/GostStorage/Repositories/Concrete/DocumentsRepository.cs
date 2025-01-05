@@ -27,15 +27,10 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
         return context.Documents.FirstOrDefaultAsync(x => x.Designation == designation);
     }
 
-    public async Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations)
+    public async Task<IList<Document>> GetDocsIdByDesignationAsync(List<string> docDesignations)
     {
         return await context.Documents
             .Where(doc => docDesignations.Contains(doc.Designation))
-            .Select(doc => new DocWithGeneralInfoModel
-            {
-                Id = doc.Id,
-                Designation = doc.Designation
-            })
             .AsSingleQuery()
             .ToListAsync();
     }

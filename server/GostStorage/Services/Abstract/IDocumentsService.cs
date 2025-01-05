@@ -23,7 +23,7 @@ public interface IDocumentsService
 
     Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
 
-    Task<List<ShortInfoDocumentModel>> SearchAsync(SearchQuery query);
+    Task<List<GeneralDocumentInfoModel>> SearchAsync(SearchQuery query);
 
     Task IndexAllDocumentsAsync();
 }

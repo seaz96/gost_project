@@ -14,7 +14,7 @@ public interface IDocumentsRepository
     
     Task<FullDocument?> GetDocumentWithFields(long docId);
 
-    public Task<IList<DocWithGeneralInfoModel>> GetDocsIdByDesignationAsync(List<string> docDesignations);
+    public Task<IList<Document>> GetDocsIdByDesignationAsync(List<string> docDesignations);
 
     public Task<long> AddAsync(Document document);
 

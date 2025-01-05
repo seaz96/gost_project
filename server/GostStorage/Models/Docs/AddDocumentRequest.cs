@@ -5,7 +5,7 @@ namespace GostStorage.Models.Docs;
 
 public record AddDocumentRequest
 {
-    public string Designation { get; init; }
+    public required string Designation { get; init; }
 
     public string? FullName { get; init; }
 

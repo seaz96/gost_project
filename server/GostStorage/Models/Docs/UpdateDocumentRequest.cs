@@ -39,7 +39,5 @@ public class UpdateDocumentRequest
 
     public HarmonizationLevel Harmonization { get; set; }
 
-    public bool IsPrimary { get; set; }
-
     public List<string> References { get; set; }
 }

@@ -143,11 +143,11 @@ public class DocumentsService(
         return new OkResult();
     }
     
-    public async Task<List<ShortInfoDocumentModel>> SearchAsync(SearchQuery query)
+    public async Task<List<GeneralDocumentInfoModel>> SearchAsync(SearchQuery query)
     {
         var result = await searchRepository.SearchAsync(query);
         
-        return result.Select(mapper.Map<ShortInfoDocumentModel>).ToList();
+        return result.Select(mapper.Map<GeneralDocumentInfoModel>).ToList();
     }
 
     public async Task IndexAllDocumentsAsync()

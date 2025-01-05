@@ -16,7 +16,7 @@ public class MapperProfile : Profile
         CreateMap<ActualField, Field>().ReverseMap();
         
         CreateMap<Field, SearchDocument>();
-        CreateMap<SearchEntity, ShortInfoDocumentModel>()
+        CreateMap<SearchEntity, GeneralDocumentInfoModel>()
             .ForMember(
                 dest => dest.RelevanceMark,
                 options => options.MapFrom(x => Math.Round(x.Score * 5)));
