@@ -1,6 +1,6 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import urfuLogo from "shared/assets/urfu.png";
+import urfuLogoSvg from "shared/assets/urfu.svg";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import AuthorizationForm from "../../../components/AuthorizationForm/AuthorizationForm.tsx";
 import type {UserAuthorization} from "../../../components/AuthorizationForm/authorizationModel.ts";
@@ -37,7 +37,10 @@ const LoginPage = () => {
 
 	return (
 		<div className={styles.loginPageContainer}>
-			<img className={styles.logo} src={urfuLogo} alt="logo" />
+			<picture className={styles.logo}>
+				<source srcSet={urfuLogoSvg} type="image/svg+xml" />
+				<img src={urfuLogo} alt="logo" />
+			</picture>
 			{state === states.authorization ? (
 				<section className={styles.authorizationForm}>
 					<AuthorizationForm
