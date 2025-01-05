@@ -6,8 +6,9 @@ import { Button } from "../../shared/components";
 import styles from "./Header.module.scss";
 
 import classNames from "classnames";
-import { useAppDispatch } from "../../app/store/hooks.ts";
+import { useAppDispatch } from "../../app/hooks.ts";
 import { UserContext } from "../../entities/user";
+import {logoutUser} from "../../features/user/userSlice.ts";
 import account from "./assets/account.png";
 import addIcon from "./assets/add-document.svg";
 import arrowDown from "./assets/arrow-down.svg";
@@ -32,8 +33,7 @@ const ProfileDropdown = () => {
 				type={"button"}
 				className={styles.exitButton}
 				onClick={() => {
-					dispatch({ type: "user/logout" });
-					localStorage.removeItem("jwt_token");
+					dispatch(logoutUser());
 				}}
 			>
 				<img src={exit} className={styles.dropdownImage} alt="exit" />

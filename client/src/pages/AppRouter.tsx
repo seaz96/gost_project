@@ -1,6 +1,6 @@
-import { useAppSelector } from "app/store/hooks";
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
+import { useAppSelector } from "../app/hooks.ts";
 import Header from "../components/Header/Header";
 
 const LoginPage = lazy(() => import("./login-page").then((module) => ({ default: module.LoginPage })));
