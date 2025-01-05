@@ -8,10 +8,12 @@ name: Backend build
 on:
   workflow_dispatch:
   push:
-    branches: [ "**" ]
+    branches: [ "main", "dev", "refactoring-040125" ]
     paths: [ "server/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ "main", "dev" ]
 
 env:
   # Use docker.io for Docker Hub if empty
