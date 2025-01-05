@@ -2,7 +2,6 @@ using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
 using GostStorage.Models.Search;
-using Microsoft.EntityFrameworkCore;
 
 namespace GostStorage.Helpers;
 
