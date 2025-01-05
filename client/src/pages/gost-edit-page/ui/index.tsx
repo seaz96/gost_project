@@ -1,7 +1,4 @@
-import axios from 'axios'
-import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Filter } from 'widgets/filter'
 import { GostForm, newGostModel } from 'widgets/gost-form'
 
 import styles from './GostEditPage.module.scss'
@@ -9,7 +6,6 @@ import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
 import { axiosInstance } from 'shared/configs/axiosConfig'
-import { Extension } from 'typescript'
 
 const GostEditPage = () => {
   const navigate = useNavigate()
@@ -18,8 +14,8 @@ const GostEditPage = () => {
 
   const editOldDocument = (gost: newGostModel.GostToSave, file: File) => {
     axiosInstance.put(`/docs/update/${id}`, gost)
-    .then(response => handleUploadFile(file, id))
-    .then(responce => navigate('/gost-review/'+id))
+    .then(() => handleUploadFile(file, id))
+    .then(() => navigate('/gost-review/'+id))
   }
 
   const handleUploadFile = (file: File, docId: string | undefined) => {

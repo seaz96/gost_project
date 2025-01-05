@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext } from 'react'
 
 import styles from './GostTable.module.scss'
 import loop  from '../assets/loop.png';

@@ -1,5 +1,4 @@
-import React, {useContext, useState} from 'react'
-import axios from 'axios';
+import {useContext, useState} from 'react'
 
 import { AuthorizationForm, authorizationModel } from 'widgets/authorization-form';
 import { RegistrationForm, registrationModel } from 'widgets/registration-form';

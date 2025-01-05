@@ -1,9 +1,5 @@
-import React from 'react'
-import { Filter } from 'widgets/filter';
 import GostForm from 'widgets/gost-form/ui';
-
 import styles from './GostEditorPage.module.scss'
-import axios from 'axios';
 import { newGostModel } from 'widgets/gost-form';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';

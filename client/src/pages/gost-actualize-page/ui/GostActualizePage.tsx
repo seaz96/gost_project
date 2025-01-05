@@ -1,9 +1,7 @@
 import classNames from 'classnames'
-import React from 'react'
 import { GostForm, newGostModel } from 'widgets/gost-form'
 
 import styles from './GostActualizePage.module.scss'
-import axios from 'axios'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAxios } from 'shared/hooks'
 import { gostModel } from 'entities/gost'
@@ -11,7 +9,7 @@ import { axiosInstance } from 'shared/configs/axiosConfig'
 
 const GostActualizePage = () => {
   const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`/docs/${id}`)
+  const {response, loading, error } = useAxios<gostModel.Gost>(`/docs/${id}`)
   const navigate = useNavigate()
 
   const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
@@ -21,8 +19,8 @@ const GostActualizePage = () => {
       }
     }
     )
-    .then(response => handleUploadFile(file, id))
-    .then(responce => navigate('/gost-review/'+id))
+    .then(() => handleUploadFile(file, id))
+    .then(() => navigate('/gost-review/'+id))
   }
 
   const handleUploadFile = (file: File, docId: string | undefined) => {

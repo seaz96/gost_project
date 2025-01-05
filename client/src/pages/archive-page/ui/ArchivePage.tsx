@@ -1,4 +1,3 @@
-import React from 'react'
 import { Filter } from 'widgets/filter';
 import { GostsTable } from 'widgets/gosts-table';
 

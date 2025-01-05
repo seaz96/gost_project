@@ -1,4 +1,3 @@
-import axios from "axios";
 import { UserContext, userModel } from "entities/user";
 import { useEffect, useState } from "react";
 import { Loader } from "shared/components";

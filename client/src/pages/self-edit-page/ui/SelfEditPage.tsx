@@ -1,6 +1,4 @@
-import axios from 'axios'
-import { UserContext, userModel } from 'entities/user'
-import React, { useContext } from 'react'
+import { userModel } from 'entities/user'
 import { useNavigate } from 'react-router-dom'
 import { useAxios } from 'shared/hooks'
 import { UserEditForm, UserEditType } from 'widgets/user-edit-form'

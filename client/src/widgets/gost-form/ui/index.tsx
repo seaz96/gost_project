@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './GostForm.module.scss'
 import { Button, Input, RadioGroup } from 'shared/components'
@@ -10,8 +10,6 @@ import { gostModel } from 'entities/gost'
 import classNames from 'classnames'
 import IconButton from 'shared/components/IconButton'
 import { TextField, styled } from '@mui/material';
-import { CloudUploadOutlined } from '@mui/icons-material';
-import axios from 'axios';
 
 interface GostFormProps {
   handleSubmit: Function,
@@ -19,18 +17,6 @@ interface GostFormProps {
   gost?: GostToSave
 }
 
-
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
-  height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
-  bottom: 0,
-  left: 0,
-  whiteSpace: 'nowrap',
-  width: 1,
-});
 
 
 function getGostStub() {

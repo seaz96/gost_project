@@ -1,5 +1,3 @@
-import React from 'react'
-import { Filter } from 'widgets/filter';
 import { GostReview } from 'widgets/gost-review';
 
 import styles from './GostReviewsPage.module.scss'

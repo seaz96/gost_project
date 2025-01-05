@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import { Button, Input } from 'shared/components'
 
 import styles from './ReviewsStatisticForm.module.scss'
-import axios from 'axios'
 import { axiosInstance } from 'shared/configs/axiosConfig'
 
 interface ReviewsStatisticFormProps {

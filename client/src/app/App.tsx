@@ -1,14 +1,11 @@
-
-
 import { withProviders } from './providers'
 import AppRouter from 'pages'
 import './styles/index.scss'
 
 const App = () => {
-  
-  return (
-      <AppRouter />
-  )
+    return (
+        <AppRouter />
+    )
 }
 
-export default withProviders(App);
+export const AppWithProviders = withProviders(App);

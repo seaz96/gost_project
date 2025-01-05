@@ -1,8 +1,5 @@
-import React from 'react'
 import { UsersTable } from 'widgets/users-table';
-
 import styles from './UsersPage.module.scss'
-import { Filter } from 'widgets/filter';
 import { useAxios } from 'shared/hooks';
 import { userModel } from 'entities/user';
 import classNames from 'classnames';

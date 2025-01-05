@@ -1,6 +1,4 @@
-import axios from 'axios'
 import classNames from 'classnames'
-import React from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { GostForm, newGostModel } from 'widgets/gost-form'
 
@@ -46,8 +44,8 @@ const GostReplacePage = () => {
               status: 2
           })
       })
-      .then(response => {handleUploadFile(file, gostToReplaceId); return gostToReplaceId})
-      .then(responce => navigate('/'))
+      .then(() => {handleUploadFile(file, gostToReplaceId); return gostToReplaceId})
+      .then(() => navigate('/'))
     }
   
     const handleUploadFile = (file: File, docId: string | undefined) => {

@@ -1,11 +1,8 @@
-import React, { useContext } from 'react'
-
 import styles from './UserEditPage.module.scss'
 import { UserEditForm, UserEditType } from 'widgets/user-edit-form';
 import { useAxios } from 'shared/hooks';
-import { UserContext, userModel } from 'entities/user';
+import { userModel } from 'entities/user';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { axiosInstance } from 'shared/configs/axiosConfig';
 
 

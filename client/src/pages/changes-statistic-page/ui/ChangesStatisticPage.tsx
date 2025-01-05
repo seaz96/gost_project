@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import styles from './ChangesStatisticPage.module.scss'
 import { ChangesStatisticForm } from 'widgets/changes-statistic-form';

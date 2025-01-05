@@ -1,8 +1,6 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { ResetPasswordForm } from 'widgets/reset-password-form'
-
 import styles from './ResetPasswordPage.module.scss'
-import axios from 'axios'
 import { UserContext } from 'entities/user'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from 'shared/configs/axiosConfig'
