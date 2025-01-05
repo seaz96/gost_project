@@ -5,9 +5,11 @@ namespace GostStorage.Middlewares;
 
 public class BodyReaderMiddleware(RequestDelegate next)
 {
+    private const string JsonContentType = "application/json";
+    
     public async Task InvokeAsync(HttpContext context)
     {
-        if (context.Request.Method == HttpMethods.Post && context.Request.ContentType == "application/json")
+        if (context.Request.Method == HttpMethods.Post && context.Request.ContentType == JsonContentType)
         {
             using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();
