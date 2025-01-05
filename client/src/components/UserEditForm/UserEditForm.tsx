@@ -1,20 +1,20 @@
 import type React from "react";
-import { useContext, useState } from "react";
-
-import { UserContext, type userModel } from "../../entities/user";
+import { useState } from "react";
+import {useAppSelector} from "../../app/hooks.ts";
+import type {User} from "../../entities/user/userModel.ts";
 import { Button, Input } from "../../shared/components";
 import styles from "./UserEditForm.module.scss";
 import type { UserEditType } from "./userEditModel.ts";
 
 interface UserEditFormProps {
 	handleSubmit: Function;
-	userData: userModel.User;
+	userData: User;
 	id: number;
 }
 
 const UserEditForm: React.FC<UserEditFormProps> = (props) => {
 	const { handleSubmit, userData, id } = props;
-	const { user } = useContext(UserContext);
+	const user = useAppSelector(s => s.user.user)
 
 	const [userEditData, setUserEditData] = useState<UserEditType>({
 		name: userData.name,
@@ -22,7 +22,7 @@ const UserEditForm: React.FC<UserEditFormProps> = (props) => {
 		org_name: userData.orgName,
 		org_activity: userData.orgActivity,
 		org_branch: userData.orgBranch,
-		is_admin: userData.role === "Admin" || userData.role === "Heisenberg" ? true : false,
+		is_admin: userData.role === "Admin" || userData.role === "Heisenberg",
 	});
 
 	return (

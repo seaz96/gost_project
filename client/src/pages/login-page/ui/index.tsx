@@ -1,12 +1,12 @@
-import { useContext, useState } from "react";
-
-import { UserContext, type userModel } from "entities/user";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import urfuLogo from "shared/assets/urfu.png";
-import { axiosInstance } from "shared/configs/axiosConfig";
-import AuthorizationForm from "../../../components/AuthorizationForm/authorizationForm.tsx";
-import type { UserAuthorization } from "../../../components/AuthorizationForm/authorizationModel.ts";
+import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
+import AuthorizationForm from "../../../components/AuthorizationForm/AuthorizationForm.tsx";
+import type {UserAuthorization} from "../../../components/AuthorizationForm/authorizationModel.ts";
 import RegistrationForm from "../../../components/RegistrationForm/RegistrationForm.tsx";
-import type { UserRegistration } from "../../../components/RegistrationForm/registrationModel.ts";
+import type {UserRegistration} from "../../../components/RegistrationForm/registrationModel.ts";
+import {loginUser} from "../../../features/user/userSlice.ts";
 import styles from "./LoginPage.module.scss";
 
 enum states {
@@ -16,26 +16,23 @@ enum states {
 
 const LoginPage = () => {
 	const [state, setState] = useState<states>(states.authorization);
-	const { setUser } = useContext(UserContext);
+	const dispatch = useAppDispatch();
+	const error = useAppSelector((state) => state.user.error);
 
 	const handleRegistration = async (user: UserRegistration) => {
-		axiosInstance
-			.post<userModel.User>("/accounts/register", user)
-			.then((response) => {
-				setUser(response.data);
-				localStorage.setItem("jwt_token", response.data.token);
-				window.location.href = "/";
-			})
-			.catch((error) => console.log(error));
+		try {
+			dispatch(loginUser(user)).unwrap();
+		} catch (err) {
+			console.error("Failed to register:", err);
+		}
 	};
 
-	const handleAuthorization = (user: UserAuthorization) => {
-		return axiosInstance.post<userModel.User>("/accounts/login", user).then((response) => {
-			setUser(response.data);
-			localStorage.setItem("jwt_token", response.data.token);
-			window.location.href = "/";
-			return null;
-		});
+	const handleAuthorization = async (user: UserAuthorization) => {
+		try {
+			dispatch(loginUser(user)).unwrap();
+		} catch (err) {
+			console.error("Failed to login:", err);
+		}
 	};
 
 	return (
@@ -56,6 +53,7 @@ const LoginPage = () => {
 					/>
 				</section>
 			)}
+			{error && <div className={styles.error}>{error}</div>}
 		</div>
 	);
 };

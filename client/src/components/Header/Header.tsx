@@ -1,13 +1,11 @@
 import type React from "react";
-import { useContext, useState } from "react";
-
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../shared/components";
 import styles from "./Header.module.scss";
 
 import classNames from "classnames";
-import { useAppDispatch } from "../../app/hooks.ts";
-import { UserContext } from "../../entities/user";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {logoutUser} from "../../features/user/userSlice.ts";
 import account from "./assets/account.png";
 import addIcon from "./assets/add-document.svg";
@@ -44,7 +42,7 @@ const ProfileDropdown = () => {
 };
 
 const Header = () => {
-	const { user } = useContext(UserContext);
+	const user = useAppSelector(s => s.user.user)
 	const [isDropdownVisible, setDropdownVisible] = useState(false);
 
 	const dropdownCloseHandler = () => {

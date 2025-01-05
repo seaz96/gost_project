@@ -1,13 +1,12 @@
-import { UserContext } from "entities/user";
-import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
+import {useAppSelector} from "../../../app/hooks.ts";
 import ResetPasswordForm from "../../../components/ResetPasswordForm/ResetPasswordForm.tsx";
 import styles from "./ResetPasswordPage.module.scss";
 
 const ResetPasswordPage = () => {
 	const navigate = useNavigate();
-	const { user } = useContext(UserContext);
+	const user = useAppSelector(s => s.user.user)
 	const handleSubmit = (oldPassword: string, newPassword: string) => {
 		axiosInstance
 			.post("/accounts/change-password", {

@@ -1,12 +1,12 @@
 import type React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {useAppSelector} from "../../app/hooks.ts";
 import { gostModel } from "../../entities/gost";
-import { UserContext } from "../../entities/user";
 import { Button } from "../../shared/components";
 import { axiosInstance } from "../../shared/configs/axiosConfig.ts";
 import styles from "./GostReview.module.scss";
@@ -19,7 +19,7 @@ interface GostReviewProps {
 const GostReview: React.FC<GostReviewProps> = (props) => {
 	const { gost, gostId } = props;
 	const navigate = useNavigate();
-	const { user } = useContext(UserContext);
+	const user = useAppSelector(s => s.user.user)
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [recoverModalOpen, setRecoverModalOpen] = useState(false);

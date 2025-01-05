@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import { useAppSelector } from "../app/hooks.ts";
 import Header from "../components/Header/Header";
 
@@ -51,10 +51,12 @@ const AppRouter = () => {
 					<Route path="/gost-actualize-page/:id" element={<GostActualizePage />} />
 					<Route path="/gost-replace-page/:id" element={<GostReplacePage />} />
 					<Route path="/self-edit-page" element={<SelfEditPage />} />
+					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>
 			) : (
 				<Routes>
-					<Route path="*" element={<LoginPage />} />
+					<Route path="/login" element={<LoginPage />} />
+					<Route path="*" element={<Navigate to="/login" replace />} />
 				</Routes>
 			)}
 		</>

@@ -4,12 +4,13 @@ import { Button, Input } from "../../shared/components";
 
 import type { AxiosError } from "axios";
 import { useFormik } from "formik";
+import type {UserRegistration} from "../RegistrationForm/registrationModel.ts";
 import styles from "./AuthorizationForm.module.scss";
 import type { UserAuthorization } from "./authorizationModel.ts";
 
 interface AuthorizationFormProps {
-	changeForm: Function;
-	onSubmit: (user: UserAuthorization) => Promise<null | AxiosError>;
+	changeForm: () => void;
+	onSubmit: (user: UserAuthorization) => Promise<void>;
 }
 
 const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
