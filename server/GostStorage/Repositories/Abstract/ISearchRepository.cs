@@ -1,4 +1,5 @@
 using GostStorage.Models.Search;
+using GostStorage.Navigations;
 
 namespace GostStorage.Repositories.Abstract;
 
@@ -11,4 +12,6 @@ public interface ISearchRepository
     public Task IndexDocumentAsync(SearchIndexModel document);
 
     public Task DeleteDocumentAsync(long docId);
+
+    Task ChangeDocumentStatusAsync(long id, DocumentStatus status);
 }

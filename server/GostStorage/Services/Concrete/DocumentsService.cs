@@ -90,15 +90,10 @@ public class DocumentsService(
         return true;
     }
 
-    //todo
     public async Task<IActionResult> ChangeStatusAsync(long id, DocumentStatus status)
     {
         await documentsRepository.UpdateStatusAsync(id, status);
-        
-        /*var ftsDocument = mapper.Map<SearchDocument>(actualField);
-        ftsDocument.Id = id;
-        var indexModel = new SearchIndexModel { Document = ftsDocument };
-        await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);*/
+        await searchRepository.ChangeDocumentStatusAsync(id, status);
 
         return new OkObjectResult("Status changed successfully.");
     }

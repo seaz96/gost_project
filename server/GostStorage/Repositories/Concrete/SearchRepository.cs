@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
 using GostStorage.Models.Search;
+using GostStorage.Navigations;
 using GostStorage.Repositories.Abstract;
 using Newtonsoft.Json;
 using Serilog;
@@ -42,6 +43,19 @@ public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearch
     public async Task DeleteDocumentAsync(long docId)
     {
         var request = new HttpRequestMessage(HttpMethod.Delete, $"{ftsApiUrl}/delete/{docId}");
+        await httpClient.SendAsync(request).ConfigureAwait(false);
+    }
+
+    public async Task ChangeDocumentStatusAsync(long id, DocumentStatus status)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{ftsApiUrl}/update-status")
+        {
+            Content = new StringContent(
+                JsonConvert.SerializeObject(new { Id = id, Status = status }),
+                Encoding.UTF8, 
+                "application/json")
+        };
+        
         await httpClient.SendAsync(request).ConfigureAwait(false);
     }
     
