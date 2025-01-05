@@ -8,6 +8,7 @@ name: Backend build
 on:
   workflow_dispatch:
   push:
+    branches: []
     paths: [ "server/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
