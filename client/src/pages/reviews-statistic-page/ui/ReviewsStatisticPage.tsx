@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import classNames from "classnames";
 import type { gostModel } from "entities/gost";
-import ReviewsStatisticForm from "../../../widgets/reviews-statistic-form/ReviewsStatisticForm.tsx";
-import ReviewsStatisticTable from "../../../widgets/reviews-statistic-table/ReviewsStatisticTable.tsx";
+import ReviewsStatisticForm from "../../../components/ReviewsStatisticForm/ReviewsStatisticForm.tsx";
+import ReviewsStatisticTable from "../../../components/ReviewsStatisticTable/ReviewsStatisticTable.tsx";
 import styles from "./ReviewsStatisticPage.module.scss";
 
 const ReviewsStatisticPage = () => {

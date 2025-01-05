@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { axiosInstance } from "shared/configs/axiosConfig";
-import type { GostViewInfo } from "../model/gostModel";
+import type { GostViewInfo } from "../entities/gost/model/gostModel.ts";
+import { axiosInstance } from "../shared/configs/axiosConfig.ts";
 
 const baseLimit = 10;
 

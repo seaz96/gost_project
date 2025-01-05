@@ -3,10 +3,10 @@ import { useContext, useState } from "react";
 import { UserContext, type userModel } from "entities/user";
 import urfuLogo from "shared/assets/urfu.png";
 import { axiosInstance } from "shared/configs/axiosConfig";
-import AuthorizationForm from "../../../widgets/authorization-form/authorizationForm.tsx";
-import type { UserAuthorization } from "../../../widgets/authorization-form/authorizationModel.ts";
-import RegistrationForm from "../../../widgets/registration-form/RegistrationForm.tsx";
-import type { UserRegistration } from "../../../widgets/registration-form/registrationModel.ts";
+import AuthorizationForm from "../../../components/AuthorizationForm/authorizationForm.tsx";
+import type { UserAuthorization } from "../../../components/AuthorizationForm/authorizationModel.ts";
+import RegistrationForm from "../../../components/RegistrationForm/RegistrationForm.tsx";
+import type { UserRegistration } from "../../../components/RegistrationForm/registrationModel.ts";
 import styles from "./LoginPage.module.scss";
 
 enum states {

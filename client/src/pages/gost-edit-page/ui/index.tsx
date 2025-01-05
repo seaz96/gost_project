@@ -3,9 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import classNames from "classnames";
 import type { gostModel } from "entities/gost";
 import { axiosInstance } from "shared/configs/axiosConfig";
-import { useAxios } from "shared/hooks";
-import GostForm from "../../../widgets/gost-form/GostForm.tsx";
-import type { GostToSave } from "../../../widgets/gost-form/newGostModel.ts";
+import GostForm from "../../../components/GostForm/GostForm.tsx";
+import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
+import useAxios from "../../../hooks/useAxios.ts";
 import styles from "./GostEditPage.module.scss";
 
 const GostEditPage = () => {

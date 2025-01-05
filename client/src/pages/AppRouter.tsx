@@ -1,7 +1,7 @@
 import { useAppSelector } from "app/store/hooks";
 import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import Header from "../widgets/header/Header.tsx";
+import Header from "../components/Header/Header";
 
 const LoginPage = lazy(() => import("./login-page").then((module) => ({ default: module.LoginPage })));
 const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));

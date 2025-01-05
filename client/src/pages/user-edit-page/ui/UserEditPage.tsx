@@ -1,9 +1,9 @@
 import type { userModel } from "entities/user";
 import { useNavigate, useParams } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
-import { useAxios } from "shared/hooks";
-import UserEditForm from "../../../widgets/user-edit-form/UserEditForm.tsx";
-import type { UserEditType } from "../../../widgets/user-edit-form/userEditModel.ts";
+import UserEditForm from "../../../components/UserEditForm/UserEditForm.tsx";
+import type { UserEditType } from "../../../components/UserEditForm/userEditModel.ts";
+import useAxios from "../../../hooks/useAxios.ts";
 import styles from "./UserEditPage.module.scss";
 
 const UserEditPage = () => {

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import type { userModel } from "entities/user";
-import { useAxios } from "shared/hooks";
-import UsersReview from "../../../widgets/users-review/UsersReview.tsx";
+import UsersReview from "../../../components/UsersReview/UsersReview.tsx";
+import useAxios from "../../../hooks/useAxios.ts";
 import styles from "./UsersPage.module.scss";
 
 const UsersPage = () => {

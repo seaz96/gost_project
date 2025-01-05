@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { axiosInstance } from "shared/configs/axiosConfig";
+import { axiosInstance } from "../shared/configs/axiosConfig.ts";
 
 const useAxios = <T>(url: string, defaultParams?: any) => {
 	const [response, setResponse] = useState<T | null>(null);

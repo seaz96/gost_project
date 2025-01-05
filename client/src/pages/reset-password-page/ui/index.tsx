@@ -2,7 +2,7 @@ import { UserContext } from "entities/user";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "shared/configs/axiosConfig";
-import ResetPasswordForm from "../../../widgets/reset-password-form/ResetPasswordForm.tsx";
+import ResetPasswordForm from "../../../components/ResetPasswordForm/ResetPasswordForm.tsx";
 import styles from "./ResetPasswordPage.module.scss";
 
 const ResetPasswordPage = () => {
