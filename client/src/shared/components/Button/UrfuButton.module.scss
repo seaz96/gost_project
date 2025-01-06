@@ -47,6 +47,12 @@
     }
   }
 
+  &.small {
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 24px;
+  }
+
   &.medium {
     font-size: 16px;
     padding: 20px 30px;

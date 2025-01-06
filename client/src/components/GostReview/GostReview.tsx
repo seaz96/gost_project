@@ -1,18 +1,14 @@
 import type React from "react";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import classNames from "classnames";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks.ts";
-import { gostModel } from "../../entities/gost";
-import {
-	useChangeGostStatusMutation,
-	useDeleteGostMutation,
-	useUpdateViewsMutation,
-} from "../../features/api/apiSlice";
-import { Button } from "../../shared/components";
+import {Link, useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../app/hooks.ts";
+import {gostModel} from "../../entities/gost";
+import {useChangeGostStatusMutation, useDeleteGostMutation, useUpdateViewsMutation,} from "../../features/api/apiSlice";
+import {Button} from "../../shared/components";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
@@ -51,33 +47,34 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 		navigate("/");
 	};
 
+	//TODO: buttons to links
 	return (
 		<>
 			<div className={styles.reviewContainer}>
 				<h2 className={styles.title}>Просмотр документа {gost.primary.designation}</h2>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
-						<Link onClick={() => {}} to={`/gost-edit/${gostId}`} className={classNames(styles.link, "coloredText")}>
+						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
 							Редактировать
-						</Link>
-						<Button onClick={() => setDeleteModalOpen(true)} isColoredText>
+						</UrfuButton>
+						<UrfuButton onClick={() => setDeleteModalOpen(true)} size={"small"} outline={true}>
 							Удалить
-						</Button>
+						</UrfuButton>
 						{gost.primary.status === 1 ? (
-							<Button onClick={() => setRecoverModalOpen(true)} isColoredText>
+							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
 								Восстановить
-							</Button>
+							</UrfuButton>
 						) : (
-							<Button onClick={() => setCancelModalOpen(true)} isColoredText>
+							<UrfuButton onClick={() => setCancelModalOpen(true)} size={"small"} outline={true}>
 								Отменить
-							</Button>
+							</UrfuButton>
 						)}
-						<Link to={`/gost-replace-page/${gostId}`} className={classNames(styles.link, "coloredText")}>
+						<UrfuButton onClick={() => navigate(`/gost-replace-page/${gostId}`)} size={"small"} outline={true}>
 							Заменить
-						</Link>
-						<Link to={`/gost-actualize-page/${gostId}`} className={classNames(styles.link, "coloredText")}>
+						</UrfuButton>
+						<UrfuButton onClick={() => navigate(`/gost-actualize-page/${gostId}`)} size={"small"} outline={true}>
 							Актуализировать данные
-						</Link>
+						</UrfuButton>
 					</div>
 				)}
 				<table className={styles.gostTable}>

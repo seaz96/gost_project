@@ -4,7 +4,7 @@ import styles from "./UrfuButton.module.scss";
 interface UrfuButtonProps {
 	children: React.ReactNode;
 	color?: "red" | "blue";
-	size?: "medium" | "large";
+	size?: "medium" | "large" | "small"
 	type?: "button" | "submit" | "reset";
 	outline?: boolean;
 	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
