@@ -2,7 +2,7 @@ import type React from "react";
 import { useState } from "react";
 import { Button, Input } from "../../shared/components";
 
-import { axiosInstance } from "../../shared/configs/axiosConfig.ts";
+import { axiosInstance } from "../../shared/configs/apiConfig.ts";
 import styles from "./ReviewsStatisticForm.module.scss";
 
 interface ReviewsStatisticFormProps {

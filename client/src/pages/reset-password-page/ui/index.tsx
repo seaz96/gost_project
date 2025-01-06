@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { axiosInstance } from "shared/configs/axiosConfig";
 import {useAppSelector} from "../../../app/hooks.ts";
 import ResetPasswordForm from "../../../components/ResetPasswordForm/ResetPasswordForm.tsx";
+import { axiosInstance } from "../../../shared/configs/apiConfig.ts";
 import styles from "./ResetPasswordPage.module.scss";
 
 const ResetPasswordPage = () => {

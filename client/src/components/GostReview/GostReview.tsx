@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import { gostModel } from "../../entities/gost";
 import { Button } from "../../shared/components";
-import { axiosInstance } from "../../shared/configs/axiosConfig.ts";
+import { axiosInstance } from "../../shared/configs/apiConfig.ts";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {

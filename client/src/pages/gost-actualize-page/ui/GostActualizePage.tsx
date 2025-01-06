@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import type { gostModel } from "entities/gost";
 import { useNavigate, useParams } from "react-router-dom";
-import { axiosInstance } from "shared/configs/axiosConfig";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
 import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
 import useAxios from "../../../hooks/useAxios.ts";
+import { axiosInstance } from "../../../shared/configs/apiConfig.ts";
 import styles from "./GostActualizePage.module.scss";
 
 const GostActualizePage = () => {

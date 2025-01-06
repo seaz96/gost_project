@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
-import { useAppSelector } from "../app/hooks.ts";
 import Header from "../components/Header/Header";
+import {useFetchUserQuery} from "../features/api/apiSlice.ts";
 
 const LoginPage = lazy(() => import("./LoginPage").then((module) => ({ default: module.LoginPage })));
 const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));
@@ -30,7 +30,13 @@ const GostReplacePage = lazy(() =>
 const SelfEditPage = lazy(() => import("./self-edit-page").then((module) => ({ default: module.SelfEditPage })));
 
 const AppRouter = () => {
-	const user = useAppSelector((state) => state.user.user);
+	const token = localStorage.getItem('jwt_token');
+
+	const { data: user, isLoading } = useFetchUserQuery(undefined, {
+		skip: !token,
+	});
+
+	if (isLoading) return null;
 
 	return (
 		<>

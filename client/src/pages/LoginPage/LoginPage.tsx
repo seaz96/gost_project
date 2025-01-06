@@ -1,10 +1,10 @@
 import {useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import {useAppSelector} from "../../app/hooks.ts";
 import AuthorizationForm from "../../components/AuthorizationForm/AuthorizationForm.tsx";
 import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
 import RegistrationForm from "../../components/RegistrationForm/RegistrationForm.tsx";
 import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
-import {loginUser, registerUser} from "../../features/user/userSlice.ts";
+import {useLoginUserMutation, useRegisterUserMutation} from "../../features/api/apiSlice.ts";
 import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import styles from "./LoginPage.module.scss";
@@ -19,12 +19,13 @@ const LoginPage = () => {
 	const [error, setError] = useState("");
 	const currentError = useAppSelector((state) => state.user.error);
 
-	const dispatch = useAppDispatch();
+	const [loginUser] = useLoginUserMutation();
+	const [registerUser] = useRegisterUserMutation();
 
 	//TODO: fix component reload during auth/registration
 	const handleRegistration = async (user: UserRegistration) => {
 		try {
-			await dispatch(registerUser(user)).unwrap();
+			await registerUser(user).unwrap();
 		} catch (err) {
 			console.error("Failed to register:", err);
 			setError(currentError ?? "Ошибка регистрации");
@@ -33,7 +34,7 @@ const LoginPage = () => {
 
 	const handleAuthorization = async (user: UserAuthorization) => {
 		try {
-			await dispatch(loginUser(user)).unwrap();
+			await loginUser(user).unwrap();
 		} catch (err) {
 			console.error("Failed to login:", err, "current error", currentError);
 			setError(currentError ?? "Ошибка авторизации");

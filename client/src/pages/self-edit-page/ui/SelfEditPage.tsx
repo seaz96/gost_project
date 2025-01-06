@@ -1,10 +1,10 @@
 import type { userModel } from "entities/user";
 import { useNavigate } from "react-router-dom";
 
-import { axiosInstance } from "shared/configs/axiosConfig";
 import UserEditForm from "../../../components/UserEditForm/UserEditForm.tsx";
 import type { UserEditType } from "../../../components/UserEditForm/userEditModel.ts";
 import useAxios from "../../../hooks/useAxios.ts";
+import { axiosInstance } from "../../../shared/configs/apiConfig.ts";
 import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {
