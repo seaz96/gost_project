@@ -1,13 +1,12 @@
-import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import classNames from "classnames";
 import {type ReactNode, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import {gostModel} from "../../entities/gost";
 import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
-import {Button} from "../../shared/components";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import {GenericTable} from "../GenericTable/GenericTable";
+import Modal from "../Modal/Modal.tsx";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
@@ -194,22 +193,15 @@ const DeleteCard = (props: DeleteCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
-		<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-			<DialogTitle id="alert-dialog-title">Удалить ГОСТ?</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">
-					Если вы удалите ГОСТ, он полностью удалится из базы без возможности восстановления
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button isColoredText onClick={() => setIsOpen(false)} className={styles.DeleteCardButton}>
-					Отменить
-				</Button>
-				<Button isFilled onClick={() => onSubmitFunction()} className={styles.DeleteCardButton}>
-					Удалить
-				</Button>
-			</DialogActions>
-		</Dialog>
+		<Modal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			title="Удалить ГОСТ?"
+			description="Если вы удалите ГОСТ, он полностью удалится из базы без возможности восстановления"
+			primaryActionText="Удалить"
+			primaryAction={onSubmitFunction}
+			secondaryActionText="Отменить"
+		/>
 	);
 };
 
@@ -223,22 +215,15 @@ const RecoverCard = (props: RecoverCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
-		<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-			<DialogTitle id="alert-dialog-title">Восстановить ГОСТ?</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">
-					Если вы восстановите ГОСТ, он удалится из архива, а его статус будет изменён на 'Действующий'
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button isColoredText onClick={() => setIsOpen(false)} className={styles.DeleteCardButton}>
-					Назад
-				</Button>
-				<Button isFilled onClick={() => onSubmitFunction()} className={styles.DeleteCardButton}>
-					Восстановить
-				</Button>
-			</DialogActions>
-		</Dialog>
+		<Modal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			title="Восстановить ГОСТ?"
+			description="Если вы восстановите ГОСТ, он удалится из архива, а его статус будет изменён на 'Действующий'"
+			primaryActionText="Восстановить"
+			primaryAction={onSubmitFunction}
+			secondaryActionText="Назад"
+		/>
 	);
 };
 
@@ -252,22 +237,15 @@ const CancelCard = (props: CancelCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
-		<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-			<DialogTitle id="alert-dialog-title">Отменить ГОСТ?</DialogTitle>
-			<DialogContent>
-				<DialogContentText id="alert-dialog-description">
-					Если вы отмените ГОСТ, он перенесется в архив, а его статус поменяться на 'Отменен'
-				</DialogContentText>
-			</DialogContent>
-			<DialogActions>
-				<Button isColoredText onClick={() => setIsOpen(false)} className={styles.DeleteCardButton}>
-					Назад
-				</Button>
-				<Button isFilled onClick={() => onSubmitFunction()} className={styles.DeleteCardButton}>
-					Отменить ГОСТ
-				</Button>
-			</DialogActions>
-		</Dialog>
+		<Modal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			title="Отменить ГОСТ?"
+			description="Если вы отмените ГОСТ, он перенесется в архив, а его статус поменяться на 'Отменен'"
+			primaryActionText="Отменить ГОСТ"
+			primaryAction={onSubmitFunction}
+			secondaryActionText="Назад"
+		/>
 	);
 };
 
