@@ -16,7 +16,7 @@ interface GostsTableProps {
 
 const GostsTable: React.FC<GostsTableProps> = (props) => {
 	const { gosts, gostsParams } = props;
-	console.log(gosts);
+
 
 	return (
 		<table className={styles.table}>

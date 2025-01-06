@@ -14,7 +14,7 @@ interface GostFormProps {
 	gost?: GostToSave;
 }
 
-function getGostStub() {
+export function getGostStub() {
 	return {
 		designation: "",
 		fullName: "",

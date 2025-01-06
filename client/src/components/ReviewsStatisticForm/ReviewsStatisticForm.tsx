@@ -1,8 +1,6 @@
-import type React from "react";
 import { useState } from "react";
 import { Button, Input } from "../../shared/components";
-
-import { axiosInstance } from "../../shared/configs/apiConfig.ts";
+import { useGetViewsStatsQuery } from "../../features/api/apiSlice";
 import styles from "./ReviewsStatisticForm.module.scss";
 
 interface ReviewsStatisticFormProps {
@@ -25,31 +23,24 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 	const validateData = (event: React.FormEvent) => {
 		event.preventDefault();
 
-		if (reviewsData.startDate && new Date(reviewsData.startDate).toString() !== "Invalid Date") {
-			reviewsData.startDate = new Date(reviewsData.startDate).toISOString();
-		} else {
-			reviewsData.startDate = new Date("1970-01-01").toISOString();
-		}
+		const startDate = reviewsData.startDate 
+			? new Date(reviewsData.startDate).toISOString() 
+			: new Date("1970-01-01").toISOString();
+		const endDate = reviewsData.endDate 
+			? new Date(reviewsData.endDate).toISOString() 
+			: new Date().toISOString();
+			
+		const { data } = useGetViewsStatsQuery({
+			...reviewsData,
+			startDate,
+			endDate
+		});
 
-		if (reviewsData.endDate && new Date(reviewsData.endDate).toString() !== "Invalid Date") {
-			reviewsData.endDate = new Date(reviewsData.endDate).toISOString();
-		} else {
-			reviewsData.endDate = new Date().toISOString();
+		if (data) {
+			handleSubmit(data);
+			startDateSubmit(startDate);
+			endDateSubmit(endDate);
 		}
-
-		axiosInstance
-			.get("/stats/get-views", {
-				params: {
-					...reviewsData,
-					StartDate: reviewsData.startDate,
-					EndDate: reviewsData.endDate,
-				},
-			})
-			.then((response) => {
-				handleSubmit(response.data);
-				startDateSubmit(reviewsData.startDate);
-				endDateSubmit(reviewsData.endDate);
-			});
 	};
 
 	return (

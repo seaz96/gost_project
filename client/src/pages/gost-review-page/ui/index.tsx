@@ -1,25 +1,26 @@
-import GostReview from "../../../components/GostReview/GostReview.tsx";
-
 import classNames from "classnames";
-import type { gostModel } from "entities/gost";
-import { useParams } from "react-router-dom";
-import useAxios from "../../../hooks/useAxios.ts";
+import {Link, useParams} from "react-router-dom";
+import GostReview from "../../../components/GostReview/GostReview.tsx";
+import { useFetchGostQuery } from "../../../features/api/apiSlice";
 import styles from "./GostReviewsPage.module.scss";
 
 const GostReviewPage = () => {
-	const gostId = useParams().id;
-	const { response, error, loading } = useAxios<gostModel.Gost>(`/docs/${gostId}`);
+    const gostId = useParams().id;
 
-	if (response) {
-		return (
-			<div className="container">
-				<section className={classNames(styles.reviewSection, "contentContainer")}>
-					<GostReview gost={response} gostId={response.docId} />
-				</section>
-			</div>
-		);
-	}
-	return <></>;
+    if (!gostId) return <>ID не указан. Вернитесь на <Link to={"/"}>главную</Link></>;
+
+    const { data: gost } = useFetchGostQuery(gostId);
+
+    if (gost) {
+        return (
+            <div className="container">
+                <section className={classNames(styles.reviewSection, "contentContainer")}>
+                    <GostReview gost={gost} gostId={gost.docId} />
+                </section>
+            </div>
+        );
+    }
+    return <></>;
 };
 
 export default GostReviewPage;

@@ -1,29 +1,28 @@
-import type { userModel } from "entities/user";
 import { useNavigate } from "react-router-dom";
-
 import UserEditForm from "../../../components/UserEditForm/UserEditForm.tsx";
-import type { UserEditType } from "../../../components/UserEditForm/userEditModel.ts";
-import useAxios from "../../../hooks/useAxios.ts";
-import { axiosInstance } from "../../../shared/configs/apiConfig.ts";
+import type {UserEditType} from "../../../components/UserEditForm/userEditModel.ts";
+import { useEditSelfMutation, useFetchUserQuery } from "../../../features/api/apiSlice";
 import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {
-	const navigate = useNavigate();
-	const { response, loading, error } = useAxios<userModel.User>("/accounts/self-info");
+    const navigate = useNavigate();
+    const { data: user } = useFetchUserQuery();
+    const [editSelf] = useEditSelfMutation();
 
-	const handleSelfEdit = (userData: UserEditType) => {
-		axiosInstance.post("/accounts/self-edit", userData).then(() => navigate("/users-page"));
-	};
+    const handleSelfEdit = async (userData: UserEditType) => {
+        await editSelf(userData);
+        navigate("/users-page");
+    };
 
-	if (response)
-		return (
-			<div>
-				<section className={styles.userEditSection}>
-					<UserEditForm handleSubmit={handleSelfEdit} userData={response} id={response.id} />
-				</section>
-			</div>
-		);
-	return <></>;
+    if (user)
+        return (
+            <div>
+                <section className={styles.userEditSection}>
+                    <UserEditForm handleSubmit={handleSelfEdit} userData={user} id={user.id} />
+                </section>
+            </div>
+        );
+    return <></>;
 };
 
 export default SelfEditPage;

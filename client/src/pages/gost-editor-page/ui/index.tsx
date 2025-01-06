@@ -1,42 +1,34 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
-import { axiosInstance } from "../../../shared/configs/apiConfig.ts";
+import type {GostToSave} from "../../../components/GostForm/newGostModel.ts";
+import { useAddGostMutation, useUploadGostFileMutation } from "../../../features/api/apiSlice";
 import styles from "./GostEditorPage.module.scss";
 
 const GostEditorPage = () => {
-	const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [addGost] = useAddGostMutation();
+    const [uploadFile] = useUploadGostFileMutation();
 
-	const addNewDocument = (gost: GostToSave, file: File) => {
-		axiosInstance
-			.post("/docs/add", gost)
-			.then((response) => {
-				handleUploadFile(file, response.data);
-				return response.data;
-			})
-			.then((responce) => navigate("/gost-review/" + responce));
-	};
+    const addNewDocument = async (gost: GostToSave, file: File) => {
+        const response = await addGost(gost).unwrap();
+        await handleUploadFile(file, response);
+        navigate(`/gost-review/${response}`);
+    };
 
-	const handleUploadFile = (file: File, docId: string | undefined) => {
-		axiosInstance({
-			method: "post",
-			url: `/docs/${docId}/upload-file`,
-			data: {
-				File: file,
-				Extension: file.name.split(".").pop(),
-			},
-			headers: { "Content-Type": "multipart/form-data" },
-		});
-	};
+    const handleUploadFile = async (file: File, docId: string | undefined) => {
+        if (docId) {
+            await uploadFile({ docId, file });
+        }
+    };
 
-	return (
-		<div className="container">
-			<section className={classNames("contentContainer", styles.reviewSection)}>
-				<GostForm handleUploadFile={handleUploadFile} handleSubmit={addNewDocument} />
-			</section>
-		</div>
-	);
+    return (
+        <div className="container">
+            <section className={classNames("contentContainer", styles.reviewSection)}>
+                <GostForm handleUploadFile={handleUploadFile} handleSubmit={addNewDocument} />
+            </section>
+        </div>
+    );
 };
 
 export default GostEditorPage;

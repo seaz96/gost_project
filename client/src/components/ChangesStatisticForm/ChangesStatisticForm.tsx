@@ -1,8 +1,7 @@
 import type React from "react";
 import { useState } from "react";
 import { Button, Input, RadioGroup } from "../../shared/components";
-
-import { axiosInstance } from "../../shared/configs/apiConfig.ts";
+import { useGetChangesStatsQuery } from "../../features/api/apiSlice";
 import styles from "./ChangesStatisticForm.module.scss";
 
 interface ChangesStatisticFormProps {
@@ -23,22 +22,18 @@ const ChangesStatisticForm: React.FC<ChangesStatisticFormProps> = (props) => {
 
 	const validateData = (event: React.FormEvent) => {
 		event.preventDefault();
-		axiosInstance
-			.get("/stats/get-count", {
-				params: {
-					status: changesData.status,
-					count: changesData.count,
-					StartDate: new Date(changesData.dateFrom).toISOString(),
-					EndDate: new Date(changesData.dateTo).toISOString(),
-				},
-			})
-			.then((response) => {
-				handleSubmit(response.data);
-				startDateSubmit(changesData.dateFrom);
-				endDateSubmit(changesData.dateTo);
-			});
+		const { data } = useGetChangesStatsQuery({
+			status: changesData.status,
+			count: changesData.count,
+			StartDate: new Date(changesData.dateFrom).toISOString(),
+			EndDate: new Date(changesData.dateTo).toISOString(),
+		});
 
-		handleSubmit();
+		if (data) {
+			handleSubmit(data);
+			startDateSubmit(changesData.dateFrom);
+			endDateSubmit(changesData.dateTo);
+		}
 	};
 
 	return (

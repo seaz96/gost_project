@@ -7,8 +7,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import { gostModel } from "../../entities/gost";
+import { useUpdateViewsMutation, useDeleteGostMutation, useChangeGostStatusMutation } from "../../features/api/apiSlice";
 import { Button } from "../../shared/components";
-import { axiosInstance } from "../../shared/configs/apiConfig.ts";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
@@ -23,43 +23,28 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [recoverModalOpen, setRecoverModalOpen] = useState(false);
+	
+	const [updateViews] = useUpdateViewsMutation();
+	const [deleteGost] = useDeleteGostMutation();
+	const [changeStatus] = useChangeGostStatusMutation();
 
 	useEffect(() => {
-		axiosInstance.post(
-			`/stats/update-views/${gostId}`,
-			{},
-			{
-				params: {
-					docId: gostId,
-				},
-			},
-		);
+		updateViews(gostId.toString());
 	}, []);
 
-	const onDeleteSubmit = () => {
-		axiosInstance.delete(`/docs/delete/${gostId}`).then(() => navigate("/"));
+	const onDeleteSubmit = async () => {
+		await deleteGost(gostId.toString());
+		navigate("/");
 	};
 
-	const recoverDoc = () => {
-		axiosInstance
-			.put(`/docs/change-status`, {
-				id: gostId,
-				status: 0,
-			})
-			.then(() => {
-				navigate("/");
-			});
+	const recoverDoc = async () => {
+		await changeStatus({ id: gostId, status: 0 });
+		navigate("/");
 	};
 
-	const cancelDoc = () => {
-		axiosInstance
-			.put(`/docs/change-status`, {
-				id: gostId,
-				status: 1,
-			})
-			.then(() => {
-				navigate("/");
-			});
+	const cancelDoc = async () => {
+		await changeStatus({ id: gostId, status: 1 });
+		navigate("/");
 	};
 
 	return (

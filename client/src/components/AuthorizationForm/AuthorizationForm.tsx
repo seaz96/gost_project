@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
-import { Button, Input } from "../../shared/components";
+import { Input } from "../../shared/components";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./AuthorizationForm.module.scss";
 import type { UserAuthorization } from "./authorizationModel.ts";
 
@@ -70,12 +71,12 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 			/>
 			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
-				<Button isFilled className={styles.formButton} type="submit">
+				<UrfuButton type="submit">
 					Войти
-				</Button>
-				<Button className={styles.formButton} onClick={() => changeForm()} isColoredText>
+				</UrfuButton>
+				<UrfuButton onClick={() => changeForm()} outline={true}>
 					Зарегистрироваться
-				</Button>
+				</UrfuButton>
 			</div>
 		</form>
 	);

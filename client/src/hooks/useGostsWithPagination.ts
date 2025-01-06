@@ -1,63 +1,57 @@
+import type { gostModel } from "entities/gost";
+import type { GostViewInfo } from "entities/gost/gostModel";
+import { useFetchGostsCountQuery, useFetchGostsPageQuery } from "features/api/apiSlice";
 import { useEffect, useState } from "react";
-import type { GostViewInfo } from "../entities/gost/gostModel.ts";
-import { axiosInstance } from "../shared/configs/apiConfig.ts";
 
-const baseLimit = 10;
+const PAGE_SIZE = 10;
 
-export const useGostsWithPagination = (url: string, defaultParams?: any) => {
-	const [gosts, setGosts] = useState<GostViewInfo[]>([]);
-	const [error, setError] = useState<string>("");
-	const [loading, setloading] = useState<boolean>(true);
-	const [gostsParams, setGostParams] = useState<any>(defaultParams);
-	const [lastId, setLastId] = useState(0);
-	const [count, setCount] = useState(0);
-	const [countFetched, setCountFetched] = useState(0);
+const useGostsWithPagination = (url: string) => {
+    const [params, setParams] = useState<gostModel.GostFields & { text?: string }>({} as gostModel.GostFields & { text?: string });
+    const [offset, setOffset] = useState(0);
+    const [accumulatedGosts, setAccumulatedGosts] = useState<GostViewInfo[]>([]);
 
-	const fetchGostsData = async (limit: number = baseLimit, id: number = lastId, refetch = false) => {
-		return axiosInstance
-			.get(url, { params: { ...gostsParams, lastId: id, limit: limit } })
-			.then((res) => {
-				const data = res.data as GostViewInfo[];
-				if (refetch) {
-					setGosts(data);
-				} else {
-					setGosts((prevGosts) => [...prevGosts, ...data]);
-				}
-				setLastId(data[data.length - 1].id);
-				setCountFetched((prev) => prev + limit);
-			})
-			.catch((err: any) => {
-				console.error(err);
-			});
-	};
+    const { data: currentPageGosts = [] } = useFetchGostsPageQuery({
+        url,
+        offset,
+        limit: PAGE_SIZE,
+        params,
+    });
 
-	const fetchCountData = () => {
-		return axiosInstance
-			.get(url + "-count", { params: { ...gostsParams } })
-			.then((res) => {
-				setCount(res.data);
-			})
-			.catch((err: any) => {
-				console.error(err);
-			});
-	};
+    const { data: totalCount = 0 } = useFetchGostsCountQuery({
+        url,
+        params,
+    });
 
-	useEffect(() => {
-		setGosts([]);
-		setloading(true);
-		setLastId(0);
-		setCountFetched(0);
-		fetchCountData().then(() => fetchGostsData(baseLimit, 0, true).then(() => setloading(false)));
-	}, [gostsParams, url]);
+    useEffect(() => {
+        if (!currentPageGosts.length) return;
+        if (offset === 0) {
+            setAccumulatedGosts(currentPageGosts);
+        } else {
+            setAccumulatedGosts((prev) => [
+                ...prev,
+                ...currentPageGosts.filter((item) => !prev.some((p) => p.id === item.id)),
+            ]);
+        }
+    }, [currentPageGosts, offset]);
 
-	return {
-		gosts,
-		count,
-		countFetched,
-		error,
-		loading,
-		gostsParams,
-		setGostParams,
-		fetchGostsData,
-	};
+    const loadMore = () => {
+        setOffset((prev) => prev + PAGE_SIZE);
+    };
+
+    const handleFilterSubmit = (filterData: gostModel.GostFields & { text?: string }) => {
+        setOffset(0);
+        setAccumulatedGosts([]);
+        setParams(filterData);
+    };
+
+    return {
+        gosts: accumulatedGosts,
+        countFetched: accumulatedGosts.length,
+        count: totalCount,
+        setGostParams: handleFilterSubmit,
+        gostsParams: params,
+        fetchGostsData: loadMore,
+    };
 };
+
+export default useGostsWithPagination;

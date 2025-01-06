@@ -10,7 +10,6 @@
 		"@mui/icons-material": "^5.15.15",
 		"@mui/material": "^5.15.4",
 		"@reduxjs/toolkit": "^2.5.0",
-		"axios": "^1.7.9",
 		"classnames": "^2.3.2",
 		"compose-function": "^3.0.3",
 		"formik": "^2.4.6",
@@ -21,6 +20,7 @@
 		"react-infinite-scroll-component": "^6.1.0",
 		"react-redux": "^9.2.0",
 		"react-router-dom": "^6.21.1",
+		"react-toastify": "^11.0.2",
 		"vite-tsconfig-paths": "^5.1.4",
 		"web-vitals": "^2.1.4"
 	},

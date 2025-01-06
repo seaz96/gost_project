@@ -5,12 +5,22 @@
   font-size: 16px;
   font-family: var(--main-font), system-ui;
   transition: background-color 0.3s;
-  border-radius: 24px;
   font-weight: 700;
 
   &.red {
     background-color: var(--urfu-red);
     color: white;
+
+    &.outline {
+      background-color: transparent;
+      color: var(--urfu-red);
+      border: 2px solid var(--urfu-red);
+
+      &:hover {
+        background-color: var(--urfu-red);
+        color: white;
+      }
+    }
 
     &:hover {
       background-color: var(--urfu-dark-red);
@@ -21,6 +31,17 @@
     background-color: var(--urfu-blue);
     color: white;
 
+    &.outline {
+      background-color: transparent;
+      color: var(--urfu-blue);
+      border: 2px solid var(--urfu-blue);
+
+      &:hover {
+        background-color: var(--urfu-blue);
+        color: white;
+      }
+    }
+
     &:hover {
       background-color: var(--urfu-dark-blue);
     }
@@ -29,10 +50,12 @@
   &.medium {
     font-size: 16px;
     padding: 20px 30px;
+    border-radius: 24px;
   }
 
   &.large {
     font-size: 20px;
     padding: 30px 40px;
+    border-radius: 24px;
   }
 }
