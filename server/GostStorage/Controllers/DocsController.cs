@@ -203,6 +203,14 @@ public class DocsController(
         return new OkObjectResult(await documentsService.SearchAsync(parameters));
     }
     
+    [NoCache]
+    [Authorize]
+    [HttpGet("search-count")]
+    public async Task<ActionResult> SearchCountAsync([FromQuery] SearchQuery parameters)
+    {
+        return new OkObjectResult(await documentsService.SearchAsync(parameters));
+    }
+    
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("index-all")]
     public async Task<ActionResult> IndexAllAsync()

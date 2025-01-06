@@ -18,6 +18,14 @@ public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearch
         return await SendGetRequestAsync<List<SearchEntity>>($"{ftsApiUrl}/search?{queryParams}").ConfigureAwait(false) 
                ?? throw new InvalidOperationException();
     }
+    
+    public async Task<int> CountAsync(SearchQuery query)
+    {
+        var queryParams = CreateQuery(query);
+        
+        Log.Logger.Information($"Begin search request to indexes: {queryParams}");
+        return await SendGetRequestAsync<int>($"{ftsApiUrl}/count?{queryParams}").ConfigureAwait(false);
+    }
 
     public async Task IndexAllDocumentsAsync(List<SearchIndexModel> documents)
     {

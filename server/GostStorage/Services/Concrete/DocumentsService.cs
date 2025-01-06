@@ -149,6 +149,11 @@ public class DocumentsService(
         
         return result.Select(mapper.Map<GeneralDocumentInfoModel>).ToList();
     }
+    
+    public Task<int> SearchCountAsync(SearchQuery query)
+    {
+        return searchRepository.CountAsync(query);
+    }
 
     public async Task IndexAllDocumentsAsync()
     {

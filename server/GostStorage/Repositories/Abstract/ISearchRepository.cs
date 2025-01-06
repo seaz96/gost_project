@@ -6,6 +6,8 @@ namespace GostStorage.Repositories.Abstract;
 public interface ISearchRepository
 {
     public Task<List<SearchEntity>> SearchAsync(SearchQuery query);
+    
+    public Task<int> CountAsync(SearchQuery query);
 
     public Task IndexAllDocumentsAsync(List<SearchIndexModel> documents);
 
