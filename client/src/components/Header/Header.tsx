@@ -7,31 +7,24 @@ import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import urfuProfile from "../../shared/assets/urfuProfile.svg";
 import styles from "./Header.module.scss";
-import account from "./assets/account.png";
-import exit from "./assets/exit.png";
-import lock from "./assets/lock.png";
 
 const ProfileDropdown = () => {
 	const dispatch = useAppDispatch();
 
 	return (
 		<div className={styles.dropdown}>
-			<Link to="/reset-password" style={{ color: "inherit" }}>
-				<img src={lock} className={styles.dropdownImage} alt="reset password" />
+			<Link to="/reset-password">
 				Сменить пароль
 			</Link>
-			<Link to={"/self-edit-page"} style={{ color: "inherit" }}>
-				<img src={account} className={styles.dropdownImage} alt="edit profile" />
+			<Link to={"/self-edit-page"}>
 				Редактировать профиль
 			</Link>
 			<button
 				type={"button"}
-				className={styles.exitButton}
 				onClick={() => {
 					dispatch(logoutUser());
 				}}
 			>
-				<img src={exit} className={styles.dropdownImage} alt="exit" />
 				Выйти
 			</button>
 		</div>
@@ -67,10 +60,12 @@ const Header = () => {
 
 	return (
 		<header className={classNames(styles.header, "container")}>
-			<picture className={styles.logo}>
-				<source srcSet={urfuLogoSvg} type="image/svg+xml" />
-				<img src={urfuLogo} alt="logo" />
-			</picture>
+			<Link to={"/"}>
+				<picture className={styles.logo}>
+					<source srcSet={urfuLogoSvg} type="image/svg+xml" />
+					<img src={urfuLogo} alt="logo" />
+				</picture>
+			</Link>
 			<nav className={styles.buttonsContainer}>
 				<ul>
 					<HeaderLink to="/">Все документы</HeaderLink>
