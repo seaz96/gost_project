@@ -1,6 +1,6 @@
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import classNames from "classnames";
-import {useState} from "react";
+import {type ReactNode, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import {gostModel} from "../../entities/gost";
@@ -18,11 +18,11 @@ interface GostReviewProps {
 interface GostComparisonRow {
 	id: string;
 	field: string;
-	primary: React.ReactNode;
-	actual: React.ReactNode;
+	primary: ReactNode;
+	actual: ReactNode;
 }
 
-const GostReview: React.FC<GostReviewProps> = (props) => {
+const GostReview = (props: GostReviewProps) => {
 	const { gost, gostId } = props;
 	const navigate = useNavigate();
 	const user = useAppSelector((s) => s.user.user);
@@ -190,7 +190,7 @@ interface DeleteCardProps {
 	onSubmitFunction: () => void;
 }
 
-const DeleteCard: React.FC<DeleteCardProps> = (props) => {
+const DeleteCard = (props: DeleteCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
@@ -219,7 +219,7 @@ interface RecoverCardProps {
 	onSubmitFunction: () => void;
 }
 
-const RecoverCard: React.FC<RecoverCardProps> = (props) => {
+const RecoverCard = (props: RecoverCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
@@ -248,7 +248,7 @@ interface CancelCardProps {
 	onSubmitFunction: () => void;
 }
 
-const CancelCard: React.FC<CancelCardProps> = (props) => {
+const CancelCard = (props: CancelCardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
