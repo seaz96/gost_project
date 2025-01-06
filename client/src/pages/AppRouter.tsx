@@ -6,7 +6,7 @@ import { useFetchUserQuery } from "../features/api/apiSlice.ts";
 const LoginPage = lazy(() => import("./LoginPage").then((module) => ({ default: module.LoginPage })));
 const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));
 const GostReviewPage = lazy(() => import("./gost-review-page").then((module) => ({ default: module.GostReviewPage })));
-const GostEditorPage = lazy(() => import("./gost-editor-page").then((module) => ({ default: module.GostEditorPage })));
+const GostEditorPage = lazy(() => import("./GostCreatorPage").then((module) => ({ default: module.GostCreatorPage })));
 const UsersPage = lazy(() => import("./users-page").then((module) => ({ default: module.UsersPage })));
 const ResetPasswordPage = lazy(() =>
 	import("./reset-password-page").then((module) => ({ default: module.ResetPasswordPage })),

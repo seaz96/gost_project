@@ -278,7 +278,7 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 						<td>
 							<RadioGroup
 								buttons={[
-									{ id: "Cancelled", value: "1", label: "Отменен" },
+									{ id: "Canceled", value: "1", label: "Отменен" },
 									{ id: "Replaced", value: "2", label: "Заменен" },
 									{ id: "Current", value: "0", label: "Действующий" },
 								]}

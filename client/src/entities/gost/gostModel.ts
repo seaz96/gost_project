@@ -2,7 +2,7 @@ export type Gost = {
 	docId: number;
 	primary: GostFields;
 	actual: GostFields;
-
+	status: number;
 	references: {
 		docId: number;
 		designation: string;

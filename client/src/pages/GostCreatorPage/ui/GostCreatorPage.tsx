@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
 import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
 import { useAddGostMutation, useUploadGostFileMutation } from "../../../features/api/apiSlice";
-import styles from "./GostEditorPage.module.scss";
+import styles from "./GostCreatorPage.module.scss";
 
-const GostEditorPage = () => {
+const GostCreatorPage = () => {
 	const navigate = useNavigate();
 	const [addGost] = useAddGostMutation();
 	const [uploadFile] = useUploadGostFileMutation();
@@ -31,4 +31,4 @@ const GostEditorPage = () => {
 	);
 };
 
-export default GostEditorPage;
+export default GostCreatorPage;

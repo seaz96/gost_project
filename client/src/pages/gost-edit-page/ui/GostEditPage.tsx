@@ -33,6 +33,7 @@ const GostEditPage = () => {
 						handleSubmit={editOldDocument}
 						gost={{
 							...gost.primary,
+							status: gost.status,
 							references: gost.references.map((reference) => reference.designation),
 						}}
 					/>
