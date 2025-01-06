@@ -3,7 +3,7 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import { useAppSelector } from "../app/hooks.ts";
 import Header from "../components/Header/Header";
 
-const LoginPage = lazy(() => import("./login-page").then((module) => ({ default: module.LoginPage })));
+const LoginPage = lazy(() => import("./LoginPage").then((module) => ({ default: module.LoginPage })));
 const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));
 const GostReviewPage = lazy(() => import("./gost-review-page").then((module) => ({ default: module.GostReviewPage })));
 const GostEditorPage = lazy(() => import("./gost-editor-page").then((module) => ({ default: module.GostEditorPage })));

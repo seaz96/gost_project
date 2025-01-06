@@ -1,27 +1,34 @@
 import {type PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
+import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
 import type {User} from "../../entities/user/userModel.ts";
+import {axiosInstance} from "../../shared/configs/axiosConfig.ts";
 
 export const fetchUser = createAsyncThunk<User, void>("user/fetchUser", async () => {
-	const response = await axios.get("/accounts/self-info");
+	const response = await axiosInstance.get("/accounts/self-info");
 	return response.data;
 });
 
-export const loginUser = createAsyncThunk<User, { login: string; password: string }>(
+export const loginUser = createAsyncThunk<User, UserAuthorization>(
 	"user/loginUser",
 	async (credentials) => {
-		const response = await axios.post("/accounts/login", credentials);
+		const response = await axiosInstance.post("/accounts/login", credentials);
 		localStorage.setItem("jwt_token", response.data.token);
 		return response.data;
 	},
 );
 
-export const registerUser = createAsyncThunk<User, { login: string; password: string }>(
+export const registerUser = createAsyncThunk<User, UserRegistration>(
 	"user/registerUser",
-	async (credentials) => {
-		const response = await axios.post("/accounts/register", credentials);
-		localStorage.setItem("jwt_token", response.data.token);
-		return response.data;
+	async (credentials, { rejectWithValue }) => {
+		return axiosInstance.post("/accounts/register", credentials)
+			.then(response => {
+				localStorage.setItem("jwt_token", response.data.token);
+				return response.data;
+			})
+			.catch(error => {
+				return rejectWithValue(error.response.data);
+			});
 	},
 );
 

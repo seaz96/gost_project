@@ -1,12 +1,12 @@
 import {useState} from "react";
-import urfuLogo from "shared/assets/urfu.png";
-import urfuLogoSvg from "shared/assets/urfu.svg";
-import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
-import AuthorizationForm from "../../../components/AuthorizationForm/AuthorizationForm.tsx";
-import type {UserAuthorization} from "../../../components/AuthorizationForm/authorizationModel.ts";
-import RegistrationForm from "../../../components/RegistrationForm/RegistrationForm.tsx";
-import type {UserRegistration} from "../../../components/RegistrationForm/registrationModel.ts";
-import {loginUser} from "../../../features/user/userSlice.ts";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import AuthorizationForm from "../../components/AuthorizationForm/AuthorizationForm.tsx";
+import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
+import RegistrationForm from "../../components/RegistrationForm/RegistrationForm.tsx";
+import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
+import {loginUser, registerUser} from "../../features/user/userSlice.ts";
+import urfuLogo from "../../shared/assets/urfu.png";
+import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import styles from "./LoginPage.module.scss";
 
 enum states {
@@ -16,22 +16,27 @@ enum states {
 
 const LoginPage = () => {
 	const [state, setState] = useState<states>(states.authorization);
-	const dispatch = useAppDispatch();
-	const error = useAppSelector((state) => state.user.error);
+	const [error, setError] = useState("");
+	const currentError = useAppSelector((state) => state.user.error);
 
+	const dispatch = useAppDispatch();
+
+	//TODO: fix component reload during auth/registration
 	const handleRegistration = async (user: UserRegistration) => {
 		try {
-			dispatch(loginUser(user)).unwrap();
+			await dispatch(registerUser(user)).unwrap();
 		} catch (err) {
 			console.error("Failed to register:", err);
+			setError(currentError ?? "Ошибка регистрации");
 		}
 	};
 
 	const handleAuthorization = async (user: UserAuthorization) => {
 		try {
-			dispatch(loginUser(user)).unwrap();
+			await dispatch(loginUser(user)).unwrap();
 		} catch (err) {
-			console.error("Failed to login:", err);
+			console.error("Failed to login:", err, "current error", currentError);
+			setError(currentError ?? "Ошибка авторизации");
 		}
 	};
 
@@ -44,7 +49,9 @@ const LoginPage = () => {
 			{state === states.authorization ? (
 				<section className={styles.authorizationForm}>
 					<AuthorizationForm
-						changeForm={() => setState(states.registration)}
+						changeForm={() => {
+							setState(states.registration)
+						}}
 						error={error}
 						onSubmit={(user: UserAuthorization) => handleAuthorization(user)}
 					/>
