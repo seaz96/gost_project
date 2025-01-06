@@ -74,7 +74,7 @@ const UserEditForm: React.FC<UserEditFormProps> = (props) => {
 								is_admin: !userEditData.is_admin,
 							})
 						}
-						checked={userEditData.is_admin ? true : false}
+						checked={userEditData.is_admin}
 					/>
 					<label htmlFor="switchAdmin">Пользователь является администратором</label>
 				</div>

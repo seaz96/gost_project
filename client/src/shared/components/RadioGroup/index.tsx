@@ -23,7 +23,7 @@ const RadioGroup: React.FC<RadioGroupProps> = (props) => {
 						id={button.id}
 						name={name}
 						value={button.value}
-						checked={value === button.value ? true : false}
+						checked={value === button.value}
 						onChange={() => onChange(button.value)}
 					/>
 					<label htmlFor={button.id}>{button.label}</label>

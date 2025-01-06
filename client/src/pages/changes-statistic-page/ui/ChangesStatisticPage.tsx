@@ -35,7 +35,7 @@ const ChangesStatisticPage = () => {
 
 const formatDate = (date: Date) => {
 	let day = date.getDate().toString();
-	day = day.length === 1 ? "0" + day : day;
+	day = day.length === 1 ? `0${day}` : day;
 	const month = date.getMonth() + 1;
 	const year = date.getFullYear();
 	return `${day}.${month}.${year}`;

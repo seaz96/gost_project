@@ -102,7 +102,7 @@ const GostRow: FC<GostRowProps> = ({ gost, gostsParams }) => {
 				</tr>
 			</tbody>
 		);
-	else return <></>;
+	return <></>;
 };
 
 export default GostsTable;
