@@ -208,7 +208,7 @@ public class DocsController(
     [HttpGet("search-count")]
     public async Task<ActionResult> SearchCountAsync([FromQuery] SearchQuery parameters)
     {
-        return new OkObjectResult(await documentsService.SearchAsync(parameters));
+        return new OkObjectResult(await documentsService.SearchCountAsync(parameters));
     }
     
     [Authorize(Roles = "Heisenberg,Admin")]

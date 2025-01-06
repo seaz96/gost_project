@@ -66,7 +66,7 @@ public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearch
         
         await httpClient.SendAsync(request).ConfigureAwait(false);
     }
-    
+
     private async Task<TResult?> SendGetRequestAsync<TResult>(string url)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, url);
