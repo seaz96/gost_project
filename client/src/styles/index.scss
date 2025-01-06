@@ -14,6 +14,7 @@
 body {
     font-family: var(--main-font), system-ui;
     color: var(--urfu-black);
+    background: var(--urfu-grey);
 }
 
 .container {
@@ -28,7 +29,6 @@ body {
 
 .filledButton {
     background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
-
     color: #fff;
 }
 

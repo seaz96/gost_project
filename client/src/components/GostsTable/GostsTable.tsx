@@ -1,13 +1,9 @@
-import { IconButton, Popover } from "@mui/material";
-import classNames from "classnames";
-import { type FC, useState } from "react";
-import { Link } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks.ts";
-import type { gostModel } from "../../entities/gost";
-import eye from "../../shared/assets/eye.svg";
-import pen from "../../shared/assets/pen.svg";
+import {EditRounded, ImportContactsRounded} from "@mui/icons-material";
+import type {FC, ReactNode} from "react";
+import {Link} from "react-router-dom";
+import {useAppSelector} from "../../app/hooks.ts";
+import type {gostModel} from "../../entities/gost";
 import styles from "./GostTable.module.scss";
-import loop from "./assets/loop.png";
 
 interface GostsTableProps {
 	gosts: gostModel.GostViewInfo[];
@@ -41,61 +37,54 @@ interface GostRowProps {
 }
 
 const GostRow: FC<GostRowProps> = ({ gost, gostsParams }) => {
-	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-	const open = Boolean(anchorEl);
+	//const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+	//const open = Boolean(anchorEl);
 	const user = useAppSelector((s) => s.user.user);
 
 	if (gost.designation)
 		return (
 			<tbody>
-				<IconButton
-					id={gost.id.toString()}
-					className={styles.loop}
-					onClick={(event) => {
-						setAnchorEl(event.currentTarget);
-					}}
-				>
-					<img src={loop} alt="открыть сводку по сфере применения" />
-				</IconButton>
+				{/*<IconButton
+				id={gost.id.toString()}
+				className={styles.loop}
+				onClick={(event) => {
+					setAnchorEl(event.currentTarget);
+				}}
+			>
+				<img src={loop} alt="открыть сводку по сфере применения"/>
+			</IconButton>
 				<Popover
-					id={gost.id.toString()}
-					open={open}
-					onClose={() => setAnchorEl(null)}
-					anchorEl={anchorEl}
-					anchorOrigin={{
-						vertical: "bottom",
-						horizontal: "center",
-					}}
-					sx={{
-						".css-3bmhjh-MuiPaper-root-MuiPopover-paper": {},
-					}}
-				>
-					<div className={styles.applicationAreaContainer} style={{ whiteSpace: "pre-line" }}>
-						{gost.applicationArea}
-					</div>
-				</Popover>
+				id={gost.id.toString()}
+			open={open}
+			onClose={() => setAnchorEl(null)}
+			anchorEl={anchorEl}
+			anchorOrigin={{
+				vertical: "bottom",
+				horizontal: "center",
+			}}
+			sx={{
+				".css-3bmhjh-MuiPaper-root-MuiPopover-paper": {},
+			}}
+			>
+			<div className={styles.applicationAreaContainer} style={{whiteSpace: "pre-line"}}>
+				{gost.applicationArea}
+			</div>
+			</Popover>
+*/}
 				<tr>
 					<td>{gost.codeOks}</td>
 					<td>{gost.designation}</td>
-					<td className={styles.gostDescription}>{gost.fullName}</td>
+					<td>{gost.fullName}</td>
 					{gostsParams && Object.values(gostsParams).some((param) => param) && <td>{gost.relevanceMark}</td>}
 					<td>
-						<div className={styles.buttons}>
-							<Link
-								to={`/gost-review/${gost.id}`}
-								className={classNames(styles.tableButton, "baseButton", "coloredText")}
-							>
-								<img src={eye} alt="eye" className={styles.buttonIcon} />
-								Просмотр
-							</Link>
+						<div className={styles.actions}>
+							<TableButton to={`/gost-review/${gost.id}`}>
+								<ImportContactsRounded />
+							</TableButton>
 							{(user?.role === "Admin" || user?.role === "Heisenberg") && (
-								<Link
-									to={`/gost-edit/${gost.id}`}
-									className={classNames(styles.tableButton, "baseButton", "filledButton")}
-								>
-									<img src={pen} alt="pen" className={styles.buttonIcon} />
-									Редактирование
-								</Link>
+								<TableButton to={`/gost-edit/${gost.id}`}>
+									<EditRounded />
+								</TableButton>
 							)}
 						</div>
 					</td>
@@ -104,5 +93,11 @@ const GostRow: FC<GostRowProps> = ({ gost, gostsParams }) => {
 		);
 	return <></>;
 };
+
+const TableButton = ({ to, children }: { to: string; children: ReactNode }) => (
+	<Link to={to} className={styles.tableButton}>
+		{children}
+	</Link>
+);
 
 export default GostsTable;

@@ -1,94 +1,30 @@
 .table {
-    position: relative;
-    display: table;
     border-collapse: collapse;
     width: 100%;
+    background-color: var(--white);
+    border-radius: 1rem;
+    overflow: hidden;
 
-    th,
-    td {
-        border: 1px solid #D2D2D2;
-    }
-
-    td {
-        border-top: none;
-    }
-
-    td,
-    th {
-        padding: 9px;
-
-        font-family: var(--main-font);
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 20px;
-        letter-spacing: 0em;
-        text-align: left;
-        vertical-align: middle;
+    th, td {
+        border-bottom: 1px solid var(--urfu-grey);
+        padding: 8px;
     }
 
     th {
-        font-weight: 600;
+        border-bottom: 2px solid var(--urfu-blue);
+    }
+    thead tr th {
+        padding: 1rem;
+    }
+    tbody tr:hover {
+        background-color: var(--urfu-grey);
     }
 
-    td:first-child,
-    th:first-child {
+    .actions {
         text-align: center;
+        a {
+            margin: 0.25rem;
+            color: var(--urfu-blue);
+        }
     }
-
-    tbody {
-        position: relative;
-    }
-}
-
-
-
-.tableButton {
-    height: 38px;
-}
-
-.buttons {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
-    height: 100%;
-    width: 100%;
-}
-
-.tableButton {
-    padding: 4px;
-    flex-grow: 1;
-}
-
-
-
-.buttonIcon {
-    display: inline-block;
-    margin-right: 7px;
-}
-
-.loop {
-    width: 48px;
-    height: 48px;
-    position: absolute;
-    right: calc(100% + 8px);
-    top: 50%;
-    transform: translateY(-50%);
-    
-    cursor: pointer;
-}
-
-.collapse {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 10;
-}
-
-.applicationAreaContainer {
-    padding: 10px;
-    max-width: 900px;
-
-    border-radius: 7px;
 }
