@@ -1,10 +1,10 @@
-import {useState} from "react";
-import {useAppSelector} from "../../app/hooks.ts";
+import { useState } from "react";
+import { useAppSelector } from "../../app/hooks.ts";
 import AuthorizationForm from "../../components/AuthorizationForm/AuthorizationForm.tsx";
-import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
+import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
 import RegistrationForm from "../../components/RegistrationForm/RegistrationForm.tsx";
-import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
-import {useLoginUserMutation, useRegisterUserMutation} from "../../features/api/apiSlice.ts";
+import type { UserRegistration } from "../../components/RegistrationForm/registrationModel.ts";
+import { useLoginUserMutation, useRegisterUserMutation } from "../../features/api/apiSlice.ts";
 import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import styles from "./LoginPage.module.scss";
@@ -51,7 +51,7 @@ const LoginPage = () => {
 				<section className={styles.authorizationForm}>
 					<AuthorizationForm
 						changeForm={() => {
-							setState(states.registration)
+							setState(states.registration);
 						}}
 						error={error}
 						onSubmit={(user: UserAuthorization) => handleAuthorization(user)}

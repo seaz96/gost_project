@@ -5,9 +5,13 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import {useAppSelector} from "../../app/hooks.ts";
+import { useAppSelector } from "../../app/hooks.ts";
 import { gostModel } from "../../entities/gost";
-import { useUpdateViewsMutation, useDeleteGostMutation, useChangeGostStatusMutation } from "../../features/api/apiSlice";
+import {
+	useChangeGostStatusMutation,
+	useDeleteGostMutation,
+	useUpdateViewsMutation,
+} from "../../features/api/apiSlice";
 import { Button } from "../../shared/components";
 import styles from "./GostReview.module.scss";
 
@@ -19,11 +23,11 @@ interface GostReviewProps {
 const GostReview: React.FC<GostReviewProps> = (props) => {
 	const { gost, gostId } = props;
 	const navigate = useNavigate();
-	const user = useAppSelector(s => s.user.user)
+	const user = useAppSelector((s) => s.user.user);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [recoverModalOpen, setRecoverModalOpen] = useState(false);
-	
+
 	const [updateViews] = useUpdateViewsMutation();
 	const [deleteGost] = useDeleteGostMutation();
 	const [changeStatus] = useChangeGostStatusMutation();

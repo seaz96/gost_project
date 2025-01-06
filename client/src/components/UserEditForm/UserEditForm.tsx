@@ -1,7 +1,7 @@
 import type React from "react";
 import { useState } from "react";
-import {useAppSelector} from "../../app/hooks.ts";
-import type {User} from "../../entities/user/userModel.ts";
+import { useAppSelector } from "../../app/hooks.ts";
+import type { User } from "../../entities/user/userModel.ts";
 import { Button, Input } from "../../shared/components";
 import styles from "./UserEditForm.module.scss";
 import type { UserEditType } from "./userEditModel.ts";
@@ -14,7 +14,7 @@ interface UserEditFormProps {
 
 const UserEditForm: React.FC<UserEditFormProps> = (props) => {
 	const { handleSubmit, userData, id } = props;
-	const user = useAppSelector(s => s.user.user)
+	const user = useAppSelector((s) => s.user.user);
 
 	const [userEditData, setUserEditData] = useState<UserEditType>({
 		name: userData.name,

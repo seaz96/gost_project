@@ -71,9 +71,7 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 			/>
 			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
-				<UrfuButton type="submit">
-					Войти
-				</UrfuButton>
+				<UrfuButton type="submit">Войти</UrfuButton>
 				<UrfuButton onClick={() => changeForm()} outline={true}>
 					Зарегистрироваться
 				</UrfuButton>

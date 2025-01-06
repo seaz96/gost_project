@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import {type ReactNode, useState} from "react";
-import {Link} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {logoutUser} from "../../features/user/userSlice.ts";
+import { type ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import { logoutUser } from "../../features/user/userSlice.ts";
 import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import urfuProfile from "../../shared/assets/urfuProfile.svg";
@@ -13,12 +13,8 @@ const ProfileDropdown = () => {
 
 	return (
 		<div className={styles.dropdown}>
-			<Link to="/reset-password">
-				Сменить пароль
-			</Link>
-			<Link to={"/self-edit-page"}>
-				Редактировать профиль
-			</Link>
+			<Link to="/reset-password">Сменить пароль</Link>
+			<Link to={"/self-edit-page"}>Редактировать профиль</Link>
 			<button
 				type={"button"}
 				onClick={() => {
@@ -68,7 +64,7 @@ const Header = () => {
 			</Link>
 			<nav className={styles.buttonsContainer}>
 				<ul>
-					<HeaderLink to="/">Все документы</HeaderLink>
+					<HeaderLink to="/">Документы</HeaderLink>
 					<HeaderLink to="/archive">Архив</HeaderLink>
 					<HeaderLink to="/statistic">Статистика</HeaderLink>
 					{(user?.role === "Admin" || user?.role === "Heisenberg") && (

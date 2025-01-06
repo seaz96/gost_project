@@ -2,7 +2,7 @@ import { IconButton, Popover } from "@mui/material";
 import classNames from "classnames";
 import { type FC, useState } from "react";
 import { Link } from "react-router-dom";
-import {useAppSelector} from "../../app/hooks.ts";
+import { useAppSelector } from "../../app/hooks.ts";
 import type { gostModel } from "../../entities/gost";
 import eye from "../../shared/assets/eye.svg";
 import pen from "../../shared/assets/pen.svg";
@@ -16,7 +16,6 @@ interface GostsTableProps {
 
 const GostsTable: React.FC<GostsTableProps> = (props) => {
 	const { gosts, gostsParams } = props;
-
 
 	return (
 		<table className={styles.table}>
@@ -44,7 +43,7 @@ interface GostRowProps {
 const GostRow: FC<GostRowProps> = ({ gost, gostsParams }) => {
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 	const open = Boolean(anchorEl);
-	const user = useAppSelector(s => s.user.user)
+	const user = useAppSelector((s) => s.user.user);
 
 	if (gost.designation)
 		return (

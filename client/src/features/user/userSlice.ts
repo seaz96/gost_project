@@ -1,6 +1,6 @@
-import {type PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type {User} from "../../entities/user/userModel.ts";
-import {apiSlice} from "../api/apiSlice.ts";
+import { type PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { User } from "../../entities/user/userModel.ts";
+import { apiSlice } from "../api/apiSlice.ts";
 
 interface UserState {
 	user: User | null;
@@ -14,14 +14,14 @@ const initialState: UserState = {
 	error: null,
 };
 
-export const logoutUser = createAsyncThunk<void, void>('user/logoutUser', async (_, { dispatch }) => {
-	localStorage.removeItem('jwt_token');
+export const logoutUser = createAsyncThunk<void, void>("user/logoutUser", async (_, { dispatch }) => {
+	localStorage.removeItem("jwt_token");
 	dispatch(setUser(null));
-	window.location.href = '/login';
+	window.location.href = "/login";
 });
 
 export const userSlice = createSlice({
-	name: 'user',
+	name: "user",
 	initialState,
 	reducers: {
 		setUser: (state, action: PayloadAction<User | null>) => {
@@ -56,12 +56,15 @@ export const userSlice = createSlice({
 				state.loading = false;
 				state.user = action.payload;
 				state.error = null;
-				localStorage.setItem('jwt_token', action.payload.token);
+				localStorage.setItem("jwt_token", action.payload.token);
 			})
 			.addMatcher(apiSlice.endpoints.loginUser.matchRejected, (state, action) => {
 				state.loading = false;
 				state.user = null;
-				state.error = action.error.code === 'ERR_BAD_REQUEST' ? "Неверный логин или пароль" : `Ошибка входа в систему (${action.error.message})`;
+				state.error =
+					action.error.code === "ERR_BAD_REQUEST"
+						? "Неверный логин или пароль"
+						: `Ошибка входа в систему (${action.error.message})`;
 			})
 			.addMatcher(apiSlice.endpoints.registerUser.matchPending, (state) => {
 				state.loading = true;
@@ -71,12 +74,15 @@ export const userSlice = createSlice({
 				state.loading = false;
 				state.user = action.payload;
 				state.error = null;
-				localStorage.setItem('jwt_token', action.payload.token);
+				localStorage.setItem("jwt_token", action.payload.token);
 			})
 			.addMatcher(apiSlice.endpoints.registerUser.matchRejected, (state, action) => {
 				state.loading = false;
 				state.user = null;
-				state.error = action.error.code === 'ERR_BAD_REQUEST' ? "Пользователь с таким логином уже существует" : `Ошибка регистрации (${action.error.message})`;
+				state.error =
+					action.error.code === "ERR_BAD_REQUEST"
+						? "Пользователь с таким логином уже существует"
+						: `Ошибка регистрации (${action.error.message})`;
 			});
 	},
 });

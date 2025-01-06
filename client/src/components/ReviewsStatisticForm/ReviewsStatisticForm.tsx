@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button, Input } from "../../shared/components";
 import { useGetViewsStatsQuery } from "../../features/api/apiSlice";
+import { Button, Input } from "../../shared/components";
 import styles from "./ReviewsStatisticForm.module.scss";
 
 interface ReviewsStatisticFormProps {
@@ -23,17 +23,15 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 	const validateData = (event: React.FormEvent) => {
 		event.preventDefault();
 
-		const startDate = reviewsData.startDate 
-			? new Date(reviewsData.startDate).toISOString() 
+		const startDate = reviewsData.startDate
+			? new Date(reviewsData.startDate).toISOString()
 			: new Date("1970-01-01").toISOString();
-		const endDate = reviewsData.endDate 
-			? new Date(reviewsData.endDate).toISOString() 
-			: new Date().toISOString();
-			
+		const endDate = reviewsData.endDate ? new Date(reviewsData.endDate).toISOString() : new Date().toISOString();
+
 		const { data } = useGetViewsStatsQuery({
 			...reviewsData,
 			startDate,
-			endDate
+			endDate,
 		});
 
 		if (data) {

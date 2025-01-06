@@ -1,7 +1,7 @@
 import type React from "react";
 import { useState } from "react";
-import { Button, Input, RadioGroup } from "../../shared/components";
 import { useGetChangesStatsQuery } from "../../features/api/apiSlice";
+import { Button, Input, RadioGroup } from "../../shared/components";
 import styles from "./ChangesStatisticForm.module.scss";
 
 interface ChangesStatisticFormProps {

@@ -1,8 +1,8 @@
-import {useFormik} from "formik";
+import { useFormik } from "formik";
 import type React from "react";
-import {Button, Input} from "../../shared/components";
+import { Button, Input } from "../../shared/components";
 import styles from "./RegistrationForm.module.scss";
-import type {UserRegistration} from "./registrationModel.ts";
+import type { UserRegistration } from "./registrationModel.ts";
 
 interface RegistrationFormProps {
 	changeForm: () => void;
