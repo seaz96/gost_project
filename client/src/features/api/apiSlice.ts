@@ -158,13 +158,6 @@ export const apiSlice = createApi({
 				params,
 			}),
 		}),
-		updateViews: builder.mutation<void, string>({
-			query: (docId) => ({
-				url: `/stats/update-views/${docId}`,
-				method: "POST",
-				params: { docId },
-			}),
-		}),
 		deleteGost: builder.mutation<void, string>({
 			query: (id) => ({
 				url: `/docs/delete/${id}`,
@@ -204,7 +197,6 @@ export const {
 	useResetPasswordMutation,
 	useGetViewsStatsQuery,
 	useGetChangesStatsQuery,
-	useUpdateViewsMutation,
 	useDeleteGostMutation,
 	useFetchGostsPageQuery,
 	useFetchGostsCountQuery,

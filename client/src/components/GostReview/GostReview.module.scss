@@ -1,54 +1,17 @@
 .title {
-    font-family: var(--main-font);
     font-size: 30px;
     font-weight: 600;
     line-height: 40px;
-    letter-spacing: 0em;
+    letter-spacing: 0;
     text-align: left;
 }
-
-.gostTable {
-    border-collapse: collapse;
-
-    margin-top: 26px;
-    
-    td {
-        padding: 9px 25px;
-    
-        font-family: var(--main-font);
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 20px;
-        letter-spacing: 0em;
-        text-align: left;
-        border: 1px solid #D2D2D2;
-    }
-}
-
 
 .buttonsContainer {
     display: flex;
     gap: 10px;
-    margin-top: 27px;
+    margin: 1rem 0;
+
 }
-
-.link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 6px;
-
-    font-family: var(--main-fonr), Arial, Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 20px;
-    text-align: center;
-
-    border: 1px solid;
-    border-color: #D12965;
-    border-radius: 5px;
-}
-
 
 .DeleteCardButton {
     padding-top: 10px;

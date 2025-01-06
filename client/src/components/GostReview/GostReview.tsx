@@ -1,19 +1,25 @@
-import type React from "react";
-import {useEffect, useState} from "react";
-
 import {Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@mui/material";
 import classNames from "classnames";
+import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import {gostModel} from "../../entities/gost";
-import {useChangeGostStatusMutation, useDeleteGostMutation, useUpdateViewsMutation,} from "../../features/api/apiSlice";
+import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
 import {Button} from "../../shared/components";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import {GenericTable} from "../GenericTable/GenericTable";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
 	gost: gostModel.Gost;
 	gostId: number;
+}
+
+interface GostComparisonRow {
+	id: string;
+	field: string;
+	primary: React.ReactNode;
+	actual: React.ReactNode;
 }
 
 const GostReview: React.FC<GostReviewProps> = (props) => {
@@ -24,13 +30,8 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [recoverModalOpen, setRecoverModalOpen] = useState(false);
 
-	const [updateViews] = useUpdateViewsMutation();
 	const [deleteGost] = useDeleteGostMutation();
 	const [changeStatus] = useChangeGostStatusMutation();
-
-	useEffect(() => {
-		updateViews(gostId.toString());
-	}, []);
 
 	const onDeleteSubmit = async () => {
 		await deleteGost(gostId.toString());
@@ -46,6 +47,103 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 		await changeStatus({ id: gostId, status: 1 });
 		navigate("/");
 	};
+
+	const renderReferences = (refs: typeof gost.references) => (
+		<>
+			{refs.map((ref, index) =>
+				ref.status === 3 ? (
+					<p key={`${ref.docId}-${index}`}>{ref.designation}</p>
+				) : (
+					<Link key={`${ref.docId}-${index}`} to={`/gost-review/${ref.docId}`}>
+						<p
+							className={classNames(
+								ref.status === 0 && styles.activeRef,
+								(ref.status === 1 || ref.status === 2) && styles.oldRef,
+							)}
+						>
+							{ref.designation}
+						</p>
+					</Link>
+				),
+			)}
+		</>
+	);
+
+	const tableData: GostComparisonRow[] = [
+		{ id: "name", field: "Наименование стандарта", primary: gost.primary.fullName, actual: gost.actual.fullName },
+		{ id: "codeOks", field: "Код ОКС", primary: gost.primary.codeOks, actual: gost.actual.codeOks },
+		{
+			id: "activityField",
+			field: "Сфера деятельности",
+			primary: gost.primary.activityField,
+			actual: gost.actual.activityField,
+		},
+		{
+			id: "acceptanceYear",
+			field: "Год принятия",
+			primary: gost.primary.acceptanceYear,
+			actual: gost.actual.acceptanceYear,
+		},
+		{
+			id: "commissionYear",
+			field: "Год введения",
+			primary: gost.primary.commissionYear,
+			actual: gost.actual.commissionYear,
+		},
+		{ id: "author", field: "Разработчик", primary: gost.primary.author, actual: gost.actual.author },
+		{
+			id: "firstOrReplaced",
+			field: "Принят впервые/взамен",
+			primary: gost.primary.acceptedFirstTimeOrReplaced,
+			actual: gost.actual.acceptedFirstTimeOrReplaced,
+		},
+		{ id: "content", field: "Содержание", primary: gost.primary.content, actual: gost.actual.content },
+		{
+			id: "applicationArea",
+			field: "Область применения",
+			primary: <div style={{ whiteSpace: "pre-line" }}>{gost.primary.applicationArea}</div>,
+			actual: <div style={{ whiteSpace: "pre-line" }}>{gost.actual.applicationArea}</div>,
+		},
+		{ id: "keyWords", field: "Ключевые слова", primary: gost.primary.keyWords, actual: gost.actual.keyWords },
+		{
+			id: "adoptionLevel",
+			field: "Уровень принятия",
+			primary: gostModel.AdoptionLevel[gost.primary.adoptionLevel],
+			actual: gostModel.AdoptionLevel[gost.actual.adoptionLevel],
+		},
+		{
+			id: "documentText",
+			field: "Текст стандарта",
+			primary: <a href={gost.primary.documentText}>{gost.primary.documentText}</a>,
+			actual: <a href={gost.actual.documentText}>{gost.actual.documentText}</a>,
+		},
+		{
+			id: "references",
+			field: "Нормативные ссылки",
+			primary: renderReferences(gost.references),
+			actual: renderReferences(gost.references),
+		},
+		{ id: "changes", field: "Изменения", primary: gost.primary.changes, actual: gost.actual.changes },
+		{ id: "amendments", field: "Поправки", primary: gost.primary.amendments, actual: gost.actual.amendments },
+		{
+			id: "status",
+			field: "Действующий/Отменён/Заменён",
+			primary: gostModel.Statuses[gost.primary.status],
+			actual: gostModel.Statuses[gost.actual.status],
+		},
+		{
+			id: "harmonization",
+			field: "Уровень гармонизации",
+			primary: gostModel.Harmonization[gost.primary.harmonization],
+			actual: gostModel.Harmonization[gost.actual.harmonization],
+		},
+	];
+
+	const columns = [
+		{ header: "Поле", accessor: (row: GostComparisonRow) => row.field },
+		{ header: "Первоначальное значение", accessor: (row: GostComparisonRow) => row.primary },
+		{ header: "Последняя актуализация", accessor: (row: GostComparisonRow) => row.actual ?? "-" },
+	];
 
 	//TODO: buttons to links
 	return (
@@ -77,144 +175,7 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 						</UrfuButton>
 					</div>
 				)}
-				<table className={styles.gostTable}>
-					<thead>
-						<tr>
-							<td>Поле</td>
-							<td>Первоначальное значение</td>
-							<td>Последняя актуализация</td>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Наименование стандарта</td>
-							<td>{gost.primary.fullName}</td>
-							<td>{gost.actual.fullName}</td>
-						</tr>
-						<tr>
-							<td>Код ОКС</td>
-							<td>{gost.primary.codeOks}</td>
-							<td>{gost.actual.codeOks}</td>
-						</tr>
-						<tr>
-							<td>Сфера деятельности</td>
-							<td>{gost.primary.activityField}</td>
-							<td>{gost.actual.activityField}</td>
-						</tr>
-						<tr>
-							<td>Год принятия</td>
-							<td>{gost.primary.acceptanceYear}</td>
-							<td>{gost.actual.acceptanceYear}</td>
-						</tr>
-						<tr>
-							<td>Год введения</td>
-							<td>{gost.primary.commissionYear}</td>
-							<td>{gost.actual.commissionYear}</td>
-						</tr>
-						<tr>
-							<td>Разработчик</td>
-							<td>{gost.primary.author}</td>
-							<td>{gost.actual.author}</td>
-						</tr>
-						<tr>
-							<td>Принят впервые/взамен</td>
-							<td>{gost.primary.acceptedFirstTimeOrReplaced}</td>
-							<td>{gost.actual.acceptedFirstTimeOrReplaced}</td>
-						</tr>
-						<tr>
-							<td>Содержание</td>
-							<td>{gost.primary.content}</td>
-							<td>{gost.actual.content}</td>
-						</tr>
-						<tr>
-							<td>Область применения</td>
-							<td style={{ whiteSpace: "pre-line" }}>{gost.primary.applicationArea}</td>
-							<td style={{ whiteSpace: "pre-line" }}>{gost.actual.applicationArea}</td>
-						</tr>
-						<tr>
-							<td>Ключевые слова</td>
-							<td>{gost.primary.keyWords}</td>
-							<td>{gost.actual.keyWords}</td>
-						</tr>
-						<tr>
-							<td>Уровень принятия</td>
-							<td>{gostModel.AdoptionLevel[gost.primary.adoptionLevel]}</td>
-							<td>{gostModel.AdoptionLevel[gost.actual.adoptionLevel]}</td>
-						</tr>
-						<tr>
-							<td>Текст стандарта</td>
-							<td>
-								<a href={gost.primary.documentText}>{gost.primary.documentText}</a>
-							</td>
-							<td>
-								<a href={gost.actual.documentText}>{gost.actual.documentText}</a>
-							</td>
-						</tr>
-						<tr>
-							<td>Нормативные ссылки</td>
-							<td>
-								{gost.references.map((ref) => (
-									<>
-										{ref.status === 3 ? (
-											<p>{ref.designation}</p>
-										) : (
-											<Link to={`/gost-review/${ref.docId}`}>
-												<p
-													className={classNames(
-														ref.status === 0 && styles.activeRef,
-														(ref.status === 1 || ref.status === 2) && styles.oldRef,
-													)}
-												>
-													{ref.designation}
-												</p>
-											</Link>
-										)}
-									</>
-								))}
-							</td>
-							<td>
-								{gost.references.map((ref) => (
-									<>
-										{ref.status === 3 ? (
-											<p>{ref.designation}</p>
-										) : (
-											<Link to={`/gost-review/${ref.docId}`}>
-												<p
-													className={classNames(
-														ref.status === 0 && styles.activeRef,
-														(ref.status === 1 || ref.status === 2) && styles.oldRef,
-													)}
-												>
-													{ref.designation}
-												</p>
-											</Link>
-										)}
-									</>
-								))}
-							</td>
-						</tr>
-						<tr>
-							<td>Изменения</td>
-							<td>{gost.primary.changes}</td>
-							<td>{gost.actual.changes}</td>
-						</tr>
-						<tr>
-							<td>Поправки</td>
-							<td>{gost.primary.amendments}</td>
-							<td>{gost.actual.amendments}</td>
-						</tr>
-						<tr>
-							<td>Действующий/Отменён/Заменён</td>
-							<td>{gostModel.Statuses[gost.primary.status]}</td>
-							<td>{gostModel.Statuses[gost.actual.status]}</td>
-						</tr>
-						<tr>
-							<td>Уровень гармонизации</td>
-							<td>{gostModel.Harmonization[gost.primary.harmonization]}</td>
-							<td>{gostModel.Harmonization[gost.actual.harmonization]}</td>
-						</tr>
-					</tbody>
-				</table>
+				<GenericTable columns={columns} data={tableData} rowKey="id" />
 			</div>
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
@@ -225,8 +186,8 @@ const GostReview: React.FC<GostReviewProps> = (props) => {
 
 interface DeleteCardProps {
 	isOpen: boolean;
-	setIsOpen: Function;
-	onSubmitFunction: Function;
+	setIsOpen: (isOpen: boolean) => void;
+	onSubmitFunction: () => void;
 }
 
 const DeleteCard: React.FC<DeleteCardProps> = (props) => {
@@ -254,8 +215,8 @@ const DeleteCard: React.FC<DeleteCardProps> = (props) => {
 
 interface RecoverCardProps {
 	isOpen: boolean;
-	setIsOpen: Function;
-	onSubmitFunction: Function;
+	setIsOpen: (isOpen: boolean) => void;
+	onSubmitFunction: () => void;
 }
 
 const RecoverCard: React.FC<RecoverCardProps> = (props) => {
@@ -283,8 +244,8 @@ const RecoverCard: React.FC<RecoverCardProps> = (props) => {
 
 interface CancelCardProps {
 	isOpen: boolean;
-	setIsOpen: Function;
-	onSubmitFunction: Function;
+	setIsOpen: (isOpen: boolean) => void;
+	onSubmitFunction: () => void;
 }
 
 const CancelCard: React.FC<CancelCardProps> = (props) => {
@@ -295,7 +256,7 @@ const CancelCard: React.FC<CancelCardProps> = (props) => {
 			<DialogTitle id="alert-dialog-title">Отменить ГОСТ?</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-description">
-					Если вы отмените ГОСТ, он перенесется в архив, а его статус поменятся на 'Отменен'
+					Если вы отмените ГОСТ, он перенесется в архив, а его статус поменяться на 'Отменен'
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>
