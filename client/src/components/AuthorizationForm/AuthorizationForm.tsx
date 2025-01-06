@@ -48,7 +48,8 @@ const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
 			}}
 		>
 			<Input
-				type="email"
+				//TODO: to type email
+				type="text"
 				id="login"
 				name="login"
 				label="Логин"

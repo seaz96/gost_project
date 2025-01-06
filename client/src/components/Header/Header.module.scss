@@ -1,87 +1,88 @@
 .header {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 6rem;
+  padding: 1rem;
+  gap: 3rem;
+  background: var(--urfu-blue);
+
+  .logo {
+    height: 3rem;
+    width: 10rem;
     display: flex;
-    justify-content: space-between;
+    flex-shrink: 0;
+    //TODO: replace with purpose white logo
+    filter: brightness(0) invert(1);
+  }
+
+  nav ul {
+    display: flex;
     align-items: center;
+    gap: 2rem;
 
-    height: 83px;
-    padding-top: 16px;
-    padding-bottom: 16px;
+    .headerLink {
+      font-family: var(--main-font), system-ui;
+      color: var(--white);
+      font-weight: 700;
+    }
+  }
 
-    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
-
-}
-
-.buttonsContainer {
-    display: flex;
-    width: clamp(350px, 420px, 443px);
-    gap: 10px;
-    height: 100%;
-}
-
-.headerButton {
-    flex-grow: 1;
-    max-width: 50%;
-
-    font-size: 14px !important;
-}
-
-.headerNavList {
-    display: flex;
-    gap: 57px;
-}
-
-.navItem {
-    font-family: var(--main-font);
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 20px;
-    letter-spacing: 0em;
-    text-align: left;
-    color: #fff;
-}
-
-.profileContainer {
+  .profileContainer {
+    margin-left: auto;
     position: relative;
+  }
 
-    height: 100%;
-    width: 139px;
-}
-
-.profileButton {
+  .profileButton {
     height: 100%;
     width: 100%;
+  }
+
+  .profileIcon {
+    height: 2rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: flex;
+    img {
+      //TODO: replace with colored svg
+      filter: brightness(0) invert(1);
+    }
+  }
 }
 
+
+
+
 .dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    z-index: 1000;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1000;
 
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 280px;
 
-    padding: 15px;
+  padding: 15px;
 
-    background-color: #fff;
-    border: 1px solid #B2B1B1;
-    border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #B2B1B1;
+  border-radius: 5px;
 
-    font-family: var(--main-font);
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
-    letter-spacing: 0em;
-    text-align: left;
+  font-family: var(--main-font);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
 }
 
 .dropdownImage {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .exitButton {
-    font: inherit;
-    text-align: left;
+  font: inherit;
+  text-align: left;
 }

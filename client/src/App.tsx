@@ -3,7 +3,7 @@ import {BrowserRouter} from "react-router-dom";
 import {useAppSelector} from "./app/hooks.ts";
 import AppRouter from "./pages/AppRouter.tsx";
 import {Loader} from "./shared/components";
-import "./index.scss";
+import "./styles/index.scss";
 
 export const App = () => {
 	const loading = useAppSelector((state) => state.user.loading);

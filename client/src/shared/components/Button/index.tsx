@@ -8,7 +8,7 @@ interface ButtonProps {
 	isFilled?: boolean;
 	isColoredText?: boolean;
 	className?: string;
-	onClick?: Function;
+	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 	prefix?: React.ReactNode;
 	suffix?: React.ReactNode;
 	type?: "button" | "submit" | "reset";

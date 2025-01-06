@@ -2,6 +2,14 @@
 
 :root {
     --main-font: 'Manrope', Aerial;
+
+    --urfu-blue: #1E4391;
+    --urfu-dark-blue: #0F2B5E;
+    --urfu-red: #EF302B;
+    --urfu-dark-red: #C0231F;
+    --urfu-grey: #F6F6F6;
+    --white: #fff;
+    --urfu-black: #222222;
 }
 
 .container {
@@ -15,21 +23,7 @@
 }
 
 .baseButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
-    font-family: var(--main-fonr), Arial, Helvetica, sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 20px;
-    color: #232323;
-    text-align: center;
-
-    background-color: #fff;
-    border: 1px solid;
-    border-color: #D12965;
-    border-radius: 5px;
 }
 
 .filledButton {

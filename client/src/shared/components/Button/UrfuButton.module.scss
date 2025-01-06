@@ -1,0 +1,38 @@
+.urfuButton {
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: var(--main-font), system-ui;
+  transition: background-color 0.3s;
+  border-radius: 24px;
+  font-weight: 700;
+
+  &.red {
+    background-color: var(--urfu-red);
+    color: white;
+
+    &:hover {
+      background-color: var(--urfu-dark-red);
+    }
+  }
+
+  &.blue {
+    background-color: var(--urfu-blue);
+    color: white;
+
+    &:hover {
+      background-color: var(--urfu-dark-blue);
+    }
+  }
+
+  &.medium {
+    font-size: 16px;
+    padding: 20px 30px;
+  }
+
+  &.large {
+    font-size: 20px;
+    padding: 30px 40px;
+  }
+}
