@@ -37,6 +37,7 @@
 		"autoprefixer": "^10.4.20",
 		"globals": "^15.9.0",
 		"postcss": "^8.4.47",
+		"sass-embedded": "^1.83.1",
 		"typescript": "^5.5.3",
 		"vite": "^5.4.8"
 	}
