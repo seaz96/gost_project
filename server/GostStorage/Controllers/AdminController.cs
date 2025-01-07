@@ -29,7 +29,7 @@ public class AdminController(IAccountService accountService) : ControllerBase
 
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpGet("users/{id:long}")]
-    public async Task<IActionResult> GetUserInfo([FromQuery] long id)
+    public async Task<IActionResult> GetUserInfo(long id)
     {
         return await accountService.GetUserInfoAsync(id);
     }
