@@ -134,14 +134,17 @@ public class DocumentsService(
     }
 
     //todo: исправить хардкод бы
-    public async Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId)
+    public async Task<bool> UploadFileForDocumentAsync(IFormFile file, long docId)
     {
-        await filesRepository.UploadFileAsync(file.File, file.Extension, docId);
+        var filename = await filesRepository.UploadFileAsync(file, docId);
+
+        if (filename is null) return false;
+        
         var doc = await documentsRepository.GetByIdAsync(docId);
         var primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
-        primary.DocumentText = $"https://gost-storage.ru/documents/{doc.Designation}.{file.Extension}";
+        primary.DocumentText = $"https://gost-storage.ru/documents/{filename}";
         await primaryFieldsRepository.UpdateAsync(primary);
-        return new OkResult();
+        return true;
     }
     
     public async Task<List<GeneralDocumentInfoModel>> SearchAsync(SearchQuery query)

@@ -4,5 +4,5 @@ namespace GostStorage.Services.Abstract;
 
 public interface IFileProcessor
 {
-    Task<string> ExtractFileTextSafeAsync(UploadFileModel document);
+    Task<string> ExtractFileTextSafeAsync(IFormFile file);
 }

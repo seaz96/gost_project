@@ -7,9 +7,9 @@ namespace GostStorage.Services.Concrete;
 
 public class FileProcessor : IFileProcessor
 {
-    public async Task<string> ExtractFileTextSafeAsync(UploadFileModel document)
+    public async Task<string> ExtractFileTextSafeAsync(IFormFile file)
     {
-        var path = Path.GetTempPath() + Guid.NewGuid() + document.File.FileName;
+        var path = Path.GetTempPath() + Guid.NewGuid() + file.FileName;
         try
         {
             await using var stream = new FileStream(
@@ -19,7 +19,7 @@ public class FileProcessor : IFileProcessor
                 FileShare.ReadWrite,
                 4096,
                 FileOptions.DeleteOnClose);
-            await document.File.CopyToAsync(stream);
+            await file.CopyToAsync(stream);
             stream.Seek(0, SeekOrigin.Begin);
             var text = ParserFactory.CreateText(new ParserContext(path)).Parse();
             return text;

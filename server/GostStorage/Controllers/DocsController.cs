@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using System.Text;
 using AutoMapper;
 using GostStorage.Attributes;
 using GostStorage.Entities;
@@ -28,8 +27,9 @@ public class DocsController(
     : ControllerBase
 {
     [Authorize(Roles = "Heisenberg,Admin")]
+    [Consumes("application/json")]
     [HttpPost("add")]
-    public async Task<IActionResult> AddDocument([FromBody] AddDocumentRequest dto)
+    public async Task<ActionResult<long>> AddDocument([FromBody] AddDocumentRequest dto)
     {
         if (!ModelState.IsValid)
         {
@@ -54,6 +54,17 @@ public class DocsController(
         });
 
         return Ok(docId);
+    }
+
+    [Authorize(Roles = "Heisenberg,Admin")]
+    [Consumes("multipart/form-data")]
+    [HttpPost("add/with-file")]
+    public async Task<ActionResult<long>> AddDocument([FromForm] AddDocumentWithFileRequest request)
+    {
+        var documentId = await AddDocument(request as AddDocumentRequest);
+        await UploadFileForDocumentAsync(new UploadFileRequest { File = request.File }, documentId.Value);
+
+        return new OkObjectResult(documentId);
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
@@ -237,7 +248,7 @@ public class DocsController(
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("{docId}/upload-file")]
     [Consumes("multipart/form-data")]
-    public async Task<IActionResult> UploadFileForDocumentAsync([FromForm] UploadFileModel file, long docId)
+    public async Task<IActionResult> UploadFileForDocumentAsync([FromForm] UploadFileRequest request, long docId)
     {
         if (!ModelState.IsValid)
         {
@@ -250,12 +261,17 @@ public class DocsController(
             return NotFound($"Document with id {docId} not found");
         }
 
-        await documentsService.UploadFileForDocumentAsync(file, docId);
+        var isUploadSuccesful = await documentsService.UploadFileForDocumentAsync(request.File, docId);
 
+        if (!isUploadSuccesful)
+        {
+            return BadRequest("File is not uploaded. Check file.");
+        }
+        
         var indexModel = new SearchIndexModel
         {
             Document = SearchHelper.SplitFieldsToIndexDocument(document.DocId, document.Primary, document.Actual),
-            Text = await fileProcessor.ExtractFileTextSafeAsync(file)
+            Text = await fileProcessor.ExtractFileTextSafeAsync(request.File)
         };
         
         await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);

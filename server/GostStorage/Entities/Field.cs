@@ -8,7 +8,7 @@ namespace GostStorage.Entities;
 public class Field : BaseEntity
 {
     [Index]
-    public string Designation { get; set; }
+    public required string Designation { get; set; }
 
     public string? FullName { get; set; }
 

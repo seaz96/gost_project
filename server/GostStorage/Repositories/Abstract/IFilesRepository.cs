@@ -2,5 +2,5 @@ namespace GostStorage.Repositories.Abstract;
 
 public interface IFilesRepository
 {
-    public Task UploadFileAsync(IFormFile file, string extension, long docId);
+    public Task<string?> UploadFileAsync(IFormFile file, long docId);
 }

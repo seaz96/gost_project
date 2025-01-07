@@ -21,7 +21,7 @@ public interface IDocumentsService
 
     Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters);
 
-    Task<IActionResult> UploadFileForDocumentAsync(UploadFileModel file, long docId);
+    Task<bool> UploadFileForDocumentAsync(IFormFile file, long docId);
 
     Task<List<GeneralDocumentInfoModel>> SearchAsync(SearchQuery query);
     

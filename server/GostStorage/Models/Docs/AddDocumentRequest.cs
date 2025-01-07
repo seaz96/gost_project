@@ -27,7 +27,7 @@ public record AddDocumentRequest
 
     public string? ApplicationArea { get; init; }
 
-    public AdoptionLevel AdoptionLevel { get; init; }
+    public AdoptionLevel? AdoptionLevel { get; init; }
 
     public string? DocumentText { get; init; }
 
@@ -35,9 +35,9 @@ public record AddDocumentRequest
 
     public string? Amendments { get; init; }
 
-    public DocumentStatus Status { get; init; }
+    public DocumentStatus? Status { get; init; }
 
-    public HarmonizationLevel Harmonization { get; init; }
+    public HarmonizationLevel? Harmonization { get; init; }
 
     public List<string> References { get; init; }
 }
