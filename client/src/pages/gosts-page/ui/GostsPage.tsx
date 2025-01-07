@@ -17,7 +17,7 @@ const GostsPage = () => {
 		<main className="container">
 			<h1 className="verticalPadding">Документы</h1>
 			{(user?.role === "Admin" || user?.role === "Heisenberg") && (
-				<Link to="/gosts-editor" className="verticalPadding">
+				<Link to="/gost-editor" className="verticalPadding">
 					Создать документ
 				</Link>
 			)}
