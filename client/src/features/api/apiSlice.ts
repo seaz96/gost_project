@@ -184,7 +184,7 @@ export const apiSlice = createApi({
 			}),
 			keepUnusedDataFor: 0,
 		}),
-		getChangesStats: builder.query<GostChanges[], { status: string; count: number; StartDate: string; EndDate: string }>({
+		getChangesStats: builder.query<GostChanges[], { status: string; StartDate: string; EndDate: string }>({
 			query: (params) => ({
 				url: "/actions/list",
 				params,

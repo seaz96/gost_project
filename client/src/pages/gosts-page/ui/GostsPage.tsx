@@ -1,4 +1,5 @@
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
+import {useEffect, useRef} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {Link} from "react-router-dom";
 import {useAppSelector} from "../../../app/hooks.ts";
@@ -12,6 +13,14 @@ const GostsPage = () => {
 	const { gosts, countFetched, count, setGostParams, gostsParams, fetchGostsData } =
 		useGostsWithPagination("/docs/search");
 	const user = useAppSelector((s) => s.user.user);
+	const contentRef = useRef<HTMLDivElement>(null);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: hook
+	useEffect(() => {
+		if (contentRef.current && contentRef.current.clientHeight < window.innerHeight) {
+			fetchGostsData();
+		}
+	}, [countFetched]);
 
 	return (
 		<main className="container">
@@ -45,7 +54,7 @@ const GostsPage = () => {
 				/>
 			</section>
 			<div className="verticalPadding">Найдено {count} документов</div>
-			<div>
+			<div ref={contentRef}>
 				<section className="verticalPadding">
 					<InfiniteScroll
 						dataLength={countFetched}
