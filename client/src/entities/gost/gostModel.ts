@@ -11,9 +11,9 @@ export type GostSearchParams = {
 		Author: string;
 		AcceptedFirstTimeOrReplaced: string;
 		KeyWords: string;
-		AdoptionLevel: adoptionLevel | null
-		Status: status | null
-		Harmonization: harmonization | null
+		AdoptionLevel: adoptionLevel | null;
+		Status: status | null;
+		Harmonization: harmonization | null;
 	};
 	Limit: number;
 	Offset: number;
@@ -31,18 +31,18 @@ export type GostRequestModel = {
 	content: string;
 	keyWords: string;
 	applicationArea: string;
-	adoptionLevel: adoptionLevel
+	adoptionLevel: adoptionLevel;
 	documentText: string;
 	changes: string;
 	amendments: string;
-	status: status
-	harmonization: harmonization
+	status: status;
+	harmonization: harmonization;
 	references: string[];
 };
 
 export type GostFetchModel = {
 	docId: number;
-	status: status
+	status: status;
 	primary: GostFieldsWithId;
 	actual: GostFieldsWithId;
 	references: GostReference[];
@@ -61,11 +61,11 @@ export type GostFieldsWithId = {
 	content: string;
 	keyWords: string;
 	applicationArea: string;
-	adoptionLevel: adoptionLevel
+	adoptionLevel: adoptionLevel;
 	documentText: string;
 	changes: string;
 	amendments: string;
-	harmonization: harmonization
+	harmonization: harmonization;
 	docId: number;
 	lastEditTime: string;
 };
@@ -73,7 +73,7 @@ export type GostFieldsWithId = {
 export type GostReference = {
 	id: number;
 	designation: string;
-	status: status
+	status: status;
 	actualFieldId: number;
 	primaryFieldId: number;
 };
@@ -86,16 +86,14 @@ export type GostViews = {
 };
 
 export type GostChanges = {
-	count: number;
-	stats: {
-		designation: string;
-		docId: number;
-		fullName: string;
-		action: "Create" | "Update";
-		date: number;
-	}[];
+	designation: string;
+	fullName: string;
+	documentId: number;
+	userId: number;
+	action: "Create" | "Update";
+	orgBranch: string | null;
+	date: number;
 };
-
 
 export type GostViewInfo = {
 	id: number;
@@ -118,7 +116,7 @@ export const StatusToRu = {
 	Canceled: "Отменён",
 	Replaced: "Заменён",
 	Inactive: "Неактивный",
-}
+};
 
 export const AdoptionLevelToRu = {
 	International: "Международный",
@@ -127,10 +125,10 @@ export const AdoptionLevelToRu = {
 	Organizational: "Организационный",
 	National: "Национальный",
 	Interstate: "Межгосударственный",
-}
+};
 
 export const HarmonizationToRu = {
 	Unharmonized: "Негармонизированный",
 	Modified: "Модифицированный",
 	Harmonized: "Гармонизированный",
-}
+};

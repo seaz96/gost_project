@@ -1,4 +1,4 @@
-@import 'reset';
+@use 'reset';
 
 :root {
     --main-font: 'Montserrat', sans-serif;
@@ -14,19 +14,46 @@
 }
 
 body {
+    line-height: 140%;
     font-family: var(--main-font), system-ui;
     color: var(--urfu-black);
     background: var(--urfu-grey);
+    //Element	Font Size (Desktop / Mobile)	Line Height	Font
+    //Заголовок	52px / 24px	110%	Montserrat Semibold
+    //Заголовок 2-го порядка	40px / 18px	120%	Montserrat Semibold
+    //Заголовок 3-го порядка	24px / 16px	120%	Montserrat Semibold
+
+    h1 {
+        font-size: 52px;
+        line-height: 110%;
+        font-weight: 600;
+    }
+    h2 {
+        font-size: 40px;
+        line-height: 120%;
+        font-weight: 600;
+    }
+    h3 {
+        font-size: 24px;
+        line-height: 120%;
+        font-weight: 600;
+    }
+
 }
 
 .container {
+    padding-top: 25px;
     padding-left: 85px;
     padding-right: 85px;
 }
 
 .contentContainer {
     padding-bottom: 55px;
-    padding-top: 55px;
+    padding-top: 25px;
+}
+
+.verticalPadding {
+    padding: 10px 0;
 }
 
 .filledButton {

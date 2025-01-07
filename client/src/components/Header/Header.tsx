@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import { type ReactNode, useState } from "react";
-import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
-import { logoutUser } from "../../features/user/userSlice.ts";
+import {type ReactNode, useState} from "react";
+import {Link} from "react-router-dom";
+import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
+import {logoutUser} from "../../features/user/userSlice.ts";
 import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import urfuProfile from "../../shared/assets/urfuProfile.svg";
@@ -55,7 +55,7 @@ const Header = () => {
 	};
 
 	return (
-		<header className={classNames(styles.header, "container")}>
+		<header className={classNames("container", styles.header)}>
 			<Link to={"/"}>
 				<picture className={styles.logo}>
 					<source srcSet={urfuLogoSvg} type="image/svg+xml" />
@@ -67,10 +67,7 @@ const Header = () => {
 					<HeaderLink to="/">Документы</HeaderLink>
 					<HeaderLink to="/statistic">Статистика</HeaderLink>
 					{(user?.role === "Admin" || user?.role === "Heisenberg") && (
-						<>
-							<HeaderLink to={"/gost-editor"}>Создать документ</HeaderLink>
-							<HeaderLink to="/users-page">Пользователи</HeaderLink>
-						</>
+						<HeaderLink to="/users-page">Пользователи</HeaderLink>
 					)}
 				</ul>
 			</nav>

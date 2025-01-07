@@ -149,8 +149,8 @@ const GostReview = (props: GostReviewProps) => {
 	//TODO: buttons to links
 	return (
 		<>
-			<div className={styles.reviewContainer}>
-				<h2 className={styles.title}>Просмотр документа {gost.primary.designation}</h2>
+			<main className={styles.reviewContainer}>
+				<h1>Просмотр документа {gost.primary.designation}</h1>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
 						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
@@ -177,7 +177,7 @@ const GostReview = (props: GostReviewProps) => {
 					</div>
 				)}
 				<GenericTable columns={columns} data={tableData} rowKey="id" />
-			</div>
+			</main>
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
 			<RecoverCard isOpen={recoverModalOpen} setIsOpen={setRecoverModalOpen} onSubmitFunction={recoverDoc} />

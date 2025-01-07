@@ -4,7 +4,13 @@ import {toast} from "react-toastify";
 import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
 import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
 import type {UserEditType} from "../../components/UserEditForm/userEditModel.ts";
-import type {GostFetchModel, GostRequestModel, GostViewInfo} from "../../entities/gost/gostModel.ts";
+import type {
+	GostChanges,
+	GostFetchModel,
+	GostRequestModel,
+	GostViewInfo,
+	GostViews,
+} from "../../entities/gost/gostModel.ts";
 import type {User} from "../../entities/user/userModel";
 import {baseURL} from "../../shared/configs/apiConfig.ts";
 
@@ -81,29 +87,31 @@ export const apiSlice = createApi({
 		}),
 		fetchUsers: builder.query<User[], void>({
 			query: () => "/admin/users",
+			keepUnusedDataFor: 0,
 		}),
 		fetchUserInfo: builder.query<User, number>({
 			query: (id) => ({
-				url: `/admin/users/${id}`
+				url: `/admin/users/${id}`,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		editUser: builder.mutation<void, UserEditType & { id: number }>({
 			query: (userData) => ({
-				url: "/accounts/admin-edit",
+				url: "/admin/edit-user",
 				method: "POST",
 				body: userData,
 			}),
 		}),
 		toggleAdmin: builder.mutation<void, { userId: number; isAdmin: boolean }>({
 			query: (data) => ({
-				url: "/accounts/make-admin",
+				url: "/admin/make-admin",
 				method: "POST",
 				body: data,
 			}),
 		}),
 		editSelf: builder.mutation<void, UserEditType>({
 			query: (userData) => ({
-				url: "/accounts/self-edit",
+				url: "/accounts/edit",
 				method: "POST",
 				body: userData,
 			}),
@@ -112,6 +120,7 @@ export const apiSlice = createApi({
 			query: (id) => ({
 				url: `/docs/${id}`,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		addGost: builder.mutation<void, GostRequestModel>({
 			query: (gost) => ({
@@ -125,6 +134,7 @@ export const apiSlice = createApi({
 				url: "/docs/change-status",
 				method: "PUT",
 				body: { id, status },
+				responseHandler: (response) => response.text(),
 			}),
 		}),
 		uploadGostFile: builder.mutation<void, { docId: string; file: File }>({
@@ -161,23 +171,25 @@ export const apiSlice = createApi({
 			}),
 		}),
 		getViewsStats: builder.query<
-			unknown,
+			GostViews[],
 			{ startDate: string; endDate: string; designation?: string; codeOks?: string; activityField?: string }
 		>({
 			query: (params) => ({
-				url: "/stats/get-views",
+				url: "/actions/views",
 				params: {
 					...params,
 					StartDate: params.startDate,
 					EndDate: params.endDate,
 				},
 			}),
+			keepUnusedDataFor: 0,
 		}),
-		getChangesStats: builder.query<unknown, { status: number; count: number; StartDate: string; EndDate: string }>({
+		getChangesStats: builder.query<GostChanges[], { status: string; count: number; StartDate: string; EndDate: string }>({
 			query: (params) => ({
-				url: "/stats/get-count",
+				url: "/actions/list",
 				params,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		deleteGost: builder.mutation<void, string>({
 			query: (id) => ({
@@ -190,12 +202,14 @@ export const apiSlice = createApi({
 				url,
 				params: { ...flattenParams(params), offset, limit },
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		fetchGostsCount: builder.query<number, { url: string; params?: object }>({
 			query: ({ url, params }) => ({
 				url: `${url}-count`,
 				params: flattenParams(params),
 			}),
+			keepUnusedDataFor: 0,
 		}),
 	}),
 });
@@ -216,8 +230,8 @@ export const {
 	useUpdateGostMutation,
 	useActualizeGostMutation,
 	useResetPasswordMutation,
-	useGetViewsStatsQuery,
-	useGetChangesStatsQuery,
+	useLazyGetViewsStatsQuery,
+	useLazyGetChangesStatsQuery,
 	useDeleteGostMutation,
 	useFetchGostsPageQuery,
 	useFetchGostsCountQuery,
