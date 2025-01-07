@@ -88,17 +88,17 @@ public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearch
         if (filters is null) 
             return query.ToString();
         
-        if (filters.Status is not null) query.Append($"&SearchFilter.Status={filters.Status.ToString()}");
-        if (filters.CodeOks is not null) query.Append($"&SearchFilter.CodeOks={filters.CodeOks}");
-        if (filters.AcceptanceYear is not null) query.Append($"&SearchFilter.AcceptanceYear={filters.AcceptanceYear.ToString()}");
-        if (filters.CommissionYear is not null) query.Append($"&SearchFilter.CommissionYear={filters.CommissionYear.ToString()}");
-        if (filters.Author is not null) query.Append($"&SearchFilter.Author={filters.Author}");
-        if (filters.AcceptedFirstTimeOrReplaced is not null) query.Append($"&SearchFilter.AcceptedFirstTimeOrReplaced={filters.AcceptedFirstTimeOrReplaced}");
-        if (filters.KeyWords is not null) query.Append($"&SearchFilter.KeyWords={filters.KeyWords}");
-        if (filters.AdoptionLevel is not null) query.Append($"&SearchFilter.AdoptionLevel={filters.AdoptionLevel.ToString()}");
-        if (filters.Harmonization is not null) query.Append($"&SearchFilter.Harmonization={filters.Harmonization.ToString()}");
-        if (filters.Amendments is not null) query.Append($"&SearchFilter.Amendments={filters.Amendments}");
-        if (filters.Changes is not null) query.Append($"&SearchFilter.Changes={filters.Changes}");
+        if (filters.Status is not null) query.Append($"&SearchFilters.Status={filters.Status.ToString()}");
+        if (filters.CodeOks is not null) query.Append($"&SearchFilters.CodeOks={filters.CodeOks}");
+        if (filters.AcceptanceYear is not null) query.Append($"&SearchFilters.AcceptanceYear={filters.AcceptanceYear.ToString()}");
+        if (filters.CommissionYear is not null) query.Append($"&SearchFilters.CommissionYear={filters.CommissionYear.ToString()}");
+        if (filters.Author is not null) query.Append($"&SearchFilters.Author={filters.Author}");
+        if (filters.AcceptedFirstTimeOrReplaced is not null) query.Append($"&SearchFilters.AcceptedFirstTimeOrReplaced={filters.AcceptedFirstTimeOrReplaced}");
+        if (filters.KeyWords is not null) query.Append($"&SearchFilters.KeyWords={filters.KeyWords}");
+        if (filters.AdoptionLevel is not null) query.Append($"&SearchFilters.AdoptionLevel={filters.AdoptionLevel.ToString()}");
+        if (filters.Harmonization is not null) query.Append($"&SearchFilters.Harmonization={filters.Harmonization.ToString()}");
+        if (filters.Amendments is not null) query.Append($"&SearchFilters.Amendments={filters.Amendments}");
+        if (filters.Changes is not null) query.Append($"&SearchFilters.Changes={filters.Changes}");
 
         return query.ToString();
     }
