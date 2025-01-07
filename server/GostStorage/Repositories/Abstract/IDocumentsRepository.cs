@@ -23,4 +23,6 @@ public interface IDocumentsRepository
     public Task UpdateStatusAsync(long id, DocumentStatus status);
 
     Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters);
+
+    Task<int> CountDocumentsWithFields(GetDocumentRequest? parameters);
 }

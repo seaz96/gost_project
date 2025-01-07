@@ -51,6 +51,14 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
             .Take(parameters.Limit)
             .ToListAsync();
     }
+    
+    public Task<int> CountDocumentsWithFields(GetDocumentRequest? parameters)
+    {
+        return SearchHelper.GetFullDocumentQueryable(context)
+            .ApplyFilters(parameters)
+            .Where(x => parameters == null || parameters.Status == null || x.Status == parameters.Status)
+            .CountAsync();
+    }
 
     public async Task<long> AddAsync(Document document)
     {

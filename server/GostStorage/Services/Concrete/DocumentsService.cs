@@ -162,11 +162,26 @@ public class DocumentsService(
     public async Task IndexAllDocumentsAsync()
     {
         var documents = await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest{ Status = DocumentStatus.Valid });
+            new GetDocumentRequest
+            {
+                Status = DocumentStatus.Valid,
+                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Valid}),
+                Offset = 0
+            });
         documents.AddRange(await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest{ Status = DocumentStatus.Canceled }));
+            new GetDocumentRequest
+            {
+                Status = DocumentStatus.Canceled,
+                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Canceled}),
+                Offset = 0
+            }));
         documents.AddRange(await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest{ Status = DocumentStatus.Replaced }));
+            new GetDocumentRequest
+            {
+                Status = DocumentStatus.Replaced,
+                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Replaced}),
+                Offset = 0
+            }));
 
         foreach (var documnet in documents)
         {
