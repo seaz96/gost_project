@@ -17,9 +17,9 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
         await context.SaveChangesAsync();
     }
 
-    public Task<List<DocumentViewsResponse>> GetViewsAsync(GetViewsModel model)
+    public async Task<List<DocumentViewsResponse>> GetViewsAsync(GetViewsModel model)
     {
-        return SearchHelper.GetFullDocumentQueryable(context)
+        var actions = SearchHelper.GetFullDocumentQueryable(context)
             .Join(context.UserActions,
                 d => d.DocId,
                 a => a.DocId,
@@ -30,30 +30,29 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
             .Where(group => (string.IsNullOrEmpty(model.OrgBranch) || group.Action.OrgBranch == model.OrgBranch)
                             && (model.Designation == null || group.Document.Actual.Designation.Contains(
                                 model.Designation)) &&
-                            (model.ActivityField == null || (group.Document.Actual.ActivityField ?? group.Document.Primary.ActivityField)
-                                .Contains(model.ActivityField)) &&
-                            (model.CodeOks == null || (group.Document.Actual.CodeOks ?? group.Document.Primary.CodeOks).Contains(
-                                model.CodeOks)) &&
+                            (model.ActivityField == null ||
+                              (group.Document.Actual.ActivityField ?? group.Document.Primary.ActivityField ?? "")
+                              .Contains(model.ActivityField)) &&
+                            (model.CodeOks == null ||
+                              (group.Document.Actual.CodeOks ?? group.Document.Primary.CodeOks ?? "").Contains(
+                                  model.CodeOks)) &&
                             (model.StartYear == null || model.StartYear <= group.Action.Date) &&
                             (model.EndYear == null || group.Action.Date <= model.EndYear) &&
-                            group.Action.Type == ActionType.View)
+                            group.Action.Type == ActionType.View).ToListAsync();
+
+        return (await actions)
             .GroupBy(stat => stat.Document)
-            .Select(group => new
+            .Select(group => new DocumentViewsResponse()
             {
-                Document = group.Key,
-                Views = group.Count()
+                DocId = group.Key.DocId,
+                Designation = group.Key.Actual.Designation,
+                Views = group.Count(),
+                FullName = group.Key.Actual.FullName ?? group.Key.Primary.FullName,
             })
-            .Select(stat => new DocumentViewsResponse
-                {
-                    DocId = stat.Document.DocId,
-                    Designation = stat.Document.Actual.Designation,
-                    Views = stat.Views,
-                    FullName = stat.Document.Actual.FullName ?? stat.Document.Primary.FullName
-                })
-            .OrderByDescending(group => group.Views)
-            .ToListAsync();
+            .OrderByDescending(x => x.Views)
+            .ToList();
     }
-    
+
     public Task<List<UserActionDocumentModel>> GetActionsAsync(DocumentCountRequest model)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
@@ -65,14 +64,14 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
                     Document = d, Action = a
                 })
             .Where(group => (model.StartDate == null || model.StartDate <= group.Action.Date) &&
-                           (model.EndDate == null || group.Action.Date <= model.EndDate)
-                           && group.Action.Type != ActionType.View
-                           && group.Document.Status == model.Status)
+                            (model.EndDate == null || group.Action.Date <= model.EndDate)
+                            && group.Action.Type != ActionType.View
+                            && group.Document.Status == model.Status)
             .Select(x => new UserActionDocumentModel
             {
                 DocumentId = x.Document.DocId,
                 Designation = x.Document.Actual.Designation,
-                FullName = x.Document.Actual.FullName ?? x.Document.Primary.FullName,
+                FullName = x.Document.Actual.FullName ?? x.Document.Primary.FullName ?? "",
                 Action = x.Action.Type,
                 Date = x.Action.Date
             })
