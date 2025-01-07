@@ -3,6 +3,7 @@ import {type ReactNode, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../app/hooks.ts";
 import {gostModel} from "../../entities/gost";
+import type {GostFetchModel} from "../../entities/gost/gostModel.ts";
 import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import {GenericTable} from "../GenericTable/GenericTable";
@@ -10,7 +11,7 @@ import Modal from "../Modal/Modal.tsx";
 import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
-	gost: gostModel.Gost;
+	gost: GostFetchModel;
 	gostId: number;
 }
 
@@ -50,14 +51,14 @@ const GostReview = (props: GostReviewProps) => {
 	const renderReferences = (refs: typeof gost.references) => (
 		<>
 			{refs.map((ref, index) =>
-				ref.status === 3 ? (
-					<p key={`${ref.docId}-${index}`}>{ref.designation}</p>
+				ref.status === "Inactive" ? (
+					<p key={`${ref.id}-${index}`}>{ref.designation}</p>
 				) : (
-					<Link key={`${ref.docId}-${index}`} to={`/gost-review/${ref.docId}`}>
+					<Link key={`${ref.id}-${index}`} to={`/gost-review/${ref.id}`}>
 						<p
 							className={classNames(
-								ref.status === 0 && styles.activeRef,
-								(ref.status === 1 || ref.status === 2) && styles.oldRef,
+								ref.status === "Valid" && styles.activeRef,
+								(ref.status === "Canceled" || ref.status === "Replaced") && styles.oldRef,
 							)}
 						>
 							{ref.designation}
@@ -107,8 +108,8 @@ const GostReview = (props: GostReviewProps) => {
 		{
 			id: "adoptionLevel",
 			field: "Уровень принятия",
-			primary: gostModel.AdoptionLevel[gost.primary.adoptionLevel],
-			actual: gostModel.AdoptionLevel[gost.actual.adoptionLevel],
+			primary: gostModel.AdoptionLevelToRu[gost.primary.adoptionLevel],
+			actual: gostModel.AdoptionLevelToRu[gost.actual.adoptionLevel],
 		},
 		{
 			id: "documentText",
@@ -125,16 +126,17 @@ const GostReview = (props: GostReviewProps) => {
 		{ id: "changes", field: "Изменения", primary: gost.primary.changes, actual: gost.actual.changes },
 		{ id: "amendments", field: "Поправки", primary: gost.primary.amendments, actual: gost.actual.amendments },
 		{
+			//TODO: Уточнить о status/harmonization в primary/actual
 			id: "status",
 			field: "Действующий/Отменён/Заменён",
-			primary: gostModel.Statuses[gost.primary.status],
-			actual: gostModel.Statuses[gost.actual.status],
+			primary: gostModel.StatusToRu[gost.status],
+			actual: gostModel.StatusToRu[gost.status],
 		},
 		{
 			id: "harmonization",
 			field: "Уровень гармонизации",
-			primary: gostModel.Harmonization[gost.primary.harmonization],
-			actual: gostModel.Harmonization[gost.actual.harmonization],
+			primary: gostModel.HarmonizationToRu[gost.primary.harmonization],
+			actual: gostModel.HarmonizationToRu[gost.actual.harmonization],
 		},
 	];
 
@@ -157,7 +159,7 @@ const GostReview = (props: GostReviewProps) => {
 						<UrfuButton onClick={() => setDeleteModalOpen(true)} size={"small"} outline={true}>
 							Удалить
 						</UrfuButton>
-						{gost.primary.status === 1 ? (
+						{gost.status === "Canceled" ? (
 							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
 								Восстановить
 							</UrfuButton>

@@ -13,7 +13,6 @@ const ResetPasswordPage = lazy(() =>
 );
 const GostEditPage = lazy(() => import("./gost-edit-page").then((module) => ({ default: module.GostEditPage })));
 const UserEditPage = lazy(() => import("./user-edit-page").then((module) => ({ default: module.UserEditPage })));
-const ArchivePage = lazy(() => import("./archive-page").then((module) => ({ default: module.ArchivePage })));
 const StatisticPage = lazy(() => import("./statistic-page").then((module) => ({ default: module.StatisticPage })));
 const ReviewsStatisticPage = lazy(() =>
 	import("./reviews-statistic-page").then((module) => ({ default: module.ReviewsStatisticPage })),
@@ -50,7 +49,6 @@ const AppRouter = () => {
 					<Route path="/users-page" element={<UsersPage />} />
 					<Route path="/user-edit-page/:id" element={<UserEditPage />} />
 					<Route path="/reset-password" element={<ResetPasswordPage />} />
-					<Route path="/archive" element={<ArchivePage />} />
 					<Route path="/statistic" element={<StatisticPage />} />
 					<Route path="/reviews-statistic-page" element={<ReviewsStatisticPage />} />
 					<Route path="/changes-statistic-page" element={<ChangesStatisticPage />} />

@@ -1,13 +1,14 @@
 import {EditRounded, ImportContactsRounded} from "@mui/icons-material";
 import {useAppSelector} from "../../app/hooks.ts";
 import type {gostModel} from "../../entities/gost";
+import type {GostSearchParams} from "../../entities/gost/gostModel.ts";
 import {GenericTable} from "../GenericTable/GenericTable.tsx";
 import GenericTableActionBlock from "../GenericTable/GenericTableActionBlock.tsx";
 import GenericTableButton from "../GenericTable/GenericTableButton.tsx";
 
 interface GostsTableProps {
 	gosts: gostModel.GostViewInfo[];
-	gostsParams: (gostModel.GostFields & { text?: string }) | null;
+	gostsParams: (GostSearchParams & { text?: string }) | null;
 }
 
 const GostsTable = ({ gosts, gostsParams }: GostsTableProps) => {

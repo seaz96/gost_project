@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
 import { useFetchGostQuery, useUpdateGostMutation, useUploadGostFileMutation } from "../../../features/api/apiSlice";
 import styles from "./GostEditPage.module.scss";
 
@@ -12,7 +12,7 @@ const GostEditPage = () => {
 	const [updateGost] = useUpdateGostMutation();
 	const [uploadFile] = useUploadGostFileMutation();
 
-	const editOldDocument = async (gostData: GostToSave, file: File) => {
+	const editOldDocument = async (gostData: GostRequestModel, file: File) => {
 		await updateGost({ id: id!, gost: gostData });
 		await handleUploadFile(file, id);
 		navigate(`/gost-review/${id}`);

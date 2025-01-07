@@ -1,34 +1,81 @@
-export type Gost = {
-	docId: number;
-	primary: GostFields;
-	actual: GostFields;
-	status: number;
-	references: {
-		docId: number;
-		designation: string;
-		status: 0 | 1 | 2 | 3;
-	}[];
+export type status = "Valid" | "Canceled" | "Replaced" | "Inactive";
+export type harmonization = "Unharmonized" | "Modified" | "Harmonized";
+export type adoptionLevel = "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate";
+
+export type GostSearchParams = {
+	text: string;
+	SearchFilters: {
+		CodeOks: string;
+		AcceptanceYear: number;
+		CommissionYear: number;
+		Author: string;
+		AcceptedFirstTimeOrReplaced: string;
+		KeyWords: string;
+		AdoptionLevel: adoptionLevel | null
+		Status: status | null
+		Harmonization: harmonization | null
+	};
+	Limit: number;
+	Offset: number;
 };
 
-export type GostFields = {
+export type GostRequestModel = {
 	designation: string;
 	fullName: string;
 	codeOks: string;
 	activityField: string;
-	acceptanceYear: string;
-	commissionYear: string;
+	acceptanceYear: number;
+	commissionYear: number;
 	author: string;
 	acceptedFirstTimeOrReplaced: string;
 	content: string;
 	keyWords: string;
 	applicationArea: string;
-	adoptionLevel: number;
+	adoptionLevel: adoptionLevel
 	documentText: string;
 	changes: string;
 	amendments: string;
-	status: number;
-	harmonization: number;
-	isPrimary: true;
+	status: status
+	harmonization: harmonization
+	references: string[];
+};
+
+export type GostFetchModel = {
+	docId: number;
+	status: status
+	primary: GostFieldsWithId;
+	actual: GostFieldsWithId;
+	references: GostReference[];
+};
+
+export type GostFieldsWithId = {
+	id: number;
+	designation: string;
+	fullName: string;
+	codeOks: string;
+	activityField: string;
+	acceptanceYear: number;
+	commissionYear: number;
+	author: string;
+	acceptedFirstTimeOrReplaced: string;
+	content: string;
+	keyWords: string;
+	applicationArea: string;
+	adoptionLevel: adoptionLevel
+	documentText: string;
+	changes: string;
+	amendments: string;
+	harmonization: harmonization
+	docId: number;
+	lastEditTime: string;
+};
+
+export type GostReference = {
+	id: number;
+	designation: string;
+	status: status
+	actualFieldId: number;
+	primaryFieldId: number;
 };
 
 export type GostViews = {
@@ -49,13 +96,6 @@ export type GostChanges = {
 	}[];
 };
 
-export type GostGeneralInfo = {
-	id: number;
-	designation: string;
-	codeOks: string;
-	fullName: string;
-	applicationArea: string;
-};
 
 export type GostViewInfo = {
 	id: number;
@@ -66,15 +106,31 @@ export type GostViewInfo = {
 	relevanceMark: number;
 };
 
-export const Statuses = ["Действующий", "Отменён", "Заменён"];
+export const IntToStatus = {
+	0: "Valid",
+	1: "Canceled",
+	2: "Replaced",
+	3: "Inactive",
+};
 
-export const Harmonization = ["Негармонизированный", "Модифицированный", "Гармонизированный"];
+export const StatusToRu = {
+	Valid: "Действующий",
+	Canceled: "Отменён",
+	Replaced: "Заменён",
+	Inactive: "Неактивный",
+}
 
-export const AdoptionLevel = [
-	"Международный",
-	"Иностранный",
-	"Региональный",
-	"Организационный",
-	"Национальный",
-	"Межгосударственный",
-];
+export const AdoptionLevelToRu = {
+	International: "Международный",
+	Foreign: "Иностранный",
+	Regional: "Региональный",
+	Organizational: "Организационный",
+	National: "Национальный",
+	Interstate: "Межгосударственный",
+}
+
+export const HarmonizationToRu = {
+	Unharmonized: "Негармонизированный",
+	Modified: "Модифицированный",
+	Harmonized: "Гармонизированный",
+}

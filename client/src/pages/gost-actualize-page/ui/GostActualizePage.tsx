@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
 import { useActualizeGostMutation, useFetchGostQuery, useUploadGostFileMutation } from "../../../features/api/apiSlice";
 import styles from "./GostActualizePage.module.scss";
 
@@ -12,7 +12,7 @@ const GostActualizePage = () => {
 	const [uploadFile] = useUploadGostFileMutation();
 	const navigate = useNavigate();
 
-	const addNewDocument = async (gostData: GostToSave, file: File) => {
+	const addNewDocument = async (gostData: GostRequestModel, file: File) => {
 		await actualizeGost({ id: id!, gost: gostData });
 		await handleUploadFile(file, id);
 		navigate(`/gost-review/${id}`);
@@ -34,6 +34,7 @@ const GostActualizePage = () => {
 						handleSubmit={addNewDocument}
 						gost={{
 							...gost.primary,
+							status: gost.status,
 							references: gost.references.map((reference) => reference.designation),
 						}}
 					/>

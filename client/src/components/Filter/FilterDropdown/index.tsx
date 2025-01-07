@@ -1,16 +1,14 @@
-import type React from "react";
-import { useState } from "react";
-import type { gostModel } from "../../../entities/gost";
-
 import { Collapse } from "@mui/material";
 import classNames from "classnames";
+import { useState } from "react";
+import type {GostSearchParams, harmonization} from "../../../entities/gost/gostModel.ts";
 import { Input, RadioGroup } from "../../../shared/components";
 import arrowDown from "../assets/arrowDown.png";
 import styles from "./FilterDropdown.module.scss";
 
 interface FilterDropdownProps {
-	filterData: Partial<gostModel.GostFields>;
-	filterSubmit: (filterData: Partial<gostModel.GostFields>) => void;
+	filterData: Partial<GostSearchParams>;
+	filterSubmit: (filterData: Partial<GostSearchParams>) => void;
 }
 
 const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
@@ -51,32 +49,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 				<Collapse className={styles.dropdownItemFilter} in={filterStatus.codeOks}>
 					<Input
 						type="text"
-						value={filterData.codeOks}
-						onChange={(value: string) => filterSubmit({ ...filterData, codeOks: value })}
-					/>
-				</Collapse>
-			</div>
-			<div className={styles.dropdownItem}>
-				<div
-					className={styles.dropdownItemInfo}
-					onClick={() =>
-						setFilterStatus({
-							...filterStatus,
-							activityField: !filterStatus.activityField,
-						})
-					}
-				>
-					<img
-						src={arrowDown}
-						className={classNames(styles.arrowDown, filterStatus.activityField ? styles.arrowUp : "")}
-					/>
-					<p className={styles.dropdownItemName}>Сфера деятельности</p>
-				</div>
-				<Collapse className={styles.dropdownItemFilter} in={filterStatus.activityField}>
-					<Input
-						type="text"
-						value={filterData.activityField}
-						onChange={(value: string) => filterSubmit({ ...filterData, activityField: value })}
+						value={filterData.SearchFilters?.CodeOks}
+						onChange={(value: string) => filterSubmit({
+							...filterData,
+							SearchFilters: {...filterData.SearchFilters, CodeOks: value}
+						})}
 					/>
 				</Collapse>
 			</div>
@@ -299,46 +276,6 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 			<div className={styles.dropdownItem}>
 				<div
 					className={styles.dropdownItemInfo}
-					onClick={() => setFilterStatus({ ...filterStatus, changes: !filterStatus.changes })}
-				>
-					<img src={arrowDown} className={classNames(styles.arrowDown, filterStatus.changes ? styles.arrowUp : "")} />
-					<p className={styles.dropdownItemName}>Изменения</p>
-				</div>
-				<Collapse className={styles.dropdownItemFilter} in={filterStatus.changes}>
-					<Input
-						type="text"
-						value={filterData.changes}
-						onChange={(value: string) => filterSubmit({ ...filterData, changes: value })}
-					/>
-				</Collapse>
-			</div>
-			<div className={styles.dropdownItem}>
-				<div
-					className={styles.dropdownItemInfo}
-					onClick={() =>
-						setFilterStatus({
-							...filterStatus,
-							amendments: !filterStatus.amendments,
-						})
-					}
-				>
-					<img
-						src={arrowDown}
-						className={classNames(styles.arrowDown, filterStatus.amendments ? styles.arrowUp : "")}
-					/>
-					<p className={styles.dropdownItemName}>Поправки</p>
-				</div>
-				<Collapse className={styles.dropdownItemFilter} in={filterStatus.amendments}>
-					<Input
-						type="text"
-						value={filterData.amendments}
-						onChange={(value: string) => filterSubmit({ ...filterData, amendments: value })}
-					/>
-				</Collapse>
-			</div>
-			<div className={styles.dropdownItem}>
-				<div
-					className={styles.dropdownItemInfo}
 					onClick={() =>
 						setFilterStatus({
 							...filterStatus,
@@ -355,17 +292,17 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 				<Collapse className={styles.dropdownItemFilter} in={filterStatus.harmonization}>
 					<RadioGroup
 						buttons={[
-							{ id: "unharmonized", value: "0", label: "Негармонизированный" },
-							{ id: "harmonized", value: "2", label: "Гармонизорованный" },
-							{ id: "modified", value: "1", label: "Модифицированный" },
+							{ id: "unharmonized", value: "Unharmonized", label: "Негармонизированный" },
+							{ id: "harmonized", value: "Harmonized", label: "Гармонизорованный" },
+							{ id: "modified", value: "Modified", label: "Модифицированный" },
 						]}
 						name="harmonization"
 						direction="vertical"
-						value={filterData.harmonization?.toString() || "1"}
-						onChange={(value: string) => {
+						value={filterData.SearchFilters?.Harmonization?.toString() || "1"}
+						onChange={(value: harmonization) => {
 							filterSubmit({
 								...filterData,
-								harmonization: Number.parseInt(value),
+								harmonization: value,
 							});
 						}}
 					/>

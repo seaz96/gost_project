@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
 import { useAddGostMutation, useUploadGostFileMutation } from "../../../features/api/apiSlice";
 import styles from "./GostCreatorPage.module.scss";
 
@@ -10,7 +10,7 @@ const GostCreatorPage = () => {
 	const [addGost] = useAddGostMutation();
 	const [uploadFile] = useUploadGostFileMutation();
 
-	const addNewDocument = async (gost: GostToSave, file: File) => {
+	const addNewDocument = async (gost: GostRequestModel, file: File) => {
 		const response = await addGost(gost).unwrap();
 		await handleUploadFile(file, response);
 		navigate(`/gost-review/${response}`);

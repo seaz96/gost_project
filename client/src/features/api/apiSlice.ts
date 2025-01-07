@@ -1,13 +1,36 @@
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { toast } from "react-toastify";
-import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
-import type { GostToSave } from "../../components/GostForm/newGostModel.ts";
-import type { UserRegistration } from "../../components/RegistrationForm/registrationModel.ts";
-import type { UserEditType } from "../../components/UserEditForm/userEditModel.ts";
-import type { Gost, GostViewInfo } from "../../entities/gost/gostModel.ts";
-import type { User } from "../../entities/user/userModel";
-import { baseURL } from "../../shared/configs/apiConfig.ts";
+import type {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {toast} from "react-toastify";
+import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
+import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
+import type {UserEditType} from "../../components/UserEditForm/userEditModel.ts";
+import type {GostFetchModel, GostRequestModel, GostViewInfo} from "../../entities/gost/gostModel.ts";
+import type {User} from "../../entities/user/userModel";
+import {baseURL} from "../../shared/configs/apiConfig.ts";
+
+type FlattenedParams = Record<string, string>;
+
+const flattenParams = <T extends object>(obj: T | undefined, prefix = ""): FlattenedParams => {
+	const flattened: FlattenedParams = {};
+	if (!obj) {
+		return flattened;
+	}
+	for (const [key, value] of Object.entries(obj)) {
+		const fullKey = prefix ? `${prefix}.${key}` : key;
+
+		if (value === null || value === undefined) {
+			continue;
+		}
+
+		if (typeof value === "object" && !Array.isArray(value)) {
+			Object.assign(flattened, flattenParams(value, fullKey));
+		} else {
+			flattened[fullKey] = String(value);
+		}
+	}
+
+	return flattened;
+};
 
 const baseQueryWithAuth = fetchBaseQuery({
 	baseUrl: baseURL,
@@ -86,12 +109,12 @@ export const apiSlice = createApi({
 				body: userData,
 			}),
 		}),
-		fetchGost: builder.query<Gost, string>({
+		fetchGost: builder.query<GostFetchModel, string>({
 			query: (id) => ({
 				url: `/docs/${id}`,
 			}),
 		}),
-		addGost: builder.mutation<void, GostToSave>({
+		addGost: builder.mutation<void, GostRequestModel>({
 			query: (gost) => ({
 				url: "/docs/add",
 				method: "POST",
@@ -109,7 +132,6 @@ export const apiSlice = createApi({
 			query: ({ docId, file }) => {
 				const formData = new FormData();
 				formData.append("File", file);
-				formData.append("Extension", file.name.split(".").pop() || "");
 				return {
 					url: `/docs/${docId}/upload-file`,
 					method: "POST",
@@ -117,14 +139,14 @@ export const apiSlice = createApi({
 				};
 			},
 		}),
-		updateGost: builder.mutation<void, { id: string; gost: GostToSave }>({
+		updateGost: builder.mutation<void, { id: string; gost: GostRequestModel }>({
 			query: ({ id, gost }) => ({
 				url: `/docs/update/${id}`,
 				method: "PUT",
 				body: gost,
 			}),
 		}),
-		actualizeGost: builder.mutation<void, { id: string; gost: GostToSave }>({
+		actualizeGost: builder.mutation<void, { id: string; gost: GostRequestModel }>({
 			query: ({ id, gost }) => ({
 				url: `/docs/actualize/${id}`,
 				method: "PUT",
@@ -140,7 +162,7 @@ export const apiSlice = createApi({
 			}),
 		}),
 		getViewsStats: builder.query<
-			any,
+			unknown,
 			{ startDate: string; endDate: string; designation?: string; codeOks?: string; activityField?: string }
 		>({
 			query: (params) => ({
@@ -152,7 +174,7 @@ export const apiSlice = createApi({
 				},
 			}),
 		}),
-		getChangesStats: builder.query<any, { status: number; count: number; StartDate: string; EndDate: string }>({
+		getChangesStats: builder.query<unknown, { status: number; count: number; StartDate: string; EndDate: string }>({
 			query: (params) => ({
 				url: "/stats/get-count",
 				params,
@@ -164,16 +186,16 @@ export const apiSlice = createApi({
 				method: "DELETE",
 			}),
 		}),
-		fetchGostsPage: builder.query<GostViewInfo[], { url: string; offset: number; limit: number; params?: any }>({
+		fetchGostsPage: builder.query<GostViewInfo[], { url: string; offset: number; limit: number; params?: object }>({
 			query: ({ url, offset, limit, params }) => ({
 				url,
-				params: { ...params, offset, limit },
+				params: { ...flattenParams(params), offset, limit },
 			}),
 		}),
-		fetchGostsCount: builder.query<number, { url: string; params?: any }>({
+		fetchGostsCount: builder.query<number, { url: string; params?: object }>({
 			query: ({ url, params }) => ({
 				url: `${url}-count`,
-				params,
+				params: flattenParams(params),
 			}),
 		}),
 	}),

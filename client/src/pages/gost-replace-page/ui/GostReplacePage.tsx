@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
 import GostForm, { getGostStub } from "../../../components/GostForm/GostForm.tsx";
-import type { GostToSave } from "../../../components/GostForm/newGostModel.ts";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
 import {
 	useAddGostMutation,
 	useChangeGostStatusMutation,
@@ -18,7 +18,7 @@ const GostReplacePage = () => {
 	const [changeStatus] = useChangeGostStatusMutation();
 	const [uploadFile] = useUploadGostFileMutation();
 
-	const addNewDocument = async (gost: GostToSave, file: File) => {
+	const addNewDocument = async (gost: GostRequestModel, file: File) => {
 		await addGost(gost);
 		await changeStatus({ id: gostToReplaceId!, status: 2 });
 		await handleUploadFile(file, gostToReplaceId);

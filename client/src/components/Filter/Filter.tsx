@@ -1,11 +1,8 @@
-import type React from "react";
+import { Collapse } from "@mui/material";
 import { useRef, useState } from "react";
-
+import type {GostSearchParams} from "../../entities/gost/gostModel.ts";
 import IconButton from "../../shared/components/IconButton";
 import styles from "./Filter.module.scss";
-
-import { Collapse } from "@mui/material";
-import type { gostModel } from "../../entities/gost";
 import FilterDropdown from "./FilterDropdown";
 import filter from "./assets/filter.svg";
 import search from "./assets/search.svg";
@@ -17,23 +14,7 @@ interface FilterProps {
 const Filter: React.FC<FilterProps> = (props) => {
 	const { filterSubmit } = props;
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const [filterData, setFilterData] = useState<Partial<gostModel.GostFields> & { text?: string }>({
-		text: "",
-		designation: "",
-		fullName: "",
-		codeOks: "",
-		activityField: "",
-		acceptanceYear: "",
-		commissionYear: "",
-		author: "",
-		acceptedFirstTimeOrReplaced: "",
-		content: "",
-		keyWords: "",
-		applicationArea: "",
-		documentText: "",
-		changes: "",
-		amendments: "",
-	});
+	const [filterData, setFilterData] = useState<Partial<GostSearchParams> & { text?: string }>({});
 
 	const handleSubmit = () => {
 		setFilterOpen(false);

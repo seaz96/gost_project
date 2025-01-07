@@ -1,13 +1,12 @@
-import type { gostModel } from "entities/gost";
-import type { GostViewInfo } from "entities/gost/gostModel";
+import type {GostSearchParams, GostViewInfo} from "entities/gost/gostModel";
 import { useFetchGostsCountQuery, useFetchGostsPageQuery } from "features/api/apiSlice";
 import { useEffect, useState } from "react";
 
 const PAGE_SIZE = 10;
 
 const useGostsWithPagination = (url: string) => {
-	const [params, setParams] = useState<gostModel.GostFields & { text?: string }>(
-		{} as gostModel.GostFields & { text?: string },
+	const [params, setParams] = useState<GostSearchParams & { text?: string }>(
+		{} as GostSearchParams & { text?: string },
 	);
 	const [offset, setOffset] = useState(0);
 	const [accumulatedGosts, setAccumulatedGosts] = useState<GostViewInfo[]>([]);
@@ -40,7 +39,7 @@ const useGostsWithPagination = (url: string) => {
 		setOffset((prev) => prev + PAGE_SIZE);
 	};
 
-	const handleFilterSubmit = (filterData: gostModel.GostFields & { text?: string }) => {
+	const handleFilterSubmit = (filterData: GostSearchParams & { text?: string }) => {
 		setOffset(0);
 		setAccumulatedGosts([]);
 		setParams(filterData);

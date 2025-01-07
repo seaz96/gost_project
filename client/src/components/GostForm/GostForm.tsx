@@ -2,16 +2,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import classNames from "classnames";
 import { type ChangeEvent, useRef, useState } from "react";
+import type {GostRequestModel} from "../../entities/gost/gostModel.ts";
 import { Button, Input, RadioGroup } from "../../shared/components";
 import IconButton from "../../shared/components/IconButton";
 import TextArea from "../../shared/components/TextArea";
 import styles from "./GostForm.module.scss";
-import type { GostToSave } from "./newGostModel.ts";
 
 interface GostFormProps {
-	handleSubmit: (gost: GostToSave, file: File) => void;
+	handleSubmit: (gost: GostRequestModel, file: File) => void;
 	handleUploadFile: (file: File, docId: string | undefined) => void;
-	gost?: GostToSave;
+	gost?: GostRequestModel;
 }
 
 export function getGostStub() {
@@ -20,26 +20,26 @@ export function getGostStub() {
 		fullName: "",
 		codeOks: "",
 		activityField: "",
-		acceptanceYear: "",
-		commissionYear: "",
+		acceptanceYear: 2000,
+		commissionYear: 2000,
 		author: "",
 		acceptedFirstTimeOrReplaced: "",
 		content: "",
 		keyWords: "",
 		applicationArea: "",
-		adoptionLevel: 0,
+		adoptionLevel: "Organizational",
 		documentText: "",
 		changes: "",
 		amendments: "",
-		status: 0,
-		harmonization: 1,
+		status: "Valid",
+		harmonization: "Harmonized",
 		isPrimary: true,
 		references: [],
-	} as GostToSave;
+	} as GostRequestModel;
 }
 
 const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
-	const [newGost, setNewGost] = useState<GostToSave>(gost ?? getGostStub());
+	const [newGost, setNewGost] = useState<GostRequestModel>(gost ?? getGostStub());
 	const [reference, setReference] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [references, setReferences] = useState<string[]>(gost?.references ?? []);
@@ -117,9 +117,9 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 						<td>Год принятия</td>
 						<td>
 							<Input
-								type="text"
+								type="number"
 								value={newGost.acceptanceYear}
-								onChange={(value: string) => setNewGost({ ...newGost, acceptanceYear: value })}
+								onChange={(value: string) => setNewGost({ ...newGost, acceptanceYear: Number.parseInt(value) })}
 							/>
 						</td>
 					</tr>
@@ -127,9 +127,9 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 						<td>Год введения</td>
 						<td>
 							<Input
-								type="text"
+								type="number"
 								value={newGost.commissionYear}
-								onChange={(value: string) => setNewGost({ ...newGost, commissionYear: value })}
+								onChange={(value: string) => setNewGost({ ...newGost, commissionYear: Number.parseInt(value) })}
 							/>
 						</td>
 					</tr>
@@ -185,23 +185,23 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 						<td>
 							<RadioGroup
 								buttons={[
-									{ id: "International", value: "0", label: "Международный" },
-									{ id: "Foreign", value: "1", label: "Иностранный" },
-									{ id: "Regional", value: "2", label: "Региональный" },
+									{ id: "International", value: "International", label: "Международный" },
+									{ id: "Foreign", value: "Foreign", label: "Иностранный" },
+									{ id: "Regional", value: "Regional", label: "Региональный" },
 									{
 										id: "Organizational",
-										value: "3",
+										value: "Organizational",
 										label: "Организационный",
 									},
-									{ id: "National", value: "4", label: "Национальный" },
-									{ id: "Interstate", value: "5", label: "Межгосударственный" },
+									{ id: "National", value: "National", label: "Национальный" },
+									{ id: "Interstate", value: "Interstate", label: "Межгосударственный" },
 								]}
 								name="adoptionLevel"
 								value={newGost.adoptionLevel.toString()}
-								onChange={(value: string) => {
+								onChange={(value: "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate") => {
 									setNewGost({
 										...newGost,
-										adoptionLevel: Number.parseInt(value),
+										adoptionLevel: value
 									});
 								}}
 							/>
@@ -278,14 +278,15 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 						<td>
 							<RadioGroup
 								buttons={[
-									{ id: "Canceled", value: "1", label: "Отменен" },
-									{ id: "Replaced", value: "2", label: "Заменен" },
-									{ id: "Current", value: "0", label: "Действующий" },
+									{ id: "Valid", value: "Valid", label: "Действующий" },
+									{ id: "Canceled", value: "Canceled", label: "Отменен" },
+									{ id: "Replaced", value: "Replaced", label: "Заменен" },
+									{ id: "Inactive", value: "Inactive", label: "Неактивен" }
 								]}
 								name="status"
 								value={newGost.status.toString()}
-								onChange={(value: string) => {
-									setNewGost({ ...newGost, status: Number.parseInt(value) });
+								onChange={(value: "Valid" | "Canceled" | "Replaced" | "Inactive") => {
+									setNewGost({ ...newGost, status: value });
 								}}
 							/>
 						</td>
@@ -296,19 +297,19 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 							<RadioGroup
 								buttons={[
 									{
-										id: "unharmonized",
-										value: "0",
+										id: "Unharmonized",
+										value: "Unharmonized",
 										label: "Негармонизированный",
 									},
-									{ id: "harmonized", value: "2", label: "Гармонизированный" },
-									{ id: "modified", value: "1", label: "Модифицированный" },
+									{ id: "Harmonized", value: "Harmonized", label: "Гармонизированный" },
+									{ id: "Modified", value: "Modified", label: "Модифицированный" },
 								]}
 								name="harmonization"
 								value={newGost.harmonization.toString()}
-								onChange={(value: string) => {
+								onChange={(value: "Unharmonized" | "Modified" | "Harmonized") => {
 									setNewGost({
 										...newGost,
-										harmonization: Number.parseInt(value),
+										harmonization: value,
 									});
 								}}
 							/>

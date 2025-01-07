@@ -65,7 +65,6 @@ const Header = () => {
 			<nav className={styles.buttonsContainer}>
 				<ul>
 					<HeaderLink to="/">Документы</HeaderLink>
-					<HeaderLink to="/archive">Архив</HeaderLink>
 					<HeaderLink to="/statistic">Статистика</HeaderLink>
 					{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 						<>
