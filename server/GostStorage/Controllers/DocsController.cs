@@ -151,16 +151,20 @@ public class DocsController(
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
-        await userActionsService.AddAsync(new UserAction
-        {
-            OrgBranch = user!.OrgBranch,
-            Type = ActionType.View,
-            DocId = docId,
-            Date = DateTime.UtcNow,
-            UserId = userId
-        });
-        
         var document = await documentsService.GetDocumentAsync(docId);
+        
+        if (document?.Status is not DocumentStatus.Inactive)
+        {
+            await userActionsService.AddAsync(new UserAction
+            {
+                OrgBranch = user!.OrgBranch,
+                Type = ActionType.View,
+                DocId = docId,
+                Date = DateTime.UtcNow,
+                UserId = userId
+            });
+        }
+        
         return document is null ? NotFound() : new OkObjectResult(mapper.Map<FullDocumentResponse>(document));
     }
 
