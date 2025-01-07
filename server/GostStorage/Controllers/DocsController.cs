@@ -144,6 +144,7 @@ public class DocsController(
     }
 
     [Authorize]
+    [NoCache]
     [HttpGet("{docId}")]
     public async Task<ActionResult<FullDocument?>> GetDocument(long docId)
     {
