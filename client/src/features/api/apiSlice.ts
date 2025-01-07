@@ -4,7 +4,13 @@ import {toast} from "react-toastify";
 import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
 import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
 import type {UserEditType} from "../../components/UserEditForm/userEditModel.ts";
-import type {GostFetchModel, GostRequestModel, GostViewInfo} from "../../entities/gost/gostModel.ts";
+import type {
+	GostChanges,
+	GostFetchModel,
+	GostRequestModel,
+	GostViewInfo,
+	GostViews,
+} from "../../entities/gost/gostModel.ts";
 import type {User} from "../../entities/user/userModel";
 import {baseURL} from "../../shared/configs/apiConfig.ts";
 
@@ -84,7 +90,7 @@ export const apiSlice = createApi({
 		}),
 		fetchUserInfo: builder.query<User, number>({
 			query: (id) => ({
-				url: `/admin/users/${id}`
+				url: `/admin/users/${id}`,
 			}),
 		}),
 		editUser: builder.mutation<void, UserEditType & { id: number }>({
@@ -161,11 +167,11 @@ export const apiSlice = createApi({
 			}),
 		}),
 		getViewsStats: builder.query<
-			unknown,
+			GostViews,
 			{ startDate: string; endDate: string; designation?: string; codeOks?: string; activityField?: string }
 		>({
 			query: (params) => ({
-				url: "/stats/get-views",
+				url: "/actions/views",
 				params: {
 					...params,
 					StartDate: params.startDate,
@@ -173,9 +179,9 @@ export const apiSlice = createApi({
 				},
 			}),
 		}),
-		getChangesStats: builder.query<unknown, { status: number; count: number; StartDate: string; EndDate: string }>({
+		getChangesStats: builder.query<GostChanges[], { status: string; count: number; StartDate: string; EndDate: string }>({
 			query: (params) => ({
-				url: "/stats/get-count",
+				url: "/actions/list",
 				params,
 			}),
 		}),
@@ -216,7 +222,9 @@ export const {
 	useUpdateGostMutation,
 	useActualizeGostMutation,
 	useResetPasswordMutation,
+	useLazyGetViewsStatsQuery,
 	useGetViewsStatsQuery,
+	useLazyGetChangesStatsQuery,
 	useGetChangesStatsQuery,
 	useDeleteGostMutation,
 	useFetchGostsPageQuery,

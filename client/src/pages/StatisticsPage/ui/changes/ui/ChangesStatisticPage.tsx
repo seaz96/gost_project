@@ -1,35 +1,48 @@
-import { useState } from "react";
-
 import classNames from "classnames";
+import {useEffect, useRef, useState} from "react";
 import ChangesStatisticForm from "../../../../../components/ChangesStatisticForm/ChangesStatisticForm.tsx";
 import ChangesStatisticTable from "../../../../../components/ChangesStatisticTable/ChangesStatisticTable.tsx";
-import type { gostModel } from "../../../../../entities/gost";
+import type {GostChanges} from "../../../../../entities/gost/gostModel.ts";
 import styles from "./ChangesStatisticPage.module.scss";
 
 const ChangesStatisticPage = () => {
-	const [changesData, setChangesData] = useState<gostModel.GostChanges | null>(null);
+	const [changesData, setChangesData] = useState<GostChanges[] | null>(null);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
+	const reportRef = useRef<HTMLElement>(null);
+
+	const handleSubmit = (values: GostChanges[]) => {
+		setChangesData(values);
+
+	};
+
+	useEffect(() => {
+		if (reportRef.current && changesData) {
+			reportRef.current.scrollIntoView({ behavior: "smooth" });
+		}
+	}, [changesData]);
 
 	return (
-		<div className="container">
-			{changesData ? (
-				<section className={classNames(styles.statistic, "contentContainer")}>
-					<h2 className={styles.title}>
-						<span>Статистика</span> с {`${formatDate(new Date(startDate))}`} по {`${formatDate(new Date(endDate))}`}
-					</h2>
-					<ChangesStatisticTable changesData={changesData} />
-				</section>
-			) : (
-				<section className={classNames(styles.statistic, "contentContainer")}>
-					<ChangesStatisticForm
-						handleSubmit={(values: gostModel.GostChanges) => setChangesData(values)}
-						startDateSubmit={setStartDate}
-						endDateSubmit={setEndDate}
-					/>
+		<section>
+			<section className={classNames(styles.statistic, "contentContainer")}>
+				<ChangesStatisticForm
+					handleSubmit={handleSubmit}
+					startDateSubmit={setStartDate}
+					endDateSubmit={setEndDate}
+				/>
+			</section>
+			{changesData && (
+				<section ref={reportRef}>
+					<h2 className={styles.title}>Отчёт об изменениях</h2>
+					<p className="verticalPadding">
+						{`с ${formatDate(new Date(startDate))} по ${formatDate(new Date(endDate))}`}
+					</p>
+					<div className="verticalPadding">
+						<ChangesStatisticTable changesData={changesData} />
+					</div>
 				</section>
 			)}
-		</div>
+		</section>
 	);
 };
 

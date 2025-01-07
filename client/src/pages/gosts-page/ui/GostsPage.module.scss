@@ -1,12 +1,21 @@
-.section {
-    margin: 25px 0;
+.tableEnd {
+  text-align: center;
+  padding: 1rem;
 }
-.gostSection {
-    min-height: 200px;
-}
-.gostsPagination {
-    display: flex;
-    justify-content: center;
 
-    margin-top: 10px;
+.tableLoad {
+    text-align: center;
+    padding: 1rem;
+    @keyframes pulse {
+        0% {
+        color: var(--urfu-transparent-black);
+        }
+        50% {
+          color: var(--urfu-black);
+        }
+        100% {
+          color: var(--urfu-transparent-black);
+        }
+    }
+    animation: pulse 2s infinite;
 }

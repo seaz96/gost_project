@@ -14,43 +14,52 @@ const GostsPage = () => {
 		<main className="container">
 			<h1>Документы</h1>
 			<section className="verticalPadding">
-				<Filter filterSubmit={setGostParams}/>
+				<Filter filterSubmit={setGostParams} />
 			</section>
 			<section className="verticalPadding">
 				<FilterTabs
 					tabs={[
-						{title: "Все", value: "All"},
-						{title: "Действующие", value: "Valid"},
-						{title: "Отменённые", value: "Canceled"},
-						{title: "Заменённые", value: "Replaced"},
+						{ title: "Все", value: "All" },
+						{ title: "Действующие", value: "Valid" },
+						{ title: "Отменённые", value: "Canceled" },
+						{ title: "Заменённые", value: "Replaced" },
 					]}
 					activeTabs={[gostsParams.SearchFilters?.Status ?? "All"]}
 					setActiveTabs={(activeTabs) =>
-						setGostParams({...gostsParams,
+						setGostParams({
+							...gostsParams,
 							SearchFilters: {
 								...gostsParams.SearchFilters,
-								Status: activeTabs[0] !== "All" ? activeTabs[0] as status : null
-							}
+								Status: activeTabs[0] !== "All" ? (activeTabs[0] as status) : null,
+							},
 						})
 					}
 				/>
 			</section>
 			<div className="verticalPadding">Найдено {count} документов</div>
 			<div>
-				<section className={styles.gostSection}>
+				<section className="verticalPadding">
 					<InfiniteScroll
 						dataLength={countFetched}
 						next={fetchGostsData}
 						hasMore={count > countFetched}
-						loader={<h4>Загрузка</h4>}
-						endMessage={<p>Конец таблицы</p>}
+						loader={<TableLoader />}
+						endMessage={<TableEnd />}
 					>
-						<GostsTable gosts={gosts} gostsParams={gostsParams}/>
+						<GostsTable gosts={gosts} gostsParams={gostsParams} />
 					</InfiniteScroll>
 				</section>
 			</div>
 		</main>
 	);
+};
+
+const TableEnd = () => {
+	return <div className={styles.tableEnd}>Конец таблицы</div>;
+};
+
+const TableLoader = () => {
+	return <div className={styles.tableLoad}>Загрузка</div>;
 };
 
 export default GostsPage;

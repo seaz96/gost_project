@@ -1,10 +1,8 @@
-import type React from "react";
-
-import type { gostModel } from "../../entities/gost";
-import styles from "./ChangesStatisticTable.module.scss";
+import type {GostChanges} from "../../entities/gost/gostModel.ts";
+import {GenericTable} from "../GenericTable/GenericTable.tsx";
 
 interface ChangesStatisticTableProps {
-	changesData: gostModel.GostChanges;
+	changesData: GostChanges[];
 }
 
 enum actions {
@@ -12,33 +10,18 @@ enum actions {
 	Create = "Создание",
 }
 
-const ChangesStatisticTable: React.FC<ChangesStatisticTableProps> = (props) => {
+const ChangesStatisticTable = (props: ChangesStatisticTableProps) => {
 	const { changesData } = props;
 
-	return (
-		<table className={styles.table}>
-			<thead>
-				<tr className={styles.tableRow}>
-					<th>№</th>
-					<th>Обозначение</th>
-					<th>Наименование</th>
-					<th>Действие</th>
-					<th>Дата</th>
-				</tr>
-			</thead>
-			<tbody>
-				{changesData.stats.map((changes) => (
-					<tr>
-						<td>{changes.docId}</td>
-						<td>{changes.designation}</td>
-						<td>{changes.fullName}</td>
-						<td>{actions[changes.action]}</td>
-						<td>{formatDate(new Date(changes.date))}</td>
-					</tr>
-				))}
-			</tbody>
-		</table>
-	);
+	const columns = [
+		{ header: "ID", accessor: (row: GostChanges) => row.documentId },
+		{ header: "Обозначение", accessor: (row: GostChanges) => row.designation },
+		{ header: "Наименование", accessor: (row: GostChanges) => row.fullName },
+		{ header: "Действие", accessor: (row: GostChanges) => actions[row.action] },
+		{ header: "Дата", accessor: (row: GostChanges) => formatDate(new Date(row.date)) },
+	];
+
+	return <GenericTable columns={columns} data={changesData} rowKey={"date"} />;
 };
 
 const formatDate = (date: Date) => {
