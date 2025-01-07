@@ -21,6 +21,9 @@ public class AdminController(IAccountService accountService) : ControllerBase
     [HttpGet("users")]
     public async Task<IActionResult> UsersList([FromQuery] int limit = 100, [FromQuery] int offset = 0)
     {
+        if (limit < 0 || offset < 0)
+            return new BadRequestObjectResult("Limit or offset cannot be negative");
+        
         return await accountService.GetUsersListAsync(limit, offset);
     }
 

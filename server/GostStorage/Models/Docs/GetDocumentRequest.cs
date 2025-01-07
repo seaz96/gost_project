@@ -36,7 +36,7 @@ public class GetDocumentRequest
 
     public HarmonizationLevel? Harmonization { get; set; }
 
-    public int Limit { get; set; } = 10;
-    public int Offset { get; set; } = 0;
+    public uint Limit { get; set; } = 10;
+    public uint Offset { get; set; } = 0;
     public DocumentStatus Status { get; set; }
 }
