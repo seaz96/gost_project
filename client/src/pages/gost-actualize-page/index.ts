@@ -1,1 +1,1 @@
-export {default as GostActualizePage} from './ui/GostActualizePage'
+export { default as GostActualizePage } from "./ui/GostActualizePage";

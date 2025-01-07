@@ -1,27 +1,23 @@
-import React from 'react'
-import { UsersTable } from 'widgets/users-table';
-
-import styles from './UsersPage.module.scss'
-import { Filter } from 'widgets/filter';
-import { useAxios } from 'shared/hooks';
-import { userModel } from 'entities/user';
-import classNames from 'classnames';
+import classNames from "classnames";
+import UsersReview from "../../../components/UsersReview/UsersReview.tsx";
+import { useFetchUsersQuery } from "../../../features/api/apiSlice";
+import styles from "./UsersPage.module.scss";
 
 const UsersPage = () => {
-  const {response, loading, error} = useAxios<userModel.User[]>('/accounts/list')
+	const { data: users, isLoading } = useFetchUsersQuery();
 
-  if(loading) return <></>
+	if (isLoading) return <></>;
 
-  if(response)
-    return (
-      <div className='container'>
-          <section className={classNames('contentContainer', styles.gostSection)}>
-            <h2 className={styles.title}>Список пользователей</h2>
-            <UsersTable users={response}/>
-          </section>
-      </div>
-    ) 
-  else return <></>
-}
+	if (users)
+		return (
+			<div className="container">
+				<section className={classNames("contentContainer", styles.gostSection)}>
+					<h2 className={styles.title}>Список пользователей</h2>
+					<UsersReview users={users} />
+				</section>
+			</div>
+		);
+	return <></>;
+};
 
 export default UsersPage;

@@ -1,0 +1,85 @@
+.header {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  height: 6rem;
+  padding: 1rem;
+  gap: 3rem;
+  background: var(--urfu-blue);
+
+  .logo {
+    height: 3rem;
+    width: 10rem;
+    display: flex;
+    flex-shrink: 0;
+    //TODO: replace with purpose white logo
+    filter: brightness(0) invert(1);
+  }
+
+  nav ul {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    .headerLink {
+      font-family: var(--main-font), system-ui;
+      color: var(--white);
+      font-weight: 700;
+    }
+  }
+
+  .profileContainer {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .profileButton {
+    height: 100%;
+    width: 100%;
+  }
+
+  .profileIcon {
+    height: 2rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: flex;
+
+    img {
+      //TODO: replace with colored svg
+      filter: brightness(0) invert(1);
+    }
+  }
+}
+
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: -10px;
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+
+
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: var(--main-font), system-ui;
+
+  a {
+    color: var(--urfu-black);
+    text-decoration: none;
+  }
+
+  button {
+    text-align: left;
+  }
+
+  * {
+    padding: 0.5rem;
+    &:hover {
+      background-color: var(--urfu-grey);
+    }
+  }
+}

@@ -1,1 +1,1 @@
-export {default as ChangesStatisticPage} from './ui/ChangesStatisticPage'
+export { default as ChangesStatisticPage } from "./ui/ChangesStatisticPage";

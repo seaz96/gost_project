@@ -1,59 +1,47 @@
-import classNames from 'classnames'
-import React from 'react'
-import { GostForm, newGostModel } from 'widgets/gost-form'
-
-import styles from './GostActualizePage.module.scss'
-import axios from 'axios'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useAxios } from 'shared/hooks'
-import { gostModel } from 'entities/gost'
-import { axiosInstance } from 'shared/configs/axiosConfig'
+import classNames from "classnames";
+import { useNavigate, useParams } from "react-router-dom";
+import GostForm from "../../../components/GostForm/GostForm.tsx";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
+import { useActualizeGostMutation, useFetchGostQuery, useUploadGostFileMutation } from "../../../features/api/apiSlice";
+import styles from "./GostActualizePage.module.scss";
 
 const GostActualizePage = () => {
-  const id = useParams().id
-  const {response, loading, error} = useAxios<gostModel.Gost>(`/docs/${id}`)
-  const navigate = useNavigate()
+	const id = useParams().id;
+	const { data: gost } = useFetchGostQuery(id!);
+	const [actualizeGost] = useActualizeGostMutation();
+	const [uploadFile] = useUploadGostFileMutation();
+	const navigate = useNavigate();
 
-  const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
-    axiosInstance.put('/docs/actualize/' + id, gost, {
-      params: {
-        docId: id
-      }
-    }
-    )
-    .then(response => handleUploadFile(file, id))
-    .then(responce => navigate('/gost-review/'+id))
-  }
+	const addNewDocument = async (gostData: GostRequestModel, file: File) => {
+		await actualizeGost({ id: id!, gost: gostData });
+		await handleUploadFile(file, id);
+		navigate(`/gost-review/${id}`);
+	};
 
-  const handleUploadFile = (file: File, docId: string | undefined) => {
-    axiosInstance({
-      method: 'post',
-      url: `/docs/${docId}/upload-file`,
-      data: {
-        File: file,
-        Extension: file.name.split('.').pop()
-      },
-      headers: {"Content-Type": "multipart/form-data"}
-    })
-  }
+	const handleUploadFile = async (file: File, docId: string | undefined) => {
+		if (docId) {
+			await uploadFile({ docId, file });
+		}
+	};
 
-  if(loading) return <></>
-  console.log(response)
-  if(response)
-  return (
-    <div className='container'>
-      <section className={classNames('contentContainer', styles.reviewSection)}>
-        <h2>Актуализировать данные</h2>
-        <GostForm handleUploadFile={handleUploadFile} handleSubmit={addNewDocument} gost={
-          {
-            ...response.primary,
-            references: response.references.map(reference => reference.designation)
-          }
-        }/>
-      </section>
-    </div>
-  ) 
-  else return <></>
-}
+	if (gost)
+		return (
+			<div className="container">
+				<section className={classNames("contentContainer", styles.reviewSection)}>
+					<h2>Актуализировать данные</h2>
+					<GostForm
+						handleUploadFile={handleUploadFile}
+						handleSubmit={addNewDocument}
+						gost={{
+							...gost.primary,
+							status: gost.status,
+							references: gost.references.map((reference) => reference.designation),
+						}}
+					/>
+				</section>
+			</div>
+		);
+	return <></>;
+};
 
 export default GostActualizePage;

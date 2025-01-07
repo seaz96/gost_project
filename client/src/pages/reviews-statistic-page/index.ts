@@ -1,1 +1,1 @@
-export {default as ReviewsStatisticPage} from './ui/ReviewsStatisticPage';
+export { default as ReviewsStatisticPage } from "./ui/ReviewsStatisticPage";

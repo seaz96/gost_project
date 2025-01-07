@@ -1,1 +1,1 @@
-export {default as ResetPasswordPage} from './ui'
+export { default as ResetPasswordPage } from "./ui";

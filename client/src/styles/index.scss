@@ -1,0 +1,46 @@
+@import 'reset';
+
+:root {
+    --main-font: 'Montserrat', sans-serif;
+    --urfu-blue: #1E4391;
+    --urfu-dark-blue: #0F2B5E;
+    --urfu-red: #EF302B;
+    --urfu-dark-red: #C0231F;
+    --urfu-grey: #F6F6F6;
+    --urfu-transparent-black: rgba(34, 34, 34, 0.2);
+    --urfu-transparent-black-light: rgba(34, 34, 34, 0.05);
+    --white: #fff;
+    --urfu-black: #222222;
+}
+
+body {
+    font-family: var(--main-font), system-ui;
+    color: var(--urfu-black);
+    background: var(--urfu-grey);
+}
+
+.container {
+    padding-left: 85px;
+    padding-right: 85px;
+}
+
+.contentContainer {
+    padding-bottom: 55px;
+    padding-top: 55px;
+}
+
+.filledButton {
+    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
+    color: #fff;
+}
+
+.coloredText {
+    color: #D12965;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}

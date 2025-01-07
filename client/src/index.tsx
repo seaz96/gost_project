@@ -1,15 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './app';
+import "./styles/index.css";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { App } from "./App.tsx";
+import { store } from "./app/store.ts";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
+const rootElement = document.getElementById("root");
 
-    <App />
-
-);
-
-
+if (rootElement) {
+	createRoot(rootElement).render(
+		<StrictMode>
+			<Provider store={store}>
+				<App />
+				<ToastContainer />
+			</Provider>
+		</StrictMode>,
+	);
+} else {
+	console.error("Root element not found");
+}

@@ -1,76 +1,53 @@
-import axios from 'axios'
-import classNames from 'classnames'
-import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { GostForm, newGostModel } from 'widgets/gost-form'
-
-import styles from './GostReplacePage.module.scss'
-import { gostModel } from 'entities/gost'
-import { useAxios } from 'shared/hooks'
-import { axiosInstance } from 'shared/configs/axiosConfig'
-
-function getGostStub() {
-    return {
-        "designation": '',
-        "fullName": '',
-        "codeOks": '',
-        "activityField": '',
-        "acceptanceYear": '',
-        "commissionYear":  '',
-        "author": '',
-        "acceptedFirstTimeOrReplaced": '',
-        "content": '',
-        "keyWords": '',
-        "applicationArea": '',
-        "adoptionLevel": 0,
-        "documentText": '',
-        "changes": '',
-        "amendments": '',
-        "status": 0,
-        "harmonization": 1,
-        "isPrimary": true,
-        "references": []
-    } as newGostModel.GostToSave
-}
+import classNames from "classnames";
+import { useNavigate, useParams } from "react-router-dom";
+import GostForm, { getGostStub } from "../../../components/GostForm/GostForm.tsx";
+import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
+import {
+	useAddGostMutation,
+	useChangeGostStatusMutation,
+	useFetchGostQuery,
+	useUploadGostFileMutation,
+} from "../../../features/api/apiSlice";
+import styles from "./GostReplacePage.module.scss";
 
 const GostReplacePage = () => {
-    const navigate = useNavigate()
-    const gostToReplaceId = useParams().id
-    const {response, loading} = useAxios<gostModel.Gost>('/docs/' + gostToReplaceId)
+	const navigate = useNavigate();
+	const gostToReplaceId = useParams().id;
+	const { data: gost } = useFetchGostQuery(gostToReplaceId!);
+	const [addGost] = useAddGostMutation();
+	const [changeStatus] = useChangeGostStatusMutation();
+	const [uploadFile] = useUploadGostFileMutation();
 
-    const addNewDocument = (gost: newGostModel.GostToSave, file: File) => {
-      axiosInstance.post('/docs/add', gost)
-      .then(() => {
-        axiosInstance.put(`/docs/change-status`, {
-              id: gostToReplaceId,
-              status: 2
-          })
-      })
-      .then(response => {handleUploadFile(file, gostToReplaceId); return gostToReplaceId})
-      .then(responce => navigate('/'))
-    }
-  
-    const handleUploadFile = (file: File, docId: string | undefined) => {
-      axiosInstance({
-        method: 'post',
-        url: `/docs/${docId}/upload-file`,
-        data: {
-          File: file,
-          Extension: file.name.split('.').pop()
-        },
-        headers: {"Content-Type": "multipart/form-data"}
-      })
-    }
+	const addNewDocument = async (gost: GostRequestModel, file: File) => {
+		await addGost(gost);
+		await changeStatus({ id: gostToReplaceId!, status: 2 });
+		await handleUploadFile(file, gostToReplaceId);
+		navigate("/");
+	};
 
-      if(loading) return <></>
-    
-      return (
-        <div className='container'>
-          <section className={classNames('contentContainer', styles.reviewSection)}>
-            <GostForm handleUploadFile={handleUploadFile} handleSubmit={addNewDocument} gost={{...getGostStub(), acceptedFirstTimeOrReplaced: `Принят взамен ${response?.primary.designation}`}}/>
-          </section>
-        </div>
-      )
-}
+	const handleUploadFile = async (file: File, docId: string | undefined) => {
+		if (docId) {
+			await uploadFile({ docId, file });
+		}
+	};
 
-export default GostReplacePage
+	if (!gost) return <></>;
+
+	return (
+		<div className="container">
+			<section className={classNames("contentContainer", styles.reviewSection)}>
+				<GostForm
+					handleUploadFile={handleUploadFile}
+					handleSubmit={addNewDocument}
+					gost={{
+						//FIXME
+						...getGostStub(),
+						acceptedFirstTimeOrReplaced: `Принят взамен ${gost?.primary.designation}`,
+					}}
+				/>
+			</section>
+		</div>
+	);
+};
+
+export default GostReplacePage;
