@@ -2,9 +2,11 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public class GetDocumentRequest
+public class FieldResponse
 {
-    public string? Name { get; set; }
+    public string Designation { get; set; }
+
+    public string? FullName { get; set; }
 
     public string? CodeOks { get; set; }
 
@@ -12,7 +14,7 @@ public class GetDocumentRequest
 
     public int? AcceptanceYear { get; set; }
 
-    public int? CommissionYear { get; set; }
+    public int? CommissionYear { get; set; }   
 
     public string? Author { get; set; }
 
@@ -21,8 +23,6 @@ public class GetDocumentRequest
     public string? Content { get; set; }
 
     public string? KeyWords { get; set; }
-
-    public string? KeyPhrases { get; set; }
 
     public string? ApplicationArea { get; set; }
 
@@ -35,8 +35,6 @@ public class GetDocumentRequest
     public string? Amendments { get; set; }
 
     public HarmonizationLevel? Harmonization { get; set; }
-
-    public int Limit { get; set; } = 10;
-    public int Offset { get; set; } = 0;
-    public DocumentStatus Status { get; set; }
+    
+    public DateTime? LastEditTime { get; set; }
 }

@@ -20,5 +20,12 @@ public class MapperProfile : Profile
             .ForMember(
                 dest => dest.RelevanceMark,
                 options => options.MapFrom(x => Math.Round(x.Score * 5)));
+
+        CreateMap<Document, ReferenceDocumentResponse>();
+        CreateMap<FullDocument, FullDocumentResponse>();
+        CreateMap<Field, FieldResponse>();
+        CreateMap<ActualField, FieldResponse>();
+        CreateMap<PrimaryField, FieldResponse>();
+        
     }
 }

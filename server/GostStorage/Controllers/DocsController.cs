@@ -174,24 +174,33 @@ public class DocsController(
         });
         
         var document = await documentsService.GetDocumentAsync(docId);
-        return document is null ? NotFound() : new OkObjectResult(document);
+        return document is null ? NotFound() : new OkObjectResult(mapper.Map<FullDocumentResponse>(document));
     }
 
     [NoCache]
     [Authorize]
     [HttpGet("all")]
     public async Task<ActionResult<List<FullDocument>>> GetDocuments(
-        [FromQuery] GetDocumentRequest? parameters)
+        [FromQuery] GetDocumentRequest parameters)
     {
-        return Ok(await documentsService.GetDocumentsAsync(parameters));
+        if (parameters.Limit < 0 || parameters.Offset < 0)
+            return new BadRequestObjectResult("Limit or offset cannot be negative");
+        
+        return Ok(
+            (await documentsService.GetDocumentsAsync(parameters))
+                .Select(mapper.Map<FullDocumentResponse>)
+                .ToList());
     }
 
     [NoCache]
     [Authorize]
     [HttpGet("all-count")]
     public async Task<ActionResult<int>> GetDocumentsCount(
-        [FromQuery] GetDocumentRequest? parameters)
+        [FromQuery] GetDocumentRequest parameters)
     {
+        if (parameters.Limit < 0 || parameters.Offset < 0)
+            return new BadRequestObjectResult("Limit or offset cannot be negative");
+        
         return Ok(await documentsService.GetDocumentsCountAsync(parameters));
     }
 
@@ -200,6 +209,9 @@ public class DocsController(
     [HttpGet("search")]
     public async Task<ActionResult> SearchAsync([FromQuery] SearchQuery parameters)
     {
+        if (parameters.Limit < 0 || parameters.Offset < 0)
+            return new BadRequestObjectResult("Limit or offset cannot be negative");
+        
         return new OkObjectResult(await documentsService.SearchAsync(parameters));
     }
     
@@ -208,6 +220,9 @@ public class DocsController(
     [HttpGet("search-count")]
     public async Task<ActionResult> SearchCountAsync([FromQuery] SearchQuery parameters)
     {
+        if (parameters.Limit < 0 || parameters.Offset < 0)
+            return new BadRequestObjectResult("Limit or offset cannot be negative");
+        
         return new OkObjectResult(await documentsService.SearchCountAsync(parameters));
     }
     

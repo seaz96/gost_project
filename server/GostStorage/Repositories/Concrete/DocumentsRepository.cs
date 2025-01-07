@@ -46,6 +46,8 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
+            .Skip(parameters.Offset)
+            .Take(parameters.Limit)
             .ToListAsync();
     }
 
