@@ -80,12 +80,11 @@ export const apiSlice = createApi({
 			}),
 		}),
 		fetchUsers: builder.query<User[], void>({
-			query: () => "/accounts/list",
+			query: () => "/admin/users",
 		}),
 		fetchUserInfo: builder.query<User, number>({
 			query: (id) => ({
-				url: "/accounts/get-user-info",
-				params: { id },
+				url: `/admin/users/${id}`
 			}),
 		}),
 		editUser: builder.mutation<void, UserEditType & { id: number }>({
