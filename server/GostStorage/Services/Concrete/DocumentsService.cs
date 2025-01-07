@@ -46,7 +46,8 @@ public class DocumentsService(
         {
             Designation = primaryField.Designation,
             ActualFieldId = actualId,
-            PrimaryFieldId = primaryId
+            PrimaryFieldId = primaryId,
+            Status = status
         };
         
         var docId = await documentsRepository.AddAsync(doc);
