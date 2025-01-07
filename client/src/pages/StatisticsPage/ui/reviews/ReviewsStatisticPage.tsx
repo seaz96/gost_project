@@ -1,35 +1,43 @@
-import { useState } from "react";
-
-import classNames from "classnames";
+import {useEffect, useRef, useState} from "react";
 import ReviewsStatisticForm from "../../../../components/ReviewsStatisticForm/ReviewsStatisticForm.tsx";
 import ReviewsStatisticTable from "../../../../components/ReviewsStatisticTable/ReviewsStatisticTable.tsx";
-import type { gostModel } from "../../../../entities/gost";
-import styles from "./ReviewsStatisticPage.module.scss";
+import type {GostViews} from "../../../../entities/gost/gostModel.ts";
 
 const ReviewsStatisticPage = () => {
-	const [reviewsData, setReviewsData] = useState<gostModel.GostViews[] | null>(null);
+	const [reviewsData, setReviewsData] = useState<GostViews[] | null>(null);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
+	const reportRef = useRef<HTMLElement>(null);
+
+	const handleSubmit = (values: GostViews[]) => {
+		setReviewsData(values);
+	};
+
+	useEffect(() => {
+		if (reportRef.current && reviewsData) {
+			reportRef.current.scrollIntoView({ behavior: "smooth" });
+		}
+	}, [reviewsData]);
 
 	return (
-		<div className="container">
-			{reviewsData ? (
-				<section className={classNames(styles.statistic, "contentContainer")}>
-					<h2 className={styles.title}>
-						<span>Статистика</span> с {`${formatDate(new Date(startDate))}`} по {`${formatDate(new Date(endDate))}`}
-					</h2>
+		<section>
+			<section>
+				<ReviewsStatisticForm
+					handleSubmit={handleSubmit}
+					startDateSubmit={setStartDate}
+					endDateSubmit={setEndDate}
+				/>
+			</section>
+			{reviewsData && (
+				<section className={"verticalPadding"} ref={reportRef}>
+					<h2>Отчёт об обращениях</h2>
+					<p className="verticalPadding">
+						{`с ${formatDate(new Date(startDate))} по ${formatDate(new Date(endDate))}`}
+					</p>
 					<ReviewsStatisticTable reviewsData={reviewsData} />
 				</section>
-			) : (
-				<section className={classNames(styles.statistic, "contentContainer")}>
-					<ReviewsStatisticForm
-						handleSubmit={(values: gostModel.GostViews[]) => setReviewsData(values)}
-						startDateSubmit={setStartDate}
-						endDateSubmit={setEndDate}
-					/>
-				</section>
 			)}
-		</div>
+		</section>
 	);
 };
 

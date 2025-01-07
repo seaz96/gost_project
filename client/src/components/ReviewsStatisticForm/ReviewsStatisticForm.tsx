@@ -1,15 +1,17 @@
-import { useState } from "react";
-import { useGetViewsStatsQuery } from "../../features/api/apiSlice";
-import { Button, Input } from "../../shared/components";
+import {type FormEvent, useState} from "react";
+import type {GostViews} from "../../entities/gost/gostModel.ts";
+import {useLazyGetViewsStatsQuery} from "../../features/api/apiSlice";
+import {Input} from "../../shared/components";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./ReviewsStatisticForm.module.scss";
 
 interface ReviewsStatisticFormProps {
-	handleSubmit: Function;
-	startDateSubmit: Function;
-	endDateSubmit: Function;
+	handleSubmit: (data: GostViews[]) => void;
+	startDateSubmit: (date: string) => void;
+	endDateSubmit: (date: string) => void;
 }
 
-const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
+const ReviewsStatisticForm = (props: ReviewsStatisticFormProps) => {
 	const { handleSubmit, startDateSubmit, endDateSubmit } = props;
 
 	const [reviewsData, setReviewsData] = useState({
@@ -20,7 +22,9 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 		endDate: "",
 	});
 
-	const validateData = (event: React.FormEvent) => {
+	const [trigger, { data }] = useLazyGetViewsStatsQuery();
+
+	const validateData = (event: FormEvent) => {
 		event.preventDefault();
 
 		const startDate = reviewsData.startDate
@@ -28,10 +32,16 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 			: new Date("1970-01-01").toISOString();
 		const endDate = reviewsData.endDate ? new Date(reviewsData.endDate).toISOString() : new Date().toISOString();
 
-		const { data } = useGetViewsStatsQuery({
+		trigger({
 			...reviewsData,
-			startDate,
-			endDate,
+			startDate: startDate,
+			endDate: endDate,
+		}).then((res) => {
+			if (res.data) {
+				handleSubmit(res.data);
+				startDateSubmit(startDate);
+				endDateSubmit(endDate);
+			}
 		});
 
 		if (data) {
@@ -43,6 +53,7 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 
 	return (
 		<form className={styles.form} onSubmit={(event) => validateData(event)}>
+			<h2>Запрос статистики обращений</h2>
 			<Input
 				label="Название ГОСТа"
 				type="text"
@@ -74,9 +85,7 @@ const ReviewsStatisticForm: React.FC<ReviewsStatisticFormProps> = (props) => {
 				value={reviewsData.endDate}
 				onChange={(value: string) => setReviewsData({ ...reviewsData, endDate: value })}
 			/>
-			<Button onClick={() => {}} className={styles.formButton} isFilled type="submit">
-				Сформировать отчёт
-			</Button>
+			<UrfuButton type="submit">Сформировать отчёт</UrfuButton>
 		</form>
 	);
 };

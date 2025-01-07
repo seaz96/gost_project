@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import {useEffect, useRef, useState} from "react";
 import ChangesStatisticForm from "../../../../../components/ChangesStatisticForm/ChangesStatisticForm.tsx";
 import ChangesStatisticTable from "../../../../../components/ChangesStatisticTable/ChangesStatisticTable.tsx";
@@ -13,7 +12,6 @@ const ChangesStatisticPage = () => {
 
 	const handleSubmit = (values: GostChanges[]) => {
 		setChangesData(values);
-
 	};
 
 	useEffect(() => {
@@ -24,7 +22,7 @@ const ChangesStatisticPage = () => {
 
 	return (
 		<section>
-			<section className={classNames(styles.statistic, "contentContainer")}>
+			<section>
 				<ChangesStatisticForm
 					handleSubmit={handleSubmit}
 					startDateSubmit={setStartDate}
@@ -32,7 +30,7 @@ const ChangesStatisticPage = () => {
 				/>
 			</section>
 			{changesData && (
-				<section ref={reportRef}>
+				<section className={"verticalPadding"} ref={reportRef}>
 					<h2 className={styles.title}>Отчёт об изменениях</h2>
 					<p className="verticalPadding">
 						{`с ${formatDate(new Date(startDate))} по ${formatDate(new Date(endDate))}`}

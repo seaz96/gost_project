@@ -1,5 +1,7 @@
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {Link} from "react-router-dom";
+import {useAppSelector} from "../../../app/hooks.ts";
 import Filter from "../../../components/Filter/Filter.tsx";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
 import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
@@ -9,10 +11,16 @@ import styles from "./GostsPage.module.scss";
 const GostsPage = () => {
 	const { gosts, countFetched, count, setGostParams, gostsParams, fetchGostsData } =
 		useGostsWithPagination("/docs/search");
+	const user = useAppSelector((s) => s.user.user);
 
 	return (
 		<main className="container">
-			<h1>Документы</h1>
+			<h1 className="verticalPadding">Документы</h1>
+			{(user?.role === "Admin" || user?.role === "Heisenberg") && (
+				<Link to="/gosts-editor" className="verticalPadding">
+					Создать документ
+				</Link>
+			)}
 			<section className="verticalPadding">
 				<Filter filterSubmit={setGostParams} />
 			</section>

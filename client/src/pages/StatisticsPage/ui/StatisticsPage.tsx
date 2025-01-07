@@ -12,7 +12,7 @@ const StatisticsPage = () => {
 		},
 		{
 			value: "changes",
-			title: "Стандарты",
+			title: "Изменения",
 		},
 	];
 

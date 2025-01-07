@@ -87,29 +87,31 @@ export const apiSlice = createApi({
 		}),
 		fetchUsers: builder.query<User[], void>({
 			query: () => "/admin/users",
+			keepUnusedDataFor: 0,
 		}),
 		fetchUserInfo: builder.query<User, number>({
 			query: (id) => ({
 				url: `/admin/users/${id}`,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		editUser: builder.mutation<void, UserEditType & { id: number }>({
 			query: (userData) => ({
-				url: "/accounts/admin-edit",
+				url: "/admin/edit-user",
 				method: "POST",
 				body: userData,
 			}),
 		}),
 		toggleAdmin: builder.mutation<void, { userId: number; isAdmin: boolean }>({
 			query: (data) => ({
-				url: "/accounts/make-admin",
+				url: "/admin/make-admin",
 				method: "POST",
 				body: data,
 			}),
 		}),
 		editSelf: builder.mutation<void, UserEditType>({
 			query: (userData) => ({
-				url: "/accounts/self-edit",
+				url: "/accounts/edit",
 				method: "POST",
 				body: userData,
 			}),
@@ -118,6 +120,7 @@ export const apiSlice = createApi({
 			query: (id) => ({
 				url: `/docs/${id}`,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		addGost: builder.mutation<void, GostRequestModel>({
 			query: (gost) => ({
@@ -131,6 +134,7 @@ export const apiSlice = createApi({
 				url: "/docs/change-status",
 				method: "PUT",
 				body: { id, status },
+				responseHandler: (response) => response.text(),
 			}),
 		}),
 		uploadGostFile: builder.mutation<void, { docId: string; file: File }>({
@@ -167,7 +171,7 @@ export const apiSlice = createApi({
 			}),
 		}),
 		getViewsStats: builder.query<
-			GostViews,
+			GostViews[],
 			{ startDate: string; endDate: string; designation?: string; codeOks?: string; activityField?: string }
 		>({
 			query: (params) => ({
@@ -178,12 +182,14 @@ export const apiSlice = createApi({
 					EndDate: params.endDate,
 				},
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		getChangesStats: builder.query<GostChanges[], { status: string; count: number; StartDate: string; EndDate: string }>({
 			query: (params) => ({
 				url: "/actions/list",
 				params,
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		deleteGost: builder.mutation<void, string>({
 			query: (id) => ({
@@ -196,12 +202,14 @@ export const apiSlice = createApi({
 				url,
 				params: { ...flattenParams(params), offset, limit },
 			}),
+			keepUnusedDataFor: 0,
 		}),
 		fetchGostsCount: builder.query<number, { url: string; params?: object }>({
 			query: ({ url, params }) => ({
 				url: `${url}-count`,
 				params: flattenParams(params),
 			}),
+			keepUnusedDataFor: 0,
 		}),
 	}),
 });
@@ -223,9 +231,7 @@ export const {
 	useActualizeGostMutation,
 	useResetPasswordMutation,
 	useLazyGetViewsStatsQuery,
-	useGetViewsStatsQuery,
 	useLazyGetChangesStatsQuery,
-	useGetChangesStatsQuery,
 	useDeleteGostMutation,
 	useFetchGostsPageQuery,
 	useFetchGostsCountQuery,

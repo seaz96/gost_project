@@ -1,7 +1,5 @@
-import type React from "react";
-
 import type { gostModel } from "../../entities/gost";
-import styles from "./ReviewsStatisticTable.module.scss";
+import {GenericTable} from "../GenericTable/GenericTable.tsx";
 
 interface ReviewsStatisticTableProps {
 	reviewsData: gostModel.GostViews[];
@@ -10,27 +8,15 @@ interface ReviewsStatisticTableProps {
 const ReviewsStatisticTable: React.FC<ReviewsStatisticTableProps> = (props) => {
 	const { reviewsData } = props;
 
+	const columns = [
+		{ header: "ID", accessor: (g: gostModel.GostViews) => g.docId },
+		{ header: "Обозначение", accessor: (g: gostModel.GostViews) => g.designation },
+		{ header: "Сфера деятельности", accessor: (g: gostModel.GostViews) => g.fullName },
+		{ header: "Просмотры", accessor: (g: gostModel.GostViews) => g.views },
+	];
+
 	return (
-		<table className={styles.table}>
-			<thead>
-				<tr className={styles.tableRow}>
-					<th>№</th>
-					<th>Обозначение</th>
-					<th>Сфера деятельности</th>
-					<th>Просмотры</th>
-				</tr>
-			</thead>
-			<tbody>
-				{reviewsData.map((review) => (
-					<tr>
-						<td>{review.docId}</td>
-						<td>{review.designation}</td>
-						<td>{review.fullName}</td>
-						<td>{review.views}</td>
-					</tr>
-				))}
-			</tbody>
-		</table>
+		<GenericTable columns={columns} data={reviewsData} rowKey={"docId"} />
 	);
 };
 

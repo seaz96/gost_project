@@ -22,19 +22,10 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 		count: 10,
 	});
 
-	const [trigger, { data }] = useLazyGetChangesStatsQuery();
+	const [trigger] = useLazyGetChangesStatsQuery();
 
 	const validateData = (event: React.FormEvent) => {
 		event.preventDefault();
-
-		fetchData();
-
-		console.log(data);
-		if (data) {
-		}
-	};
-
-	const fetchData = () => {
 		trigger({
 			status: changesData.status,
 			count: changesData.count,
