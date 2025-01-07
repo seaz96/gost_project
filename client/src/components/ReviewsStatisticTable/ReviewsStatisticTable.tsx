@@ -1,5 +1,5 @@
 import type { gostModel } from "../../entities/gost";
-import {GenericTable} from "../GenericTable/GenericTable.tsx";
+import { GenericTable } from "../GenericTable/GenericTable.tsx";
 
 interface ReviewsStatisticTableProps {
 	reviewsData: gostModel.GostViews[];
@@ -15,9 +15,7 @@ const ReviewsStatisticTable: React.FC<ReviewsStatisticTableProps> = (props) => {
 		{ header: "Просмотры", accessor: (g: gostModel.GostViews) => g.views },
 	];
 
-	return (
-		<GenericTable columns={columns} data={reviewsData} rowKey={"docId"} />
-	);
+	return <GenericTable columns={columns} data={reviewsData} rowKey={"docId"} />;
 };
 
 export default ReviewsStatisticTable;

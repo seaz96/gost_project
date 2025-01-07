@@ -1,7 +1,7 @@
-import {useState} from "react";
+import { useState } from "react";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
-import {ChangesStatisticPage} from "./changes";
-import {ReviewsStatisticPage} from "./reviews";
+import { ChangesStatisticPage } from "./changes";
+import { ReviewsStatisticPage } from "./reviews";
 
 const StatisticsPage = () => {
 	const [activeTabs, setActiveTabs] = useState<string>("reviews");

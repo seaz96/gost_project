@@ -1,4 +1,4 @@
-import type {ReactNode} from "react";
+import type { ReactNode } from "react";
 import styles from "./GenericTable.module.scss";
 
 interface GenericTableActionBlockProps {

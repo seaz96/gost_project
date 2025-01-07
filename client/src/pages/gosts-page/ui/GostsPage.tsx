@@ -1,12 +1,12 @@
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../app/hooks.ts";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../app/hooks.ts";
 import Filter from "../../../components/Filter/Filter.tsx";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
 import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
-import type {status} from "../../../entities/gost/gostModel.ts";
+import type { status } from "../../../entities/gost/gostModel.ts";
 import styles from "./GostsPage.module.scss";
 
 const GostsPage = () => {

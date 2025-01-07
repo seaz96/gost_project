@@ -1,5 +1,5 @@
-import type {ReactNode} from "react";
-import {Link} from "react-router-dom";
+import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import styles from "./GenericTable.module.scss";
 
 const GenericTableButton = ({ to, children }: { to: string; children: ReactNode }) => (

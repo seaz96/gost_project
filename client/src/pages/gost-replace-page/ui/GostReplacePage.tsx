@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate, useParams } from "react-router-dom";
 import GostForm, { getGostStub } from "../../../components/GostForm/GostForm.tsx";
-import type {GostRequestModel} from "../../../entities/gost/gostModel.ts";
+import type { GostRequestModel } from "../../../entities/gost/gostModel.ts";
 import {
 	useAddGostMutation,
 	useChangeGostStatusMutation,

@@ -1,5 +1,5 @@
-import type {GostChanges} from "../../entities/gost/gostModel.ts";
-import {GenericTable} from "../GenericTable/GenericTable.tsx";
+import type { GostChanges } from "../../entities/gost/gostModel.ts";
+import { GenericTable } from "../GenericTable/GenericTable.tsx";
 
 interface ChangesStatisticTableProps {
 	changesData: GostChanges[];

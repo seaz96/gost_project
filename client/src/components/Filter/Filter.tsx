@@ -1,6 +1,6 @@
 import { Collapse } from "@mui/material";
 import { useRef, useState } from "react";
-import type {GostSearchParams} from "../../entities/gost/gostModel.ts";
+import type { GostSearchParams } from "../../entities/gost/gostModel.ts";
 import IconButton from "../../shared/components/IconButton";
 import styles from "./Filter.module.scss";
 import FilterDropdown from "./FilterDropdown";

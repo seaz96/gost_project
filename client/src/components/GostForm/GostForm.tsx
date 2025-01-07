@@ -2,7 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TextField } from "@mui/material";
 import classNames from "classnames";
 import { type ChangeEvent, useRef, useState } from "react";
-import type {GostRequestModel} from "../../entities/gost/gostModel.ts";
+import type { GostRequestModel } from "../../entities/gost/gostModel.ts";
 import { Button, Input, RadioGroup } from "../../shared/components";
 import IconButton from "../../shared/components/IconButton";
 import TextArea from "../../shared/components/TextArea";
@@ -198,10 +198,12 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 								]}
 								name="adoptionLevel"
 								value={newGost.adoptionLevel.toString()}
-								onChange={(value: "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate") => {
+								onChange={(
+									value: "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate",
+								) => {
 									setNewGost({
 										...newGost,
-										adoptionLevel: value
+										adoptionLevel: value,
 									});
 								}}
 							/>
@@ -281,7 +283,7 @@ const GostForm = ({ handleSubmit, gost }: GostFormProps) => {
 									{ id: "Valid", value: "Valid", label: "Действующий" },
 									{ id: "Canceled", value: "Canceled", label: "Отменен" },
 									{ id: "Replaced", value: "Replaced", label: "Заменен" },
-									{ id: "Inactive", value: "Inactive", label: "Неактивен" }
+									{ id: "Inactive", value: "Inactive", label: "Неактивен" },
 								]}
 								name="status"
 								value={newGost.status.toString()}

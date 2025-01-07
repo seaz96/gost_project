@@ -1,4 +1,4 @@
-import type {GostSearchParams, GostViewInfo} from "entities/gost/gostModel";
+import type { GostSearchParams, GostViewInfo } from "entities/gost/gostModel";
 import { useFetchGostsCountQuery, useFetchGostsPageQuery } from "features/api/apiSlice";
 import { useEffect, useState } from "react";
 

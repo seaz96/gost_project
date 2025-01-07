@@ -1,7 +1,7 @@
 import { Collapse } from "@mui/material";
 import classNames from "classnames";
 import { useState } from "react";
-import type {GostSearchParams, harmonization} from "../../../entities/gost/gostModel.ts";
+import type { GostSearchParams, harmonization } from "../../../entities/gost/gostModel.ts";
 import { Input, RadioGroup } from "../../../shared/components";
 import arrowDown from "../assets/arrowDown.png";
 import styles from "./FilterDropdown.module.scss";
@@ -50,10 +50,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 					<Input
 						type="text"
 						value={filterData.SearchFilters?.CodeOks}
-						onChange={(value: string) => filterSubmit({
-							...filterData,
-							SearchFilters: {...filterData.SearchFilters, CodeOks: value}
-						})}
+						onChange={(value: string) =>
+							filterSubmit({
+								...filterData,
+								SearchFilters: { ...filterData.SearchFilters, CodeOks: value },
+							})
+						}
 					/>
 				</Collapse>
 			</div>

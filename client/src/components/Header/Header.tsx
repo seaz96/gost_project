@@ -1,8 +1,8 @@
 import classNames from "classnames";
-import {type ReactNode, useState} from "react";
-import {Link} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {logoutUser} from "../../features/user/userSlice.ts";
+import { type ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks.ts";
+import { logoutUser } from "../../features/user/userSlice.ts";
 import urfuLogo from "../../shared/assets/urfu.png";
 import urfuLogoSvg from "../../shared/assets/urfu.svg";
 import urfuProfile from "../../shared/assets/urfuProfile.svg";

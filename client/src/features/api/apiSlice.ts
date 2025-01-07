@@ -1,9 +1,9 @@
-import type {BaseQueryFn, FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query";
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {toast} from "react-toastify";
-import type {UserAuthorization} from "../../components/AuthorizationForm/authorizationModel.ts";
-import type {UserRegistration} from "../../components/RegistrationForm/registrationModel.ts";
-import type {UserEditType} from "../../components/UserEditForm/userEditModel.ts";
+import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { toast } from "react-toastify";
+import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
+import type { UserRegistration } from "../../components/RegistrationForm/registrationModel.ts";
+import type { UserEditType } from "../../components/UserEditForm/userEditModel.ts";
 import type {
 	GostChanges,
 	GostFetchModel,
@@ -11,8 +11,8 @@ import type {
 	GostViewInfo,
 	GostViews,
 } from "../../entities/gost/gostModel.ts";
-import type {User} from "../../entities/user/userModel";
-import {baseURL} from "../../shared/configs/apiConfig.ts";
+import type { User } from "../../entities/user/userModel";
+import { baseURL } from "../../shared/configs/apiConfig.ts";
 
 type FlattenedParams = Record<string, string>;
 

@@ -1,7 +1,7 @@
-import {type FormEvent, useState} from "react";
-import type {GostViews} from "../../entities/gost/gostModel.ts";
-import {useLazyGetViewsStatsQuery} from "../../features/api/apiSlice";
-import {Input} from "../../shared/components";
+import { type FormEvent, useState } from "react";
+import type { GostViews } from "../../entities/gost/gostModel.ts";
+import { useLazyGetViewsStatsQuery } from "../../features/api/apiSlice";
+import { Input } from "../../shared/components";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./ReviewsStatisticForm.module.scss";
 

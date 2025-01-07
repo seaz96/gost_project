@@ -1,7 +1,7 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import ReviewsStatisticForm from "../../../../components/ReviewsStatisticForm/ReviewsStatisticForm.tsx";
 import ReviewsStatisticTable from "../../../../components/ReviewsStatisticTable/ReviewsStatisticTable.tsx";
-import type {GostViews} from "../../../../entities/gost/gostModel.ts";
+import type { GostViews } from "../../../../entities/gost/gostModel.ts";
 
 const ReviewsStatisticPage = () => {
 	const [reviewsData, setReviewsData] = useState<GostViews[] | null>(null);
@@ -22,11 +22,7 @@ const ReviewsStatisticPage = () => {
 	return (
 		<section>
 			<section>
-				<ReviewsStatisticForm
-					handleSubmit={handleSubmit}
-					startDateSubmit={setStartDate}
-					endDateSubmit={setEndDate}
-				/>
+				<ReviewsStatisticForm handleSubmit={handleSubmit} startDateSubmit={setStartDate} endDateSubmit={setEndDate} />
 			</section>
 			{reviewsData && (
 				<section className={"verticalPadding"} ref={reportRef}>
