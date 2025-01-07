@@ -82,40 +82,23 @@ public class SearchRepository(HttpClient httpClient, string ftsApiUrl) : ISearch
 
         if (request.Text is not null)
             query.Append($"&text={request.Text}");
-
+        
         var filters = request.SearchFilters;
 
         if (filters is null) 
             return query.ToString();
         
-        var properties = filters.GetType().GetProperties()
-            .Where(x => x.CanRead)
-            .Where(x => x.GetValue(filters, null) != null)
-            .ToDictionary(x => x.Name, x => x.GetValue(filters, null));
-
-        var propertyNames = properties
-            .Where(x => !(x.Value is string) && x.Value is IEnumerable)
-            .Select(x => x.Key)
-            .ToList();
-
-        foreach (var key in propertyNames)
-        {
-            var valueType = properties[key].GetType();
-            var valueElemType = valueType.IsGenericType
-                ? valueType.GetGenericArguments()[0]
-                : valueType.GetElementType();
-            if (valueElemType.IsPrimitive || valueElemType == typeof(string))
-            {
-                var enumerable = properties[key] as IEnumerable;
-                properties[key] = string.Join(',', enumerable.Cast<object>());
-            }
-
-            query.Append(string.Join("&", properties
-                .Select(x => string.Concat(
-                    "SearchFilters.",
-                    Uri.EscapeDataString(x.Key), "=",
-                    Uri.EscapeDataString(x.Value.ToString())))));
-        }
+        if (filters.Status is not null) query.Append($"&SearchFilter.Status={filters.Status.ToString()}");
+        if (filters.CodeOks is not null) query.Append($"&SearchFilter.CodeOks={filters.CodeOks}");
+        if (filters.AcceptanceYear is not null) query.Append($"&SearchFilter.AcceptanceYear={filters.AcceptanceYear.ToString()}");
+        if (filters.CommissionYear is not null) query.Append($"&SearchFilter.CommissionYear={filters.CommissionYear.ToString()}");
+        if (filters.Author is not null) query.Append($"&SearchFilter.Author={filters.Author}");
+        if (filters.AcceptedFirstTimeOrReplaced is not null) query.Append($"&SearchFilter.AcceptedFirstTimeOrReplaced={filters.AcceptedFirstTimeOrReplaced}");
+        if (filters.KeyWords is not null) query.Append($"&SearchFilter.KeyWords={filters.KeyWords}");
+        if (filters.AdoptionLevel is not null) query.Append($"&SearchFilter.AdoptionLevel={filters.AdoptionLevel.ToString()}");
+        if (filters.Harmonization is not null) query.Append($"&SearchFilter.Harmonization={filters.Harmonization.ToString()}");
+        if (filters.Amendments is not null) query.Append($"&SearchFilter.Amendments={filters.Amendments}");
+        if (filters.Changes is not null) query.Append($"&SearchFilter.Changes={filters.Changes}");
 
         return query.ToString();
     }
