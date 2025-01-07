@@ -15,6 +15,7 @@ const GostsPage = () => {
 	const user = useAppSelector((s) => s.user.user);
 	const contentRef = useRef<HTMLDivElement>(null);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: hook
 	useEffect(() => {
 		if (contentRef.current && contentRef.current.clientHeight < window.innerHeight) {
 			fetchGostsData();

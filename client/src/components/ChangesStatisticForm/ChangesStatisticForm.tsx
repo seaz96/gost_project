@@ -19,7 +19,6 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 		status: "Valid",
 		dateFrom: date.toISOString(),
 		dateTo: date.toISOString(),
-		count: 10,
 	});
 
 	const [trigger] = useLazyGetChangesStatsQuery();
@@ -71,14 +70,6 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 				required={true}
 				value={changesData.dateTo}
 				onChange={(value: string) => setChangesData({ ...changesData, dateTo: value })}
-			/>
-			<p className={styles.countTitle}>Количество выводимых изменений</p>
-			<Input
-				placeholder="Количество..."
-				type="number"
-				required={true}
-				value={changesData.count}
-				onChange={(value: string) => setChangesData({ ...changesData, count: +value })}
 			/>
 			<UrfuButton type="submit">Сформировать отчёт</UrfuButton>
 		</form>

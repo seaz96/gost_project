@@ -117,12 +117,6 @@ const GostReview = (props: GostReviewProps) => {
 			primary: <a href={gost.primary.documentText}>{gost.primary.documentText}</a>,
 			actual: <a href={gost.actual.documentText}>{gost.actual.documentText}</a>,
 		},
-		{
-			id: "references",
-			field: "Нормативные ссылки",
-			primary: renderReferences(gost.references),
-			actual: renderReferences(gost.references),
-		},
 		{ id: "changes", field: "Изменения", primary: gost.primary.changes, actual: gost.actual.changes },
 		{ id: "amendments", field: "Поправки", primary: gost.primary.amendments, actual: gost.actual.amendments },
 		{
@@ -177,6 +171,14 @@ const GostReview = (props: GostReviewProps) => {
 					</div>
 				)}
 				<GenericTable columns={columns} data={tableData} rowKey="id" />
+				<h2 className="verticalPadding">Нормативные ссылки</h2>
+				{
+					gost.references.length > 0 ?
+						<div className={styles.references}>{renderReferences(gost.references)}</div>
+						:
+						<p>Нет нормативных ссылок</p>
+				}
+
 			</main>
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
