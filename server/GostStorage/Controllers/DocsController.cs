@@ -31,11 +31,6 @@ public class DocsController(
     [HttpPost("add")]
     public async Task<ActionResult<long>> AddDocument([FromBody] AddDocumentRequest dto)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         var newField = mapper.Map<PrimaryField>(dto);
 
         var docId = await documentsService.AddDocumentAsync(newField, DocumentStatus.Valid);
@@ -71,11 +66,6 @@ public class DocsController(
     [HttpDelete("delete/{docId}")]
     public async Task<IActionResult> Delete(long docId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         await referencesService.DeleteReferencesByIdAsync(docId);
         await userActionsService.DeleteAsync(docId);
         await searchRepository.DeleteDocumentAsync(docId);
@@ -90,11 +80,6 @@ public class DocsController(
     [HttpPut("update/{docId}")]
     public async Task<IActionResult> Update([FromBody] UpdateDocumentRequest dto, long docId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.UpdateAsync(updatedField, docId);
@@ -119,11 +104,6 @@ public class DocsController(
     [HttpPut("actualize/{docId}")]
     public async Task<IActionResult> Actualize([FromBody] UpdateDocumentRequest dto, long docId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.ActualizeAsync(updatedField, docId);
@@ -148,11 +128,6 @@ public class DocsController(
     [HttpPut("change-status")]
     public async Task<IActionResult> ChangeStatus(ChangeStatusRequest model)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
 
@@ -250,11 +225,6 @@ public class DocsController(
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadFileForDocumentAsync([FromForm] UploadFileRequest request, long docId)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest("Model is not valid");
-        }
-
         var document = await documentsService.GetDocumentAsync(docId);
         if (document is null)
         {
