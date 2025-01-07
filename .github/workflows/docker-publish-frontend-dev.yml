@@ -20,7 +20,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}-frontend
-  REACT_APP_API_URL: https://test.gost-storage.ru/api
+  API_URL: https://test.gost-storage.ru/api
 
 
 jobs:
