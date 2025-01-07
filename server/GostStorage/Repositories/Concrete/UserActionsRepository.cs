@@ -41,13 +41,13 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
                             group.Action.Type == ActionType.View).ToListAsync();
 
         return (await actions)
-            .GroupBy(stat => stat.Document)
-            .Select(group => new DocumentViewsResponse()
+            .GroupBy(stat => stat.Document.DocId)
+            .Select(group => new DocumentViewsResponse
             {
-                DocId = group.Key.DocId,
-                Designation = group.Key.Actual.Designation,
+                DocId = group.Key,
+                Designation = group.First().Document.Actual.Designation,
                 Views = group.Count(),
-                FullName = group.Key.Actual.FullName ?? group.Key.Primary.FullName,
+                FullName = group.First().Document.Actual.FullName ?? group.First().Document.Primary.FullName,
             })
             .OrderByDescending(x => x.Views)
             .ToList();
