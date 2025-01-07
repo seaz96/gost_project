@@ -8,7 +8,7 @@ name: Frontend dev build
 on:
   workflow_dispatch:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "refactoring-040125" ]
     paths: [ "client/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
