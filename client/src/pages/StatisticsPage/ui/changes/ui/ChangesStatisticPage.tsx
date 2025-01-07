@@ -1,29 +1,29 @@
 import { useState } from "react";
 
 import classNames from "classnames";
-import type { gostModel } from "entities/gost";
-import ReviewsStatisticForm from "../../../components/ReviewsStatisticForm/ReviewsStatisticForm.tsx";
-import ReviewsStatisticTable from "../../../components/ReviewsStatisticTable/ReviewsStatisticTable.tsx";
-import styles from "./ReviewsStatisticPage.module.scss";
+import ChangesStatisticForm from "../../../../../components/ChangesStatisticForm/ChangesStatisticForm.tsx";
+import ChangesStatisticTable from "../../../../../components/ChangesStatisticTable/ChangesStatisticTable.tsx";
+import type { gostModel } from "../../../../../entities/gost";
+import styles from "./ChangesStatisticPage.module.scss";
 
-const ReviewsStatisticPage = () => {
-	const [reviewsData, setReviewsData] = useState<gostModel.GostViews[] | null>(null);
+const ChangesStatisticPage = () => {
+	const [changesData, setChangesData] = useState<gostModel.GostChanges | null>(null);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
 
 	return (
 		<div className="container">
-			{reviewsData ? (
+			{changesData ? (
 				<section className={classNames(styles.statistic, "contentContainer")}>
 					<h2 className={styles.title}>
 						<span>Статистика</span> с {`${formatDate(new Date(startDate))}`} по {`${formatDate(new Date(endDate))}`}
 					</h2>
-					<ReviewsStatisticTable reviewsData={reviewsData} />
+					<ChangesStatisticTable changesData={changesData} />
 				</section>
 			) : (
 				<section className={classNames(styles.statistic, "contentContainer")}>
-					<ReviewsStatisticForm
-						handleSubmit={(values: gostModel.GostViews[]) => setReviewsData(values)}
+					<ChangesStatisticForm
+						handleSubmit={(values: gostModel.GostChanges) => setChangesData(values)}
 						startDateSubmit={setStartDate}
 						endDateSubmit={setEndDate}
 					/>
@@ -34,10 +34,11 @@ const ReviewsStatisticPage = () => {
 };
 
 const formatDate = (date: Date) => {
-	const day = date.getDate();
+	let day = date.getDate().toString();
+	day = day.length === 1 ? `0${day}` : day;
 	const month = date.getMonth() + 1;
 	const year = date.getFullYear();
 	return `${day}.${month}.${year}`;
 };
 
-export default ReviewsStatisticPage;
+export default ChangesStatisticPage;

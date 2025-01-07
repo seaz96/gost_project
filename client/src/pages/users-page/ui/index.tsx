@@ -1,7 +1,5 @@
-import classNames from "classnames";
 import UsersReview from "../../../components/UsersReview/UsersReview.tsx";
-import { useFetchUsersQuery } from "../../../features/api/apiSlice";
-import styles from "./UsersPage.module.scss";
+import {useFetchUsersQuery} from "../../../features/api/apiSlice";
 
 const UsersPage = () => {
 	const { data: users, isLoading } = useFetchUsersQuery();
@@ -10,12 +8,12 @@ const UsersPage = () => {
 
 	if (users)
 		return (
-			<div className="container">
-				<section className={classNames("contentContainer", styles.gostSection)}>
-					<h2 className={styles.title}>Список пользователей</h2>
+			<main className="container">
+				<h1 className="verticalPadding">Список пользователей</h1>
+				<section className="verticalPadding">
 					<UsersReview users={users} />
 				</section>
-			</div>
+			</main>
 		);
 	return <></>;
 };

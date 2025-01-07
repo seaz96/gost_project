@@ -11,27 +11,31 @@ const GostsPage = () => {
 		useGostsWithPagination("/docs/search");
 
 	return (
-		<div className="container contentContainer">
+		<main className="container">
 			<h1>Документы</h1>
-			<div>Найдено {count} документов</div>
-			<section className={styles.filterSection}>
-				<Filter filterSubmit={setGostParams} />
+			<section className="verticalPadding">
+				<Filter filterSubmit={setGostParams}/>
 			</section>
-			<section className={styles.filterSection}>
+			<section className="verticalPadding">
 				<FilterTabs
 					tabs={[
-						{ title: "Все", value: "All" },
-						{ title: "Действующие", value: "Valid" },
-						{ title: "Отменённые", value: "Canceled" },
-						{ title: "Заменённые", value: "Replaced" },
+						{title: "Все", value: "All"},
+						{title: "Действующие", value: "Valid"},
+						{title: "Отменённые", value: "Canceled"},
+						{title: "Заменённые", value: "Replaced"},
 					]}
 					activeTabs={[gostsParams.SearchFilters?.Status ?? "All"]}
 					setActiveTabs={(activeTabs) =>
-						setGostParams({ ...gostsParams, SearchFilters: { ...gostsParams.SearchFilters, Status: activeTabs[0] !== "All" ? activeTabs[0] as status : null } })
+						setGostParams({...gostsParams,
+							SearchFilters: {
+								...gostsParams.SearchFilters,
+								Status: activeTabs[0] !== "All" ? activeTabs[0] as status : null
+							}
+						})
 					}
 				/>
 			</section>
-
+			<div className="verticalPadding">Найдено {count} документов</div>
 			<div>
 				<section className={styles.gostSection}>
 					<InfiniteScroll
@@ -41,11 +45,11 @@ const GostsPage = () => {
 						loader={<h4>Загрузка</h4>}
 						endMessage={<p>Конец таблицы</p>}
 					>
-						<GostsTable gosts={gosts} gostsParams={gostsParams} />
+						<GostsTable gosts={gosts} gostsParams={gostsParams}/>
 					</InfiniteScroll>
 				</section>
 			</div>
-		</div>
+		</main>
 	);
 };
 
