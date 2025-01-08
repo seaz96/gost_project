@@ -66,8 +66,8 @@ public class DocsController(
         var result = await documentsService.DeleteDocumentAsync(docId);
 
         return result
-            ? new OkObjectResult("Document deleted successfully.")
-            : new NotFoundObjectResult($"Document with id {docId} not found.");
+            ? Ok()
+            : new NotFoundResult();
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
@@ -97,7 +97,7 @@ public class DocsController(
             UserId = userId
         });
 
-        return result;
+        return Ok();
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
@@ -127,7 +127,7 @@ public class DocsController(
             UserId = userId
         });
 
-        return result;
+        return Ok();
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
