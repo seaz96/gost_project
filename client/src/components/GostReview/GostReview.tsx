@@ -143,7 +143,6 @@ const GostReview = (props: GostReviewProps) => {
 	];
 
 	//TODO: buttons to links
-	//TODO: fix replace
 	return (
 		<>
 			<main className={styles.reviewContainer}>

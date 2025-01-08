@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import {useNavigate, useParams, useSearchParams} from "react-router-dom";
+import {Link, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
 import type {GostAddModel} from "../../../entities/gost/gostModel.ts";
 import {useFetchGostQuery, useUpdateGostMutation} from "../../../features/api/apiSlice";
@@ -27,6 +27,7 @@ const GostEditPage = () => {
 		return (
 			<div className="container">
 				<h1 className={"verticalPadding"}>{isActualize ? "Актуализировать" : "Редактировать"} документ</h1>
+				<Link className={styles.back} to={`/gost-review/${id}`}>Вернуться к просмотру</Link>
 				<section className={classNames("contentContainer", styles.reviewSection)}>
 					<GostForm
 						handleSubmit={handleSubmit}

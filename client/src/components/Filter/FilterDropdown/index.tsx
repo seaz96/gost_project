@@ -1,8 +1,8 @@
 import { Collapse } from "@mui/material";
 import classNames from "classnames";
 import { useState } from "react";
-import type { GostSearchParams, harmonization } from "../../../entities/gost/gostModel.ts";
-import { Input, RadioGroup } from "../../../shared/components";
+import type { GostSearchParams } from "../../../entities/gost/gostModel.ts";
+import { Input } from "../../../shared/components";
 import arrowDown from "../assets/arrowDown.png";
 import styles from "./FilterDropdown.module.scss";
 
@@ -230,25 +230,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 					<p className={styles.dropdownItemName}>Уровень принятия</p>
 				</div>
 				<Collapse className={styles.dropdownItemFilter} in={filterStatus.adoptionLevel}>
-					<RadioGroup
-						buttons={[
-							{ id: "International", value: "0", label: "Международный" },
-							{ id: "Foreign", value: "1", label: "Иностранный" },
-							{ id: "Regional", value: "2", label: "Региональный" },
-							{ id: "Organizational", value: "3", label: "Организационный" },
-							{ id: "National", value: "4", label: "Национальный" },
-							{ id: "Interstate", value: "5", label: "Межгосударственный" },
-						]}
-						direction="vertical"
-						name="adoptionLevel"
-						value={filterData.adoptionLevel?.toString() || "0"}
-						onChange={(value: string) => {
-							filterSubmit({
-								...filterData,
-								adoptionLevel: Number.parseInt(value),
-							});
-						}}
-					/>
+
 				</Collapse>
 			</div>
 			<div className={styles.dropdownItem}>
@@ -292,22 +274,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 					<p className={styles.dropdownItemName}>Уровень гармонизации</p>
 				</div>
 				<Collapse className={styles.dropdownItemFilter} in={filterStatus.harmonization}>
-					<RadioGroup
-						buttons={[
-							{ id: "unharmonized", value: "Unharmonized", label: "Негармонизированный" },
-							{ id: "harmonized", value: "Harmonized", label: "Гармонизорованный" },
-							{ id: "modified", value: "Modified", label: "Модифицированный" },
-						]}
-						name="harmonization"
-						direction="vertical"
-						value={filterData.SearchFilters?.Harmonization?.toString() || "1"}
-						onChange={(value: harmonization) => {
-							filterSubmit({
-								...filterData,
-								harmonization: value,
-							});
-						}}
-					/>
+					
 				</Collapse>
 			</div>
 		</div>

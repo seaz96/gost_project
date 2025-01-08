@@ -1,8 +1,9 @@
 import { useState } from "react";
 import type { GostChanges } from "../../entities/gost/gostModel.ts";
 import { useLazyGetChangesStatsQuery } from "../../features/api/apiSlice";
-import { Input, RadioGroup } from "../../shared/components";
+import { Input } from "../../shared/components";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuRadioGroup from "../../shared/components/RadioGroup/UrfuRadioGroup.tsx";
 import styles from "./ChangesStatisticForm.module.scss";
 
 interface ChangesStatisticFormProps {
@@ -42,16 +43,16 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 		<form className={styles.form} onSubmit={(event) => validateData(event)}>
 			<h2>Запрос статистики изменений</h2>
 			<p className={styles.status}>Статус</p>
-			<RadioGroup
-				buttons={[
-					{ id: "Valid", value: "Valid", label: "Действующий" },
-					{ id: "Replaced", value: "Replaced", label: "Заменен" },
-					{ id: "Canceled", value: "Canceled", label: "Отменен" },
+			<UrfuRadioGroup
+				options={[
+					{ value: "Valid", label: "Действующий" },
+					{ value: "Replaced", label: "Заменен" },
+					{ value: "Canceled", label: "Отменен" },
 				]}
 				name="status"
 				value={changesData.status}
-				onChange={(value: string) => {
-					setChangesData({ ...changesData, status: value });
+				onChange={(e) => {
+					setChangesData({ ...changesData, status: e.target.value });
 				}}
 			/>
 			<p>Начальная дата изменений</p>
