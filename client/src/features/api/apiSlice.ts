@@ -5,9 +5,9 @@ import type { UserAuthorization } from "../../components/AuthorizationForm/autho
 import type { UserRegistration } from "../../components/RegistrationForm/registrationModel.ts";
 import type { UserEditType } from "../../components/UserEditForm/userEditModel.ts";
 import type {
+	GostAddModel,
 	GostChanges,
 	GostFetchModel,
-	GostRequestModel,
 	GostViewInfo,
 	GostViews,
 } from "../../entities/gost/gostModel.ts";
@@ -34,9 +34,49 @@ const flattenParams = <T extends object>(obj: T | undefined, prefix = ""): Flatt
 			flattened[fullKey] = String(value);
 		}
 	}
-
 	return flattened;
 };
+
+const toFormData = (obj: Record<string, object | string | number | Blob>) => {
+	console.log(obj);
+	const formData = new FormData();
+	for (const [key, value] of Object.entries(obj)) {
+		if (typeof value === "object" && !Array.isArray(value)) {
+			for (const [nestedKey, nestedValue] of Object.entries(value)) {
+				formData.append(`${key}.${nestedKey}`, nestedValue);
+			}
+			continue;
+		}
+		if (Array.isArray(value)) {
+			for (const [index, arrayValue] of value.entries()) {
+				formData.append(`${key}[${index}]`, arrayValue);
+			}
+			continue;
+		}
+		if (isFile(value)) {
+			formData.append(key, value, (value as File).name);
+			continue;
+		}
+		if (isBlob(value)) {
+			formData.append(key, value);
+			continue;
+		}
+		if (typeof value === "number") {
+			formData.append(key, value.toString());
+			continue
+		}
+		formData.append(key, value);
+	}
+	return formData;
+}
+
+function isBlob(value: unknown): value is Blob {
+	return value instanceof Blob;
+}
+
+function isFile(value: unknown): value is File {
+	return value instanceof File;
+}
 
 const baseQueryWithAuth = fetchBaseQuery({
 	baseUrl: baseURL,
@@ -122,12 +162,14 @@ export const apiSlice = createApi({
 			}),
 			keepUnusedDataFor: 0,
 		}),
-		addGost: builder.mutation<void, GostRequestModel>({
-			query: (gost) => ({
-				url: "/docs/add",
-				method: "POST",
-				body: gost,
-			}),
+		addGost: builder.mutation<void, GostAddModel>({
+			query: (gost) => {
+				return {
+					url: "/docs/add",
+					method: "POST",
+					body: toFormData(gost),
+				};
+			},
 		}),
 		changeGostStatus: builder.mutation<void, { id: string | number; status: number }>({
 			query: ({ id, status }) => ({
@@ -137,30 +179,18 @@ export const apiSlice = createApi({
 				responseHandler: (response) => response.text(),
 			}),
 		}),
-		uploadGostFile: builder.mutation<void, { docId: string; file: File }>({
-			query: ({ docId, file }) => {
-				const formData = new FormData();
-				formData.append("File", file);
-				return {
-					url: `/docs/${docId}/upload-file`,
-					method: "POST",
-					body: formData,
-				};
-			},
-		}),
-		updateGost: builder.mutation<void, { id: string; gost: GostRequestModel }>({
+		updateGost: builder.mutation<void, { id: string; gost: GostAddModel }>({
 			query: ({ id, gost }) => ({
 				url: `/docs/update/${id}`,
 				method: "PUT",
-				body: gost,
+				body: toFormData(gost),
 			}),
 		}),
-		actualizeGost: builder.mutation<void, { id: string; gost: GostRequestModel }>({
+		actualizeGost: builder.mutation<void, { id: string; gost: GostAddModel }>({
 			query: ({ id, gost }) => ({
 				url: `/docs/actualize/${id}`,
 				method: "PUT",
-				body: gost,
-				params: { docId: id },
+				body: toFormData(gost),
 			}),
 		}),
 		resetPassword: builder.mutation<void, { login: string; old_password: string; new_password: string }>({
@@ -226,14 +256,12 @@ export const {
 	useEditSelfMutation,
 	useAddGostMutation,
 	useChangeGostStatusMutation,
-	useUploadGostFileMutation,
 	useUpdateGostMutation,
 	useActualizeGostMutation,
 	useResetPasswordMutation,
 	useLazyGetViewsStatsQuery,
 	useLazyGetChangesStatsQuery,
 	useDeleteGostMutation,
-	useFetchGostsPageQuery,
 	useLazyFetchGostsPageQuery,
 	useFetchGostsCountQuery,
 } = apiSlice;

@@ -26,3 +26,12 @@
   display: flex;
   gap: 1rem;
 }
+
+.addDocument {
+  width: fit-content;
+  display: flex;
+  gap: 8px;
+  font-size: 20px;
+  margin: .5rem 0;
+  color: var(--urfu-blue);
+}

@@ -3,7 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import UrfuTextInput from "shared/components/Input/UrfuTextInput";
-import type { GostRequestModel } from "../../entities/gost/gostModel";
+import type {GostAddModel, GostRequestModel} from "../../entities/gost/gostModel";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import UrfuTextArea from "../../shared/components/Input/UrfuTextArea.tsx";
 import UrfuRadioGroup from "../../shared/components/RadioGroup/UrfuRadioGroup";
@@ -11,7 +11,7 @@ import styles from "./GostForm.module.scss";
 import { type GostFormValues, gostFormSchema } from "./types";
 
 interface GostFormProps {
-  handleSubmit: (gost: GostRequestModel, file: File) => void;
+  handleSubmit: (gost: GostAddModel) => void;
   gost?: GostRequestModel;
 }
 
@@ -62,7 +62,6 @@ const harmonizationOptions = [
 ];
 
 export default function GostForm({ handleSubmit, gost }: GostFormProps) {
-  const [file, setFile] = useState<File | null>(null);
   const [newReference, setNewReference] = useState("");
 
   const {
@@ -79,12 +78,12 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
   const references = watch("references");
 
   const onSubmit = (data: GostFormValues) => {
-    if (!file && !data.documentText) {
+    if (!data.file && !data.documentText) {
       console.log(data)
       alert("Пожалуйста, загрузите файл или заполните текст стандарта");
       return;
     }
-    handleSubmit(data as GostRequestModel, file);
+    handleSubmit(data as GostAddModel);
   };
 
   const handleAddReference = () => {
@@ -184,7 +183,7 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
         <div className={styles.fileUpload}>
           <input
               type="file"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+                {...register("file")}
               accept=".pdf,.doc,.docx"
           />
         </div>

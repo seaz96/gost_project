@@ -19,6 +19,10 @@ export type GostSearchParams = {
 	Offset: number;
 };
 
+export type GostAddModel = GostRequestModel & {
+	file?: File;
+}
+
 export type GostRequestModel = {
 	designation: string;
 	fullName: string;

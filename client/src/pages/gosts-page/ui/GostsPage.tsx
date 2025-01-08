@@ -1,3 +1,4 @@
+import {Add} from "@mui/icons-material";
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
 import {useEffect, useRef, useState} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -35,9 +36,7 @@ const GostsPage = () => {
 		<main className="container">
 			<h1 className="verticalPadding">Документы</h1>
 			{(user?.role === "Admin" || user?.role === "Heisenberg") && (
-				<Link to="/gost-editor" className="verticalPadding">
-					Создать документ
-				</Link>
+				<CreateDocumentLink />
 			)}
 			<section className="verticalPadding">
 				<Filter filterSubmit={setGostParams}/>
@@ -125,5 +124,16 @@ const TableEnd = () => {
 const TableLoader = () => {
 	return <div className={styles.tableLoad}>Загрузка</div>;
 };
+
+const CreateDocumentLink = () => {
+	return (
+		<Link to="/gost-editor" className={styles.addDocument}>
+			<span>
+				<Add />
+			</span>
+			Создать документ
+		</Link>
+	);
+}
 
 export default GostsPage;
