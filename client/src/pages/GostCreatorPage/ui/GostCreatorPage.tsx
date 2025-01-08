@@ -16,6 +16,7 @@ const GostCreatorPage = () => {
 
 	return (
 		<div className="container">
+			<h1 className={"verticalPadding"}>Создать новый документ</h1>
 			<section className={classNames("contentContainer", styles.reviewSection)}>
 				<GostForm handleSubmit={addNewDocument} />
 			</section>

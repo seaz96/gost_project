@@ -179,16 +179,9 @@ export const apiSlice = createApi({
 				responseHandler: (response) => response.text(),
 			}),
 		}),
-		updateGost: builder.mutation<void, { id: string; gost: GostAddModel }>({
-			query: ({ id, gost }) => ({
-				url: `/docs/update/${id}`,
-				method: "PUT",
-				body: toFormData(gost),
-			}),
-		}),
-		actualizeGost: builder.mutation<void, { id: string; gost: GostAddModel }>({
-			query: ({ id, gost }) => ({
-				url: `/docs/actualize/${id}`,
+		updateGost: builder.mutation<void, { id: string; gost: GostAddModel; actualize: boolean }>({
+			query: ({ id, gost, actualize }) => ({
+				url: `/docs/${actualize ? "actualize" : "update"}/${id}`,
 				method: "PUT",
 				body: toFormData(gost),
 			}),
@@ -257,7 +250,6 @@ export const {
 	useAddGostMutation,
 	useChangeGostStatusMutation,
 	useUpdateGostMutation,
-	useActualizeGostMutation,
 	useResetPasswordMutation,
 	useLazyGetViewsStatsQuery,
 	useLazyGetChangesStatsQuery,

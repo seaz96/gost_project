@@ -4,7 +4,6 @@ import { useFetchUserQuery } from "../features/api/apiSlice.ts";
 import {GostCreatorPage} from "./GostCreatorPage";
 import {LoginPage} from "./LoginPage";
 import {StatisticsPage} from "./StatisticsPage";
-import {GostActualizePage} from "./gost-actualize-page";
 import {GostEditPage} from "./gost-edit-page";
 import {GostReviewPage} from "./gost-review-page";
 import {GostsPage} from "./gosts-page";
@@ -30,13 +29,12 @@ const AppRouter = () => {
 				<Routes>
 					<Route path="/" element={<GostsPage />} />
 					<Route path="/gost-review/:id" element={<GostReviewPage />} />
-					<Route path="/gost-editor" element={<GostCreatorPage />} />
+					<Route path="/new" element={<GostCreatorPage />} />
 					<Route path="/gost-edit/:id" element={<GostEditPage />} />
 					<Route path="/users-page" element={<UsersPage />} />
 					<Route path="/user-edit-page/:id" element={<UserEditPage />} />
 					<Route path="/reset-password" element={<ResetPasswordPage />} />
 					<Route path="/statistic" element={<StatisticsPage />} />
-					<Route path="/gost-actualize-page/:id" element={<GostActualizePage />} />
 					<Route path="/self-edit-page" element={<SelfEditPage />} />
 					<Route path="*" element={<Navigate to="/" replace />} />
 				</Routes>

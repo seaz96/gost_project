@@ -1,13 +1,15 @@
 import classNames from "classnames";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
 import type {GostAddModel} from "../../../entities/gost/gostModel.ts";
-import { useFetchGostQuery, useUpdateGostMutation } from "../../../features/api/apiSlice";
+import {useFetchGostQuery, useUpdateGostMutation} from "../../../features/api/apiSlice";
 import styles from "./GostEditPage.module.scss";
 
 const GostEditPage = () => {
 	const navigate = useNavigate();
 	const id = useParams().id;
+	const [searchParams] = useSearchParams();
+	const isActualize = searchParams.has("actualize");
 
 	if (!id) {
 		navigate("/");
@@ -17,17 +19,17 @@ const GostEditPage = () => {
 	const { data: gost } = useFetchGostQuery(id);
 	const [updateGost] = useUpdateGostMutation();
 
-	const editOldDocument = async (gostData: GostAddModel) => {
-		await updateGost({ id: id, gost: gostData });
-		navigate(`/gost-review/${id}`);
+	const handleSubmit = async (gostData: GostAddModel) => {
+		await updateGost({ id: id, gost: gostData, actualize: isActualize }).then(() => navigate(`/gost-review/${id}`));
 	};
 
 	if (gost)
 		return (
 			<div className="container">
+				<h1 className={"verticalPadding"}>{isActualize ? "Актуализировать" : "Редактировать"} документ</h1>
 				<section className={classNames("contentContainer", styles.reviewSection)}>
 					<GostForm
-						handleSubmit={editOldDocument}
+						handleSubmit={handleSubmit}
 						gost={{
 							...gost.primary,
 							status: gost.status,

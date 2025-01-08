@@ -127,7 +127,7 @@ const TableLoader = () => {
 
 const CreateDocumentLink = () => {
 	return (
-		<Link to="/gost-editor" className={styles.addDocument}>
+		<Link to="/new" className={styles.addDocument}>
 			<span>
 				<Add />
 			</span>

@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import { type ReactNode, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks.ts";
-import { gostModel } from "../../entities/gost";
-import type { GostFetchModel } from "../../entities/gost/gostModel.ts";
-import { useChangeGostStatusMutation, useDeleteGostMutation } from "../../features/api/apiSlice";
+import {type ReactNode, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../app/hooks.ts";
+import {gostModel} from "../../entities/gost";
+import type {GostFetchModel} from "../../entities/gost/gostModel.ts";
+import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
-import { GenericTable } from "../GenericTable/GenericTable";
+import {GenericTable} from "../GenericTable/GenericTable";
 import Modal from "../Modal/Modal.tsx";
 import styles from "./GostReview.module.scss";
 
@@ -35,24 +35,20 @@ const GostReview = (props: GostReviewProps) => {
 	const [changeStatus] = useChangeGostStatusMutation();
 
 	const onDeleteSubmit = async () => {
-		await deleteGost(gostId.toString());
-		navigate("/");
+		await deleteGost(gostId.toString()).then(() => navigate("/"));
 	};
 
 	const recoverDoc = async () => {
-		await changeStatus({ id: gostId, status: "Valid" });
-		navigate("/");
+		await changeStatus({ id: gostId, status: "Valid" }).then(() => navigate("/"));
 	};
 
 	const cancelDoc = async () => {
-		await changeStatus({ id: gostId, status: "Canceled" });
-		navigate("/");
+		await changeStatus({ id: gostId, status: "Canceled" }).then(() => navigate("/"));
 	};
 
 	const replaceDoc = async () => {
-		await changeStatus({ id: gostId, status: "Replaced" });
-		navigate("/gost-editor");
-	}
+		await changeStatus({ id: gostId, status: "Replaced" }).then(() => navigate("/new"));
+	};
 
 	const renderReferences = (refs: typeof gost.references) => (
 		<>
@@ -169,10 +165,15 @@ const GostReview = (props: GostReviewProps) => {
 								Отменить
 							</UrfuButton>
 						)}
-						<UrfuButton disabled={gost.status === "Replaced"} onClick={() => setReplaceModalOpen(true)} size={"small"} outline={true}>
+						<UrfuButton
+							disabled={gost.status === "Replaced"}
+							onClick={() => setReplaceModalOpen(true)}
+							size={"small"}
+							outline={true}
+						>
 							Заменить
 						</UrfuButton>
-						<UrfuButton onClick={() => navigate(`/gost-actualize-page/${gostId}`)} size={"small"} outline={true}>
+						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}?actualize`)} size={"small"} outline={true}>
 							Актуализировать
 						</UrfuButton>
 					</div>
@@ -261,6 +262,6 @@ const ReplaceCard = (props: CardProps) => {
 			secondaryActionText="Назад"
 		/>
 	);
-}
+};
 
 export default GostReview;
