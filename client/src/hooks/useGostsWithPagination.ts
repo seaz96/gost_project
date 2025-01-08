@@ -1,6 +1,6 @@
 import type {GostSearchParams, GostViewInfo} from "entities/gost/gostModel";
 import {useFetchGostsCountQuery, useLazyFetchGostsPageQuery} from "features/api/apiSlice";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 
 const PAGE_SIZE = 10;
 const SMART_SEARCH_URL = "/docs/search";
@@ -32,6 +32,7 @@ const useGostsWithPagination = (useSmartSearch: boolean) => {
 
 	useEffect(() => {
 		if (!fetching) return;
+		console.log(`Fetching data with offset ${offset}`);
 		trigger({
 			url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
 			offset: offset,
@@ -46,13 +47,12 @@ const useGostsWithPagination = (useSmartSearch: boolean) => {
 					return;
 				}
 				console.log(`Fetched ${res.data.length} documents. Total ${accumulatedGosts.length + res.data.length}`);
-				setAccumulatedGosts((prev) => [...prev, ...res.data]);
+				setAccumulatedGosts((prev) => [...prev, ...(res.data as [])]);
 			}
 		});
-		console.log(`Fetching data with offset ${offset}`);
 		setOffset((prev) => prev + PAGE_SIZE);
 		setFetching(false);
-	}, [fetching, setFetching]);
+	}, [fetching, params, useSmartSearch, trigger, offset, accumulatedGosts, totalCount]);
 
 	const handleFilterSubmit = (filterData: GostSearchParams & { text?: string }) => {
 		console.log("Resetting due to filter change");
