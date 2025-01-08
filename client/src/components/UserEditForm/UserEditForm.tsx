@@ -1,18 +1,18 @@
-import type React from "react";
 import { useState } from "react";
 import { useAppSelector } from "../../app/hooks.ts";
 import type { User } from "../../entities/user/userModel.ts";
-import { Button, Input } from "../../shared/components";
+import {  Input } from "../../shared/components";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./UserEditForm.module.scss";
 import type { UserEditType } from "./userEditModel.ts";
 
 interface UserEditFormProps {
-	handleSubmit: Function;
+	handleSubmit: (userData: UserEditType) => void;
 	userData: User;
 	id: number;
 }
 
-const UserEditForm: React.FC<UserEditFormProps> = (props) => {
+const UserEditForm = (props: UserEditFormProps) => {
 	const { handleSubmit, userData, id } = props;
 	const user = useAppSelector((s) => s.user.user);
 
@@ -79,9 +79,9 @@ const UserEditForm: React.FC<UserEditFormProps> = (props) => {
 					<label htmlFor="switchAdmin">Пользователь является администратором</label>
 				</div>
 			)}
-			<Button type="submit" onClick={() => {}} className={styles.formButton} isFilled>
+			<UrfuButton type="submit">
 				Сохранить
-			</Button>
+			</UrfuButton>
 		</form>
 	);
 };
