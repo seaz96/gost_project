@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useAppSelector } from "../../app/hooks.ts";
-import type { User } from "../../entities/user/userModel.ts";
-import {  Input } from "../../shared/components";
+import {useForm} from "react-hook-form";
+import UrfuTextInput from "shared/components/Input/UrfuTextInput.tsx";
+import {useAppSelector} from "../../app/hooks.ts";
+import type {User} from "../../entities/user/userModel.ts";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuCheckbox from "../../shared/components/Input/UrfuCheckbox.tsx";
 import styles from "./UserEditForm.module.scss";
-import type { UserEditType } from "./userEditModel.ts";
+import type {UserEditType} from "./userEditModel.ts";
 
 interface UserEditFormProps {
 	handleSubmit: (userData: UserEditType) => void;
@@ -16,72 +17,44 @@ const UserEditForm = (props: UserEditFormProps) => {
 	const { handleSubmit, userData, id } = props;
 	const user = useAppSelector((s) => s.user.user);
 
-	const [userEditData, setUserEditData] = useState<UserEditType>({
-		name: userData.name,
-		login: userData.login,
-		org_name: userData.orgName,
-		org_activity: userData.orgActivity,
-		org_branch: userData.orgBranch,
-		is_admin: userData.role === "Admin" || userData.role === "Heisenberg",
+	const {
+		register,
+		handleSubmit: handleFormSubmit,
+		watch,
+		formState: { errors }
+	} = useForm<UserEditType>({
+		defaultValues: {
+			name: userData.name,
+			login: userData.login,
+			org_name: userData.orgName,
+			org_activity: userData.orgActivity,
+			org_branch: userData.orgBranch,
+			is_admin: userData.role === "Admin" || userData.role === "Heisenberg",
+		},
 	});
 
 	return (
-		<form
-			className={styles.form}
-			onSubmit={(event) => {
-				event.preventDefault();
-				handleSubmit(userEditData);
-			}}
-		>
-			<Input
-				label="ФИО пользователя"
-				type="text"
-				value={userEditData.name}
-				onChange={(value: string) => setUserEditData({ ...userEditData, name: value })}
-			/>
-			<Input
+		<form className={styles.form} onSubmit={handleFormSubmit((data) => handleSubmit(data))}>
+			<UrfuTextInput label="ФИО пользователя" type="text" {...register("name")} />
+			<UrfuTextInput
 				label="Логин"
 				type="text"
-				value={userEditData.login}
-				onChange={(value: string) => setUserEditData({ ...userEditData, login: value })}
+				error={errors.login?.message}
+				{...register("login", {
+					required: "Логин обязателен для заполнения",
+				})}
 			/>
-			<Input
-				label="Название организации"
-				type="text"
-				value={userEditData.org_name}
-				onChange={(value: string) => setUserEditData({ ...userEditData, org_name: value })}
-			/>
-			<Input
-				label="Отделение организации"
-				type="text"
-				value={userEditData.org_branch}
-				onChange={(value: string) => setUserEditData({ ...userEditData, org_branch: value })}
-			/>
-			<Input
-				label="Деятельность организации"
-				type="text"
-				value={userEditData.org_activity}
-				onChange={(value: string) => setUserEditData({ ...userEditData, org_activity: value })}
-			/>
+			<UrfuTextInput label="Название организации" type="text" {...register("org_name")} />
+			<UrfuTextInput label="Отделение организации" type="text" {...register("org_branch")} />
+			<UrfuTextInput label="Деятельность организации" type="text" {...register("org_activity")} />
 			{id !== user?.id && user?.role === "Heisenberg" && (
-				<div className={styles.checkboxContainer}>
-					<input
-						type="checkbox"
-						id="switchAdmin"
-						onChange={() =>
-							setUserEditData({
-								...userEditData,
-								is_admin: !userEditData.is_admin,
-							})
-						}
-						checked={userEditData.is_admin}
-					/>
-					<label htmlFor="switchAdmin">Пользователь является администратором</label>
-				</div>
+				<UrfuCheckbox
+					title={"Пользователь является администратором"}
+					{...register("is_admin")}
+					checked={watch("is_admin")}
+				/>
 			)}
-			<UrfuButton type="submit">
-				Сохранить
-			</UrfuButton>
+			<UrfuButton type="submit">Сохранить</UrfuButton>
 		</form>
 	);
 };

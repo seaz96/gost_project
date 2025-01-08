@@ -1,4 +1,4 @@
-import type {ChangeEvent, InputHTMLAttributes} from "react";
+import { type ChangeEvent, type InputHTMLAttributes, forwardRef } from "react";
 import styles from './UrfuCheckbox.module.scss';
 
 interface UrfuCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -7,13 +7,13 @@ interface UrfuCheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const UrfuCheckbox = ({ checked, onChange, title, ...props }: UrfuCheckboxProps) => {
+const UrfuCheckbox = forwardRef<HTMLInputElement, UrfuCheckboxProps>(({ checked, onChange, title, ...props }, ref) => {
     return (
         <label className={styles.urfuCheckbox}>
-            <input type="checkbox" checked={checked} onChange={onChange} {...props} />
+            <input type="checkbox" checked={checked} onChange={onChange} ref={ref} {...props} />
             <span>{title}</span>
         </label>
     );
-};
+});
 
 export default UrfuCheckbox;
