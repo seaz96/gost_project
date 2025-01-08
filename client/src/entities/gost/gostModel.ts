@@ -3,17 +3,19 @@ export type harmonization = "Unharmonized" | "Modified" | "Harmonized";
 export type adoptionLevel = "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate";
 
 export type GostSearchParams = {
-	text: string;
+	Text: string;
 	SearchFilters: {
-		CodeOks: string;
-		AcceptanceYear: number;
-		CommissionYear: number;
-		Author: string;
-		AcceptedFirstTimeOrReplaced: string;
-		KeyWords: string;
+		CodeOks: string | null;
+		AcceptanceYear: number | null;
+		CommissionYear: number | null;
+		Author: string | null;
+		AcceptedFirstTimeOrReplaced: string | null;
+		KeyWords: string | null;
 		AdoptionLevel: adoptionLevel | null;
 		Status: documentStatus | null;
 		Harmonization: harmonization | null;
+		Changes: string | null;
+		Amendments: string | null;
 	};
 	Limit: number;
 	Offset: number;

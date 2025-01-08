@@ -8,6 +8,7 @@ import Filter from "../../../components/Filter/Filter.tsx";
 import FilterButton from "../../../components/FilterButton/FilterButton.tsx";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
 import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
+import SearchFilters from "../../../components/SearchFilters/SearchFilters";
 import {
 	AdoptionLevelToRu,
 	HarmonizationToRu,
@@ -25,6 +26,7 @@ const GostsPage = () => {
 	const user = useAppSelector((s) => s.user.user);
 	const contentRef = useRef<HTMLDivElement>(null);
 
+	//TODO: debouncing
 	// biome-ignore lint/correctness/useExhaustiveDependencies: hook
 	useEffect(() => {
 		if (contentRef.current && contentRef.current.clientHeight < window.innerHeight) {
@@ -39,6 +41,15 @@ const GostsPage = () => {
 			{(user?.role === "Admin" || user?.role === "Heisenberg") && <CreateDocumentLink />}
 			<section className="verticalPadding">
 				<Filter filterSubmit={setGostParams} />
+				<SearchFilters 
+					filters={gostsParams.SearchFilters ?? {}}
+					onChange={(newFilters) => {
+						setGostParams({
+							...gostsParams,
+							SearchFilters: newFilters
+						});
+					}}
+				/>
 			</section>
 
 			<section className="verticalPadding">

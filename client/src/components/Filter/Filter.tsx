@@ -1,9 +1,7 @@
-import { Collapse } from "@mui/material";
 import { useRef, useState } from "react";
 import type { GostSearchParams } from "../../entities/gost/gostModel.ts";
 import IconButton from "../../shared/components/IconButton";
 import styles from "./Filter.module.scss";
-import FilterDropdown from "./FilterDropdown";
 import filter from "./assets/filter.svg";
 import search from "./assets/search.svg";
 
@@ -58,11 +56,6 @@ const Filter: React.FC<FilterProps> = (props) => {
 				<IconButton onClick={() => handleSubmit()} isFilled className={styles.searchButton}>
 					<img src={search} alt="search" />
 				</IconButton>
-				<Collapse className={styles.filterDropdown} in={filterOpen}>
-					<div ref={dropdownRef}>
-						<FilterDropdown filterData={filterData} filterSubmit={(filterData) => setFilterData(filterData)} />
-					</div>
-				</Collapse>
 			</div>
 		</div>
 	);
