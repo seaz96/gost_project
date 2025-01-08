@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useNavigate } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type {GostAddModel} from "../../../entities/gost/gostModel.ts";
+import type { GostAddModel } from "../../../entities/gost/gostModel.ts";
 import { useAddGostMutation } from "../../../features/api/apiSlice";
 import styles from "./GostCreatorPage.module.scss";
 

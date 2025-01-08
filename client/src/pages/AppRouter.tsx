@@ -1,17 +1,16 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { useFetchUserQuery } from "../features/api/apiSlice.ts";
-import {GostCreatorPage} from "./GostCreatorPage";
-import {LoginPage} from "./LoginPage";
-import {StatisticsPage} from "./StatisticsPage";
-import {GostEditPage} from "./gost-edit-page";
-import {GostReviewPage} from "./gost-review-page";
-import {GostsPage} from "./gosts-page";
-import {ResetPasswordPage} from "./reset-password-page";
-import {SelfEditPage} from "./self-edit-page";
-import {UserEditPage} from "./user-edit-page";
-import {UsersPage} from "./users-page";
-
+import { GostCreatorPage } from "./GostCreatorPage";
+import { LoginPage } from "./LoginPage";
+import { StatisticsPage } from "./StatisticsPage";
+import { GostEditPage } from "./gost-edit-page";
+import { GostReviewPage } from "./gost-review-page";
+import { GostsPage } from "./gosts-page";
+import { ResetPasswordPage } from "./reset-password-page";
+import { SelfEditPage } from "./self-edit-page";
+import { UserEditPage } from "./user-edit-page";
+import { UsersPage } from "./users-page";
 
 const AppRouter = () => {
 	const token = localStorage.getItem("jwt_token");

@@ -14,7 +14,11 @@ interface FormData {
 }
 
 const ResetPasswordForm = ({ handleSubmit }: ResetPasswordFormProps) => {
-	const { register, handleSubmit: handleFormSubmit, formState: { errors } } = useForm<FormData>();
+	const {
+		register,
+		handleSubmit: handleFormSubmit,
+		formState: { errors },
+	} = useForm<FormData>();
 
 	const validateData = (data: FormData) => {
 		if (data.newPassword === data.repeatedNewPassword) {
@@ -29,7 +33,7 @@ const ResetPasswordForm = ({ handleSubmit }: ResetPasswordFormProps) => {
 				type="password"
 				{...register("oldPassword", {
 					required: "Старый пароль обязателен",
-					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" },
 				})}
 				error={errors.oldPassword?.message}
 			/>
@@ -38,7 +42,7 @@ const ResetPasswordForm = ({ handleSubmit }: ResetPasswordFormProps) => {
 				type="password"
 				{...register("newPassword", {
 					required: "Новый пароль обязателен",
-					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" },
 				})}
 				error={errors.newPassword?.message}
 			/>
@@ -47,7 +51,7 @@ const ResetPasswordForm = ({ handleSubmit }: ResetPasswordFormProps) => {
 				type="password"
 				{...register("repeatedNewPassword", {
 					required: "Повторите новый пароль",
-					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" },
 				})}
 				error={errors.repeatedNewPassword?.message}
 			/>

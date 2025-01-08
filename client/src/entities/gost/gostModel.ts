@@ -21,7 +21,7 @@ export type GostSearchParams = {
 
 export type GostAddModel = GostRequestModel & {
 	file?: File;
-}
+};
 
 export type GostRequestModel = {
 	designation: string;

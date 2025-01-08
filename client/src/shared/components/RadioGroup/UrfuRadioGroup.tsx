@@ -1,4 +1,4 @@
-import {forwardRef} from "react";
+import { forwardRef } from "react";
 import styles from "./UrfuRadioGroup.module.scss";
 
 interface RadioOption {

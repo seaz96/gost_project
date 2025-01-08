@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import {type ReactNode, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useAppSelector} from "../../app/hooks.ts";
-import {gostModel} from "../../entities/gost";
-import type {GostFetchModel} from "../../entities/gost/gostModel.ts";
-import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
+import { type ReactNode, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks.ts";
+import { gostModel } from "../../entities/gost";
+import type { GostFetchModel } from "../../entities/gost/gostModel.ts";
+import { useChangeGostStatusMutation, useDeleteGostMutation } from "../../features/api/apiSlice";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
-import {GenericTable} from "../GenericTable/GenericTable";
+import { GenericTable } from "../GenericTable/GenericTable";
 import Modal from "../Modal/Modal.tsx";
 import styles from "./GostReview.module.scss";
 

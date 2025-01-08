@@ -1,11 +1,11 @@
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import UrfuTextInput from "shared/components/Input/UrfuTextInput.tsx";
-import {useAppSelector} from "../../app/hooks.ts";
-import type {User} from "../../entities/user/userModel.ts";
+import { useAppSelector } from "../../app/hooks.ts";
+import type { User } from "../../entities/user/userModel.ts";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import UrfuCheckbox from "../../shared/components/Input/UrfuCheckbox.tsx";
 import styles from "./UserEditForm.module.scss";
-import type {UserEditType} from "./userEditModel.ts";
+import type { UserEditType } from "./userEditModel.ts";
 
 interface UserEditFormProps {
 	handleSubmit: (userData: UserEditType) => void;
@@ -21,7 +21,7 @@ const UserEditForm = (props: UserEditFormProps) => {
 		register,
 		handleSubmit: handleFormSubmit,
 		watch,
-		formState: { errors }
+		formState: { errors },
 	} = useForm<UserEditType>({
 		defaultValues: {
 			name: userData.name,
@@ -35,7 +35,6 @@ const UserEditForm = (props: UserEditFormProps) => {
 
 	return (
 		<form className={styles.form} onSubmit={handleFormSubmit((data) => handleSubmit(data))}>
-
 			<UrfuTextInput label="ID" disabled={true} type="text" value={userData.id} />
 			<UrfuTextInput label="ФИО пользователя" type="text" {...register("name")} />
 			<UrfuTextInput

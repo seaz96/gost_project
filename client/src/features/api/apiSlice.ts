@@ -9,7 +9,8 @@ import type {
 	GostChanges,
 	GostFetchModel,
 	GostViewInfo,
-	GostViews, documentStatus,
+	GostViews,
+	documentStatus,
 } from "../../entities/gost/gostModel.ts";
 import type { User } from "../../entities/user/userModel";
 import { baseURL } from "../../shared/configs/apiConfig.ts";
@@ -63,12 +64,12 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 		}
 		if (typeof value === "number") {
 			formData.append(key, value.toString());
-			continue
+			continue;
 		}
 		formData.append(key, value);
 	}
 	return formData;
-}
+};
 
 function isBlob(value: unknown): value is Blob {
 	return value instanceof Blob;

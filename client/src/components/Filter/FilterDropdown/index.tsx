@@ -229,9 +229,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 					/>
 					<p className={styles.dropdownItemName}>Уровень принятия</p>
 				</div>
-				<Collapse className={styles.dropdownItemFilter} in={filterStatus.adoptionLevel}>
-
-				</Collapse>
+				<Collapse className={styles.dropdownItemFilter} in={filterStatus.adoptionLevel}></Collapse>
 			</div>
 			<div className={styles.dropdownItem}>
 				<div
@@ -273,9 +271,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = (props) => {
 					/>
 					<p className={styles.dropdownItemName}>Уровень гармонизации</p>
 				</div>
-				<Collapse className={styles.dropdownItemFilter} in={filterStatus.harmonization}>
-					
-				</Collapse>
+				<Collapse className={styles.dropdownItemFilter} in={filterStatus.harmonization}></Collapse>
 			</div>
 		</div>
 	);
