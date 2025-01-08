@@ -1,12 +1,18 @@
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Link } from "react-router-dom";
-import { useAppSelector } from "../../../app/hooks.ts";
+import {Link} from "react-router-dom";
+import {useAppSelector} from "../../../app/hooks.ts";
 import Filter from "../../../components/Filter/Filter.tsx";
+import FilterButton from "../../../components/FilterButton/FilterButton.tsx";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
 import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
-import type { status } from "../../../entities/gost/gostModel.ts";
+import {
+	AdoptionLevelToRu,
+	HarmonizationToRu,type adoptionLevel, 
+	type harmonization,
+	type status 
+} from "../../../entities/gost/gostModel.ts";
 import styles from "./GostsPage.module.scss";
 
 const GostsPage = () => {
@@ -52,6 +58,35 @@ const GostsPage = () => {
 						})
 					}
 				/>
+			</section>
+			<section className="verticalPadding flex">
+				<FilterButton
+					title="Уровень гармонизации"
+					options={Object.entries(HarmonizationToRu).map(([value, label]) => ({ value, label }))}
+					selectedOptions={gostsParams.SearchFilters?.Harmonization ? [gostsParams.SearchFilters.Harmonization] : []}
+					setSelectedOptions={(options) => {
+						setGostParams({
+							...gostsParams,
+							SearchFilters: {
+								...gostsParams.SearchFilters,
+								Harmonization: (options[0] as harmonization) ?? null,
+							},
+						});
+					}}
+				/>
+				<FilterButton
+					title="Уровень принятия"
+					options={Object.entries(AdoptionLevelToRu).map(([value, label]) => ({ value, label }))}
+					selectedOptions={gostsParams.SearchFilters?.AdoptionLevel ? [gostsParams.SearchFilters.AdoptionLevel] : []}
+					setSelectedOptions={(options) => {
+						setGostParams({
+							...gostsParams,
+							SearchFilters: {
+								...gostsParams.SearchFilters,
+								AdoptionLevel: (options[0] as adoptionLevel) ?? null,
+							},
+						});
+					}} />
 			</section>
 			<div className="verticalPadding">Найдено {count} документов</div>
 			<div ref={contentRef}>

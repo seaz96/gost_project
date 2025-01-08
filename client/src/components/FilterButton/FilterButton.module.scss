@@ -1,0 +1,57 @@
+.filterButton {
+  position: relative;
+  display: block;
+  height: 28px;
+
+  button {
+    gap: 8px;
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    height: 28px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .selectedCount {
+    color: var(--white);
+    background-color: var(--urfu-blue);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+  }
+
+  .openIcon {
+    line-height: 0;
+  }
+
+  &.selected button {
+    color: var(--urfu-blue);
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+
+    .option {
+      padding: 8px 16px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      &.selected {
+        background-color: #d0d0ff;
+      }
+    }
+  }
+}

@@ -144,7 +144,7 @@ const GostReview = (props: GostReviewProps) => {
 	return (
 		<>
 			<main className={styles.reviewContainer}>
-				<h1>Просмотр документа {gost.primary.designation}</h1>
+				<h1 className="verticalPadding">Просмотр документа {gost.primary.designation}</h1>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
 						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
