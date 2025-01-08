@@ -27,14 +27,17 @@ public class DocsController(
     : ControllerBase
 {
     [Authorize(Roles = "Heisenberg,Admin")]
-    [Consumes("application/json")]
+    [Consumes("multipart/form-data")]
     [HttpPost("add")]
-    public async Task<ActionResult<long>> AddDocument([FromBody] AddDocumentRequest dto)
+    public async Task<ActionResult<long>> AddDocument([FromBody] AddOrUpdateDocumentRequest dto)
     {
         var newField = mapper.Map<PrimaryField>(dto);
 
         var docId = await documentsService.AddDocumentAsync(newField, DocumentStatus.Valid);
         await referencesService.AddReferencesAsync(dto.References, docId);
+        
+        if (dto.File is not null)
+            await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
@@ -43,25 +46,14 @@ public class DocsController(
         {
             OrgBranch = user!.OrgBranch,
             Type = ActionType.Create,
-            DocId = docId,
+            DocId = docId,  
             Date = DateTime.UtcNow,
             UserId = userId
         });
 
         return Ok(docId);
     }
-
-    [Authorize(Roles = "Heisenberg,Admin")]
-    [Consumes("multipart/form-data")]
-    [HttpPost("add/with-file")]
-    public async Task<ActionResult<long>> AddDocument([FromForm] AddDocumentWithFileRequest request)
-    {
-        var documentId = await AddDocument(request as AddDocumentRequest);
-        await UploadFileForDocumentAsync(new UploadFileRequest { File = request.File }, documentId.Value);
-
-        return new OkObjectResult(documentId);
-    }
-
+    
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpDelete("delete/{docId}")]
     public async Task<IActionResult> Delete(long docId)
@@ -78,12 +70,15 @@ public class DocsController(
 
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPut("update/{docId}")]
-    public async Task<IActionResult> Update([FromBody] UpdateDocumentRequest dto, long docId)
+    public async Task<IActionResult> Update([FromBody] AddOrUpdateDocumentRequest dto, long docId)
     {
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.UpdateAsync(updatedField, docId);
         await referencesService.UpdateReferencesAsync(dto.References, docId);
+        
+        if (dto.File is not null)
+            await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
@@ -102,12 +97,15 @@ public class DocsController(
 
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPut("actualize/{docId}")]
-    public async Task<IActionResult> Actualize([FromBody] UpdateDocumentRequest dto, long docId)
+    public async Task<IActionResult> Actualize([FromBody] AddOrUpdateDocumentRequest dto, long docId)
     {
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.ActualizeAsync(updatedField, docId);
         await referencesService.UpdateReferencesAsync(dto.References, docId);
+        
+        if (dto.File is not null)
+            await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
 
         var userId = Convert.ToInt64(User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value);
         var user = await usersRepository.GetUserAsync(userId);
