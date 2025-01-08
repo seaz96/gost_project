@@ -1,7 +1,7 @@
-import {useState} from "react";
-import type {GostChanges} from "../../entities/gost/gostModel.ts";
-import {useLazyGetChangesStatsQuery} from "../../features/api/apiSlice";
-import {Input, RadioGroup} from "../../shared/components";
+import { useState } from "react";
+import type { GostChanges } from "../../entities/gost/gostModel.ts";
+import { useLazyGetChangesStatsQuery } from "../../features/api/apiSlice";
+import { Input, RadioGroup } from "../../shared/components";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./ChangesStatisticForm.module.scss";
 
@@ -27,7 +27,6 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 		event.preventDefault();
 		trigger({
 			status: changesData.status,
-			count: changesData.count,
 			StartDate: new Date(changesData.dateFrom).toISOString(),
 			EndDate: new Date(changesData.dateTo).toISOString(),
 		}).then((res) => {
@@ -41,9 +40,7 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 
 	return (
 		<form className={styles.form} onSubmit={(event) => validateData(event)}>
-			<h2>
-				Запрос статистики изменений
-			</h2>
+			<h2>Запрос статистики изменений</h2>
 			<p className={styles.status}>Статус</p>
 			<RadioGroup
 				buttons={[

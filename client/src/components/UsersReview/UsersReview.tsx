@@ -1,4 +1,4 @@
-import {EditRounded} from "@mui/icons-material";
+import { EditRounded } from "@mui/icons-material";
 import { useAppSelector } from "../../app/hooks.ts";
 import type { userModel } from "../../entities/user";
 import { GenericTable } from "../GenericTable/GenericTable";
@@ -33,7 +33,7 @@ const UsersReview: React.FC<UsersTableProps> = ({ users }) => {
 						</GenericTableButton>
 					</GenericTableActionBlock>
 				) : null,
-		}
+		},
 	];
 
 	return <GenericTable columns={columns} data={users} rowKey="id" />;

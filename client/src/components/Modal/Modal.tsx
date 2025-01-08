@@ -1,4 +1,4 @@
-import {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import styles from "./Modal.module.scss";
 
@@ -33,7 +33,9 @@ const Modal = (props: ModalProps) => {
 				<p>{description}</p>
 			</div>
 			<div className={styles.modalActions}>
-				<UrfuButton size={"small"} onClick={() => setIsOpen(false)}>{secondaryActionText}</UrfuButton>
+				<UrfuButton size={"small"} onClick={() => setIsOpen(false)}>
+					{secondaryActionText}
+				</UrfuButton>
 				<UrfuButton size={"small"} outline={true} onClick={() => primaryAction()}>
 					{primaryActionText}
 				</UrfuButton>

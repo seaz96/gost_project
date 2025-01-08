@@ -1,12 +1,12 @@
 import classNames from "classnames";
-import {type ReactNode, useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useAppSelector} from "../../app/hooks.ts";
-import {gostModel} from "../../entities/gost";
-import type {GostFetchModel} from "../../entities/gost/gostModel.ts";
-import {useChangeGostStatusMutation, useDeleteGostMutation} from "../../features/api/apiSlice";
+import { type ReactNode, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks.ts";
+import { gostModel } from "../../entities/gost";
+import type { GostFetchModel } from "../../entities/gost/gostModel.ts";
+import { useChangeGostStatusMutation, useDeleteGostMutation } from "../../features/api/apiSlice";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
-import {GenericTable} from "../GenericTable/GenericTable";
+import { GenericTable } from "../GenericTable/GenericTable";
 import Modal from "../Modal/Modal.tsx";
 import styles from "./GostReview.module.scss";
 
@@ -144,7 +144,7 @@ const GostReview = (props: GostReviewProps) => {
 	return (
 		<>
 			<main className={styles.reviewContainer}>
-				<h1>Просмотр документа {gost.primary.designation}</h1>
+				<h1 className="verticalPadding">Просмотр документа {gost.primary.designation}</h1>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
 						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
@@ -172,13 +172,11 @@ const GostReview = (props: GostReviewProps) => {
 				)}
 				<GenericTable columns={columns} data={tableData} rowKey="id" />
 				<h2 className="verticalPadding">Нормативные ссылки</h2>
-				{
-					gost.references.length > 0 ?
-						<div className={styles.references}>{renderReferences(gost.references)}</div>
-						:
-						<p>Нет нормативных ссылок</p>
-				}
-
+				{gost.references.length > 0 ? (
+					<div className={styles.references}>{renderReferences(gost.references)}</div>
+				) : (
+					<p>Нет нормативных ссылок</p>
+				)}
 			</main>
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />

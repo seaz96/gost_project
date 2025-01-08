@@ -14,6 +14,9 @@
 }
 
 body {
+    h1, h2, h3 {
+        color: var(--urfu-blue);
+    }
     line-height: 140%;
     font-family: var(--main-font), system-ui;
     color: var(--urfu-black);
@@ -53,13 +56,8 @@ body {
     padding: 10px 0;
 }
 
-.filledButton {
-    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
-    color: #fff;
-}
-
-.coloredText {
-    color: #D12965;
+.flex {
+    display: flex;
 }
 
 html,

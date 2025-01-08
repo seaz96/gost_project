@@ -1,5 +1,5 @@
 import UsersReview from "../../../components/UsersReview/UsersReview.tsx";
-import {useFetchUsersQuery} from "../../../features/api/apiSlice";
+import { useFetchUsersQuery } from "../../../features/api/apiSlice";
 
 const UsersPage = () => {
 	const { data: users, isLoading } = useFetchUsersQuery();

@@ -1,8 +1,9 @@
-import { useFormik } from "formik";
 import type React from "react";
-import { Button, Input } from "../../shared/components";
+import {useForm} from "react-hook-form";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuTextInput from "../../shared/components/Input/UrfuTextInput.tsx";
 import styles from "./RegistrationForm.module.scss";
-import type { UserRegistration } from "./registrationModel.ts";
+import type {UserRegistration} from "./registrationModel.ts";
 
 interface RegistrationFormProps {
 	changeForm: () => void;
@@ -10,111 +11,115 @@ interface RegistrationFormProps {
 	error: string | null;
 }
 
+type FormValues = UserRegistration & { repeatedPassword: string };
+
 const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {
 	const { changeForm, onSubmit, error } = props;
 
-	const validate = (values: UserRegistration & { repeatedPassword: string }) => {
-		const errors: Partial<UserRegistration & { repeatedPassword: string }> = {};
-
-		if (!values.login) {
-			errors.login = "Заполните поле";
-		} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.login)) {
-			errors.login = "Некорректный логин";
-		}
-
-		if (values.password.length < 7) {
-			errors.password = "Пароль должен быть не меньше 7 символов";
-		}
-
-		if (values.password !== values.repeatedPassword) {
-			errors.repeatedPassword = "Пароли не совпадают";
-		}
-
-		return errors;
-	};
-
-	const formik = useFormik({
-		initialValues: {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+		watch,
+	} = useForm<FormValues>({
+		defaultValues: {
 			login: "",
 			password: "",
-			role: "",
 			repeatedPassword: "",
+			role: "",
 			name: "",
 			orgName: "",
 			orgBranch: "",
 			orgActivity: "",
 		},
-		validate,
-		onSubmit: (values) => {
-			onSubmit({ ...values, role: "Admin" });
-		},
 	});
 
+	const password = watch("password");
+
+	const onSubmitHandler = (data: FormValues) => {
+		onSubmit({ ...data, role: "Admin" });
+	};
+
 	return (
-		<form
-			className={styles.form}
-			onSubmit={(event) => {
-				event.preventDefault();
-				formik.handleSubmit();
-			}}
-		>
-			<Input
-				type="text"
+		<form className={styles.form} onSubmit={handleSubmit(onSubmitHandler)}>
+			<UrfuTextInput
+				type="email"
 				label="Логин"
-				onChange={formik.handleChange("login")}
-				value={formik.values.login}
-				error={formik.errors.login}
+				placeholder="user@example.com"
+				{...register("login", {
+					required: "Заполните поле",
+					pattern: {
+						value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+						message: "Некорректный логин",
+					},
+				})}
+				error={errors.login?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="password"
 				label="Пароль"
-				onChange={formik.handleChange("password")}
-				value={formik.values.password}
-				error={formik.errors.password}
+				{...register("password", {
+					required: "Заполните поле",
+					minLength: {
+						value: 7,
+						message: "Пароль должен быть не меньше 7 символов",
+					},
+				})}
+				error={errors.password?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="password"
 				label="Повторите пароль"
-				onChange={formik.handleChange("repeatedPassword")}
-				value={formik.values.repeatedPassword}
-				error={formik.errors.repeatedPassword}
+				{...register("repeatedPassword", {
+					required: "Заполните поле",
+					validate: (value) => value === password || "Пароли не совпадают",
+				})}
+				error={errors.repeatedPassword?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="text"
 				label="ФИО пользователя"
-				onChange={formik.handleChange("name")}
-				value={formik.values.name}
-				error={formik.errors.name}
+				placeholder="Иванов Иван Иванович"
+				{...register("name", {
+					required: "Заполните поле",
+				})}
+				error={errors.name?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="text"
 				label="Название организации"
-				onChange={formik.handleChange("orgName")}
-				value={formik.values.orgName}
-				error={formik.errors.orgName}
+				placeholder="Уральский федеральный университет"
+				{...register("orgName", {
+					required: "Заполните поле",
+				})}
+				error={errors.orgName?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="text"
 				label="Отделение организации"
-				onChange={formik.handleChange("orgBranch")}
-				value={formik.values.orgBranch}
-				error={formik.errors.orgBranch}
+				placeholder="Институт радиоэлектроники и информационных технологий - РтФ"
+				{...register("orgBranch", {
+					required: "Заполните поле",
+				})}
+				error={errors.orgBranch?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				type="text"
 				label="Деятельность организации"
-				onChange={formik.handleChange("orgActivity")}
-				value={formik.values.orgActivity}
-				error={formik.errors.orgActivity}
+				placeholder="Образование"
+				{...register("orgActivity", {
+					required: "Заполните поле",
+				})}
+				error={errors.orgActivity?.message}
 			/>
 			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
-				<Button onClick={() => {}} isFilled className={styles.formButton} type="submit">
+				<UrfuButton type="submit">
 					Зарегистрироваться
-				</Button>
-				<Button className={styles.formButton} onClick={() => changeForm()} isColoredText>
+				</UrfuButton>
+				<UrfuButton onClick={() => changeForm()} outline={true}>
 					Авторизоваться
-				</Button>
+				</UrfuButton>
 			</div>
 		</form>
 	);

@@ -1,0 +1,35 @@
+.urfuCheckbox {
+  display: flex;
+  align-items: center;
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--urfu-blue);
+    border-radius: 2px;
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+
+    &:checked {
+      background-color: var(--urfu-blue);
+    }
+
+    &:checked::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 6px;
+      width: 6px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  span {
+    margin-left: 8px;
+  }
+}

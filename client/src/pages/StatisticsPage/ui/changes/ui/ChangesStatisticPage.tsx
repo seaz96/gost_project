@@ -1,7 +1,7 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import ChangesStatisticForm from "../../../../../components/ChangesStatisticForm/ChangesStatisticForm.tsx";
 import ChangesStatisticTable from "../../../../../components/ChangesStatisticTable/ChangesStatisticTable.tsx";
-import type {GostChanges} from "../../../../../entities/gost/gostModel.ts";
+import type { GostChanges } from "../../../../../entities/gost/gostModel.ts";
 import styles from "./ChangesStatisticPage.module.scss";
 
 const ChangesStatisticPage = () => {
@@ -23,11 +23,7 @@ const ChangesStatisticPage = () => {
 	return (
 		<section>
 			<section>
-				<ChangesStatisticForm
-					handleSubmit={handleSubmit}
-					startDateSubmit={setStartDate}
-					endDateSubmit={setEndDate}
-				/>
+				<ChangesStatisticForm handleSubmit={handleSubmit} startDateSubmit={setStartDate} endDateSubmit={setEndDate} />
 			</section>
 			{changesData && (
 				<section className={"verticalPadding"} ref={reportRef}>
