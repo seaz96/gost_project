@@ -1,57 +1,57 @@
-import type React from "react";
-import { useState } from "react";
-import { Button, Input } from "../../shared/components";
-
+import { useForm } from "react-hook-form";
+import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuTextInput from "../../shared/components/Input/UrfuTextInput.tsx";
 import styles from "./ResetPasswordForm.module.scss";
 
 interface ResetPasswordFormProps {
-	handleSubmit: Function;
+	handleSubmit: (oldPassword: string, newPassword: string) => void;
 }
 
-const ResetPasswordForm: React.FC<ResetPasswordFormProps> = (props) => {
-	const { handleSubmit } = props;
+interface FormData {
+	oldPassword: string;
+	newPassword: string;
+	repeatedNewPassword: string;
+}
 
-	const [changePasswordData, setChangePasswordData] = useState({
-		oldPassword: "",
-		newPassword: "",
-		repeatedNewPassword: "",
-	});
+const ResetPasswordForm = ({ handleSubmit }: ResetPasswordFormProps) => {
+	const { register, handleSubmit: handleFormSubmit, formState: { errors } } = useForm<FormData>();
 
-	const validateData = (event: React.FormEvent) => {
-		event.preventDefault();
-
-		if (changePasswordData.newPassword === changePasswordData.repeatedNewPassword)
-			handleSubmit(changePasswordData.oldPassword, changePasswordData.newPassword);
+	const validateData = (data: FormData) => {
+		if (data.newPassword === data.repeatedNewPassword) {
+			handleSubmit(data.oldPassword, data.newPassword);
+		}
 	};
 
 	return (
-		<form className={styles.form} onSubmit={(event) => validateData(event)}>
-			<Input
+		<form className={styles.form} onSubmit={handleFormSubmit(validateData)}>
+			<UrfuTextInput
 				label="Старый пароль"
 				type="password"
-				value={changePasswordData.oldPassword}
-				onChange={(value: string) => setChangePasswordData({ ...changePasswordData, oldPassword: value })}
+				{...register("oldPassword", {
+					required: "Старый пароль обязателен",
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+				})}
+				error={errors.oldPassword?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				label="Новый пароль"
 				type="password"
-				value={changePasswordData.newPassword}
-				onChange={(value: string) => setChangePasswordData({ ...changePasswordData, newPassword: value })}
+				{...register("newPassword", {
+					required: "Новый пароль обязателен",
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+				})}
+				error={errors.newPassword?.message}
 			/>
-			<Input
+			<UrfuTextInput
 				label="Повторите новый пароль"
 				type="password"
-				value={changePasswordData.repeatedNewPassword}
-				onChange={(value: string) =>
-					setChangePasswordData({
-						...changePasswordData,
-						repeatedNewPassword: value,
-					})
-				}
+				{...register("repeatedNewPassword", {
+					required: "Повторите новый пароль",
+					minLength: { value: 7, message: "Пароль должен быть не менее 7 символов" }
+				})}
+				error={errors.repeatedNewPassword?.message}
 			/>
-			<Button onClick={() => {}} className={styles.formButton} isFilled type="submit">
-				Сохранить
-			</Button>
+			<UrfuButton type="submit">Сохранить</UrfuButton>
 		</form>
 	);
 };

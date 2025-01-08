@@ -10,8 +10,12 @@ const ResetPasswordPage = () => {
 	const [resetPassword] = useResetPasswordMutation();
 
 	const handleSubmit = async (oldPassword: string, newPassword: string) => {
+		//TODO: stay on page if error
+		if (!user) {
+			return;
+		}
 		await resetPassword({
-			login: user?.login!,
+			login: user.login,
 			old_password: oldPassword,
 			new_password: newPassword,
 		});
@@ -19,7 +23,8 @@ const ResetPasswordPage = () => {
 	};
 
 	return (
-		<div>
+		<div className="container">
+			<h1 className="verticalPadding">Сброс пароля</h1>
 			<section className={styles.gostSection}>
 				<ResetPasswordForm handleSubmit={handleSubmit} />
 			</section>
