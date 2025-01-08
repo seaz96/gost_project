@@ -166,7 +166,7 @@ const GostReview = (props: GostReviewProps) => {
 							Заменить
 						</UrfuButton>
 						<UrfuButton onClick={() => navigate(`/gost-actualize-page/${gostId}`)} size={"small"} outline={true}>
-							Актуализировать данные
+							Актуализировать
 						</UrfuButton>
 					</div>
 				)}
