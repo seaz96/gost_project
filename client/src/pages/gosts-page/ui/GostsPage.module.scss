@@ -17,5 +17,7 @@
           color: var(--urfu-transparent-black);
         }
     }
+  & {
     animation: pulse 2s infinite;
+  }
 }

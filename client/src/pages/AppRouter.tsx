@@ -1,26 +1,21 @@
-import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "../components/Header/Header";
 import { useFetchUserQuery } from "../features/api/apiSlice.ts";
+import {LoginPage} from "./LoginPage";
+import {StatisticsPage} from "./StatisticsPage";
+import {GostActualizePage} from "./gost-actualize-page";
+import {GostEditPage} from "./gost-edit-page";
+import {GostReplacePage} from "./gost-replace-page";
+import {GostReviewPage} from "./gost-review-page";
+import {GostsPage} from "./gosts-page";
+import {ResetPasswordPage} from "./reset-password-page";
+import {SelfEditPage} from "./self-edit-page";
+import {UserEditPage} from "./user-edit-page";
+import {UsersPage} from "./users-page";
 
-const LoginPage = lazy(() => import("./LoginPage").then((module) => ({ default: module.LoginPage })));
-const GostsPage = lazy(() => import("./gosts-page").then((module) => ({ default: module.GostsPage })));
-const GostReviewPage = lazy(() => import("./gost-review-page").then((module) => ({ default: module.GostReviewPage })));
-const GostEditorPage = lazy(() => import("./GostCreatorPage").then((module) => ({ default: module.GostCreatorPage })));
-const UsersPage = lazy(() => import("./users-page").then((module) => ({ default: module.UsersPage })));
-const ResetPasswordPage = lazy(() =>
-	import("./reset-password-page").then((module) => ({ default: module.ResetPasswordPage })),
-);
-const GostEditPage = lazy(() => import("./gost-edit-page").then((module) => ({ default: module.GostEditPage })));
-const UserEditPage = lazy(() => import("./user-edit-page").then((module) => ({ default: module.UserEditPage })));
-const StatisticsPage = lazy(() => import("./StatisticsPage").then((module) => ({ default: module.StatisticsPage })));
-const GostActualizePage = lazy(() =>
-	import("./gost-actualize-page").then((module) => ({ default: module.GostActualizePage })),
-);
-const GostReplacePage = lazy(() =>
-	import("./gost-replace-page").then((module) => ({ default: module.GostReplacePage })),
-);
-const SelfEditPage = lazy(() => import("./self-edit-page").then((module) => ({ default: module.SelfEditPage })));
+function GostEditorPage() {
+	return null;
+}
 
 const AppRouter = () => {
 	const token = localStorage.getItem("jwt_token");
