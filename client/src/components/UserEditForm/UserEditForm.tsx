@@ -35,6 +35,8 @@ const UserEditForm = (props: UserEditFormProps) => {
 
 	return (
 		<form className={styles.form} onSubmit={handleFormSubmit((data) => handleSubmit(data))}>
+
+			<UrfuTextInput label="ID" disabled={true} type="text" value={userData.id} />
 			<UrfuTextInput label="ФИО пользователя" type="text" {...register("name")} />
 			<UrfuTextInput
 				label="Логин"

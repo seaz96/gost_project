@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import styles from './UrfuTextInput.module.scss';
 
 interface UrfuTextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -6,12 +6,17 @@ interface UrfuTextInputProps extends React.InputHTMLAttributes<HTMLInputElement>
     error?: string;
 }
 
-const UrfuTextInput = forwardRef<HTMLInputElement, UrfuTextInputProps>(({ label, error, ...props }, ref) => {
+const UrfuTextInput = forwardRef<HTMLInputElement, UrfuTextInputProps>(({ label, error, id, ...props }, ref) => {
+    const generatedId = useId();
+    //FIXME
+    const inputId = id || generatedId;
+
     return (
         <div className={styles.inputContainer}>
-            {label && <label htmlFor={props.id} className={styles.label}>{label}</label>}
+            {label && <label htmlFor={inputId} className={styles.label}>{label}</label>}
             <input
                 ref={ref}
+                id={inputId}
                 className={`${styles.input} ${error ? styles.error : ''}`}
                 {...props}
             />

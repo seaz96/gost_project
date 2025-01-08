@@ -1,7 +1,7 @@
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import UserEditForm from "../../../components/UserEditForm/UserEditForm.tsx";
-import type { UserEditType } from "../../../components/UserEditForm/userEditModel.ts";
-import { useEditUserMutation, useFetchUserInfoQuery, useToggleAdminMutation } from "../../../features/api/apiSlice";
+import type {UserEditType} from "../../../components/UserEditForm/userEditModel.ts";
+import {useEditUserMutation, useFetchUserInfoQuery, useToggleAdminMutation} from "../../../features/api/apiSlice";
 import styles from "./UserEditPage.module.scss";
 
 const UserEditPage = () => {
@@ -27,7 +27,10 @@ const UserEditPage = () => {
 
 	if (user)
 		return (
-			<div>
+			<div className={"container"}>
+				<h1 className={"verticalPadding"}>
+					Редактирование пользователя
+				</h1>
 				<section className={styles.userEditSection}>
 					<UserEditForm handleSubmit={handleUserEdit} userData={user} id={user.id} />
 				</section>
