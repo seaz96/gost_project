@@ -41,5 +41,5 @@ public record AddOrUpdateDocumentRequest
     
     public IFormFile? File { get; set; }
 
-    public List<string> References { get; init; }
+    public List<string>? References { get; init; }
 }

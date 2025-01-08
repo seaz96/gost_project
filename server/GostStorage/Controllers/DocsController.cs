@@ -29,12 +29,14 @@ public class DocsController(
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
     [HttpPost("add")]
-    public async Task<ActionResult<long>> AddDocument([FromBody] AddOrUpdateDocumentRequest dto)
+    public async Task<ActionResult<long>> AddDocument([FromForm] AddOrUpdateDocumentRequest dto)
     {
         var newField = mapper.Map<PrimaryField>(dto);
 
         var docId = await documentsService.AddDocumentAsync(newField, DocumentStatus.Valid);
-        await referencesService.AddReferencesAsync(dto.References, docId);
+        
+        if (dto.References is not null && dto.References.Count > 0)
+            await referencesService.AddReferencesAsync(dto.References, docId);
         
         if (dto.File is not null)
             await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
@@ -71,12 +73,14 @@ public class DocsController(
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
     [HttpPut("update/{docId}")]
-    public async Task<IActionResult> Update([FromBody] AddOrUpdateDocumentRequest dto, long docId)
+    public async Task<IActionResult> Update([FromForm] AddOrUpdateDocumentRequest dto, long docId)
     {
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.UpdateAsync(updatedField, docId);
-        await referencesService.UpdateReferencesAsync(dto.References, docId);
+        
+        if (dto.References is not null && dto.References.Count > 0)
+            await referencesService.UpdateReferencesAsync(dto.References, docId);
         
         if (dto.File is not null)
             await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
@@ -99,12 +103,14 @@ public class DocsController(
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
     [HttpPut("actualize/{docId}")]
-    public async Task<IActionResult> Actualize([FromBody] AddOrUpdateDocumentRequest dto, long docId)
+    public async Task<IActionResult> Actualize([FromForm] AddOrUpdateDocumentRequest dto, long docId)
     {
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
         var result = await fieldsService.ActualizeAsync(updatedField, docId);
-        await referencesService.UpdateReferencesAsync(dto.References, docId);
+        
+        if (dto.References is not null && dto.References.Count > 0)
+            await referencesService.UpdateReferencesAsync(dto.References, docId);
         
         if (dto.File is not null)
             await UploadFileForDocumentAsync(new UploadFileRequest { File = dto.File }, docId);
