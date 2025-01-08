@@ -149,21 +149,25 @@ const GostReview = (props: GostReviewProps) => {
 				<h1 className="verticalPadding">Просмотр документа {gost.primary.designation}</h1>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
+						{gost.status !== "Valid" && (
+							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
+								Восстановить
+							</UrfuButton>
+						)}
 						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
 							Редактировать
 						</UrfuButton>
 						<UrfuButton onClick={() => setDeleteModalOpen(true)} size={"small"} outline={true}>
 							Удалить
 						</UrfuButton>
-						{gost.status === "Canceled" ? (
-							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
-								Восстановить
-							</UrfuButton>
-						) : (
-							<UrfuButton onClick={() => setCancelModalOpen(true)} size={"small"} outline={true}>
-								Отменить
-							</UrfuButton>
-						)}
+						<UrfuButton
+							disabled={gost.status === "Canceled"}
+							onClick={() => setCancelModalOpen(true)}
+							size={"small"}
+							outline={true}
+						>
+							Отменить
+						</UrfuButton>
 						<UrfuButton
 							disabled={gost.status === "Replaced"}
 							onClick={() => setReplaceModalOpen(true)}
