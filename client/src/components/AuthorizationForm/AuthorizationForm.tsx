@@ -1,83 +1,67 @@
-import { useFormik } from "formik";
-import { Input } from "../../shared/components";
+import { useForm } from "react-hook-form";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuTextInput from "../../shared/components/Input/UrfuTextInput.tsx";
 import styles from "./AuthorizationForm.module.scss";
 import type { UserAuthorization } from "./authorizationModel.ts";
 
 interface AuthorizationFormProps {
-	changeForm: () => void;
-	onSubmit: (user: UserAuthorization) => Promise<void>;
-	error: string | null;
+  changeForm: () => void;
+  onSubmit: (user: UserAuthorization) => Promise<void>;
+  error: string | null;
 }
 
 const AuthorizationForm: React.FC<AuthorizationFormProps> = (props) => {
-	const { changeForm, onSubmit, error } = props;
+  const { changeForm, onSubmit, error } = props;
 
-	const validate = (values: { login: string; password: string }) => {
-		const errors: { login?: string; password?: string } = {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<UserAuthorization>({
+    defaultValues: {
+      login: "",
+      password: ""
+    }
+  });
 
-		if (!values.login) {
-			errors.login = "Заполните поле";
-		} /* else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.login)) {
-      errors.login = 'Некорректный логин';
-    } */
-
-		if (values.password.length < 7) {
-			errors.password = "Пароль должен быть не меньше 7 символов";
-		}
-
-		return errors;
-	};
-
-	const formik = useFormik({
-		initialValues: {
-			login: "",
-			password: "",
-		},
-		validate,
-		onSubmit: (values) => {
-			onSubmit(values);
-		},
-	});
-
-	return (
-		<form
-			className={styles.form}
-			onSubmit={(event) => {
-				event.preventDefault();
-				formik.handleSubmit();
-			}}
-		>
-			<Input
-				//TODO: to type email
-				type="text"
-				id="login"
-				name="login"
-				label="Логин"
-				placeholder="user@example.com"
-				onChange={formik.handleChange("login")}
-				value={formik.values.login}
-				error={formik.errors.login}
-			/>
-			<Input
-				type="password"
-				label="Пароль"
-				id="password"
-				name="password"
-				placeholder=""
-				value={formik.values.password}
-				onChange={formik.handleChange("password")}
-				error={formik.errors.password}
-			/>
-			{error && <p className={styles.error}>{error}</p>}
-			<div className={styles.buttonsContainer}>
-				<UrfuButton type="submit">Войти</UrfuButton>
-				<UrfuButton onClick={() => changeForm()} outline={true}>
-					Зарегистрироваться
-				</UrfuButton>
-			</div>
-		</form>
-	);
+  return (
+    <form 
+      className={styles.form}
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <UrfuTextInput
+        type="text"
+        id="login"
+        label="Логин"
+        placeholder="user@example.com"
+        {...register("login", {
+          required: "Заполните поле"
+        })}
+        error={errors.login?.message}
+      />
+      <UrfuTextInput
+        type="password"
+        label="Пароль"
+        id="password"
+        placeholder=""
+        {...register("password", {
+          required: "Заполните поле",
+          minLength: {
+            value: 7,
+            message: "Пароль должен быть не меньше 7 символов"
+          }
+        })}
+        error={errors.password?.message}
+      />
+      {error && <p className={styles.error}>{error}</p>}
+      <div className={styles.buttonsContainer}>
+        <UrfuButton type="submit">Войти</UrfuButton>
+        <UrfuButton onClick={() => changeForm()} outline={true}>
+          Зарегистрироваться
+        </UrfuButton>
+      </div>
+    </form>
+  );
 };
 
 export default AuthorizationForm;
