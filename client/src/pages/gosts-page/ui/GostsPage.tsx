@@ -1,17 +1,20 @@
+import { Add } from "@mui/icons-material";
 import useGostsWithPagination from "hooks/useGostsWithPagination.ts";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Link} from "react-router-dom";
-import {useAppSelector} from "../../../app/hooks.ts";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../../../app/hooks.ts";
 import Filter from "../../../components/Filter/Filter.tsx";
 import FilterButton from "../../../components/FilterButton/FilterButton.tsx";
 import FilterTabs from "../../../components/FilterTabs/FilterTabs.tsx";
 import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
+import SearchFilters from "../../../components/SearchFilters/SearchFilters";
 import {
 	AdoptionLevelToRu,
-	HarmonizationToRu,type adoptionLevel, 
+	HarmonizationToRu,
+	type adoptionLevel,
+	type documentStatus,
 	type harmonization,
-	type status 
 } from "../../../entities/gost/gostModel.ts";
 import UrfuCheckbox from "../../../shared/components/Input/UrfuCheckbox.tsx";
 import styles from "./GostsPage.module.scss";
@@ -23,6 +26,7 @@ const GostsPage = () => {
 	const user = useAppSelector((s) => s.user.user);
 	const contentRef = useRef<HTMLDivElement>(null);
 
+	//TODO: debouncing
 	// biome-ignore lint/correctness/useExhaustiveDependencies: hook
 	useEffect(() => {
 		if (contentRef.current && contentRef.current.clientHeight < window.innerHeight) {
@@ -34,22 +38,27 @@ const GostsPage = () => {
 	return (
 		<main className="container">
 			<h1 className="verticalPadding">Документы</h1>
-			{(user?.role === "Admin" || user?.role === "Heisenberg") && (
-				<Link to="/gost-editor" className="verticalPadding">
-					Создать документ
-				</Link>
-			)}
+			{(user?.role === "Admin" || user?.role === "Heisenberg") && <CreateDocumentLink />}
 			<section className="verticalPadding">
-				<Filter filterSubmit={setGostParams}/>
+				<Filter filterSubmit={setGostParams} />
+				<SearchFilters 
+					filters={gostsParams.SearchFilters ?? {}}
+					onChange={(newFilters) => {
+						setGostParams({
+							...gostsParams,
+							SearchFilters: newFilters
+						});
+					}}
+				/>
 			</section>
 
 			<section className="verticalPadding">
 				<FilterTabs
 					tabs={[
-						{title: "Все", value: "All"},
-						{title: "Действующие", value: "Valid"},
-						{title: "Отменённые", value: "Canceled"},
-						{title: "Заменённые", value: "Replaced"},
+						{ title: "Все", value: "All" },
+						{ title: "Действующие", value: "Valid" },
+						{ title: "Отменённые", value: "Canceled" },
+						{ title: "Заменённые", value: "Replaced" },
 					]}
 					activeTabs={[gostsParams.SearchFilters?.Status ?? "All"]}
 					setActiveTabs={(activeTabs) =>
@@ -57,7 +66,7 @@ const GostsPage = () => {
 							...gostsParams,
 							SearchFilters: {
 								...gostsParams.SearchFilters,
-								Status: activeTabs[0] !== "All" ? (activeTabs[0] as status) : null,
+								Status: activeTabs[0] !== "All" ? (activeTabs[0] as documentStatus) : null,
 							},
 						})
 					}
@@ -66,7 +75,7 @@ const GostsPage = () => {
 			<section className={`verticalPadding ${styles.filters}`}>
 				<FilterButton
 					title="Уровень гармонизации"
-					options={Object.entries(HarmonizationToRu).map(([value, label]) => ({value, label}))}
+					options={Object.entries(HarmonizationToRu).map(([value, label]) => ({ value, label }))}
 					selectedOptions={gostsParams.SearchFilters?.Harmonization ? [gostsParams.SearchFilters.Harmonization] : []}
 					setSelectedOptions={(options) => {
 						setGostParams({
@@ -80,7 +89,7 @@ const GostsPage = () => {
 				/>
 				<FilterButton
 					title="Уровень принятия"
-					options={Object.entries(AdoptionLevelToRu).map(([value, label]) => ({value, label}))}
+					options={Object.entries(AdoptionLevelToRu).map(([value, label]) => ({ value, label }))}
 					selectedOptions={gostsParams.SearchFilters?.AdoptionLevel ? [gostsParams.SearchFilters.AdoptionLevel] : []}
 					setSelectedOptions={(options) => {
 						setGostParams({
@@ -90,7 +99,8 @@ const GostsPage = () => {
 								AdoptionLevel: (options[0] as adoptionLevel) ?? null,
 							},
 						});
-					}}/>
+					}}
+				/>
 			</section>
 			<section className="verticalPadding">
 				<UrfuCheckbox
@@ -98,7 +108,8 @@ const GostsPage = () => {
 					checked={useSmartSearch}
 					onChange={(event) => {
 						setUseSmartSearch(event.target.checked);
-					}}/>
+					}}
+				/>
 			</section>
 			<div className="verticalPadding">Найдено {count} документов</div>
 			<div ref={contentRef}>
@@ -107,10 +118,10 @@ const GostsPage = () => {
 						dataLength={countFetched}
 						next={fetchGostsData}
 						hasMore={count > countFetched}
-						loader={<TableLoader/>}
-						endMessage={<TableEnd/>}
+						loader={<TableLoader />}
+						endMessage={<TableEnd />}
 					>
-						<GostsTable gosts={gosts} gostsParams={gostsParams}/>
+						<GostsTable gosts={gosts} gostsParams={gostsParams} />
 					</InfiniteScroll>
 				</section>
 			</div>
@@ -124,6 +135,17 @@ const TableEnd = () => {
 
 const TableLoader = () => {
 	return <div className={styles.tableLoad}>Загрузка</div>;
+};
+
+const CreateDocumentLink = () => {
+	return (
+		<Link to="/new" className={styles.addDocument}>
+			<span>
+				<Add />
+			</span>
+			Создать документ
+		</Link>
+	);
 };
 
 export default GostsPage;

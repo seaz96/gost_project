@@ -1,12 +1,9 @@
 import react from "@vitejs/plugin-react";
-import {defineConfig} from "vite";
+import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-	plugins: [
-		react(),
-		tsconfigPaths(),
-	],
+	plugins: [react(), tsconfigPaths()],
 	server: {
 		port: 3000,
 	},
@@ -21,8 +18,8 @@ export default defineConfig({
 		rollupOptions: {
 			output: {
 				manualChunks(id) {
-					if (id.includes('node_modules')) {
-						return 'vendor';
+					if (id.includes("node_modules")) {
+						return "vendor";
 					}
 				},
 			},

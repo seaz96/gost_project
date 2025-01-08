@@ -7,17 +7,19 @@ interface UrfuButtonProps {
 	size?: "medium" | "large" | "small";
 	type?: "button" | "submit" | "reset";
 	outline?: boolean;
+	disabled?: boolean;
 	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const UrfuButton: React.FC<UrfuButtonProps> = ({
+const UrfuButton = ({
 	children,
 	color = "blue",
 	size = "medium",
 	outline = false,
 	onClick,
+	disabled = false,
 	type = "button",
-}) => {
+}: UrfuButtonProps) => {
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		if (onClick) {
 			onClick(event);
@@ -27,6 +29,7 @@ const UrfuButton: React.FC<UrfuButtonProps> = ({
 	return (
 		<button
 			type={type}
+			disabled={disabled}
 			className={classNames(styles.urfuButton, styles[color], styles[size], { [styles.outline]: outline })}
 			onClick={handleClick}
 		>

@@ -1,0 +1,36 @@
+.textAreaContainer {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.textArea {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--urfu-transparent-black);
+  background: none;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, color 0.3s;
+  resize: none;
+}
+
+.textArea:focus {
+  border-color: var(--urfu-blue);
+}
+
+.textArea.error {
+  border-color: var(--urfu-red);
+}
+
+.textArea:disabled {
+  opacity: 0.8;
+}
+
+.errorMessage {
+  color: var(--urfu-red);
+  font-size: 12px;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+}

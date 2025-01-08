@@ -31,6 +31,10 @@
   border-bottom-color: var(--input-error-color);
 }
 
+.input:disabled {
+  opacity: 0.8;
+}
+
 .errorMessage {
   color: var(--input-error-color);
   font-size: 12px;

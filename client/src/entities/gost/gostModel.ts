@@ -1,22 +1,28 @@
-export type status = "Valid" | "Canceled" | "Replaced" | "Inactive";
+export type documentStatus = "Valid" | "Canceled" | "Replaced" | "Inactive";
 export type harmonization = "Unharmonized" | "Modified" | "Harmonized";
 export type adoptionLevel = "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate";
 
 export type GostSearchParams = {
-	text: string;
+	Text: string;
 	SearchFilters: {
-		CodeOks: string;
-		AcceptanceYear: number;
-		CommissionYear: number;
-		Author: string;
-		AcceptedFirstTimeOrReplaced: string;
-		KeyWords: string;
+		CodeOks: string | null;
+		AcceptanceYear: number | null;
+		CommissionYear: number | null;
+		Author: string | null;
+		AcceptedFirstTimeOrReplaced: string | null;
+		KeyWords: string | null;
 		AdoptionLevel: adoptionLevel | null;
-		Status: status | null;
+		Status: documentStatus | null;
 		Harmonization: harmonization | null;
+		Changes: string | null;
+		Amendments: string | null;
 	};
 	Limit: number;
 	Offset: number;
+};
+
+export type GostAddModel = GostRequestModel & {
+	file?: File;
 };
 
 export type GostRequestModel = {
@@ -35,14 +41,14 @@ export type GostRequestModel = {
 	documentText: string;
 	changes: string;
 	amendments: string;
-	status: status;
+	status: documentStatus;
 	harmonization: harmonization;
 	references: string[];
 };
 
 export type GostFetchModel = {
 	docId: number;
-	status: status;
+	status: documentStatus;
 	primary: GostFieldsWithId;
 	actual: GostFieldsWithId;
 	references: GostReference[];
@@ -73,7 +79,7 @@ export type GostFieldsWithId = {
 export type GostReference = {
 	id: number;
 	designation: string;
-	status: status;
+	status: documentStatus;
 	actualFieldId: number;
 	primaryFieldId: number;
 };

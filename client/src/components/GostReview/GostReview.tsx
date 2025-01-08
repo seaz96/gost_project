@@ -29,23 +29,25 @@ const GostReview = (props: GostReviewProps) => {
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [recoverModalOpen, setRecoverModalOpen] = useState(false);
+	const [replaceModalOpen, setReplaceModalOpen] = useState(false);
 
 	const [deleteGost] = useDeleteGostMutation();
 	const [changeStatus] = useChangeGostStatusMutation();
 
 	const onDeleteSubmit = async () => {
-		await deleteGost(gostId.toString());
-		navigate("/");
+		await deleteGost(gostId.toString()).then(() => navigate("/"));
 	};
 
 	const recoverDoc = async () => {
-		await changeStatus({ id: gostId, status: 0 });
-		navigate("/");
+		await changeStatus({ id: gostId, status: "Valid" }).then(() => navigate("/"));
 	};
 
 	const cancelDoc = async () => {
-		await changeStatus({ id: gostId, status: 1 });
-		navigate("/");
+		await changeStatus({ id: gostId, status: "Canceled" }).then(() => navigate("/"));
+	};
+
+	const replaceDoc = async () => {
+		await changeStatus({ id: gostId, status: "Replaced" }).then(() => navigate("/new"));
 	};
 
 	const renderReferences = (refs: typeof gost.references) => (
@@ -147,26 +149,35 @@ const GostReview = (props: GostReviewProps) => {
 				<h1 className="verticalPadding">Просмотр документа {gost.primary.designation}</h1>
 				{(user?.role === "Admin" || user?.role === "Heisenberg") && (
 					<div className={styles.buttonsContainer}>
+						{gost.status !== "Valid" && (
+							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
+								Восстановить
+							</UrfuButton>
+						)}
 						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
 							Редактировать
 						</UrfuButton>
 						<UrfuButton onClick={() => setDeleteModalOpen(true)} size={"small"} outline={true}>
 							Удалить
 						</UrfuButton>
-						{gost.status === "Canceled" ? (
-							<UrfuButton onClick={() => setRecoverModalOpen(true)} size={"small"} outline={true}>
-								Восстановить
-							</UrfuButton>
-						) : (
-							<UrfuButton onClick={() => setCancelModalOpen(true)} size={"small"} outline={true}>
-								Отменить
-							</UrfuButton>
-						)}
-						<UrfuButton onClick={() => navigate(`/gost-replace-page/${gostId}`)} size={"small"} outline={true}>
+						<UrfuButton
+							disabled={gost.status === "Canceled"}
+							onClick={() => setCancelModalOpen(true)}
+							size={"small"}
+							outline={true}
+						>
+							Отменить
+						</UrfuButton>
+						<UrfuButton
+							disabled={gost.status === "Replaced"}
+							onClick={() => setReplaceModalOpen(true)}
+							size={"small"}
+							outline={true}
+						>
 							Заменить
 						</UrfuButton>
-						<UrfuButton onClick={() => navigate(`/gost-actualize-page/${gostId}`)} size={"small"} outline={true}>
-							Актуализировать данные
+						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}?actualize`)} size={"small"} outline={true}>
+							Актуализировать
 						</UrfuButton>
 					</div>
 				)}
@@ -181,17 +192,18 @@ const GostReview = (props: GostReviewProps) => {
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
 			<RecoverCard isOpen={recoverModalOpen} setIsOpen={setRecoverModalOpen} onSubmitFunction={recoverDoc} />
+			<ReplaceCard isOpen={replaceModalOpen} setIsOpen={setReplaceModalOpen} onSubmitFunction={replaceDoc} />
 		</>
 	);
 };
 
-interface DeleteCardProps {
+interface CardProps {
 	isOpen: boolean;
 	setIsOpen: (isOpen: boolean) => void;
 	onSubmitFunction: () => void;
 }
 
-const DeleteCard = (props: DeleteCardProps) => {
+const DeleteCard = (props: CardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
@@ -207,13 +219,7 @@ const DeleteCard = (props: DeleteCardProps) => {
 	);
 };
 
-interface RecoverCardProps {
-	isOpen: boolean;
-	setIsOpen: (isOpen: boolean) => void;
-	onSubmitFunction: () => void;
-}
-
-const RecoverCard = (props: RecoverCardProps) => {
+const RecoverCard = (props: CardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
@@ -229,13 +235,7 @@ const RecoverCard = (props: RecoverCardProps) => {
 	);
 };
 
-interface CancelCardProps {
-	isOpen: boolean;
-	setIsOpen: (isOpen: boolean) => void;
-	onSubmitFunction: () => void;
-}
-
-const CancelCard = (props: CancelCardProps) => {
+const CancelCard = (props: CardProps) => {
 	const { isOpen, setIsOpen, onSubmitFunction } = props;
 
 	return (
@@ -245,6 +245,22 @@ const CancelCard = (props: CancelCardProps) => {
 			title="Отменить ГОСТ?"
 			description="Если вы отмените ГОСТ, он перенесется в архив, а его статус поменяться на 'Отменен'"
 			primaryActionText="Отменить ГОСТ"
+			primaryAction={onSubmitFunction}
+			secondaryActionText="Назад"
+		/>
+	);
+};
+
+const ReplaceCard = (props: CardProps) => {
+	const { isOpen, setIsOpen, onSubmitFunction } = props;
+
+	return (
+		<Modal
+			isOpen={isOpen}
+			setIsOpen={setIsOpen}
+			title="Заменить ГОСТ?"
+			description="Если вы замените ГОСТ, его статус поменяется на 'Заменен', страница будет перенаправлена на страницу создания нового ГОСТа"
+			primaryActionText="Заменить ГОСТ"
 			primaryAction={onSubmitFunction}
 			secondaryActionText="Назад"
 		/>

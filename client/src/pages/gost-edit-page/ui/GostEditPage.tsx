@@ -1,36 +1,38 @@
 import classNames from "classnames";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import GostForm from "../../../components/GostForm/GostForm.tsx";
-import type { GostRequestModel } from "../../../entities/gost/gostModel.ts";
-import { useFetchGostQuery, useUpdateGostMutation, useUploadGostFileMutation } from "../../../features/api/apiSlice";
+import type { GostAddModel } from "../../../entities/gost/gostModel.ts";
+import { useFetchGostQuery, useUpdateGostMutation } from "../../../features/api/apiSlice";
 import styles from "./GostEditPage.module.scss";
 
 const GostEditPage = () => {
 	const navigate = useNavigate();
 	const id = useParams().id;
-	const { data: gost } = useFetchGostQuery(id!);
+	const [searchParams] = useSearchParams();
+	const isActualize = searchParams.has("actualize");
+
+	if (!id) {
+		navigate("/");
+		return null;
+	}
+
+	const { data: gost } = useFetchGostQuery(id);
 	const [updateGost] = useUpdateGostMutation();
-	const [uploadFile] = useUploadGostFileMutation();
 
-	const editOldDocument = async (gostData: GostRequestModel, file: File) => {
-		await updateGost({ id: id!, gost: gostData });
-		await handleUploadFile(file, id);
-		navigate(`/gost-review/${id}`);
-	};
-
-	const handleUploadFile = async (file: File, docId: string | undefined) => {
-		if (docId) {
-			await uploadFile({ docId, file });
-		}
+	const handleSubmit = async (gostData: GostAddModel) => {
+		await updateGost({ id: id, gost: gostData, actualize: isActualize }).then(() => navigate(`/gost-review/${id}`));
 	};
 
 	if (gost)
 		return (
 			<div className="container">
+				<h1 className={"verticalPadding"}>{isActualize ? "Актуализировать" : "Редактировать"} документ</h1>
+				<Link className={styles.back} to={`/gost-review/${id}`}>
+					Вернуться к просмотру
+				</Link>
 				<section className={classNames("contentContainer", styles.reviewSection)}>
 					<GostForm
-						handleUploadFile={handleUploadFile}
-						handleSubmit={editOldDocument}
+						handleSubmit={handleSubmit}
 						gost={{
 							...gost.primary,
 							status: gost.status,

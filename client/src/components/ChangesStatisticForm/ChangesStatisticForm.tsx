@@ -1,8 +1,9 @@
-import { useState } from "react";
-import type { GostChanges } from "../../entities/gost/gostModel.ts";
+import { useForm } from "react-hook-form";
+import type { GostChanges } from "../../entities/gost/gostModel";
 import { useLazyGetChangesStatsQuery } from "../../features/api/apiSlice";
-import { Input, RadioGroup } from "../../shared/components";
-import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
+import UrfuButton from "../../shared/components/Button/UrfuButton";
+import UrfuTextInput from "../../shared/components/Input/UrfuTextInput";
+import UrfuRadioGroup from "../../shared/components/RadioGroup/UrfuRadioGroup";
 import styles from "./ChangesStatisticForm.module.scss";
 
 interface ChangesStatisticFormProps {
@@ -13,60 +14,60 @@ interface ChangesStatisticFormProps {
 
 const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 	const { handleSubmit, startDateSubmit, endDateSubmit } = props;
-
-	const date = new Date();
-	const [changesData, setChangesData] = useState({
-		status: "Valid",
-		dateFrom: date.toISOString(),
-		dateTo: date.toISOString(),
+	const { register, handleSubmit: handleFormSubmit, watch, setValue, formState: {errors} } = useForm({
+		defaultValues: {
+			status: "Valid",
+			dateFrom: new Date().toISOString(),
+			dateTo: new Date().toISOString(),
+		},
 	});
 
 	const [trigger] = useLazyGetChangesStatsQuery();
 
-	const validateData = (event: React.FormEvent) => {
-		event.preventDefault();
+	const onSubmit = (data: { status: string; dateFrom: string; dateTo: string }) => {
 		trigger({
-			status: changesData.status,
-			StartDate: new Date(changesData.dateFrom).toISOString(),
-			EndDate: new Date(changesData.dateTo).toISOString(),
+			status: data.status,
+			StartDate: new Date(data.dateFrom).toISOString(),
+			EndDate: new Date(data.dateTo).toISOString(),
 		}).then((res) => {
 			if (res.data) {
 				handleSubmit(res.data);
-				startDateSubmit(changesData.dateFrom);
-				endDateSubmit(changesData.dateTo);
+				startDateSubmit(data.dateFrom);
+				endDateSubmit(data.dateTo);
 			}
 		});
 	};
 
 	return (
-		<form className={styles.form} onSubmit={(event) => validateData(event)}>
+		<form className={styles.form} onSubmit={handleFormSubmit(onSubmit)}>
 			<h2>Запрос статистики изменений</h2>
 			<p className={styles.status}>Статус</p>
-			<RadioGroup
-				buttons={[
-					{ id: "Valid", value: "Valid", label: "Действующий" },
-					{ id: "Replaced", value: "Replaced", label: "Заменен" },
-					{ id: "Canceled", value: "Canceled", label: "Отменен" },
+			<UrfuRadioGroup
+				options={[
+					{ value: "Valid", label: "Действующий" },
+					{ value: "Replaced", label: "Заменен" },
+					{ value: "Canceled", label: "Отменен" },
 				]}
 				name="status"
-				value={changesData.status}
-				onChange={(value: string) => {
-					setChangesData({ ...changesData, status: value });
+				value={watch("status")}
+				onChange={(e) => {
+					const { value } = e.target;
+					setValue("status", value);
 				}}
+				ref={register("status").ref}
 			/>
 			<p>Начальная дата изменений</p>
-			<Input
+			<UrfuTextInput
 				type="date"
-				required={true}
-				value={changesData.dateFrom}
-				onChange={(value: string) => setChangesData({ ...changesData, dateFrom: value })}
+				error={errors.dateFrom?.message}
+				{...register("dateFrom", { required: "Начальная дата обязательна" })}
+
 			/>
 			<p>Конечная дата изменений</p>
-			<Input
+			<UrfuTextInput
 				type="date"
-				required={true}
-				value={changesData.dateTo}
-				onChange={(value: string) => setChangesData({ ...changesData, dateTo: value })}
+				error={errors.dateTo?.message}
+				{...register("dateTo", { required: "Конечная дата обязательна" })}
 			/>
 			<UrfuButton type="submit">Сформировать отчёт</UrfuButton>
 		</form>

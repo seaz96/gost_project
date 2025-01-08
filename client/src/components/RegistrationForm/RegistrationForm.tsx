@@ -1,9 +1,9 @@
 import type React from "react";
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import UrfuButton from "../../shared/components/Button/UrfuButton.tsx";
 import UrfuTextInput from "../../shared/components/Input/UrfuTextInput.tsx";
 import styles from "./RegistrationForm.module.scss";
-import type {UserRegistration} from "./registrationModel.ts";
+import type { UserRegistration } from "./registrationModel.ts";
 
 interface RegistrationFormProps {
 	changeForm: () => void;
@@ -114,9 +114,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = (props) => {
 			/>
 			{error && <p className={styles.error}>{error}</p>}
 			<div className={styles.buttonsContainer}>
-				<UrfuButton type="submit">
-					Зарегистрироваться
-				</UrfuButton>
+				<UrfuButton type="submit">Зарегистрироваться</UrfuButton>
 				<UrfuButton onClick={() => changeForm()} outline={true}>
 					Авторизоваться
 				</UrfuButton>

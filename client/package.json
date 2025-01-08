@@ -4,6 +4,7 @@
 	"type": "module",
 	"private": true,
 	"dependencies": {
+		"@hookform/resolvers": "^3.10.0",
 		"@mui/icons-material": "^5.15.15",
 		"@mui/material": "^5.15.4",
 		"@reduxjs/toolkit": "^2.5.0",
@@ -16,7 +17,8 @@
 		"react-router-dom": "^6.21.1",
 		"react-toastify": "^11.0.2",
 		"vite-tsconfig-paths": "^5.1.4",
-		"web-vitals": "^2.1.4"
+		"web-vitals": "^2.1.4",
+		"zod": "^3.24.1"
 	},
 	"scripts": {
 		"dev": "vite",

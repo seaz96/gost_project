@@ -27,7 +27,8 @@ const UserEditPage = () => {
 
 	if (user)
 		return (
-			<div>
+			<div className={"container"}>
+				<h1 className={"verticalPadding"}>Редактирование пользователя</h1>
 				<section className={styles.userEditSection}>
 					<UserEditForm handleSubmit={handleUserEdit} userData={user} id={user.id} />
 				</section>

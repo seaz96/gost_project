@@ -1,6 +1,6 @@
-import type {GostSearchParams, GostViewInfo} from "entities/gost/gostModel";
-import {useFetchGostsCountQuery, useLazyFetchGostsPageQuery} from "features/api/apiSlice";
-import {useEffect, useState} from "react";
+import type { GostSearchParams, GostViewInfo } from "entities/gost/gostModel";
+import { useFetchGostsCountQuery, useLazyFetchGostsPageQuery } from "features/api/apiSlice";
+import { useEffect, useState } from "react";
 
 const PAGE_SIZE = 10;
 const SMART_SEARCH_URL = "/docs/search";
@@ -27,7 +27,7 @@ const useGostsWithPagination = (useSmartSearch: boolean) => {
 	}, [useSmartSearch]);
 
 	const loadMore = () => {
-		setFetching(true)
+		setFetching(true);
 	};
 
 	useEffect(() => {
