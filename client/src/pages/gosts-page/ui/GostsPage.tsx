@@ -11,8 +11,8 @@ import GostsTable from "../../../components/GostsTable/GostsTable.tsx";
 import {
 	AdoptionLevelToRu,
 	HarmonizationToRu,type adoptionLevel, 
-	type harmonization,
-	type status 
+	type documentStatus,
+	type harmonization
 } from "../../../entities/gost/gostModel.ts";
 import UrfuCheckbox from "../../../shared/components/Input/UrfuCheckbox.tsx";
 import styles from "./GostsPage.module.scss";
@@ -56,7 +56,7 @@ const GostsPage = () => {
 							...gostsParams,
 							SearchFilters: {
 								...gostsParams.SearchFilters,
-								Status: activeTabs[0] !== "All" ? (activeTabs[0] as status) : null,
+								Status: activeTabs[0] !== "All" ? (activeTabs[0] as documentStatus) : null,
 							},
 						})
 					}

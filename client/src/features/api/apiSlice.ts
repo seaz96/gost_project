@@ -9,7 +9,7 @@ import type {
 	GostChanges,
 	GostFetchModel,
 	GostViewInfo,
-	GostViews,
+	GostViews, documentStatus,
 } from "../../entities/gost/gostModel.ts";
 import type { User } from "../../entities/user/userModel";
 import { baseURL } from "../../shared/configs/apiConfig.ts";
@@ -171,7 +171,7 @@ export const apiSlice = createApi({
 				};
 			},
 		}),
-		changeGostStatus: builder.mutation<void, { id: string | number; status: number }>({
+		changeGostStatus: builder.mutation<void, { id: string | number; status: documentStatus }>({
 			query: ({ id, status }) => ({
 				url: "/docs/change-status",
 				method: "PUT",

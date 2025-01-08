@@ -1,4 +1,4 @@
-export type status = "Valid" | "Canceled" | "Replaced" | "Inactive";
+export type documentStatus = "Valid" | "Canceled" | "Replaced" | "Inactive";
 export type harmonization = "Unharmonized" | "Modified" | "Harmonized";
 export type adoptionLevel = "International" | "Foreign" | "Regional" | "Organizational" | "National" | "Interstate";
 
@@ -12,7 +12,7 @@ export type GostSearchParams = {
 		AcceptedFirstTimeOrReplaced: string;
 		KeyWords: string;
 		AdoptionLevel: adoptionLevel | null;
-		Status: status | null;
+		Status: documentStatus | null;
 		Harmonization: harmonization | null;
 	};
 	Limit: number;
@@ -39,14 +39,14 @@ export type GostRequestModel = {
 	documentText: string;
 	changes: string;
 	amendments: string;
-	status: status;
+	status: documentStatus;
 	harmonization: harmonization;
 	references: string[];
 };
 
 export type GostFetchModel = {
 	docId: number;
-	status: status;
+	status: documentStatus;
 	primary: GostFieldsWithId;
 	actual: GostFieldsWithId;
 	references: GostReference[];
@@ -77,7 +77,7 @@ export type GostFieldsWithId = {
 export type GostReference = {
 	id: number;
 	designation: string;
-	status: status;
+	status: documentStatus;
 	actualFieldId: number;
 	primaryFieldId: number;
 };
