@@ -1,11 +1,10 @@
-import type { GostSearchParams, GostViewInfo } from "entities/gost/gostModel";
-import { useFetchGostsCountQuery, useFetchGostsPageQuery } from "features/api/apiSlice";
-import { useEffect, useState } from "react";
+import type {GostSearchParams, GostViewInfo} from "entities/gost/gostModel";
+import {useFetchGostsCountQuery, useLazyFetchGostsPageQuery} from "features/api/apiSlice";
+import {useEffect, useRef, useState} from "react";
 
 const PAGE_SIZE = 10;
 const SMART_SEARCH_URL = "/docs/search";
 const SEARCH_URL = "/docs/all";
-
 
 const useGostsWithPagination = (useSmartSearch: boolean) => {
 	const [params, setParams] = useState<GostSearchParams & { text?: string }>(
@@ -13,42 +12,50 @@ const useGostsWithPagination = (useSmartSearch: boolean) => {
 	);
 	const [offset, setOffset] = useState(0);
 	const [accumulatedGosts, setAccumulatedGosts] = useState<GostViewInfo[]>([]);
+	const [fetching, setFetching] = useState(false);
 
-	const { data: currentPageGosts = [] } = useFetchGostsPageQuery({
-		url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
-		offset,
-		limit: PAGE_SIZE,
-		params: params
-	});
+	const [trigger] = useLazyFetchGostsPageQuery();
 
 	const { data: totalCount = 0 } = useFetchGostsCountQuery({
 		url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
-		params: params
+		params: params,
 	});
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: when useSmartSearch changes, reset offset
 	useEffect(() => {
-		console.log('useSmartSearch changed, reset data & offset');
 		handleFilterSubmit(params);
 	}, [useSmartSearch]);
 
-	useEffect(() => {
-		if (!currentPageGosts.length) return;
-		if (offset === 0) {
-			setAccumulatedGosts(currentPageGosts);
-		} else {
-			setAccumulatedGosts((prev) => [
-				...prev,
-				...currentPageGosts.filter((item) => !prev.some((p) => p.id === item.id)),
-			]);
-		}
-	}, [currentPageGosts, offset]);
-
 	const loadMore = () => {
-		setOffset((prev) => prev + PAGE_SIZE);
+		setFetching(true)
 	};
 
+	useEffect(() => {
+		if (!fetching) return;
+		trigger({
+			url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
+			offset: offset,
+			limit: PAGE_SIZE,
+			params: params,
+		}).then((res) => {
+			if (res.data && Array.isArray(res.data)) {
+				if (res.data.length === 0) {
+					console.log(
+						`No data fetched. Current page is ${offset / PAGE_SIZE}, total: ${totalCount}, total fetched: ${accumulatedGosts.length}`,
+					);
+					return;
+				}
+				console.log(`Fetched ${res.data.length} documents. Total ${accumulatedGosts.length + res.data.length}`);
+				setAccumulatedGosts((prev) => [...prev, ...res.data]);
+			}
+		});
+		console.log(`Fetching data with offset ${offset}`);
+		setOffset((prev) => prev + PAGE_SIZE);
+		setFetching(false);
+	}, [fetching, setFetching]);
+
 	const handleFilterSubmit = (filterData: GostSearchParams & { text?: string }) => {
+		console.log("Resetting due to filter change");
 		setOffset(0);
 		setAccumulatedGosts([]);
 		setParams(filterData);

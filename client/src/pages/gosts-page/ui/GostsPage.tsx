@@ -26,9 +26,10 @@ const GostsPage = () => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: hook
 	useEffect(() => {
 		if (contentRef.current && contentRef.current.clientHeight < window.innerHeight) {
+			console.log("Fetching more data due to small content height");
 			fetchGostsData();
 		}
-	}, [countFetched]);
+	}, [countFetched, count]);
 
 	return (
 		<main className="container">

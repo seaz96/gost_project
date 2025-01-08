@@ -234,5 +234,6 @@ export const {
 	useLazyGetChangesStatsQuery,
 	useDeleteGostMutation,
 	useFetchGostsPageQuery,
+	useLazyFetchGostsPageQuery,
 	useFetchGostsCountQuery,
 } = apiSlice;
