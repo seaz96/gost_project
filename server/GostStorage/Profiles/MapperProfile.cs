@@ -9,8 +9,8 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<AddDocumentRequest, PrimaryField>();
-        CreateMap<UpdateDocumentRequest, Field>();
+        CreateMap<AddOrUpdateDocumentRequest, PrimaryField>();
+        CreateMap<AddOrUpdateDocumentRequest, Field>();
 
         CreateMap<PrimaryField, Field>().ReverseMap();
         CreateMap<ActualField, Field>().ReverseMap();

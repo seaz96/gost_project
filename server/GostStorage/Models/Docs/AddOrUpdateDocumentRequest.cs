@@ -3,7 +3,7 @@ using GostStorage.Navigations;
 
 namespace GostStorage.Models.Docs;
 
-public record AddDocumentRequest
+public record AddOrUpdateDocumentRequest
 {
     public required string Designation { get; init; }
 
@@ -38,6 +38,8 @@ public record AddDocumentRequest
     public DocumentStatus? Status { get; init; }
 
     public HarmonizationLevel? Harmonization { get; init; }
+    
+    public IFormFile? File { get; set; }
 
     public List<string> References { get; init; }
 }

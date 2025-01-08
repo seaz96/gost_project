@@ -55,9 +55,10 @@ public class ReferencesService(
                 return existingDocs.First(x => x.Designation == designation).Id;
             }
 
-            var docId = documentsService.AddDocumentAsync(new PrimaryField { Designation = designation }, DocumentStatus.Inactive);
-            docId.Wait();
-            return docId.Result;
+            var docId = documentsService
+                .AddDocumentAsync(new PrimaryField { Designation = designation }, DocumentStatus.Inactive)
+                .GetAwaiter().GetResult();
+            return docId;
         }).ToList(); 
         
         await referencesRepository.UpdateByParentIdAsync(referenceIds, parentId);
