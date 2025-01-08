@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import {Search} from "@mui/icons-material";
+import { useState } from "react";
 import type { GostSearchParams } from "../../entities/gost/gostModel.ts";
 import IconButton from "../../shared/components/IconButton";
 import styles from "./Filter.module.scss";
-import filter from "./assets/filter.svg";
-import search from "./assets/search.svg";
 
 interface FilterProps {
 	filterSubmit: Function;
@@ -11,27 +10,11 @@ interface FilterProps {
 
 const Filter: React.FC<FilterProps> = (props) => {
 	const { filterSubmit } = props;
-	const dropdownRef = useRef<HTMLDivElement>(null);
 	const [filterData, setFilterData] = useState<Partial<GostSearchParams> & { text?: string }>({});
 
 	const handleSubmit = () => {
-		setFilterOpen(false);
 		filterSubmit(filterData);
 	};
-
-	const handleFilterDropdownOpen = () => {
-		const closeListener = (event: MouseEvent) => {
-			if (event.target !== dropdownRef.current && !dropdownRef.current?.contains(event.target as HTMLElement)) {
-				event.stopPropagation();
-				setFilterOpen(false);
-				document.removeEventListener("click", closeListener);
-			}
-		};
-		setFilterOpen(true);
-		document.addEventListener("click", (event) => closeListener(event));
-	};
-
-	const [filterOpen, setFilterOpen] = useState(false);
 
 	return (
 		<div className={styles.filterContainer}>
@@ -43,18 +26,8 @@ const Filter: React.FC<FilterProps> = (props) => {
 				placeholder="Поиск по обозначению или наименованию..."
 			/>
 			<div className={styles.buttonsContainer}>
-				<IconButton
-					onClick={(event: React.MouseEvent) => {
-						event.stopPropagation();
-						filterOpen ? setFilterOpen(false) : handleFilterDropdownOpen();
-					}}
-					isFilled
-					className={styles.filterButton}
-				>
-					<img src={filter} alt="filter" />
-				</IconButton>
 				<IconButton onClick={() => handleSubmit()} isFilled className={styles.searchButton}>
-					<img src={search} alt="search" />
+					<Search />
 				</IconButton>
 			</div>
 		</div>
