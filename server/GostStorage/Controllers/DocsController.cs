@@ -69,6 +69,7 @@ public class DocsController(
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
+    [Consumes("multipart/form-data")]
     [HttpPut("update/{docId}")]
     public async Task<IActionResult> Update([FromBody] AddOrUpdateDocumentRequest dto, long docId)
     {
@@ -96,6 +97,7 @@ public class DocsController(
     }
 
     [Authorize(Roles = "Heisenberg,Admin")]
+    [Consumes("multipart/form-data")]
     [HttpPut("actualize/{docId}")]
     public async Task<IActionResult> Actualize([FromBody] AddOrUpdateDocumentRequest dto, long docId)
     {
