@@ -3,8 +3,11 @@ import { useFetchGostsCountQuery, useFetchGostsPageQuery } from "features/api/ap
 import { useEffect, useState } from "react";
 
 const PAGE_SIZE = 10;
+const SMART_SEARCH_URL = "/docs/search";
+const SEARCH_URL = "/docs/all";
 
-const useGostsWithPagination = (url: string) => {
+
+const useGostsWithPagination = (useSmartSearch: boolean) => {
 	const [params, setParams] = useState<GostSearchParams & { text?: string }>(
 		{} as GostSearchParams & { text?: string },
 	);
@@ -12,16 +15,22 @@ const useGostsWithPagination = (url: string) => {
 	const [accumulatedGosts, setAccumulatedGosts] = useState<GostViewInfo[]>([]);
 
 	const { data: currentPageGosts = [] } = useFetchGostsPageQuery({
-		url,
+		url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
 		offset,
 		limit: PAGE_SIZE,
-		params,
+		params: params
 	});
 
 	const { data: totalCount = 0 } = useFetchGostsCountQuery({
-		url,
-		params,
+		url: useSmartSearch ? SMART_SEARCH_URL : SEARCH_URL,
+		params: params
 	});
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: when useSmartSearch changes, reset offset
+	useEffect(() => {
+		console.log('useSmartSearch changed, reset data & offset');
+		handleFilterSubmit(params);
+	}, [useSmartSearch]);
 
 	useEffect(() => {
 		if (!currentPageGosts.length) return;

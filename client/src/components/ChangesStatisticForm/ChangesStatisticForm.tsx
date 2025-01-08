@@ -27,7 +27,6 @@ const ChangesStatisticForm = (props: ChangesStatisticFormProps) => {
 		event.preventDefault();
 		trigger({
 			status: changesData.status,
-			count: changesData.count,
 			StartDate: new Date(changesData.dateFrom).toISOString(),
 			EndDate: new Date(changesData.dateTo).toISOString(),
 		}).then((res) => {
