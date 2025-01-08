@@ -19,6 +19,7 @@ export const gostFormSchema = z.object({
   status: z.enum(["Valid", "Canceled", "Replaced", "Inactive"]),
   harmonization: z.enum(["Harmonized", "Unharmonized", "Modified"]),
   references: z.array(z.string()),
+  file: z.any()
 });
 
 export type GostFormValues = z.infer<typeof gostFormSchema>;
