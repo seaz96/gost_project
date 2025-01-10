@@ -26,6 +26,7 @@ public class DocsController(
     IMapper mapper)
     : ControllerBase
 {
+    [DisableRequestSizeLimit]
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
     [HttpPost("add")]
@@ -72,12 +73,13 @@ public class DocsController(
 
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
+    [DisableRequestSizeLimit]
     [HttpPut("update/{docId}")]
     public async Task<IActionResult> Update([FromForm] AddOrUpdateDocumentRequest dto, long docId)
     {
         var updatedField = mapper.Map<Field>(dto);
         updatedField.DocId = docId;
-        var result = await fieldsService.UpdateAsync(updatedField, docId);
+        await fieldsService.UpdateAsync(updatedField, docId);
         
         if (dto.References is not null && dto.References.Count > 0)
             await referencesService.UpdateReferencesAsync(dto.References, docId);
@@ -100,6 +102,7 @@ public class DocsController(
         return Ok();
     }
 
+    [DisableRequestSizeLimit]
     [Authorize(Roles = "Heisenberg,Admin")]
     [Consumes("multipart/form-data")]
     [HttpPut("actualize/{docId}")]
@@ -231,6 +234,7 @@ public class DocsController(
         return Ok();
     }
 
+    [DisableRequestSizeLimit]
     [Authorize(Roles = "Heisenberg,Admin")]
     [HttpPost("{docId}/upload-file")]
     [Consumes("multipart/form-data")]
