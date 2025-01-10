@@ -17,7 +17,7 @@ const GostReviewPage = () => {
 	if (gost) {
 		return (
 			<main className="container">
-				<GostReview gost={gost} gostId={gost.docId} />
+				<GostReview gost={gost} />
 			</main>
 		);
 	}

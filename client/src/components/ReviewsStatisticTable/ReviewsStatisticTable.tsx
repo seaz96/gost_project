@@ -9,13 +9,13 @@ const ReviewsStatisticTable: React.FC<ReviewsStatisticTableProps> = (props) => {
 	const { reviewsData } = props;
 
 	const columns = [
-		{ header: "ID", accessor: (g: gostModel.GostViews) => g.docId },
+		{ header: "ID", accessor: (g: gostModel.GostViews) => g.id },
 		{ header: "Обозначение", accessor: (g: gostModel.GostViews) => g.designation },
 		{ header: "Сфера деятельности", accessor: (g: gostModel.GostViews) => g.fullName },
 		{ header: "Просмотры", accessor: (g: gostModel.GostViews) => g.views },
 	];
 
-	return <GenericTable columns={columns} data={reviewsData} rowKey={"docId"} />;
+	return <GenericTable columns={columns} data={reviewsData} rowKey={"id"} />;
 };
 
 export default ReviewsStatisticTable;
