@@ -78,8 +78,12 @@ const Header = () => {
 						setDropdownVisible(!isDropdownVisible);
 						document.addEventListener("click", dropdownCloseHandler);
 					}}
+					className={styles.profileButton}
 					type={"button"}
 				>
+					<span>
+					{user?.name}
+					</span>
 					<HeaderProfileIcon />
 				</button>
 				{isDropdownVisible && <ProfileDropdown />}

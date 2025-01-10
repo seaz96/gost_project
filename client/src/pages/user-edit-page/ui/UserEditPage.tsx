@@ -30,7 +30,7 @@ const UserEditPage = () => {
 			<div className={"container"}>
 				<h1 className={"verticalPadding"}>Редактирование пользователя</h1>
 				<section className={styles.userEditSection}>
-					<UserEditForm handleSubmit={handleUserEdit} userData={user} id={user.id} />
+					<UserEditForm handleSubmit={handleUserEdit} userData={user} />
 				</section>
 			</div>
 		);

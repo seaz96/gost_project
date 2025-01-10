@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import { type ChangeEvent, forwardRef } from "react";
 import styles from "./UrfuRadioGroup.module.scss";
 
 interface RadioOption {
@@ -10,10 +10,10 @@ interface UrfuRadioGroupProps {
 	options: RadioOption[];
 	label?: string;
 	error?: string;
-	value?: string;
+	value?: string | null;
 	name: string;
 	multiline?: boolean;
-	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+	onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const UrfuRadioGroup = forwardRef<HTMLInputElement, UrfuRadioGroupProps>(

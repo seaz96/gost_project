@@ -1,14 +1,14 @@
 import { EditRounded, ImportContactsRounded } from "@mui/icons-material";
 import { useAppSelector } from "../../app/hooks.ts";
 import type { gostModel } from "../../entities/gost";
-import type { GostSearchParams } from "../../entities/gost/gostModel.ts";
+import type { GostSearchParams, GostViewInfo } from "../../entities/gost/gostModel.ts";
 import { GenericTable } from "../GenericTable/GenericTable.tsx";
 import GenericTableActionBlock from "../GenericTable/GenericTableActionBlock.tsx";
 import GenericTableButton from "../GenericTable/GenericTableButton.tsx";
 
 interface GostsTableProps {
-	gosts: gostModel.GostViewInfo[];
-	gostsParams: (GostSearchParams & { text?: string }) | null;
+	gosts: GostViewInfo[];
+	gostsParams: GostSearchParams | null;
 }
 
 const GostsTable = ({ gosts, gostsParams }: GostsTableProps) => {
@@ -26,11 +26,14 @@ const GostsTable = ({ gosts, gostsParams }: GostsTableProps) => {
 			header: "Наименование",
 			accessor: (g: gostModel.GostViewInfo) => g.fullName,
 		},
-		gostsParams && Object.values(gostsParams).some((param) => param)
+		gostsParams?.SearchFilters &&
+		Object.entries(gostsParams.SearchFilters)
+			.filter(([key]) => key !== "Status")
+			.some(([, param]) => param)
 			? {
 					header: "Соответствие запросу",
 					accessor: (g: gostModel.GostViewInfo) =>
-						gostsParams && Object.values(gostsParams).some((param) => param) ? g.relevanceMark : null,
+						gostsParams.SearchFilters && Object.values(gostsParams).some((param) => param) ? g.relevanceMark : null,
 				}
 			: null,
 		{

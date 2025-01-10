@@ -17,26 +17,42 @@
     filter: brightness(0) invert(1);
   }
 
-  nav ul {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
+  nav {
+    height: 100%;
 
-    .headerLink {
-      font-family: var(--main-font), system-ui;
-      color: var(--white);
-      font-weight: 700;
+    ul {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      height: 100%;
+
+      li {
+        height: 100%;
+
+        .headerLink {
+          display: flex;
+          align-items: center;
+          font-family: var(--main-font), system-ui;
+          color: var(--white);
+          font-weight: 700;
+          height: 100%;
+        }
+      }
     }
   }
 
   .profileContainer {
     margin-left: auto;
     position: relative;
-  }
 
-  .profileButton {
-    height: 100%;
-    width: 100%;
+    .profileButton {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+    }
   }
 
   .profileIcon {
@@ -46,7 +62,6 @@
     display: flex;
 
     img {
-      //TODO: replace with colored svg
       filter: brightness(0) invert(1);
     }
   }
@@ -64,12 +79,10 @@
   width: 280px;
 
 
-  background-color: #fff;
+  background-color: var(--white);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  font-family: var(--main-font), system-ui;
 
   a {
-    color: var(--urfu-black);
     text-decoration: none;
   }
 
@@ -79,6 +92,7 @@
 
   * {
     padding: 0.5rem;
+
     &:hover {
       background-color: var(--urfu-grey);
     }
