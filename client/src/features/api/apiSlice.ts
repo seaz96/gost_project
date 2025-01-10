@@ -42,6 +42,9 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 	console.log(obj);
 	const formData = new FormData();
 	for (const [key, value] of Object.entries(obj)) {
+		if (value === null || value === undefined || Number.isNaN(value)) {
+			continue;
+		}
 		if (typeof value === "object" && !Array.isArray(value)) {
 			for (const [nestedKey, nestedValue] of Object.entries(value)) {
 				formData.append(`${key}.${nestedKey}`, nestedValue);

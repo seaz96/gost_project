@@ -27,23 +27,23 @@ export type GostAddModel = GostRequestModel & {
 
 export type GostRequestModel = {
 	designation: string;
-	fullName: string;
-	codeOks: string;
-	activityField: string;
-	acceptanceYear: number;
-	commissionYear: number;
-	author: string;
-	acceptedFirstTimeOrReplaced: string;
-	content: string;
-	keyWords: string;
-	applicationArea: string;
-	adoptionLevel: adoptionLevel;
-	documentText: string;
-	changes: string;
-	amendments: string;
-	status: documentStatus;
-	harmonization: harmonization;
-	references: string[];
+	fullName?: string;
+	codeOks?: string;
+	activityField?: string;
+	acceptanceYear?: number;
+	commissionYear?: number;
+	author?: string;
+	acceptedFirstTimeOrReplaced?: string;
+	content?: string;
+	keyWords?: string;
+	applicationArea?: string;
+	adoptionLevel?: adoptionLevel;
+	documentText?: string;
+	changes?: string;
+	amendments?: string;
+	status?: documentStatus;
+	harmonization?: harmonization;
+	references?: string[];
 };
 
 export type GostFetchModel = {

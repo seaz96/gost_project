@@ -33,7 +33,7 @@ const GostEditPage = () => {
 				<section className={classNames("contentContainer", styles.reviewSection)}>
 					<GostForm
 						handleSubmit={handleSubmit}
-						gost={{
+						data={{
 							...gost.primary,
 							status: gost.status,
 							references: gost.references.map((reference) => reference.designation),

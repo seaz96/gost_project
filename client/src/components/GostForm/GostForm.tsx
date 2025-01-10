@@ -12,31 +12,7 @@ import { type GostFormValues, gostFormSchema } from "./types";
 
 interface GostFormProps {
 	handleSubmit: (gost: GostAddModel) => void;
-	gost?: GostRequestModel;
-}
-
-export function getGostStub() {
-	return {
-		designation: "",
-		fullName: "",
-		codeOks: "",
-		activityField: "",
-		acceptanceYear: 2000,
-		commissionYear: 2000,
-		author: "",
-		acceptedFirstTimeOrReplaced: "",
-		content: "",
-		keyWords: "",
-		applicationArea: "",
-		adoptionLevel: "Organizational",
-		documentText: "",
-		changes: "",
-		amendments: "",
-		status: "Valid",
-		harmonization: "Harmonized",
-		isPrimary: true,
-		references: [],
-	} as GostRequestModel;
+	data?: GostRequestModel;
 }
 
 const adoptionLevelOptions = [
@@ -61,7 +37,7 @@ const harmonizationOptions = [
 	{ value: "Modified", label: "Модифицированный" },
 ];
 
-export default function GostForm({ handleSubmit, gost }: GostFormProps) {
+export default function GostForm({ handleSubmit, data }: GostFormProps) {
 	const [newReference, setNewReference] = useState("");
 
 	const {
@@ -72,15 +48,14 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 		setValue,
 	} = useForm<GostFormValues>({
 		resolver: zodResolver(gostFormSchema),
-		defaultValues: gost || getGostStub(),
+		defaultValues: data || { references: [] },
 	});
 
-	const references = watch("references");
+	const references = watch("references") || [];
 
 	const onSubmit = (data: GostFormValues) => {
+		console.log(data);
 		if (!data.file && !data.documentText) {
-			console.log(data);
-			alert("Пожалуйста, загрузите файл или заполните текст стандарта");
 			return;
 		}
 		handleSubmit(data as GostAddModel);
@@ -108,50 +83,39 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 					label="Наименование стандарта"
 					error={errors.designation?.message}
 				/>
-
 				<UrfuTextInput {...register("fullName")} label="Заглавие стандарта" error={errors.fullName?.message} />
-
 				<UrfuTextInput {...register("codeOks")} label="Код ОКС" error={errors.codeOks?.message} />
-
 				<UrfuTextInput
 					{...register("activityField")}
 					label="Сфера деятельности"
 					error={errors.activityField?.message}
 				/>
-
 				<UrfuTextInput
 					{...register("acceptanceYear", { valueAsNumber: true })}
 					type="number"
 					label="Год принятия"
 					error={errors.acceptanceYear?.message}
 				/>
-
 				<UrfuTextInput
 					{...register("commissionYear", { valueAsNumber: true })}
 					type="number"
 					label="Год введения"
 					error={errors.commissionYear?.message}
 				/>
-
 				<UrfuTextInput {...register("author")} label="Разработчик" error={errors.author?.message} />
-
 				<UrfuTextInput
 					{...register("acceptedFirstTimeOrReplaced")}
 					label="Принят впервые или заменен"
 					error={errors.acceptedFirstTimeOrReplaced?.message}
 				/>
-
 				<UrfuTextArea {...register("content")} label="Содержание" error={errors.content?.message} rows={4} />
-
 				<UrfuTextArea
 					{...register("applicationArea")}
 					label="Область применения"
 					error={errors.applicationArea?.message}
 					rows={4}
 				/>
-
 				<UrfuTextArea {...register("keyWords")} label="Ключевые слова" error={errors.keyWords?.message} rows={4} />
-
 				<UrfuTextArea
 					{...register("documentText")}
 					label="Текст стандарта"
@@ -161,7 +125,6 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 				<div className={styles.fileUpload}>
 					<input type="file" {...register("file")} accept=".pdf,.doc,.docx" />
 				</div>
-
 				<div className={styles.fullWidth}>
 					<UrfuRadioGroup
 						{...register("adoptionLevel")}
@@ -171,7 +134,6 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 						value={watch("adoptionLevel")}
 					/>
 				</div>
-
 				<div className={styles.fullWidth}>
 					<UrfuRadioGroup
 						{...register("status")}
@@ -181,7 +143,6 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 						value={watch("status")}
 					/>
 				</div>
-
 				<div className={styles.fullWidth}>
 					<UrfuRadioGroup
 						{...register("harmonization")}
@@ -191,13 +152,13 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 						value={watch("harmonization")}
 					/>
 				</div>
-
 				<div className={styles.references}>
 					<div className={styles.referenceInput}>
 						<UrfuTextInput
 							value={newReference}
 							onChange={(e) => setNewReference(e.target.value)}
 							label="Нормативные ссылки"
+							error={errors.references?.message}
 						/>
 						<UrfuButton onClick={handleAddReference}>Добавить</UrfuButton>
 					</div>
@@ -212,14 +173,14 @@ export default function GostForm({ handleSubmit, gost }: GostFormProps) {
 						))}
 					</div>
 				</div>
-
 				<UrfuTextInput {...register("changes")} label="Изменения" error={errors.changes?.message} />
-
 				<UrfuTextInput {...register("amendments")} label="Поправки" error={errors.amendments?.message} />
 			</div>
 
 			<div className={styles.submitButton}>
-				<UrfuButton type="submit">Сохранить</UrfuButton>
+				<UrfuButton disabled={Object.keys(errors).length > 0} type="submit">
+					Сохранить
+				</UrfuButton>
 			</div>
 		</form>
 	);
