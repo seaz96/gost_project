@@ -4,7 +4,7 @@ namespace GostStorage.Models.Docs;
 
 public class GetDocumentRequest
 {
-    public string? Name { get; set; }
+    public string? Text { get; set; }
 
     public string? CodeOks { get; set; }
 

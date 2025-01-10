@@ -23,11 +23,11 @@ public static class SearchHelper
             .Where(f => parameters.AdoptionLevel == null
                         || f.Primary.AdoptionLevel != parameters.AdoptionLevel
                         || f.Actual.AdoptionLevel != parameters.AdoptionLevel)
-            .Where(f => parameters.Name == null ||
-                        (f.Primary.Designation ?? "").ToLower().Contains(parameters.Name.ToLower()) ||
-                        (f.Primary.FullName ?? "").ToLower().Contains(parameters.Name.ToLower()) ||
-                        (f.Actual.Designation ?? "").ToLower().Contains(parameters.Name.ToLower()) ||
-                        (f.Actual.FullName ?? "").ToLower().Contains(parameters.Name.ToLower()))
+            .Where(f => parameters.Text == null ||
+                        f.Primary.Designation.ToLower().Contains(parameters.Text.ToLower()) ||
+                        (f.Primary.FullName ?? "").ToLower().Contains(parameters.Text.ToLower()) ||
+                        f.Actual.Designation.ToLower().Contains(parameters.Text.ToLower()) ||
+                        (f.Actual.FullName ?? "").ToLower().Contains(parameters.Text.ToLower()))
             .Where(f => parameters.AcceptanceYear == null
                         || f.Primary.AcceptanceYear.Value == parameters.AcceptanceYear.Value
                         || f.Actual.AcceptanceYear.Value == parameters.AcceptanceYear.Value)

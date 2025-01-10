@@ -115,9 +115,9 @@ public class DocumentsService(
 
     public async Task<List<FullDocument>> GetDocumentsAsync(GetDocumentRequest? parameters)
     {
-        if (!string.IsNullOrEmpty(parameters.Name))
+        if (!string.IsNullOrEmpty(parameters.Text))
         {
-            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+            parameters.Text = TextFormattingHelper.FormatDesignation(parameters.Text);
         }
 
         return await documentsRepository.GetDocumentsWithFields(parameters);
@@ -125,9 +125,9 @@ public class DocumentsService(
     
     public async Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters)
     {
-        if (parameters.Name is not null)
+        if (parameters.Text is not null)
         {
-            parameters.Name = TextFormattingHelper.FormatDesignation(parameters.Name);
+            parameters.Text = TextFormattingHelper.FormatDesignation(parameters.Text);
         }
 
         return await documentsRepository.GetCountOfDocumentsAsync(parameters);
