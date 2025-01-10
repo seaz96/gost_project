@@ -121,13 +121,6 @@ const GostReview = (props: GostReviewProps) => {
 		{ id: "changes", field: "Изменения", primary: gost.primary.changes, actual: gost.actual.changes },
 		{ id: "amendments", field: "Поправки", primary: gost.primary.amendments, actual: gost.actual.amendments },
 		{
-			//TODO: Уточнить о status/harmonization в primary/actual
-			id: "status",
-			field: "Действующий/Отменён/Заменён",
-			primary: gostModel.StatusToRu[gost.status],
-			actual: gostModel.StatusToRu[gost.status],
-		},
-		{
 			id: "harmonization",
 			field: "Уровень гармонизации",
 			primary: gostModel.HarmonizationToRu[gost.primary.harmonization],
@@ -180,13 +173,20 @@ const GostReview = (props: GostReviewProps) => {
 						</UrfuButton>
 					</div>
 				)}
-				<GenericTable columns={columns} data={tableData} rowKey="id" />
-				<h2 className="verticalPadding">Нормативные ссылки</h2>
-				{gost.references.length > 0 ? (
-					<div className={styles.references}>{renderReferences(gost.references)}</div>
-				) : (
-					<p>Нет нормативных ссылок</p>
-				)}
+				<section>
+					<h2 className="verticalPadding">Статус</h2>
+					<p>{gostModel.StatusToRu[gost.status]}</p>
+					<h2 className="verticalPadding">Нормативные ссылки</h2>
+					{gost.references.length > 0 ? (
+						<div className={styles.references}>{renderReferences(gost.references)}</div>
+					) : (
+						<p>Нет нормативных ссылок</p>
+					)}
+				</section>
+				<section>
+					<h2 className="verticalPadding">Информация о документе</h2>
+					<GenericTable columns={columns} data={tableData} rowKey="id" />
+				</section>
 			</main>
 			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={deleteDoc} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
