@@ -165,13 +165,13 @@ public class DocumentsService(
             {
                 SearchFilters = new SearchFilters
                 {
-                    Status = DocumentStatus.Valid,
+                    Status = [DocumentStatus.Valid],
                 },
                 Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
                 {
                     SearchFilters = new SearchFilters
                     {
-                        Status = DocumentStatus.Valid,
+                        Status =[ DocumentStatus.Valid],
                     }
                 }),
                 Offset = 0
@@ -181,13 +181,13 @@ public class DocumentsService(
             {
                 SearchFilters = new SearchFilters
                 {
-                    Status = DocumentStatus.Canceled,
+                    Status =[ DocumentStatus.Canceled],
                 },
                 Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
                 {
                     SearchFilters = new SearchFilters
                     {
-                        Status = DocumentStatus.Canceled,
+                        Status = [DocumentStatus.Canceled],
                     }
                 }),
                 Offset = 0
@@ -197,13 +197,13 @@ public class DocumentsService(
             {
                 SearchFilters = new SearchFilters
                 {
-                    Status = DocumentStatus.Replaced,
+                    Status =[ DocumentStatus.Replaced],
                 },
                 Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
                 {
                     SearchFilters = new SearchFilters
                     {
-                        Status = DocumentStatus.Replaced,
+                        Status = [DocumentStatus.Replaced],
                     },
                 }),
                 Offset = 0

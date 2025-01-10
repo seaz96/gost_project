@@ -49,8 +49,8 @@ public static class SearchHelper
                         || (f.Primary.Amendments ?? "").ToLower().Contains(parameters.Amendments.ToLower())
                         || (f.Actual.Amendments ?? "").ToLower().Contains(parameters.Amendments.ToLower()))
             .Where(f => parameters.Harmonization == null
-                        || f.Primary.Harmonization == parameters.Harmonization
-                        || f.Actual.Harmonization == parameters.Harmonization);
+                        ||  parameters.Harmonization.Contains(f.Primary.Harmonization.Value)
+                        || parameters.Harmonization.Contains(f.Actual.Harmonization.Value));
     }
 
     public static SearchDocument SplitFieldsToIndexDocument(long documentId, Field primary, Field actual)

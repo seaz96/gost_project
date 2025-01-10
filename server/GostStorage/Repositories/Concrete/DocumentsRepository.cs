@@ -19,7 +19,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
                 (parameters == null
                  || parameters.SearchFilters == null
                  || parameters.SearchFilters.Status == null
-                 || x.Status == parameters.SearchFilters.Status)
+                 || parameters.SearchFilters.Status.Contains(x.Status))
                 && x.Status != DocumentStatus.Inactive)
             .CountAsync();
     }
@@ -63,7 +63,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
                 (parameters == null
                  || parameters.SearchFilters == null
                  || parameters.SearchFilters.Status == null
-                 || x.Status == parameters.SearchFilters.Status)
+                 || parameters.SearchFilters.Status.Contains(x.Status))
                 && x.Status != DocumentStatus.Inactive)
             .Skip(parameters.Offset)
             .Take(parameters.Limit)
@@ -78,7 +78,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
                 (parameters == null
                  || parameters.SearchFilters == null
                  || parameters.SearchFilters.Status == null
-                 || x.Status == parameters.SearchFilters.Status)
+                 ||  parameters.SearchFilters.Status.Contains(x.Status))
                 && x.Status != DocumentStatus.Inactive)
             .CountAsync();
     }
