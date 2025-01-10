@@ -11,7 +11,7 @@ public class SearchFilters
     public string? Author { get; set; }
     public string? AcceptedFirstTimeOrReplaced { get; set; }
     public string? KeyWords { get; set; }
-    public AdoptionLevel? AdoptionLevel { get; set; }
+    public HashSet<AdoptionLevel>? AdoptionLevel { get; set; }
     public HashSet<DocumentStatus>? Status { get; set; }
     public HashSet<HarmonizationLevel>? Harmonization { get; set; }
     public string? Changes { get; set; }

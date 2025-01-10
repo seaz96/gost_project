@@ -20,8 +20,8 @@ public static class SearchHelper
                         || (f.Primary.CodeOks ?? "").ToLower().Contains(parameters.CodeOks.ToLower())
                         || (f.Actual.CodeOks ?? "").ToLower().Contains(parameters.CodeOks.ToLower()))
             .Where(f => parameters.AdoptionLevel == null
-                        || f.Primary.AdoptionLevel != parameters.AdoptionLevel
-                        || f.Actual.AdoptionLevel != parameters.AdoptionLevel)
+                        || parameters.AdoptionLevel.Contains(f.Primary.AdoptionLevel.Value)
+                        || parameters.AdoptionLevel.Contains(f.Actual.AdoptionLevel.Value))
             .Where(f => query.Text == null ||
                         f.Primary.Designation.ToLower().Contains(query.Text.ToLower()) ||
                         (f.Primary.FullName ?? "").ToLower().Contains(query.Text.ToLower()) ||
