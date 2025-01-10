@@ -85,10 +85,10 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
 
     public async Task<long> AddAsync(Document document)
     {
-        await context.Documents.AddAsync(document);
+        var d = await context.Documents.AddAsync(document);
         await context.SaveChangesAsync();
         
-        return document.Id;
+        return d.Entity.Id;
     }
 
     public async Task DeleteAsync(long id)

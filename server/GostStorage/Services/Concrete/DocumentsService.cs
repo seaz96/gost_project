@@ -50,22 +50,20 @@ public class DocumentsService(
             Status = status
         };
 
-         await documentsRepository.AddAsync(doc);
-         
-         doc = await documentsRepository.GetByDesignationAsync(primaryField.Designation);
+         var docId = await documentsRepository.AddAsync(doc);
 
-        primaryField.DocId = doc.Id;
-        actualField.DocId = doc.Id;
+        primaryField.DocId = docId;
+        actualField.DocId = docId;
 
         await primaryFieldsRepository.UpdateAsync(primaryField);
         await actualFieldsRepository.UpdateAsync(actualField);
 
         var ftsDocument = mapper.Map<SearchDocument>(primaryField);
-        ftsDocument.Id = doc.Id;
+        ftsDocument.Id = docId;
         var indexModel = new SearchIndexModel { Document = ftsDocument };
         await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
-        return doc.Id;
+        return docId;
     }
 
     public async Task<bool> DeleteDocumentAsync(long id)
