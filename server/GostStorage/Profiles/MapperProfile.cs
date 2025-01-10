@@ -22,14 +22,8 @@ public class MapperProfile : Profile
                 options => options.MapFrom(x => Math.Round(x.Score * 5)));
 
         CreateMap<Document, ReferenceDocumentResponse>();
-        CreateMap<FullDocument, FullDocumentResponse>()
-            .ForMember(
-                dest => dest.Id,
-                src => src.MapFrom(x => x.DocId));
+        CreateMap<FullDocument, FullDocumentResponse>();
         CreateMap<FullDocument, GeneralDocumentInfoModel>()
-            .ForMember(
-                dest => dest.Id,
-                src => src.MapFrom(x => x.DocId))
             .ForMember(
                 dest => dest.CodeOks,
                 src => src.MapFrom(x => x.Primary.CodeOks))

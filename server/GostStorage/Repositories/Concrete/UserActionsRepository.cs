@@ -21,7 +21,7 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
     {
         var actions = SearchHelper.GetFullDocumentQueryable(context)
             .Join(context.UserActions,
-                d => d.DocId,
+                d => d.Id,
                 a => a.DocId,
                 (d, a) => new
                 {
@@ -41,7 +41,7 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
                             group.Action.Type == ActionType.View).ToListAsync();
 
         return (await actions)
-            .GroupBy(stat => stat.Document.DocId)
+            .GroupBy(stat => stat.Document.Id)
             .Select(group => new DocumentViewsResponse
             {
                 DocId = group.Key,
@@ -57,7 +57,7 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .Join(context.UserActions,
-                d => d.DocId,
+                d => d.Id,
                 a => a.DocId,
                 (d, a) => new
                 {
@@ -69,7 +69,7 @@ public class UserActionsRepository(DataContext context) : IUserActionsRepository
                             && group.Document.Status == model.Status)
             .Select(x => new UserActionDocumentModel
             {
-                DocumentId = x.Document.DocId,
+                DocumentId = x.Document.Id,
                 Designation = x.Document.Actual.Designation,
                 FullName = x.Document.Actual.FullName ?? x.Document.Primary.FullName ?? "",
                 Action = x.Action.Type,

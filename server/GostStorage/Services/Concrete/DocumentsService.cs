@@ -212,10 +212,10 @@ public class DocumentsService(
 
         foreach (var documnet in documents)
         {
-            Log.Logger.Information($"indexing {documnet.DocId}");
+            Log.Logger.Information($"indexing {documnet.Id}");
             await searchRepository.IndexDocumentAsync(new SearchIndexModel
             {
-                Document = SearchHelper.SplitFieldsToIndexDocument(documnet.DocId, documnet.Primary, documnet.Actual)
+                Document = SearchHelper.SplitFieldsToIndexDocument(documnet.Id, documnet.Primary, documnet.Actual)
             });
         }
     }

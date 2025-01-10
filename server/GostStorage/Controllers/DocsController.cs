@@ -255,7 +255,7 @@ public class DocsController(
         
         var indexModel = new SearchIndexModel
         {
-            Document = SearchHelper.SplitFieldsToIndexDocument(document.DocId, document.Primary, document.Actual),
+            Document = SearchHelper.SplitFieldsToIndexDocument(document.Id, document.Primary, document.Actual),
             Text = await fileProcessor.ExtractFileTextSafeAsync(request.File)
         };
         

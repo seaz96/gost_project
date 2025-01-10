@@ -88,7 +88,7 @@ public static class SearchHelper
                 f => f.DocId,
                 (g, a) => new FullDocument
                 {
-                    DocId = g.d.Id,
+                    Id = g.d.Id,
                     Actual = a,
                     Primary = g.p,
                     Status = g.d.Status

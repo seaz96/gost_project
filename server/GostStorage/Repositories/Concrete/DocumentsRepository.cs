@@ -45,7 +45,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
     public Task<FullDocument?> GetDocumentWithFields(long docId)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
-            .Where(x => x.DocId == docId)
+            .Where(x => x.Id == docId)
             .FirstOrDefaultAsync();
     }
 
