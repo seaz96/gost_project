@@ -16,6 +16,8 @@ public interface IDocumentsService
     
     Task<FullDocument?> GetDocumentAsync(long id);
 
+    Task<Document?> GetDocumentByDesignationAsync(string designation);
+
     Task<List<FullDocument>> GetDocumentsAsync(
         SearchQuery? parameters);
 

@@ -17,6 +17,8 @@ public interface IDocumentsRepository
 
     public Task<IList<Document>> GetDocsIdByDesignationAsync(List<string> docDesignations);
 
+    Task<Document?> GetDocumentByDesignationAsync(string designation);
+
     public Task<long> AddAsync(Document document);
 
     public Task DeleteAsync(long id);

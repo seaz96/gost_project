@@ -42,6 +42,12 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
             .ToListAsync();
     }
 
+    public Task<Document?> GetDocumentByDesignationAsync(string designation)
+    {
+        return context.Documents
+            .FirstOrDefaultAsync(doc => doc.Designation == designation);
+    }
+
     public Task<FullDocument?> GetDocumentWithFields(long docId)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
@@ -81,6 +87,7 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
     {
         await context.Documents.AddAsync(document);
         await context.SaveChangesAsync();
+        
         return document.Id;
     }
 

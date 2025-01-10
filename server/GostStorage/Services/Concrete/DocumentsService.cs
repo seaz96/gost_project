@@ -50,26 +50,22 @@ public class DocumentsService(
             Status = status
         };
 
-        var docId = await documentsRepository.AddAsync(doc);
+         await documentsRepository.AddAsync(doc);
+         
+         doc = await documentsRepository.GetByDesignationAsync(primaryField.Designation);
 
-        // костыль: возможно еще не присвоился айди для документа, нужно подождать
-        if (docId == 0)
-        {
-            await Task.Delay(1000);
-        }
-
-        primaryField.DocId = docId;
-        actualField.DocId = docId;
+        primaryField.DocId = doc.Id;
+        actualField.DocId = doc.Id;
 
         await primaryFieldsRepository.UpdateAsync(primaryField);
         await actualFieldsRepository.UpdateAsync(actualField);
 
         var ftsDocument = mapper.Map<SearchDocument>(primaryField);
-        ftsDocument.Id = docId;
+        ftsDocument.Id = doc.Id;
         var indexModel = new SearchIndexModel { Document = ftsDocument };
         await searchRepository.IndexDocumentAsync(indexModel).ConfigureAwait(false);
 
-        return docId;
+        return doc.Id;
     }
 
     public async Task<bool> DeleteDocumentAsync(long id)
@@ -111,6 +107,11 @@ public class DocumentsService(
         doc.References = references;
 
         return doc;
+    }
+
+    public Task<Document?> GetDocumentByDesignationAsync(string  designation)
+    {
+        return  documentsRepository.GetByDesignationAsync(designation);
     }
 
     public async Task<List<FullDocument>> GetDocumentsAsync(SearchQuery? parameters)
