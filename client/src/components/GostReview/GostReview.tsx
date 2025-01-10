@@ -12,7 +12,6 @@ import styles from "./GostReview.module.scss";
 
 interface GostReviewProps {
 	gost: GostFetchModel;
-	gostId: number;
 }
 
 interface GostComparisonRow {
@@ -23,7 +22,7 @@ interface GostComparisonRow {
 }
 
 const GostReview = (props: GostReviewProps) => {
-	const { gost, gostId } = props;
+	const { gost } = props;
 	const navigate = useNavigate();
 	const user = useAppSelector((s) => s.user.user);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -34,20 +33,20 @@ const GostReview = (props: GostReviewProps) => {
 	const [deleteGost] = useDeleteGostMutation();
 	const [changeStatus] = useChangeGostStatusMutation();
 
-	const onDeleteSubmit = async () => {
-		await deleteGost(gostId.toString()).then(() => navigate("/"));
+	const deleteDoc = async () => {
+		await deleteGost(gost.id.toString()).then(() => navigate("/"));
 	};
 
 	const recoverDoc = async () => {
-		await changeStatus({ id: gostId, status: "Valid" }).then(() => navigate("/"));
+		await changeStatus({ id: gost.id, status: "Valid" }).then(() => navigate("/"));
 	};
 
 	const cancelDoc = async () => {
-		await changeStatus({ id: gostId, status: "Canceled" }).then(() => navigate("/"));
+		await changeStatus({ id: gost.id, status: "Canceled" }).then(() => navigate("/"));
 	};
 
 	const replaceDoc = async () => {
-		await changeStatus({ id: gostId, status: "Replaced" }).then(() => navigate("/new"));
+		await changeStatus({ id: gost.id, status: "Replaced" }).then(() => navigate("/new"));
 	};
 
 	const renderReferences = (refs: typeof gost.references) => (
@@ -154,7 +153,7 @@ const GostReview = (props: GostReviewProps) => {
 								Восстановить
 							</UrfuButton>
 						)}
-						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}`)} size={"small"} outline={true}>
+						<UrfuButton onClick={() => navigate(`/gost-edit/${gost.id}`)} size={"small"} outline={true}>
 							Редактировать
 						</UrfuButton>
 						<UrfuButton onClick={() => setDeleteModalOpen(true)} size={"small"} outline={true}>
@@ -176,7 +175,7 @@ const GostReview = (props: GostReviewProps) => {
 						>
 							Заменить
 						</UrfuButton>
-						<UrfuButton onClick={() => navigate(`/gost-edit/${gostId}?actualize`)} size={"small"} outline={true}>
+						<UrfuButton onClick={() => navigate(`/gost-edit/${gost.id}?actualize`)} size={"small"} outline={true}>
 							Актуализировать
 						</UrfuButton>
 					</div>
@@ -189,7 +188,7 @@ const GostReview = (props: GostReviewProps) => {
 					<p>Нет нормативных ссылок</p>
 				)}
 			</main>
-			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={onDeleteSubmit} />
+			<DeleteCard isOpen={deleteModalOpen} setIsOpen={setDeleteModalOpen} onSubmitFunction={deleteDoc} />
 			<CancelCard isOpen={cancelModalOpen} setIsOpen={setCancelModalOpen} onSubmitFunction={cancelDoc} />
 			<RecoverCard isOpen={recoverModalOpen} setIsOpen={setRecoverModalOpen} onSubmitFunction={recoverDoc} />
 			<ReplaceCard isOpen={replaceModalOpen} setIsOpen={setReplaceModalOpen} onSubmitFunction={replaceDoc} />

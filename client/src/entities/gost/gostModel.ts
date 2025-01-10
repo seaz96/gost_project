@@ -47,7 +47,7 @@ export type GostRequestModel = {
 };
 
 export type GostFetchModel = {
-	docId: number;
+	id: number;
 	status: documentStatus;
 	primary: GostFieldsWithId;
 	actual: GostFieldsWithId;
@@ -72,7 +72,6 @@ export type GostFieldsWithId = {
 	changes: string;
 	amendments: string;
 	harmonization: harmonization;
-	docId: number;
 	lastEditTime: string;
 };
 
@@ -86,7 +85,7 @@ export type GostReference = {
 
 export type GostViews = {
 	designation: string;
-	docId: number;
+	id: number;
 	fullName: string;
 	views: number;
 };
