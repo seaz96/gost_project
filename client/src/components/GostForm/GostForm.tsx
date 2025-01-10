@@ -56,6 +56,8 @@ export default function GostForm({ handleSubmit, data }: GostFormProps) {
 	const onSubmit = (data: GostFormValues) => {
 		console.log(data);
 		if (!data.file && !data.documentText) {
+			//TODO FIXME: add proper error handling
+			alert("Необходимо загрузить файл или заполнить текст стандарта");
 			return;
 		}
 		handleSubmit(data as GostAddModel);
