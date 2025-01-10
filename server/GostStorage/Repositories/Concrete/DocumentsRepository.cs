@@ -2,6 +2,7 @@ using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Helpers;
 using GostStorage.Models.Docs;
+using GostStorage.Models.Search;
 using GostStorage.Navigations;
 using GostStorage.Repositories.Abstract;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +11,15 @@ namespace GostStorage.Repositories.Concrete;
 
 public class DocumentsRepository(DataContext context) : IDocumentsRepository
 {
-    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters)
+    public Task<int> GetCountOfDocumentsAsync(SearchQuery? parameters)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
             .Where(x =>
                 (parameters == null
-                 || parameters.Status == null
-                 || x.Status == parameters.Status)
+                 || parameters.SearchFilters == null
+                 || parameters.SearchFilters.Status == null
+                 || x.Status == parameters.SearchFilters.Status)
                 && x.Status != DocumentStatus.Inactive)
             .CountAsync();
     }
@@ -47,28 +49,30 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
             .FirstOrDefaultAsync();
     }
 
-    public Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters)
+    public Task<List<FullDocument>> GetDocumentsWithFields(SearchQuery? parameters)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
             .Where(x =>
                 (parameters == null
-                 || parameters.Status == null
-                 || x.Status == parameters.Status)
+                 || parameters.SearchFilters == null
+                 || parameters.SearchFilters.Status == null
+                 || x.Status == parameters.SearchFilters.Status)
                 && x.Status != DocumentStatus.Inactive)
             .Skip(parameters.Offset)
             .Take(parameters.Limit)
             .ToListAsync();
     }
 
-    public Task<int> CountDocumentsWithFields(GetDocumentRequest? parameters)
+    public Task<int> CountDocumentsWithFields(SearchQuery? parameters)
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
             .Where(x =>
                 (parameters == null
-                 || parameters.Status == null
-                 || x.Status == parameters.Status)
+                 || parameters.SearchFilters == null
+                 || parameters.SearchFilters.Status == null
+                 || x.Status == parameters.SearchFilters.Status)
                 && x.Status != DocumentStatus.Inactive)
             .CountAsync();
     }

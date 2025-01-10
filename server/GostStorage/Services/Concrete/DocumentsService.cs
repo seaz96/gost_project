@@ -12,28 +12,28 @@ using Serilog;
 namespace GostStorage.Services.Concrete;
 
 public class DocumentsService(
-        IDocumentsRepository documentsRepository,
-        IPrimaryFieldsRepository primaryFieldsRepository,
-        IActualFieldsRepository actualFieldsRepository,
-        IReferencesRepository referencesRepository,
-        IFieldsService fieldsService,
-        IFilesRepository filesRepository,
-        ISearchRepository searchRepository,
-        IMapper mapper)
+    IDocumentsRepository documentsRepository,
+    IPrimaryFieldsRepository primaryFieldsRepository,
+    IActualFieldsRepository actualFieldsRepository,
+    IReferencesRepository referencesRepository,
+    IFieldsService fieldsService,
+    IFilesRepository filesRepository,
+    ISearchRepository searchRepository,
+    IMapper mapper)
     : IDocumentsService
 {
     public async Task<long> AddDocumentAsync(PrimaryField primaryField, DocumentStatus status)
     {
         primaryField.Designation = TextFormattingHelper.FormatDesignation(primaryField.Designation);
         var doc = await documentsRepository.GetByDesignationAsync(primaryField.Designation);
-        
+
         if (doc is not null)
         {
             await fieldsService.UpdateAsync(primaryField, doc.Id);
             await ChangeStatusAsync(doc.Id, status);
             return doc.Id;
         }
-        
+
         var actualField = new ActualField
         {
             Designation = primaryField.Designation,
@@ -41,7 +41,7 @@ public class DocumentsService(
         };
         var primaryId = await primaryFieldsRepository.AddAsync(primaryField);
         var actualId = await actualFieldsRepository.AddAsync(actualField);
-        
+
         doc = new Document
         {
             Designation = primaryField.Designation,
@@ -49,18 +49,18 @@ public class DocumentsService(
             PrimaryFieldId = primaryId,
             Status = status
         };
-        
+
         var docId = await documentsRepository.AddAsync(doc);
-        
+
         // костыль: возможно еще не присвоился айди для документа, нужно подождать
         if (docId == 0)
         {
             await Task.Delay(1000);
         }
-        
+
         primaryField.DocId = docId;
-        actualField.DocId = docId; 
-        
+        actualField.DocId = docId;
+
         await primaryFieldsRepository.UpdateAsync(primaryField);
         await actualFieldsRepository.UpdateAsync(actualField);
 
@@ -80,10 +80,10 @@ public class DocumentsService(
         {
             return false;
         }
-        
+
         await primaryFieldsRepository.DeleteAsync(doc.PrimaryFieldId);
         await primaryFieldsRepository.DeleteAsync(doc.ActualFieldId);
-        
+
         await documentsRepository.DeleteAsync(id);
         await searchRepository.DeleteDocumentAsync(id);
 
@@ -101,7 +101,7 @@ public class DocumentsService(
     public async Task<FullDocument?> GetDocumentAsync(long id)
     {
         var doc = await documentsRepository.GetDocumentWithFields(id);
-        
+
         if (doc is null)
         {
             return null;
@@ -113,19 +113,19 @@ public class DocumentsService(
         return doc;
     }
 
-    public async Task<List<FullDocument>> GetDocumentsAsync(GetDocumentRequest? parameters)
+    public async Task<List<FullDocument>> GetDocumentsAsync(SearchQuery? parameters)
     {
-        if (!string.IsNullOrEmpty(parameters.Text))
+        if (!string.IsNullOrEmpty(parameters?.Text))
         {
             parameters.Text = TextFormattingHelper.FormatDesignation(parameters.Text);
         }
 
         return await documentsRepository.GetDocumentsWithFields(parameters);
     }
-    
-    public async Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters)
+
+    public async Task<int> GetDocumentsCountAsync(SearchQuery? parameters)
     {
-        if (parameters.Text is not null)
+        if (parameters?.Text is not null)
         {
             parameters.Text = TextFormattingHelper.FormatDesignation(parameters.Text);
         }
@@ -139,21 +139,21 @@ public class DocumentsService(
         var filename = await filesRepository.UploadFileAsync(file, docId);
 
         if (filename is null) return false;
-        
+
         var doc = await documentsRepository.GetByIdAsync(docId);
         var primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
         primary.DocumentText = $"https://gost-storage.ru/documents/{filename}";
         await primaryFieldsRepository.UpdateAsync(primary);
         return true;
     }
-    
+
     public async Task<List<GeneralDocumentInfoModel>> SearchAsync(SearchQuery query)
     {
         var result = await searchRepository.SearchAsync(query);
-        
+
         return result.Select(mapper.Map<GeneralDocumentInfoModel>).ToList();
     }
-    
+
     public Task<int> SearchCountAsync(SearchQuery query)
     {
         return searchRepository.CountAsync(query);
@@ -162,24 +162,51 @@ public class DocumentsService(
     public async Task IndexAllDocumentsAsync()
     {
         var documents = await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest
+            new SearchQuery
             {
-                Status = DocumentStatus.Valid,
-                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Valid}),
+                SearchFilters = new SearchFilters
+                {
+                    Status = DocumentStatus.Valid,
+                },
+                Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
+                {
+                    SearchFilters = new SearchFilters
+                    {
+                        Status = DocumentStatus.Valid,
+                    }
+                }),
                 Offset = 0
             });
         documents.AddRange(await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest
+            new SearchQuery
             {
-                Status = DocumentStatus.Canceled,
-                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Canceled}),
+                SearchFilters = new SearchFilters
+                {
+                    Status = DocumentStatus.Canceled,
+                },
+                Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
+                {
+                    SearchFilters = new SearchFilters
+                    {
+                        Status = DocumentStatus.Canceled,
+                    }
+                }),
                 Offset = 0
             }));
         documents.AddRange(await documentsRepository.GetDocumentsWithFields(
-            new GetDocumentRequest
+            new SearchQuery
             {
-                Status = DocumentStatus.Replaced,
-                Limit = await documentsRepository.CountDocumentsWithFields(new GetDocumentRequest{Status = DocumentStatus.Replaced}),
+                SearchFilters = new SearchFilters
+                {
+                    Status = DocumentStatus.Replaced,
+                },
+                Limit = await documentsRepository.CountDocumentsWithFields(new SearchQuery
+                {
+                    SearchFilters = new SearchFilters
+                    {
+                        Status = DocumentStatus.Replaced,
+                    },
+                }),
                 Offset = 0
             }));
 

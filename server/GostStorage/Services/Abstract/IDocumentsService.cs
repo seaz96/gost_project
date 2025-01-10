@@ -17,9 +17,9 @@ public interface IDocumentsService
     Task<FullDocument?> GetDocumentAsync(long id);
 
     Task<List<FullDocument>> GetDocumentsAsync(
-        GetDocumentRequest? parameters);
+        SearchQuery? parameters);
 
-    Task<int> GetDocumentsCountAsync(GetDocumentRequest? parameters);
+    Task<int> GetDocumentsCountAsync(SearchQuery? parameters);
 
     Task<bool> UploadFileForDocumentAsync(IFormFile file, long docId);
 

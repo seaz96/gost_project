@@ -181,7 +181,7 @@ public class DocsController(
     [Authorize]
     [HttpGet("all")]
     public async Task<ActionResult<List<FullDocument>>> GetDocuments(
-        [FromQuery] GetDocumentRequest parameters)
+        [FromQuery] SearchQuery parameters)
     {
         if (parameters.Limit < 0 || parameters.Offset < 0)
             return new BadRequestObjectResult("Limit or offset cannot be negative");
@@ -196,7 +196,7 @@ public class DocsController(
     [Authorize]
     [HttpGet("all-count")]
     public async Task<ActionResult<int>> GetDocumentsCount(
-        [FromQuery] GetDocumentRequest parameters)
+        [FromQuery] SearchQuery parameters)
     {
         if (parameters.Limit < 0 || parameters.Offset < 0)
             return new BadRequestObjectResult("Limit or offset cannot be negative");

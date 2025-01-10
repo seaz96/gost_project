@@ -2,8 +2,8 @@
 
 public class SearchQuery
 {
-    public string? Text { get; init; }
-    public SearchFilters? SearchFilters { get; init; }
-    public int Limit { get; init; }
-    public int Offset { get; init; }
+    public string? Text { get; set; }
+    public SearchFilters? SearchFilters { get; set; }
+    public int Limit { get; set; }
+    public int Offset { get; set; }
 }

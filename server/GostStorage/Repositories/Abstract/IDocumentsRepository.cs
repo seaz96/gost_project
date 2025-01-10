@@ -1,12 +1,13 @@
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
+using GostStorage.Models.Search;
 using GostStorage.Navigations;
 
 namespace GostStorage.Repositories.Abstract;
 
 public interface IDocumentsRepository
 {
-    public Task<int> GetCountOfDocumentsAsync(GetDocumentRequest? parameters);
+    public Task<int> GetCountOfDocumentsAsync(SearchQuery? parameters);
 
     public Task<Document?> GetByIdAsync(long id);
 
@@ -22,7 +23,7 @@ public interface IDocumentsRepository
 
     public Task UpdateStatusAsync(long id, DocumentStatus status);
 
-    Task<List<FullDocument>> GetDocumentsWithFields(GetDocumentRequest? parameters);
+    Task<List<FullDocument>> GetDocumentsWithFields(SearchQuery? parameters);
 
-    Task<int> CountDocumentsWithFields(GetDocumentRequest? parameters);
+    Task<int> CountDocumentsWithFields(SearchQuery? parameters);
 }
