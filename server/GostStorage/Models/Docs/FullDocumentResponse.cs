@@ -5,7 +5,7 @@ namespace GostStorage.Models.Docs;
 
 public class FullDocumentResponse
 {
-    public long DocId { get; set; }
+    public long Id { get; set; }
 
     public DocumentStatus Status { get; set; }
 

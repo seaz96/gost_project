@@ -22,7 +22,26 @@ public class MapperProfile : Profile
                 options => options.MapFrom(x => Math.Round(x.Score * 5)));
 
         CreateMap<Document, ReferenceDocumentResponse>();
-        CreateMap<FullDocument, FullDocumentResponse>();
+        CreateMap<FullDocument, FullDocumentResponse>()
+            .ForMember(
+                dest => dest.Id,
+                src => src.MapFrom(x => x.DocId));
+        CreateMap<FullDocument, GeneralDocumentInfoModel>()
+            .ForMember(
+                dest => dest.Id,
+                src => src.MapFrom(x => x.DocId))
+            .ForMember(
+                dest => dest.CodeOks,
+                src => src.MapFrom(x => x.Primary.CodeOks))
+            .ForMember(
+                dest => dest.Designation,
+                src => src.MapFrom(x => x.Primary.Designation))
+            .ForMember(
+                dest => dest.FullName,
+                src => src.MapFrom(x => x.Primary.FullName))
+            .ForMember(
+                dest => dest.RelevanceMark,
+                src => src.MapFrom(x => 5));
         CreateMap<Field, FieldResponse>();
         CreateMap<ActualField, FieldResponse>();
         CreateMap<PrimaryField, FieldResponse>();

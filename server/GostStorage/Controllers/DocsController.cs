@@ -188,7 +188,7 @@ public class DocsController(
         
         return Ok(
             (await documentsService.GetDocumentsAsync(parameters))
-                .Select(mapper.Map<FullDocumentResponse>)
+                .Select(mapper.Map<GeneralDocumentInfoModel>)
                 .ToList());
     }
 
