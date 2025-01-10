@@ -10,11 +10,10 @@ import type { UserEditType } from "./userEditModel.ts";
 interface UserEditFormProps {
 	handleSubmit: (userData: UserEditType) => void;
 	userData: User;
-	id: number;
 }
 
 const UserEditForm = (props: UserEditFormProps) => {
-	const { handleSubmit, userData, id } = props;
+	const { handleSubmit, userData } = props;
 	const user = useAppSelector((s) => s.user.user);
 
 	const {
@@ -48,7 +47,7 @@ const UserEditForm = (props: UserEditFormProps) => {
 			<UrfuTextInput label="Название организации" type="text" {...register("org_name")} />
 			<UrfuTextInput label="Отделение организации" type="text" {...register("org_branch")} />
 			<UrfuTextInput label="Деятельность организации" type="text" {...register("org_activity")} />
-			{id !== user?.id && user?.role === "Heisenberg" && (
+			{userData.id !== user?.id && user?.role === "Heisenberg" && (
 				<UrfuCheckbox
 					title={"Пользователь является администратором"}
 					{...register("is_admin")}

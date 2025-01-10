@@ -6,11 +6,13 @@ import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {
 	const navigate = useNavigate();
-	const { data: user } = useFetchUserQuery();
+	const { data: user, refetch } = useFetchUserQuery();
 	const [editSelf] = useEditSelfMutation();
+
 
 	const handleSelfEdit = async (userData: UserEditType) => {
 		await editSelf(userData);
+		refetch();
 		navigate("/users-page");
 	};
 
@@ -18,7 +20,7 @@ const SelfEditPage = () => {
 		return (
 			<div>
 				<section className={styles.userEditSection}>
-					<UserEditForm handleSubmit={handleSelfEdit} userData={user} id={user.id} />
+					<UserEditForm handleSubmit={handleSelfEdit} userData={user} />
 				</section>
 			</div>
 		);
