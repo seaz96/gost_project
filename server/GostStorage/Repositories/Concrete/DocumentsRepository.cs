@@ -14,6 +14,11 @@ public class DocumentsRepository(DataContext context) : IDocumentsRepository
     {
         return SearchHelper.GetFullDocumentQueryable(context)
             .ApplyFilters(parameters)
+            .Where(x =>
+                (parameters == null
+                 || parameters.Status == null
+                 || x.Status == parameters.Status)
+                && x.Status != DocumentStatus.Inactive)
             .CountAsync();
     }
 
