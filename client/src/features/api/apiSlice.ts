@@ -45,10 +45,12 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 		if (value === null || value === undefined || Number.isNaN(value)) {
 			continue;
 		}
-		if (typeof value === "object" && !Array.isArray(value)) {
-			for (const [nestedKey, nestedValue] of Object.entries(value)) {
-				formData.append(`${key}.${nestedKey}`, nestedValue);
-			}
+		if (isFile(value)) {
+			formData.append(key, value, (value as File).name);
+			continue;
+		}
+		if (isBlob(value)) {
+			formData.append(key, value);
 			continue;
 		}
 		if (Array.isArray(value)) {
@@ -57,12 +59,10 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 			}
 			continue;
 		}
-		if (isFile(value)) {
-			formData.append('File', value, (value as File).name);
-			continue;
-		}
-		if (isBlob(value)) {
-			formData.append(key, value);
+		if (typeof value === "object" && !Array.isArray(value)) {
+			for (const [nestedKey, nestedValue] of Object.entries(value)) {
+				formData.append(`${key}.${nestedKey}`, nestedValue);
+			}
 			continue;
 		}
 		if (typeof value === "number") {
