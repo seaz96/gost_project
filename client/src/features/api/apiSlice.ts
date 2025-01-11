@@ -58,7 +58,7 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 			continue;
 		}
 		if (isFile(value)) {
-			formData.append(key, value, (value as File).name);
+			formData.append('File', value, (value as File).name);
 			continue;
 		}
 		if (isBlob(value)) {
