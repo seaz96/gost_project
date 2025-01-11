@@ -141,6 +141,7 @@ public class DocumentsService(
 
         var doc = await documentsRepository.GetByIdAsync(docId);
         var primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
+        Log.Logger.Information($"File https://gost-storage.ru/documents/{filename} has been uploaded successfully.");
         primary.DocumentText = $"https://gost-storage.ru/documents/{filename}";
         await primaryFieldsRepository.UpdateAsync(primary);
         return true;

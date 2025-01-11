@@ -1,6 +1,7 @@
 using GostStorage.Repositories.Abstract;
 using Minio;
 using Minio.DataModel.Args;
+using Serilog;
 using IMinioClientFactory = Minio.AspNetCore.IMinioClientFactory;
 
 namespace GostStorage.Repositories.Concrete;
@@ -31,7 +32,14 @@ public class FilesRepository(
             .WithObjectSize(stream.Length)
             .WithContentType("application/octet-stream");
 
-        await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
+        try
+        {
+            await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            Log.Logger.Error(e.ToString());
+        }
 
         return filename;
     }
