@@ -60,7 +60,7 @@ export default function GostForm({ handleSubmit, data }: GostFormProps) {
 			alert("Необходимо загрузить файл или заполнить текст стандарта");
 			return;
 		}
-		handleSubmit(data as GostAddModel);
+		handleSubmit({ ...data, file: data.file[0] ?? null } as GostAddModel);
 	};
 
 	const handleAddReference = () => {
