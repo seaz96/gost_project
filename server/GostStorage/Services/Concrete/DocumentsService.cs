@@ -19,7 +19,8 @@ public class DocumentsService(
     IFieldsService fieldsService,
     IFilesRepository filesRepository,
     ISearchRepository searchRepository,
-    IMapper mapper)
+    IMapper mapper,
+    IConfiguration configuration)
     : IDocumentsService
 {
     public async Task<long> AddDocumentAsync(PrimaryField primaryField, DocumentStatus status)
@@ -139,10 +140,12 @@ public class DocumentsService(
 
         if (filename is null) return false;
 
+        var bucket = configuration.GetValue<string>("MINIO_BUCKET");
+
         var doc = await documentsRepository.GetByIdAsync(docId);
         var primary = await primaryFieldsRepository.GetByIdAsync(doc.PrimaryFieldId);
-        Log.Logger.Information($"File https://gost-storage.ru/documents/{filename} has been uploaded successfully.");
-        primary.DocumentText = $"https://gost-storage.ru/documents/{filename}";
+        Log.Logger.Information($"File https://gost-storage.ru/{bucket}/{filename} has been uploaded successfully.");
+        primary.DocumentText = $"https://gost-storage.ru/{bucket}/{filename}";
         await primaryFieldsRepository.UpdateAsync(primary);
         return true;
     }
