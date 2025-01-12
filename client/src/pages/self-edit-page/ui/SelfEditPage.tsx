@@ -6,13 +6,11 @@ import styles from "./SelfEditPage.module.scss";
 
 const SelfEditPage = () => {
 	const navigate = useNavigate();
-	const { data: user, refetch } = useFetchUserQuery();
+	const { data: user } = useFetchUserQuery();
 	const [editSelf] = useEditSelfMutation();
-
 
 	const handleSelfEdit = async (userData: UserEditType) => {
 		await editSelf(userData);
-		refetch();
 		navigate("/users-page");
 	};
 

@@ -13,11 +13,8 @@ import { UserEditPage } from "./user-edit-page";
 import { UsersPage } from "./users-page";
 
 const AppRouter = () => {
-	const token = localStorage.getItem("jwt_token");
-
-	const { data: user, isLoading } = useFetchUserQuery(undefined, {
-		skip: !token,
-	});
+	//TODO: add skip
+	const { data: user, isLoading } = useFetchUserQuery();
 
 	if (isLoading) return null;
 
