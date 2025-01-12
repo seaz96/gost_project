@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAppSelector } from "../../app/hooks.ts";
 import AuthorizationForm from "../../components/AuthorizationForm/AuthorizationForm.tsx";
 import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
 import RegistrationForm from "../../components/RegistrationForm/RegistrationForm.tsx";
@@ -17,9 +16,8 @@ enum states {
 const LoginPage = () => {
 	const [state, setState] = useState<states>(states.authorization);
 	const [error, setError] = useState("");
-	const currentError = useAppSelector((state) => state.user.error);
 
-	const [loginUser] = useLoginUserMutation();
+	const [loginUser, { error: loginError }] = useLoginUserMutation();
 	const [registerUser] = useRegisterUserMutation();
 
 	//TODO: fix component reload during auth/registration
@@ -28,7 +26,6 @@ const LoginPage = () => {
 			await registerUser(user).unwrap();
 		} catch (err) {
 			console.error("Failed to register:", err);
-			setError(currentError ?? "Ошибка регистрации");
 		}
 	};
 
@@ -36,8 +33,10 @@ const LoginPage = () => {
 		try {
 			await loginUser(user).unwrap();
 		} catch (err) {
-			console.error("Failed to login:", err, "current error", currentError);
-			setError(currentError ?? "Ошибка авторизации");
+			console.error("Failed to login:", err, loginError);
+			if ((err as { status: number }).status === 400) {
+				setError("Неверный логин или пароль");
+			}
 		}
 	};
 

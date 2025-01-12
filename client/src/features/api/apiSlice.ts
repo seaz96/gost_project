@@ -1,6 +1,4 @@
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { toast } from "react-toastify";
 import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
 import type { UserRegistration } from "../../components/RegistrationForm/registrationModel.ts";
 import type { UserEditType } from "../../components/UserEditForm/userEditModel.ts";
@@ -69,7 +67,11 @@ const toFormData = (obj: Record<string, object | string | number | Blob>) => {
 			formData.append(key, value.toString());
 			continue;
 		}
-		formData.append(key, value);
+		if (typeof value === "string") {
+			formData.append(key, value);
+			//continue;
+		}
+		//formData.append(key, value);
 	}
 	return formData;
 };
@@ -93,51 +95,45 @@ const baseQueryWithAuth = fetchBaseQuery({
 	},
 });
 
-const baseQueryWithErrorHandling: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-	args,
-	api,
-	extraOptions,
-) => {
-	const result = await baseQueryWithAuth(args, api, extraOptions);
-	if (result.error) {
-		const errorMessage = (result.error.data as { message?: string })?.message || result.error.status;
-		toast.error(`Ошибка получения данных (${errorMessage})`);
-	}
-	return result;
-};
-
 export const apiSlice = createApi({
 	reducerPath: "api",
-	baseQuery: baseQueryWithErrorHandling,
+	baseQuery: baseQueryWithAuth,
+	tagTypes: ["User", "Gost"],
+	keepUnusedDataFor: 600,
 	endpoints: (builder) => ({
 		fetchUser: builder.query<User, void>({
 			query: () => ({
 				url: "/accounts/self-info",
 			}),
+			providesTags: ["User"],
 		}),
 		loginUser: builder.mutation<User, UserAuthorization>({
 			query: (credentials) => ({
 				url: "/accounts/login",
 				method: "POST",
 				body: credentials,
+				keepUnusedDataFor: 0,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		registerUser: builder.mutation<User, UserRegistration>({
 			query: (credentials) => ({
 				url: "/accounts/register",
 				method: "POST",
 				body: credentials,
+				keepUnusedDataFor: 0,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		fetchUsers: builder.query<User[], void>({
 			query: () => "/admin/users",
-			keepUnusedDataFor: 0,
+			providesTags: ["User"],
 		}),
 		fetchUserInfo: builder.query<User, number>({
 			query: (id) => ({
 				url: `/admin/users/${id}`,
 			}),
-			keepUnusedDataFor: 0,
+			providesTags: ["User"],
 		}),
 		editUser: builder.mutation<void, UserEditType & { id: number }>({
 			query: (userData) => ({
@@ -145,6 +141,7 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: userData,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		toggleAdmin: builder.mutation<void, { userId: number; isAdmin: boolean }>({
 			query: (data) => ({
@@ -152,6 +149,7 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: data,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		editSelf: builder.mutation<void, UserEditType>({
 			query: (userData) => ({
@@ -159,12 +157,13 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: userData,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		fetchGost: builder.query<GostFetchModel, string>({
 			query: (id) => ({
 				url: `/docs/${id}`,
 			}),
-			keepUnusedDataFor: 0,
+			providesTags: ["Gost"],
 		}),
 		addGost: builder.mutation<void, GostAddModel>({
 			query: (gost) => {
@@ -174,14 +173,15 @@ export const apiSlice = createApi({
 					body: toFormData(gost),
 				};
 			},
+			invalidatesTags: ["Gost"],
 		}),
 		changeGostStatus: builder.mutation<void, { id: string | number; status: documentStatus }>({
 			query: ({ id, status }) => ({
 				url: "/docs/change-status",
 				method: "PUT",
 				body: { id, status },
-				responseHandler: (response) => response.text(),
 			}),
+			invalidatesTags: ["Gost"],
 		}),
 		updateGost: builder.mutation<void, { id: string; gost: GostAddModel; actualize: boolean }>({
 			query: ({ id, gost, actualize }) => ({
@@ -189,6 +189,7 @@ export const apiSlice = createApi({
 				method: "PUT",
 				body: toFormData(gost),
 			}),
+			invalidatesTags: ["Gost"],
 		}),
 		resetPassword: builder.mutation<void, { login: string; old_password: string; new_password: string }>({
 			query: (credentials) => ({
@@ -196,6 +197,7 @@ export const apiSlice = createApi({
 				method: "POST",
 				body: credentials,
 			}),
+			invalidatesTags: ["User"],
 		}),
 		getViewsStats: builder.query<
 			GostViews[],
@@ -209,34 +211,37 @@ export const apiSlice = createApi({
 					EndDate: params.endDate,
 				},
 			}),
-			keepUnusedDataFor: 0,
+			keepUnusedDataFor: 60,
+			providesTags: ["Gost"],
 		}),
 		getChangesStats: builder.query<GostChanges[], { status: string; StartDate: string; EndDate: string }>({
 			query: (params) => ({
 				url: "/actions/list",
 				params,
 			}),
-			keepUnusedDataFor: 0,
+			keepUnusedDataFor: 60,
+			providesTags: ["Gost"],
 		}),
 		deleteGost: builder.mutation<void, string>({
 			query: (id) => ({
 				url: `/docs/delete/${id}`,
 				method: "DELETE",
 			}),
+			invalidatesTags: ["Gost"],
 		}),
 		fetchGostsPage: builder.query<GostViewInfo[], { url: string; offset: number; limit: number; params?: object }>({
 			query: ({ url, offset, limit, params }) => ({
 				url,
 				params: { ...flattenParams(params), offset, limit },
 			}),
-			keepUnusedDataFor: 0,
+			providesTags: ["Gost"],
 		}),
 		fetchGostsCount: builder.query<number, { url: string; params?: object }>({
 			query: ({ url, params }) => ({
 				url: `${url}-count`,
 				params: flattenParams(params),
 			}),
-			keepUnusedDataFor: 0,
+			providesTags: ["Gost"],
 		}),
 	}),
 });
