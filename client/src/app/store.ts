@@ -1,4 +1,5 @@
 import { type Middleware, type MiddlewareAPI, configureStore, isRejectedWithValue } from "@reduxjs/toolkit";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { apiSlice } from "features/api/apiSlice.ts";
 import { toast } from "react-toastify";
 import userReducer from "../features/user/userSlice.ts";
@@ -6,7 +7,7 @@ import userReducer from "../features/user/userSlice.ts";
 export const rtkQueryErrorLogger: Middleware = (_: MiddlewareAPI) => (next) => (action) => {
 	if (isRejectedWithValue(action)) {
 		console.warn("Rejected action:", action);
-		const payload = action.payload as { status?: number };
+		const payload = action.payload as FetchBaseQueryError | undefined;
 		if (payload?.status) {
 			switch (payload.status) {
 				case 400:
@@ -22,7 +23,8 @@ export const rtkQueryErrorLogger: Middleware = (_: MiddlewareAPI) => (next) => (
 					toast.error("Документ не найден (404)");
 					break;
 				default:
-					if (payload.status >= 500) toast.error(`Ошибка сервера (${payload.status})`);
+					if (typeof payload.status === "number" && payload.status >= 500)
+						toast.error(`Ошибка сервера (${payload.status})`);
 					else toast.error(`Неизвестная ошибка (${payload.status})`);
 			}
 		} else {

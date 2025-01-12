@@ -1,3 +1,4 @@
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useState } from "react";
 import AuthorizationForm from "../../components/AuthorizationForm/AuthorizationForm.tsx";
 import type { UserAuthorization } from "../../components/AuthorizationForm/authorizationModel.ts";
@@ -34,7 +35,7 @@ const LoginPage = () => {
 			await loginUser(user).unwrap();
 		} catch (err) {
 			console.error("Failed to login:", err, loginError);
-			if ((err as { status: number }).status === 400) {
+			if ((err as FetchBaseQueryError).status === 400) {
 				setError("Неверный логин или пароль");
 			}
 		}
