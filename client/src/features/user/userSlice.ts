@@ -4,13 +4,13 @@ import { apiSlice } from "../api/apiSlice.ts";
 
 interface UserState {
 	user: User | null;
-	loading: boolean;
+	status: "idle" | "loading" | "succeeded" | "failed";
 	error: string | null;
 }
 
 const initialState: UserState = {
 	user: null,
-	loading: false,
+	status: "idle",
 	error: null,
 };
 
@@ -28,38 +28,43 @@ export const userSlice = createSlice({
 			state.user = action.payload;
 		},
 		setLoading: (state, action: PayloadAction<boolean>) => {
-			state.loading = action.payload;
+			state.status = action.payload ? "loading" : "idle";
 		},
 	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(logoutUser.fulfilled, (state: UserState) => {
 				state.user = null;
+				state.status = "succeeded";
 			})
 			.addMatcher(apiSlice.endpoints.fetchUser.matchPending, (state) => {
-				state.loading = true;
+				state.status = "loading";
 				state.error = null;
 			})
 			.addMatcher(apiSlice.endpoints.fetchUser.matchFulfilled, (state, action: PayloadAction<User>) => {
-				state.loading = false;
+				state.status = "succeeded";
 				state.user = action.payload;
 			})
 			.addMatcher(apiSlice.endpoints.fetchUser.matchRejected, (state, action) => {
-				state.loading = false;
+				state.status = "failed";
+				if (action.payload?.status === 401) {
+					state.user = null;
+					localStorage.removeItem("jwt_token");
+				}
 				state.error = `Ошибка загрузки данных пользователя (${action.error.message})`;
 			})
 			.addMatcher(apiSlice.endpoints.loginUser.matchPending, (state) => {
-				state.loading = true;
+				state.status = "loading";
 				state.error = null;
 			})
 			.addMatcher(apiSlice.endpoints.loginUser.matchFulfilled, (state, action: PayloadAction<User>) => {
-				state.loading = false;
+				state.status = "succeeded";
 				state.user = action.payload;
 				state.error = null;
 				localStorage.setItem("jwt_token", action.payload.token);
 			})
 			.addMatcher(apiSlice.endpoints.loginUser.matchRejected, (state, action) => {
-				state.loading = false;
+				state.status = "failed";
 				state.user = null;
 				state.error =
 					action.error.code === "ERR_BAD_REQUEST"
@@ -67,17 +72,17 @@ export const userSlice = createSlice({
 						: `Ошибка входа в систему (${action.error.message})`;
 			})
 			.addMatcher(apiSlice.endpoints.registerUser.matchPending, (state) => {
-				state.loading = true;
+				state.status = "loading";
 				state.error = null;
 			})
 			.addMatcher(apiSlice.endpoints.registerUser.matchFulfilled, (state, action: PayloadAction<User>) => {
-				state.loading = false;
+				state.status = "succeeded";
 				state.user = action.payload;
 				state.error = null;
 				localStorage.setItem("jwt_token", action.payload.token);
 			})
 			.addMatcher(apiSlice.endpoints.registerUser.matchRejected, (state, action) => {
-				state.loading = false;
+				state.status = "failed";
 				state.user = null;
 				state.error =
 					action.error.code === "ERR_BAD_REQUEST"

@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useAppSelector } from "../app/hooks.ts";
 import Header from "../components/Header/Header";
 import { useFetchUserQuery } from "../features/api/apiSlice.ts";
+import { Loader } from "../shared/components";
 import { GostCreatorPage } from "./GostCreatorPage";
 import { LoginPage } from "./LoginPage";
 import { StatisticsPage } from "./StatisticsPage";
@@ -13,10 +15,12 @@ import { UserEditPage } from "./user-edit-page";
 import { UsersPage } from "./users-page";
 
 const AppRouter = () => {
-	//TODO: add skip
-	const { data: user, isLoading } = useFetchUserQuery();
-
-	if (isLoading) return null;
+	const token = localStorage.getItem("jwt_token");
+	const state = useAppSelector((state) => state.user.status);
+	const { data: user, isLoading } = useFetchUserQuery(undefined, {
+		skip: !token && (state === "idle" || state === "loading"),
+	});
+	if (isLoading) return <Loader />;
 
 	return (
 		<>
