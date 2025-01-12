@@ -5,12 +5,12 @@
 
     background-color: #fff;
     border: 1px solid;
-    border-color: #D12965;
+    border-color: var(--urfu-blue);
     border-radius: 5px;
 }
 
 .filledButton {
-    background: linear-gradient(180deg, #CB0E70 -26%, #F1B72C 183%);
+    background: var(--urfu-blue);
 
     color: #fff;
 }

@@ -1,13 +1,15 @@
 using System.Text;
-using GostStorage.Services;
+using GostStorage.Services.Concrete;
 
 namespace GostStorage.Middlewares;
 
 public class BodyReaderMiddleware(RequestDelegate next)
 {
+    private const string JsonContentType = "application/json";
+    
     public async Task InvokeAsync(HttpContext context)
     {
-        if (context.Request.Method == HttpMethods.Post)
+        if (context.Request.Method == HttpMethods.Post && context.Request.ContentType == JsonContentType)
         {
             using var reader = new StreamReader(context.Request.Body, Encoding.UTF8);
             var body = await reader.ReadToEndAsync();

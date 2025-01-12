@@ -1,6 +1,5 @@
-using GostStorage.Services;
+using GostStorage.Services.Abstract;
 using GostStorage.Services.Concrete;
-using GostStorage.Services.Interfaces;
 
 namespace GostStorage.StartUp;
 
@@ -8,10 +7,11 @@ public static class ServicesStartUp
 {
     public static void AddApplicationServices(this IServiceCollection serviceCollection)
     {
+        serviceCollection.AddScoped<IFileProcessor, FileProcessor>();
         serviceCollection.AddScoped<IAccountService, AccountService>();
-        serviceCollection.AddScoped<IDocsService, DocsService>();
+        serviceCollection.AddScoped<IDocumentsService, DocumentsService>();
         serviceCollection.AddScoped<IReferencesService, ReferencesService>();
         serviceCollection.AddScoped<IFieldsService, FieldsService>();
-        serviceCollection.AddScoped<IDocStatisticsService, DocStatisticsService>();
+        serviceCollection.AddScoped<IUserActionsService, UserActionsService>();
     }
 }

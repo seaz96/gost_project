@@ -1,33 +1,26 @@
-import React from 'react'
+import type React from "react";
 
-import styles from './IconButton.module.scss'
-import classNames from 'classnames';
+import classNames from "classnames";
+import styles from "./IconButton.module.scss";
 
 interface ButtonProps {
-  children: React.ReactNode
-  isFilled?: boolean
-  className?: string
-  onClick: Function
+	children: React.ReactNode;
+	isFilled?: boolean;
+	className?: string;
+	onClick: Function;
 }
 
-const IconButton:React.FC<ButtonProps> = props => {
-  const {
-    children,
-    className,
-    onClick,
-    isFilled
-  } = props
+const IconButton: React.FC<ButtonProps> = (props) => {
+	const { children, className, onClick, isFilled } = props;
 
-  return (
-    <button 
-      className={classNames(className, styles.baseButton, 
-        isFilled ? styles.filledButton : '', 
-      )} 
-      onClick={(event) => onClick(event)}
-    >
-      {children}
-    </button>
-  )
-}
+	return (
+		<button
+			className={classNames(className, styles.baseButton, isFilled ? styles.filledButton : "")}
+			onClick={(event) => onClick(event)}
+		>
+			{children}
+		</button>
+	);
+};
 
 export default IconButton;

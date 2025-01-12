@@ -1,10 +1,37 @@
-.filterSection {
-    margin: 0 0 26px;
+.tableEnd {
+  text-align: center;
+  padding: 1rem;
 }
 
-.gostsPagination {
-    display: flex;
-    justify-content: center;
+.tableLoad {
+    text-align: center;
+    padding: 1rem;
+    @keyframes pulse {
+        0% {
+        color: var(--urfu-transparent-black);
+        }
+        50% {
+          color: var(--urfu-black);
+        }
+        100% {
+          color: var(--urfu-transparent-black);
+        }
+    }
+  & {
+    animation: pulse 2s infinite;
+  }
+}
 
-    margin-top: 10px;
+.filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.addDocument {
+  width: fit-content;
+  display: flex;
+  gap: 8px;
+  font-size: 20px;
+  margin: .5rem 0;
+  color: var(--urfu-blue);
 }

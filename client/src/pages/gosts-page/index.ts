@@ -1,1 +1,1 @@
-export {default as GostsPage} from './ui';
+export { default as GostsPage } from "./ui/GostsPage.tsx";

@@ -1,0 +1,68 @@
+@use 'reset';
+
+:root {
+    --main-font: 'Montserrat', sans-serif;
+    --urfu-blue: #1E4391;
+    --urfu-dark-blue: #0F2B5E;
+    --urfu-red: #EF302B;
+    --urfu-dark-red: #C0231F;
+    --urfu-grey: #F6F6F6;
+    --urfu-transparent-black: rgba(34, 34, 34, 0.2);
+    --urfu-transparent-black-light: rgba(34, 34, 34, 0.05);
+    --white: #fff;
+    --urfu-black: #222222;
+}
+
+body {
+    h1, h2, h3 {
+        color: var(--urfu-blue);
+    }
+    line-height: 140%;
+    font-family: var(--main-font), system-ui;
+    color: var(--urfu-black);
+    background: var(--urfu-grey);
+    //Element	Font Size (Desktop / Mobile)	Line Height	Font
+    //Заголовок	52px / 24px	110%	Montserrat Semibold
+    //Заголовок 2-го порядка	40px / 18px	120%	Montserrat Semibold
+    //Заголовок 3-го порядка	24px / 16px	120%	Montserrat Semibold
+
+    h1 {
+        font-size: 52px;
+        line-height: 110%;
+        font-weight: 600;
+    }
+    h2 {
+        font-size: 40px;
+        line-height: 120%;
+        font-weight: 600;
+    }
+    h3 {
+        font-size: 24px;
+        line-height: 120%;
+        font-weight: 600;
+    }
+}
+
+.container {
+    padding: 25px 85px;
+}
+
+.contentContainer {
+    padding-bottom: 55px;
+    padding-top: 25px;
+}
+
+.verticalPadding {
+    padding: 10px 0;
+}
+
+.flex {
+    display: flex;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}

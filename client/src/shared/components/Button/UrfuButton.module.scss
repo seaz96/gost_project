@@ -1,0 +1,73 @@
+.urfuButton {
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: var(--main-font), system-ui;
+  transition: background-color 0.3s;
+  font-weight: 700;
+
+  &.red {
+    background-color: var(--urfu-red);
+    color: white;
+
+    &.outline {
+      background-color: transparent;
+      color: var(--urfu-red);
+      border: 2px solid var(--urfu-red);
+
+      &:hover {
+        background-color: var(--urfu-red);
+        color: white;
+      }
+    }
+
+    &:hover {
+      background-color: var(--urfu-dark-red);
+    }
+  }
+
+  &.blue {
+    background-color: var(--urfu-blue);
+    color: white;
+
+    &.outline {
+      background-color: transparent;
+      color: var(--urfu-blue);
+      border: 2px solid var(--urfu-blue);
+
+      &:hover {
+        background-color: var(--urfu-blue);
+        color: white;
+      }
+    }
+
+    &:hover {
+      background-color: var(--urfu-dark-blue);
+    }
+  }
+
+  &.small {
+    font-size: 14px;
+    padding: 10px 15px;
+    border-radius: 24px;
+  }
+
+  &.medium {
+    font-size: 16px;
+    padding: 20px 30px;
+    border-radius: 24px;
+  }
+
+  &.large {
+    font-size: 20px;
+    padding: 30px 40px;
+    border-radius: 24px;
+  }
+
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

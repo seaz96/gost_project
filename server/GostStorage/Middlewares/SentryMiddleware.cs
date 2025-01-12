@@ -1,4 +1,4 @@
-using GostStorage.Services;
+using GostStorage.Services.Abstract;
 
 namespace GostStorage.Middlewares;
 

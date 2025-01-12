@@ -1,7 +1,6 @@
 using GostStorage.Data;
-using GostStorage.Repositories;
+using GostStorage.Repositories.Abstract;
 using GostStorage.Repositories.Concrete;
-using GostStorage.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Minio.AspNetCore;
 
@@ -37,13 +36,14 @@ public static class InfrastructureStartUp
         
         serviceCollection.AddScoped<HttpClient>();
         serviceCollection.AddScoped<IUsersRepository, UsersRepository>();
-        serviceCollection.AddScoped<IFieldsRepository, FieldsRepository>();
+        serviceCollection.AddScoped<IPrimaryFieldsRepository, PrimaryFieldsRepository>();
+        serviceCollection.AddScoped<IActualFieldsRepository, ActualFieldsRepository>();
         serviceCollection.AddScoped<IReferencesRepository, ReferencesRepository>();
-        serviceCollection.AddScoped<IDocsRepository, DocsRepository>();
-        serviceCollection.AddScoped<IDocStatisticsRepository, DocStatisticsRepository>();
+        serviceCollection.AddScoped<IDocumentsRepository, DocumentsRepository>();
+        serviceCollection.AddScoped<IUserActionsRepository, UserActionsRepository>();
         serviceCollection.AddMinio(new Uri($"s3://{minioPublicKey}:{minioPrivateKey}@{minioHost}:{minioPort}/"));
         serviceCollection.AddScoped<IFilesRepository, FilesRepository>();
         serviceCollection.AddScoped<ISearchRepository>(
-            serviceProvider => new FtsRepository(serviceProvider.GetService<HttpClient>()!, ftsApiUrl!));
+            serviceProvider => new SearchRepository(serviceProvider.GetService<HttpClient>()!, ftsApiUrl!));
     }
 }

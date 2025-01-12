@@ -1,1 +1,1 @@
-export {default as SelfEditPage} from './ui/SelfEditPage'
+export { default as SelfEditPage } from "./ui/SelfEditPage";

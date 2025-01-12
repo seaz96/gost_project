@@ -8,7 +8,7 @@ name: Backend build
 on:
   workflow_dispatch:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "refactoring-040125" ]
     paths: [ "server/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]

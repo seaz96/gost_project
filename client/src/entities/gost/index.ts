@@ -1,2 +1,2 @@
-export * as gostModel from './model/gostModel';
-export * from './hooks/useGostsWithPagination'
+export * as gostModel from "./gostModel.ts";
+export * from "../../hooks/useGostsWithPagination";

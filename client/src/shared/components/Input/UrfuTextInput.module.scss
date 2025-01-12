@@ -1,0 +1,44 @@
+:root {
+  --input-border-color: rgba(34, 34, 34, 0.2);
+  --input-border-color-active: #1E4391;
+  --input-text-color: #222222;
+  --input-error-color: #EF302B;
+}
+
+.inputContainer {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px 0;
+  border: none;
+  border-bottom: 2px solid var(--input-border-color);
+  background: none;
+  color: var(--input-text-color);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, color 0.3s;
+}
+
+.input:focus {
+  border-bottom-color: var(--input-border-color-active);
+  color: var(--input-text-color);
+}
+
+.input.error {
+  border-bottom-color: var(--input-error-color);
+}
+
+.input:disabled {
+  opacity: 0.8;
+}
+
+.errorMessage {
+  color: var(--input-error-color);
+  font-size: 12px;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+}

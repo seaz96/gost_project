@@ -8,7 +8,7 @@ name: Frontend dev build
 on:
   workflow_dispatch:
   push:
-    branches: [ "dev" ]
+    branches: [ "dev", "refactoring-040125" ]
     paths: [ "client/**" ]
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
@@ -20,7 +20,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}-frontend
-  REACT_APP_API_URL: https://test.gost-storage.ru/api
+  API_URL: https://test.gost-storage.ru/api
 
 
 jobs:
@@ -79,7 +79,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            REACT_APP_API_URL=${{ env.REACT_APP_API_URL }}
+            API_URL=${{ env.API_URL }}
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

@@ -1,61 +1,66 @@
 using GostStorage.Data;
 using GostStorage.Entities;
 using GostStorage.Models.Docs;
-using GostStorage.Navigations;
-using Microsoft.EntityFrameworkCore;
+using GostStorage.Models.Search;
 
 namespace GostStorage.Helpers;
 
 public static class SearchHelper
 {
-    public static async Task<List<long>> SearchFields(SearchParametersModel parameters, bool? isValid, DataContext _context)
+    public static IQueryable<FullDocument> ApplyFilters(
+        this IQueryable<FullDocument> queryable,
+        SearchQuery? query)
     {
-        return await _context.Fields
-            .Where(f => parameters.CodeOKS == null || (f.CodeOKS ?? "").ToLower()
-                .Contains(parameters.CodeOKS.ToLower()))
-            .Where(f => parameters.ActivityField == null || (f.ActivityField ?? "").ToLower()
-                .Contains(parameters.ActivityField.ToLower()))
-            .Where(f => parameters.AdoptionLevel == null || f.AdoptionLevel != parameters.AdoptionLevel)
-            .Where(f => parameters.Name == null || 
-                        (f.Designation ?? "").ToLower()
-                        .Contains(parameters.Name.ToLower()) || 
-                        (f.FullName ?? "").ToLower()
-                        .Contains(parameters.Name.ToLower()))
-            .Where(f => parameters.AcceptanceYear == null || f.AcceptanceYear.Value == parameters.AcceptanceYear.Value)
-            .Where(f => parameters.CommissionYear == null || f.CommissionYear.Value == parameters.CommissionYear.Value)
-            .Where(f => parameters.Author == null || (f.Author ?? "").ToLower()
-                .Contains(parameters.Author.ToLower()))
-            .Where(f => parameters.AcceptedFirstTimeOrReplaced == null || (f.AcceptedFirstTimeOrReplaced ?? "").ToLower()
-                .Contains(parameters.AcceptedFirstTimeOrReplaced.ToLower()))
-            .Where(f => parameters.KeyWords == null || (f.KeyWords ?? "").ToLower()
-                .Contains(parameters.KeyWords.ToLower()))
-            .Where(f => parameters.ApplicationArea == null || (f.ApplicationArea ?? "").ToLower()
-                .Contains(parameters.ApplicationArea.ToLower()))
-            .Where(f => parameters.DocumentText == null || (f.DocumentText ?? "").ToLower()
-                .Contains(parameters.DocumentText.ToLower()))
-            .Where(f => parameters.Changes == null || (f.Changes ?? "").ToLower()
-                .Contains(parameters.Changes.ToLower()))
-            .Where(f => parameters.Amendments == null || (f.Amendments ?? "").ToLower()
-                .Contains(parameters.Amendments.ToLower()))
-            .Where(f => parameters.Content == null || (f.Content ?? "").ToLower()
-                .Contains(parameters.Content.ToLower()))
-            .Where(f => parameters.Harmonization == null || f.Harmonization == parameters.Harmonization)
-            .Where(f => isValid == null || isValid.Value
-                ? f.Status == DocStatuses.Valid
-                : f.Status != DocStatuses.Valid && f.Status != DocStatuses.Inactive)
-            .AsSingleQuery()
-            .Select(f => f.Id)
-            .ToListAsync();
+        var parameters = query.SearchFilters;
+        
+        if (parameters is null) return queryable;
+        
+        return queryable
+            .Where(f => parameters.CodeOks == null
+                        || (f.Primary.CodeOks ?? "").ToLower().Contains(parameters.CodeOks.ToLower())
+                        || (f.Actual.CodeOks ?? "").ToLower().Contains(parameters.CodeOks.ToLower()))
+            .Where(f => parameters.AdoptionLevel == null
+                        || parameters.AdoptionLevel.Contains(f.Primary.AdoptionLevel.Value)
+                        || parameters.AdoptionLevel.Contains(f.Actual.AdoptionLevel.Value))
+            .Where(f => query.Text == null ||
+                        f.Primary.Designation.ToLower().Contains(query.Text.ToLower()) ||
+                        (f.Primary.FullName ?? "").ToLower().Contains(query.Text.ToLower()) ||
+                        f.Actual.Designation.ToLower().Contains(query.Text.ToLower()) ||
+                        (f.Actual.FullName ?? "").ToLower().Contains(query.Text.ToLower()))
+            .Where(f => parameters.AcceptanceYear == null
+                        || f.Primary.AcceptanceYear.Value == parameters.AcceptanceYear.Value
+                        || f.Actual.AcceptanceYear.Value == parameters.AcceptanceYear.Value)
+            .Where(f => parameters.CommissionYear == null
+                        || f.Primary.CommissionYear.Value == parameters.CommissionYear.Value
+                        || f.Actual.CommissionYear.Value == parameters.CommissionYear.Value)
+            .Where(f => parameters.Author == null
+                        || (f.Primary.Author ?? "").ToLower().Contains(parameters.Author.ToLower())
+                        || (f.Actual.Author ?? "").ToLower().Contains(parameters.Author.ToLower()))
+            .Where(f => parameters.AcceptedFirstTimeOrReplaced == null
+                        || (f.Primary.AcceptedFirstTimeOrReplaced ?? "").ToLower().Contains(parameters.AcceptedFirstTimeOrReplaced.ToLower())
+                        || (f.Actual.AcceptedFirstTimeOrReplaced ?? "").ToLower().Contains(parameters.AcceptedFirstTimeOrReplaced.ToLower()))
+            .Where(f => parameters.KeyWords == null
+                        || (f.Primary.KeyWords ?? "").ToLower().Contains(parameters.KeyWords.ToLower())
+                        || (f.Actual.KeyWords ?? "").ToLower().Contains(parameters.KeyWords.ToLower()))
+            .Where(f => parameters.Changes == null
+                        || (f.Primary.Changes ?? "").ToLower().Contains(parameters.Changes.ToLower())
+                        || (f.Actual.Changes ?? "").ToLower().Contains(parameters.Changes.ToLower()))
+            .Where(f => parameters.Amendments == null
+                        || (f.Primary.Amendments ?? "").ToLower().Contains(parameters.Amendments.ToLower())
+                        || (f.Actual.Amendments ?? "").ToLower().Contains(parameters.Amendments.ToLower()))
+            .Where(f => parameters.Harmonization == null
+                        ||  parameters.Harmonization.Contains(f.Primary.Harmonization.Value)
+                        || parameters.Harmonization.Contains(f.Actual.Harmonization.Value));
     }
 
-    public static GostsFtsDocument SplitFieldsToIndexDocument(long documentId, FieldEntity primary, FieldEntity actual)
+    public static SearchDocument SplitFieldsToIndexDocument(long documentId, Field primary, Field actual)
     {
-        return new GostsFtsDocument
+        return new SearchDocument
         {
             Id = documentId,
             Designation = actual.Designation ?? primary.Designation,
             FullName = actual.FullName ?? primary.FullName,
-            CodeOks = actual.CodeOKS ?? primary.CodeOKS,
+            CodeOks = actual.CodeOks ?? primary.CodeOks,
             ActivityField = actual.ActivityField ?? primary.ActivityField,
             AcceptanceYear = actual.AcceptanceYear ?? primary.AcceptanceYear,
             CommissionYear = actual.CommissionYear ?? primary.CommissionYear,
@@ -67,8 +72,26 @@ public static class SearchHelper
             AdoptionLevel = actual.AdoptionLevel ?? primary.AdoptionLevel,
             Changes = actual.Changes ?? primary.Changes,
             Amendments = actual.Amendments ?? primary.Amendments,
-            Status = primary.Status,
             Harmonization = primary.Harmonization,
         };
+    }
+    
+    internal static IQueryable<FullDocument> GetFullDocumentQueryable(DataContext context)
+    {
+        return context.Documents
+            .Join(context.PrimaryFields,
+                d => d.Id,
+                f => f.DocId,
+                (d, p) => new { d, p })
+            .Join(context.ActualFields,
+                g => g.d.Id,
+                f => f.DocId,
+                (g, a) => new FullDocument
+                {
+                    Id = g.d.Id,
+                    Actual = a,
+                    Primary = g.p,
+                    Status = g.d.Status
+                });
     }
 }
