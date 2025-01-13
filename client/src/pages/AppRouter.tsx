@@ -18,7 +18,7 @@ const AppRouter = () => {
 	const token = localStorage.getItem("jwt_token");
 	const state = useAppSelector((state) => state.user.status);
 	const { data: user, isLoading } = useFetchUserQuery(undefined, {
-		skip: !token && (state === "idle" || state === "loading"),
+		skip: !token && (state === "idle" || state === "loading" || state === "failed"),
 	});
 	if (isLoading) return <Loader />;
 
